@@ -1,0 +1,33 @@
+# Livrables / documents à NE PAS publier sur le repo public
+*.zip
+*.pdf
+consigne.md
+
+# Fichiers de travail / rendus temporaires
+_shot*.html
+*_preview.html
+_rap_light.html
+*.tmp
+
+# Dépendances / build (au cas où un outil serait ajouté plus tard)
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Environnement
+.env
+.env.*
+
+# Système / éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*~
