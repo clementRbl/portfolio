@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clément Reboul — AI Engineer</title>
 <meta name="description" content="Portfolio de Clément Reboul, AI Engineer. Du notebook à la production : machine learning, MLOps et GenAI/RAG.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%230B0E0C'/><text x='50' y='72' font-size='58' font-family='Georgia,serif' font-weight='700' fill='%23C97E43' text-anchor='middle'>CR</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%230B0E0C'/><text x='50' y='72' font-size='58' font-family='Georgia,serif' font-weight='700' fill='%23E4A34B' text-anchor='middle'>CR</text></svg>">
 <script>document.documentElement.classList.add('js');</script>
 <style>
   @font-face {
@@ -24,13 +24,15 @@
     --ink: #E7E3D4;
     --ink-dim: #B6B4A0;
     --muted: #7F856B;
-    --ember: #C97E43;        /* rouille / feu — accent principal */
-    --ember-bright: #E39A55;
+    --ember: #E4A34B;        /* ambre / lueur de lanterne — accent principal (aligné au rapport) */
+    --ember-bright: #F2BB63;
+    --spore: #4FB39B;        /* teal froid — glint de la bordure animée */
+    --spore-bright: #6FCBB4;
     --moss: #7C8A56;         /* mousse — secondaire */
     --moss-dim: #55603C;
     --blood: #9B3B2A;        /* sang séché — très rare */
     --good: #8BA05A;
-    --ember-glow: rgba(201,126,67,.30);
+    --ember-glow: rgba(228,163,75,.30);
     --bevel: 14px;
     --maxw: 1200px;
     --font-display: 'Headliner', 'Arial Narrow', 'Oswald', sans-serif;
@@ -100,9 +102,9 @@
     background: linear-gradient(180deg, rgba(10,13,11,.94), rgba(10,13,11,.6) 70%, transparent);
     backdrop-filter: blur(2px);
   }
-  .brand { display: flex; align-items: baseline; gap: 12px; margin-right: auto; }
-  .brand .mono-logo { font-family: var(--font-display); font-size: 30px; color: var(--ink); letter-spacing: .02em; line-height: 1; }
-  .brand .tag { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .22em; color: var(--muted); text-transform: uppercase; }
+  .brand { display: flex; align-items: center; gap: 13px; margin-right: auto; }
+  .brand .mono-logo { font-family: var(--font-display); font-size: 25px; color: var(--ink); letter-spacing: .03em; line-height: 1; white-space: nowrap; }
+  .brand .tag { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .22em; color: var(--muted); text-transform: uppercase; padding-left: 13px; border-left: 1px solid var(--border-2); white-space: nowrap; }
   .top-nav { margin-left: auto; display: flex; gap: 3px; }
   .top-nav a {
     font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase;
@@ -112,13 +114,13 @@
   .menu-btn {
     display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
     font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--ink); background: rgba(201,126,67,.10); border: 1px solid var(--border-2);
+    color: var(--ink); background: rgba(228,163,75,.10); border: 1px solid var(--border-2);
     padding: 9px 15px; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
     transition: background .15s, border-color .15s;
   }
-  .menu-btn:hover { background: rgba(201,126,67,.20); border-color: var(--ember); }
+  .menu-btn:hover { background: rgba(228,163,75,.20); border-color: var(--ember); }
   .menu-btn.pulse { animation: btnpulse 2.6s ease-in-out infinite; }
-  @keyframes btnpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(201,126,67,0); border-color: var(--border-2); } 50% { box-shadow: 0 0 0 4px rgba(201,126,67,.13), 0 0 18px rgba(201,126,67,.30); border-color: var(--ember); } }
+  @keyframes btnpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(228,163,75,0); border-color: var(--border-2); } 50% { box-shadow: 0 0 0 4px rgba(228,163,75,.13), 0 0 18px rgba(228,163,75,.30); border-color: var(--ember); } }
   @media (prefers-reduced-motion: reduce) { .menu-btn.pulse { animation: none; } }
   .menu-btn kbd {
     font-family: var(--font-mono); font-size: 10px; background: var(--surface-2); border: 1px solid var(--border-2);
@@ -126,6 +128,21 @@
   }
   .menu-btn .dot { width: 7px; height: 7px; background: var(--ember); border-radius: 50%; box-shadow: 0 0 8px var(--ember); }
   @media (max-width: 820px) { .top-nav { display: none; } }
+
+  /* Bordure « vivante » : dégradé conique en rotation infinie (incite au clic) */
+  @property --lb { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  .live-border { position: relative; }
+  .live-border::before {
+    content: ""; position: absolute; inset: 0; padding: 1.6px; pointer-events: none;
+    background: conic-gradient(from var(--lb),
+      var(--ember-bright), var(--spore-bright), var(--moss), var(--ember), var(--ember-bright));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: lbspin 4.5s linear infinite;
+  }
+  @keyframes lbspin { to { --lb: 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .live-border::before { animation: none; } }
 
   /* Boutons */
   .btn {
@@ -152,7 +169,7 @@
   .hero { min-height: 100svh; display: flex; align-items: center; padding-top: 80px; overflow: hidden; }
   .hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(80% 60% at 78% 30%, rgba(201,126,67,.10), transparent 60%),
+      radial-gradient(80% 60% at 78% 30%, rgba(228,163,75,.10), transparent 60%),
       radial-gradient(70% 80% at 15% 90%, rgba(124,138,86,.10), transparent 60%);
   }
   .hero-bg::before {
@@ -318,7 +335,7 @@
     font-family: var(--font-display); text-transform: uppercase; color: var(--ink);
     font-size: clamp(1.55rem, .9rem + 3.4vw, 3.3rem); line-height: 1.02; letter-spacing: .02em;
     max-width: min(92vw, 740px); margin: 0 auto; min-height: 1.05em;
-    text-shadow: 0 0 42px rgba(201,126,67,.20);
+    text-shadow: 0 0 42px rgba(228,163,75,.20);
   }
   .q-caret { font-family: var(--font-mono); color: var(--ember); margin-left: 3px; animation: caretBlink 1.05s steps(1) infinite; }
   @keyframes caretBlink { 50% { opacity: 0; } }
@@ -390,6 +407,7 @@
     .btn { padding: 12px 15px; font-size: 11.5px; }
     .hud-top { gap: 10px; padding: 0 16px; }
     .brand .tag { display: none; }
+    .brand .mono-logo { font-size: 20px; }
     /* Weapon wheel adaptée au tactile */
     .wheel-wrap { width: min(93vmin, 460px); }
     .wheel-center { padding: 0 25%; }
@@ -403,14 +421,14 @@
 <a href="#profil" class="skip">Aller au contenu</a>
 
 <header class="hud-top">
-  <a href="#accueil" class="brand"><span class="mono-logo">CR</span><span class="tag">AI&nbsp;Engineer</span></a>
-  <button class="menu-btn pulse" id="wheel-open" aria-haspopup="dialog" aria-controls="wheel">
+  <a href="#accueil" class="brand"><span class="mono-logo">Clément&nbsp;Reboul</span><span class="tag">AI&nbsp;Engineer</span></a>
+  <button class="menu-btn live-border" id="wheel-open" aria-haspopup="dialog" aria-controls="wheel">
     <span class="dot"></span> Naviguer <kbd>M</kbd>
   </button>
 </header>
 <noscript>
   <nav aria-label="Navigation" style="position:fixed;top:60px;left:0;right:0;z-index:59;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:12px;background:#12160F;border-bottom:1px solid #29311F;font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em">
-    <a href="#profil" style="color:#C97E43">Profil</a><a href="#competences" style="color:#C97E43">Compétences</a><a href="#projets" style="color:#C97E43">Projets</a><a href="#projet-phare" style="color:#C97E43">Projet phare</a><a href="#reflexivite" style="color:#C97E43">Réflexivité</a><a href="#contact" style="color:#C97E43">Contact</a>
+    <a href="#profil" style="color:#E4A34B">Profil</a><a href="#competences" style="color:#E4A34B">Compétences</a><a href="#projets" style="color:#E4A34B">Projets</a><a href="#projet-phare" style="color:#E4A34B">Projet phare</a><a href="#reflexivite" style="color:#E4A34B">Réflexivité</a><a href="#contact" style="color:#E4A34B">Contact</a>
   </nav>
 </noscript>
 
@@ -423,15 +441,15 @@
       <div>
         <p class="hud-label reveal">AI Engineer · ML · MLOps · GenAI</p>
         <h1 class="reveal">Du notebook <span class="ember">à la production.</span></h1>
-        <p class="lede reveal">Data Scientist / AI Engineer formé chez OpenClassrooms. Je conçois des modèles — mais surtout je les rends <b>fiables, déployés et monitorés</b>, là où naît la valeur.</p>
+        <p class="lede reveal">Développeur web pendant 5 ans, devenu AI Engineer. Je conçois des modèles — et surtout je les rends <b>fiables, déployés et monitorés</b>, là où naît la valeur.</p>
         <div class="hero-cta reveal">
           <a href="#projets" class="btn btn-primary">Explorer<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a href="./rapport.html" class="btn btn-ghost">Rapport</a>
-          <button class="btn btn-ghost" id="wheel-open-2">Menu radial</button>
+          <button class="btn btn-ghost live-border" id="wheel-open-2">Menu radial</button>
         </div>
         <div class="hero-stats reveal tnum">
+          <div><div class="k">5</div><div class="l">Ans dev web · lead</div></div>
           <div><div class="k">06</div><div class="l">Projets IA</div></div>
-          <div><div class="k">10+</div><div class="l">Modules validés</div></div>
           <div><div class="k">01</div><div class="l">API en prod</div></div>
         </div>
         <p class="wheel-hint reveal">Navigation : appuie sur <b>M</b> ou clique <b>Menu</b> pour la roue de sélection</p>
@@ -460,13 +478,13 @@
       <div class="sec-head reveal"><span class="idx">// 01</span><h2>Profil</h2></div>
       <div class="about-grid reveal">
         <div>
-          <p class="lead">Après une reconversion et le parcours <b>AI Engineer</b> d'OpenClassrooms, une conviction : un modèle n'a de valeur que <b>servi, surveillé et maintenable</b>.</p>
-          <p class="muted">J'ai couvert toute la chaîne : de l'exploration de données et la modélisation (scoring, classification, computer vision) à l'industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et aux systèmes GenAI (RAG, évaluation LLM). Objectif : rejoindre une équipe qui met l'IA <b>en production</b>, sur les sujets les plus demandés de 2026 — MLOps et LLMOps.</p>
-          <p class="muted">Approche d'ingénieur : arbitrer entre performance et fiabilité, documenter mes choix, et toujours relier la technique à l'enjeu métier.</p>
+          <p class="lead"><b>5 ans développeur web</b>, dont lead dev. Aujourd'hui AI Engineer.</p>
+          <p class="muted">Je sais livrer du code : testé, déployé, maintenu. J'apporte cette culture d'ingénieur à l'IA.</p>
+          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production — pas dans le notebook.</p>
         </div>
         <div class="panel"><ul class="facts">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Objectif</b> — AI Engineer / MLOps / GenAI</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Cœur de métier</b> — du notebook à l'API monitorée</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Expérience</b> — 5 ans en dev web, dont lead dev</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Stack</b> — Python, FastAPI, Docker, MLflow, LangChain</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Basé en</b> France — mobile / télétravail</span></li>
         </ul></div>
