@@ -100,7 +100,7 @@
     background: linear-gradient(180deg, rgba(10,13,11,.94), rgba(10,13,11,.6) 70%, transparent);
     backdrop-filter: blur(2px);
   }
-  .brand { display: flex; align-items: baseline; gap: 12px; }
+  .brand { display: flex; align-items: baseline; gap: 12px; margin-right: auto; }
   .brand .mono-logo { font-family: var(--font-display); font-size: 30px; color: var(--ink); letter-spacing: .02em; line-height: 1; }
   .brand .tag { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .22em; color: var(--muted); text-transform: uppercase; }
   .top-nav { margin-left: auto; display: flex; gap: 3px; }
@@ -117,6 +117,9 @@
     transition: background .15s, border-color .15s;
   }
   .menu-btn:hover { background: rgba(201,126,67,.20); border-color: var(--ember); }
+  .menu-btn.pulse { animation: btnpulse 2.6s ease-in-out infinite; }
+  @keyframes btnpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(201,126,67,0); border-color: var(--border-2); } 50% { box-shadow: 0 0 0 4px rgba(201,126,67,.13), 0 0 18px rgba(201,126,67,.30); border-color: var(--ember); } }
+  @media (prefers-reduced-motion: reduce) { .menu-btn.pulse { animation: none; } }
   .menu-btn kbd {
     font-family: var(--font-mono); font-size: 10px; background: var(--surface-2); border: 1px solid var(--border-2);
     border-radius: 3px; padding: 1px 5px; color: var(--muted);
@@ -330,12 +333,27 @@
   @media (max-width: 900px) {
     .hero-grid, .about-grid, .skills-grid, .proj-grid, .proj.feat .layout, .flag-body, .refl-grid { grid-template-columns: 1fr; }
     .soft-grid { grid-template-columns: 1fr 1fr; }
-    .hero-panel { order: -1; }
-    section { padding-block: 66px; }
+    .hero { min-height: auto; padding-top: 104px; padding-bottom: 46px; }
+    section { padding-block: 62px; }
+    .kpi-row { margin: 22px; }
+    .flag-body, .pipe { padding-inline: 22px; }
   }
   @media (max-width: 560px) {
-    .soft-grid, .kpi-row, .status .kpis { grid-template-columns: 1fr; }
-    .kpi-row, .status .kpis { grid-template-columns: repeat(3,1fr); }
+    .wrap { padding-inline: 18px; }
+    .soft-grid { grid-template-columns: 1fr; }
+    .kpi-row, .status .kpis { grid-template-columns: repeat(3, 1fr); }
+    .hero h1 { font-size: clamp(2.5rem, 1rem + 12vw, 3.4rem); }
+    .hero-stats { gap: 20px; }
+    .sec-head h2 { font-size: clamp(2rem, 1.2rem + 6vw, 2.6rem); }
+    .btn { padding: 12px 15px; font-size: 11.5px; }
+    .hud-top { gap: 10px; padding: 0 16px; }
+    .brand .tag { display: none; }
+    /* Weapon wheel adaptée au tactile */
+    .wheel-wrap { width: min(93vmin, 460px); }
+    .wheel-center { padding: 0 25%; }
+    .wheel-center .wc-name { font-size: 1.4rem; }
+    .wheel-center .wc-desc { display: none; }
+    .wheel-close { top: 14px; right: 14px; }
   }
 </style>
 </head>
@@ -344,18 +362,15 @@
 
 <header class="hud-top">
   <a href="#accueil" class="brand"><span class="mono-logo">CR</span><span class="tag">AI&nbsp;Engineer</span></a>
-  <nav class="top-nav" aria-label="Navigation">
-    <a href="#profil">Profil</a>
-    <a href="#competences">Compétences</a>
-    <a href="#projets">Projets</a>
-    <a href="#projet-phare">Projet phare</a>
-    <a href="#reflexivite">Réflexivité</a>
-    <a href="#contact">Contact</a>
-  </nav>
-  <button class="menu-btn" id="wheel-open" aria-haspopup="dialog" aria-controls="wheel">
-    <span class="dot"></span> Menu <kbd>M</kbd>
+  <button class="menu-btn pulse" id="wheel-open" aria-haspopup="dialog" aria-controls="wheel">
+    <span class="dot"></span> Naviguer <kbd>M</kbd>
   </button>
 </header>
+<noscript>
+  <nav aria-label="Navigation" style="position:fixed;top:60px;left:0;right:0;z-index:59;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:12px;background:#12160F;border-bottom:1px solid #29311F;font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em">
+    <a href="#profil" style="color:#C97E43">Profil</a><a href="#competences" style="color:#C97E43">Compétences</a><a href="#projets" style="color:#C97E43">Projets</a><a href="#projet-phare" style="color:#C97E43">Projet phare</a><a href="#reflexivite" style="color:#C97E43">Réflexivité</a><a href="#contact" style="color:#C97E43">Contact</a>
+  </nav>
+</noscript>
 
 <main id="accueil">
 
@@ -607,7 +622,6 @@
       <div class="wc-idx" id="wc-idx">// 01</div>
       <div class="wc-name" id="wc-name">Accueil</div>
       <div class="wc-desc" id="wc-desc">Retour en haut de page</div>
-      <div class="wc-go"><kbd>Entrée</kbd> pour sélectionner · <kbd>Échap</kbd> pour fermer</div>
     </div>
   </div>
 </div>
@@ -747,6 +761,14 @@
     else if (e.key === 'Enter') { e.preventDefault(); go(active); }
     else if (/^[1-8]$/.test(e.key)) { go(parseInt(e.key, 10) - 1); }
   });
+
+  // Découverte : ouvre la roue automatiquement à la première visite
+  try {
+    if (!localStorage.getItem('wheelSeen')) {
+      localStorage.setItem('wheelSeen', '1');
+      setTimeout(function () { if (!isOpen) openWheel(); }, 1000);
+    }
+  } catch (e) {}
 })();
 </script>
 </body>
