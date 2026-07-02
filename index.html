@@ -384,6 +384,50 @@
   .wheel-close { position: absolute; top: 22px; right: 26px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--border-2); padding: 8px 12px; cursor: pointer; }
   .wheel-close:hover { color: var(--ember); border-color: var(--ember); }
 
+  /* ---------- TORCHE (curseur lampe) ---------- */
+  .torch {
+    position: fixed; inset: 0; z-index: 6; pointer-events: none;
+    opacity: 0; transition: opacity .45s ease; mix-blend-mode: screen;
+    background: radial-gradient(240px 240px at var(--mx, 50%) var(--my, 50%),
+      rgba(255,241,214,.11), rgba(255,214,150,.05) 42%, transparent 70%);
+  }
+  @media (hover: none) { .torch { display: none; } }
+
+  /* ---------- BOUTON SON ---------- */
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; cursor: pointer;
+    color: var(--ink-dim); background: rgba(228,163,75,.06); border: 1px solid var(--border-2);
+    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+    transition: color .15s, border-color .15s, background .15s;
+  }
+  .icon-btn:hover { color: var(--ember); border-color: var(--ember); }
+  .icon-btn svg { width: 17px; height: 17px; }
+  .icon-btn .on-ic { display: none; }
+  .icon-btn.on { color: var(--ember); }
+  .icon-btn.on .off-ic { display: none; }
+  .icon-btn.on .on-ic { display: block; }
+
+  /* ---------- SÉQUENCE DE BOOT (intro) ---------- */
+  .wheel-boot {
+    display: inline-block; text-align: left; font-family: var(--font-mono);
+    font-size: 12.5px; letter-spacing: .08em; color: var(--good); line-height: 1.7;
+    margin-bottom: 16px; max-height: 120px; overflow: hidden;
+    text-shadow: 0 0 10px rgba(139,160,90,.35);
+    transition: opacity .5s ease, max-height .5s ease, margin .5s ease;
+  }
+  .wheel-boot.fade { opacity: 0; max-height: 0; margin-bottom: 0; }
+
+  /* ---------- HUD vivant : battement + valeurs ---------- */
+  .status .hb { width: 42px; height: 14px; margin-left: 10px; }
+  .status .hb polyline {
+    fill: none; stroke: var(--good); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 64; stroke-dashoffset: 64; animation: hbdraw 2.6s linear infinite;
+    filter: drop-shadow(0 0 3px rgba(139,160,90,.5));
+  }
+  @keyframes hbdraw { 0% { stroke-dashoffset: 64; } 55% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -64; } }
+  @media (prefers-reduced-motion: reduce) { .status .hb polyline { animation: none; stroke-dashoffset: 0; } }
+  #kpi-lat { transition: opacity .5s ease; }
+
   /* Révélation au scroll */
   .reveal { transition: opacity .6s ease, transform .6s ease; }
   html.js .reveal:not(.in) { opacity: 0; transform: translateY(20px); }
@@ -422,6 +466,10 @@
 
 <header class="hud-top">
   <a href="#accueil" class="brand"><span class="mono-logo">Clément&nbsp;Reboul</span><span class="tag">AI&nbsp;Engineer</span></a>
+  <button class="icon-btn" id="snd-toggle" aria-pressed="false" aria-label="Activer le son" title="Son (tic de la roue)">
+    <svg class="off-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+    <svg class="on-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+  </button>
   <button class="menu-btn live-border" id="wheel-open" aria-haspopup="dialog" aria-controls="wheel">
     <span class="dot"></span> Naviguer <kbd>M</kbd>
   </button>
@@ -456,15 +504,15 @@
       </div>
       <div class="hero-panel reveal">
         <div class="panel status" role="img" aria-label="Statut : API de scoring crédit en production, health 200 OK, AUC 0,78, latence 6 ms, couverture de tests 98%.">
-          <div class="st-top"><span class="pulse"></span><span class="s">EN&nbsp;PRODUCTION</span><span class="h">credit-scoring-api</span></div>
+          <div class="st-top"><span class="pulse"></span><span class="s">EN&nbsp;PRODUCTION</span><svg class="hb" viewBox="0 0 44 16" aria-hidden="true"><polyline points="0,8 10,8 13,8 16,3 20,13 24,8 44,8"/></svg><span class="h">credit-scoring-api</span></div>
           <div class="st-body">
             <div class="row"><span class="v">GET</span><span>/health</span><span class="ok">200 OK</span></div>
             <div class="row"><span class="v">POST</span><span>/predict?SK_ID_CURR=100001</span><span class="ok">200</span></div>
-            <div class="row"><span class="muted">→ { "decision":"ACCORDE", "proba":0.37 }</span></div>
+            <div class="row"><span class="muted">→ { "decision":"ACCORDE", "proba":<span id="log-proba">0.37</span> }</span></div>
           </div>
           <div class="kpis tnum">
             <div><div class="n">0.78</div><div class="c">AUC</div></div>
-            <div><div class="n">6ms</div><div class="c">Latence</div></div>
+            <div><div class="n" id="kpi-lat">6ms</div><div class="c">Latence</div></div>
             <div><div class="n">98%</div><div class="c">Tests</div></div>
           </div>
         </div>
@@ -678,6 +726,7 @@
   <button class="wheel-close" id="wheel-close">✕ Fermer <span style="opacity:.6">ESC</span></button>
   <div class="wheel-stage">
     <div class="wheel-head">
+      <div class="wheel-boot" id="wheel-boot" aria-hidden="true"></div>
       <p class="wheel-quote"><span class="q-txt" id="q-txt"></span><span class="q-caret" id="q-caret" aria-hidden="true">▍</span></p>
       <span class="wheel-quote-attr" id="q-attr">— George E. P. Box</span>
     </div>
@@ -789,8 +838,65 @@
     })();
   }
 
+  /* ---- Sons discrets (coupés par défaut, WebAudio, aucun fichier) ---- */
+  var sfx = (function () {
+    var on = false, ctx = null;
+    try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
+    function actx() { if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) ctx = new A(); } return ctx; }
+    function blip(freq, dur, type, vol) {
+      if (!on) return; var c = actx(); if (!c) return; if (c.state === 'suspended') c.resume();
+      var o = c.createOscillator(), g = c.createGain();
+      o.type = type || 'triangle'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(vol || 0.05, c.currentTime + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + (dur || 0.05));
+      o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime + (dur || 0.05) + 0.02);
+    }
+    function tick() { blip(430 + Math.random() * 30, 0.045, 'triangle', 0.05); }
+    function whoosh() {
+      if (!on) return; var c = actx(); if (!c) return; if (c.state === 'suspended') c.resume();
+      var dur = 0.28, buf = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate), d = buf.getChannelData(0);
+      for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      var src = c.createBufferSource(); src.buffer = buf;
+      var bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.7;
+      bp.frequency.setValueAtTime(300, c.currentTime);
+      bp.frequency.exponentialRampToValueAtTime(1400, c.currentTime + dur);
+      var g = c.createGain(); g.gain.setValueAtTime(0.0001, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.05, c.currentTime + 0.05);
+      g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + dur);
+      src.connect(bp); bp.connect(g); g.connect(c.destination); src.start();
+    }
+    return {
+      tick: tick, whoosh: whoosh, isOn: function () { return on; },
+      set: function (v) { on = v; try { localStorage.setItem('soundOn', v ? '1' : '0'); } catch (e) {} if (v) { var c = actx(); if (c && c.resume) c.resume(); } }
+    };
+  })();
+  var sndBtn = document.getElementById('snd-toggle');
+  function syncSnd() {
+    if (!sndBtn) return; var on = sfx.isOn();
+    sndBtn.classList.toggle('on', on);
+    sndBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    sndBtn.setAttribute('aria-label', on ? 'Couper le son' : 'Activer le son');
+  }
+  if (sndBtn) { syncSnd(); sndBtn.addEventListener('click', function () { sfx.set(!sfx.isOn()); syncSnd(); if (sfx.isOn()) sfx.tick(); }); }
+
+  /* ---- Séquence de « boot » HUD avant la réplique ---- */
+  var bootEl = document.getElementById('wheel-boot');
+  var BOOT = ['> SYSTÈME EN LIGNE', '> SCAN DES MODULES… OK', '> CHARGEMENT DE LA ROUE…'];
+  function runBoot(done) {
+    if (!bootEl || reduce) { if (bootEl) bootEl.textContent = ''; done(); return; }
+    bootEl.classList.remove('fade'); bootEl.innerHTML = ''; var i = 0;
+    (function nextLine() {
+      if (i >= BOOT.length) { setTimeout(function () { bootEl.classList.add('fade'); done(); }, 280); return; }
+      var line = document.createElement('div'); line.textContent = BOOT[i]; bootEl.appendChild(line);
+      i++; setTimeout(nextLine, 260);
+    })();
+  }
+
   function setActive(i) {
-    active = (i + N) % N;
+    var n = (i + N) % N;
+    if (n !== active && isOpen) sfx.tick();
+    active = n;
     sectors.forEach(function (s, k) { s.classList.toggle('active', k === active); });
     wcIdx.textContent = '// 0' + (active + 1);
     wcName.textContent = NAV[active].name;
@@ -802,18 +908,21 @@
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     setActive(0);
+    sfx.whoosh();
     if (intro) {
       overlay.classList.add('intro');
       closeBtn.focus({ preventScroll: true });
-      typewriter(qTxt, QUOTE, function () {
-        overlay.classList.add('attr-shown');
-        setTimeout(function () {
-          overlay.classList.add('wheel-shown');
-          setTimeout(function () { if (isOpen && overlay.classList.contains('intro')) sectors[0].focus({ preventScroll: true }); }, 300);
-        }, 450);
+      runBoot(function () {
+        typewriter(qTxt, QUOTE, function () {
+          overlay.classList.add('attr-shown');
+          setTimeout(function () {
+            overlay.classList.add('wheel-shown');
+            setTimeout(function () { if (isOpen && overlay.classList.contains('intro')) sectors[0].focus({ preventScroll: true }); }, 300);
+          }, 450);
+        });
       });
       // filet de sécurité : révèle la roue même si l'animation est interrompue
-      setTimeout(function () { overlay.classList.add('attr-shown', 'wheel-shown'); }, 3200);
+      setTimeout(function () { overlay.classList.add('attr-shown', 'wheel-shown'); }, 5200);
     } else {
       if (!reduce) overlay.classList.add('animate');
       sectors[0].focus({ preventScroll: true });
@@ -925,6 +1034,45 @@
   window.addEventListener('resize', resize);
   resize();
   requestAnimationFrame(tick);
+})();
+</script>
+<script>
+/* Curseur torche + HUD « vivant » */
+(function () {
+  "use strict";
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- Torche : halo lumineux qui suit la souris (souris uniquement) --- */
+  if (window.matchMedia('(pointer: fine)').matches) {
+    var torch = document.createElement('div');
+    torch.className = 'torch'; torch.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(torch);
+    var hideT;
+    window.addEventListener('mousemove', function (e) {
+      torch.style.setProperty('--mx', e.clientX + 'px');
+      torch.style.setProperty('--my', e.clientY + 'px');
+      torch.style.opacity = '1';
+      clearTimeout(hideT);
+      hideT = setTimeout(function () { torch.style.opacity = '0'; }, 3200);
+    }, { passive: true });
+    document.addEventListener('mouseleave', function () { torch.style.opacity = '0'; });
+  }
+
+  /* --- HUD « vivant » : latence + proba qui fluctuent --- */
+  if (!reduce) {
+    var lat = document.getElementById('kpi-lat'), pr = document.getElementById('log-proba');
+    var lats = ['5ms', '6ms', '7ms', '6ms', '5ms', '7ms'], li = 0;
+    if (lat) setInterval(function () {
+      if (document.hidden) return;
+      li = (li + 1) % lats.length; lat.textContent = lats[li];
+      lat.style.opacity = '.45';
+      requestAnimationFrame(function () { lat.style.opacity = '1'; });
+    }, 1900);
+    if (pr) setInterval(function () {
+      if (document.hidden) return;
+      pr.textContent = (0.36 + Math.random() * 0.03).toFixed(2);
+    }, 3200);
+  }
 })();
 </script>
 </body>
