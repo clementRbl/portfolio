@@ -299,10 +299,52 @@
     background: rgba(6,8,6,.72); backdrop-filter: blur(7px) saturate(.5) brightness(.7);
   }
   .wheel-overlay.open { display: flex; }
+  /* Intro « écran-titre » : fond plus dense + entrée en fondu */
+  .wheel-overlay.intro { background: rgba(5,7,5,.94); }
+  html.js .wheel-overlay.intro { animation: fadeBg .55s ease both; }
+  @keyframes fadeBg { from { opacity: 0; } to { opacity: 1; } }
   html.js .wheel-overlay.open.animate .wheel-wrap { animation: wheelIn .28s cubic-bezier(.2,.8,.2,1); }
   @keyframes wheelIn { from { transform: scale(.86); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { html.js .wheel-overlay.open.animate .wheel-wrap { animation: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    html.js .wheel-overlay.open.animate .wheel-wrap { animation: none; }
+    html.js .wheel-overlay.intro { animation: none; }
+  }
+
+  /* Scène : réplique (machine à écrire) au-dessus de la roue */
+  .wheel-stage { display: flex; flex-direction: column; align-items: center; gap: clamp(20px, 4.5vh, 46px); }
+  .wheel-head { text-align: center; }
+  .wheel-overlay:not(.intro) .wheel-head { display: none; }
+  .wheel-quote {
+    font-family: var(--font-display); text-transform: uppercase; color: var(--ink);
+    font-size: clamp(1.55rem, .9rem + 3.4vw, 3.3rem); line-height: 1.02; letter-spacing: .02em;
+    max-width: min(92vw, 740px); margin: 0 auto; min-height: 1.05em;
+    text-shadow: 0 0 42px rgba(201,126,67,.20);
+  }
+  .q-caret { font-family: var(--font-mono); color: var(--ember); margin-left: 3px; animation: caretBlink 1.05s steps(1) infinite; }
+  @keyframes caretBlink { 50% { opacity: 0; } }
+  .wheel-overlay.wheel-shown .q-caret { animation: none; opacity: 0; transition: opacity .5s ease; }
+  .wheel-quote-attr {
+    display: block; margin-top: 14px; font-family: var(--font-mono); font-size: 11.5px;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+    opacity: 0; transition: opacity .8s ease;
+  }
+  .wheel-overlay.attr-shown .wheel-quote-attr { opacity: 1; }
+  /* La roue apparaît en douceur, après la réplique */
+  .wheel-overlay.intro .wheel-wrap {
+    opacity: 0; transform: scale(.9); pointer-events: none;
+    transition: opacity .95s ease, transform .95s cubic-bezier(.2,.8,.2,1);
+  }
+  .wheel-overlay.intro.wheel-shown .wheel-wrap { opacity: 1; transform: scale(1); pointer-events: auto; }
+  @media (prefers-reduced-motion: reduce) {
+    .wheel-overlay.intro .wheel-wrap { transition: none; }
+    .q-caret { animation: none; }
+  }
   .wheel-wrap { position: relative; width: min(78vmin, 560px); height: min(78vmin, 560px); }
+  /* Écrans peu hauts (laptops) : roue réduite pour que réplique + roue tiennent */
+  @media (max-height: 760px) {
+    .wheel-wrap { width: min(70vmin, 500px); height: min(70vmin, 500px); }
+    .wheel-stage { gap: clamp(14px, 3vh, 30px); }
+  }
   .wheel-wrap svg { width: 100%; height: 100%; display: block; overflow: visible; }
   .sector { cursor: pointer; transition: fill .12s, stroke .12s; }
   .sector .seg { fill: rgba(20,25,17,.82); stroke: var(--border-2); stroke-width: 1.5; }
@@ -616,12 +658,18 @@
 <!-- WEAPON WHEEL -->
 <div class="wheel-overlay" id="wheel" role="dialog" aria-modal="true" aria-label="Roue de navigation">
   <button class="wheel-close" id="wheel-close">✕ Fermer <span style="opacity:.6">ESC</span></button>
-  <div class="wheel-wrap">
-    <svg id="wheel-svg" viewBox="0 0 400 400" aria-hidden="true"></svg>
-    <div class="wheel-center">
-      <div class="wc-idx" id="wc-idx">// 01</div>
-      <div class="wc-name" id="wc-name">Accueil</div>
-      <div class="wc-desc" id="wc-desc">Retour en haut de page</div>
+  <div class="wheel-stage">
+    <div class="wheel-head">
+      <p class="wheel-quote"><span class="q-txt" id="q-txt"></span><span class="q-caret" id="q-caret" aria-hidden="true">▍</span></p>
+      <span class="wheel-quote-attr" id="q-attr">— George E. P. Box</span>
+    </div>
+    <div class="wheel-wrap">
+      <svg id="wheel-svg" viewBox="0 0 400 400" aria-hidden="true"></svg>
+      <div class="wheel-center">
+        <div class="wc-idx" id="wc-idx">// 01</div>
+        <div class="wc-name" id="wc-name">Accueil</div>
+        <div class="wc-desc" id="wc-desc">Retour en haut de page</div>
+      </div>
     </div>
   </div>
 </div>
@@ -707,7 +755,21 @@
 
   var overlay = document.getElementById('wheel'), wrap = overlay.querySelector('.wheel-wrap');
   var wcIdx = document.getElementById('wc-idx'), wcName = document.getElementById('wc-name'), wcDesc = document.getElementById('wc-desc');
+  var qTxt = document.getElementById('q-txt'), closeBtn = document.getElementById('wheel-close');
   var active = 0, isOpen = false, lastFocus = null;
+
+  /* Réplique tapée à la machine à écrire (police d'affichage) */
+  var QUOTE = 'All models are wrong, but some are useful';
+  function typewriter(el, text, done) {
+    if (reduce) { el.textContent = text; if (done) done(); return; }
+    el.textContent = ''; var i = 0;
+    (function tick() {
+      el.textContent = text.slice(0, i);
+      if (i >= text.length) { if (done) done(); return; }
+      i++;
+      setTimeout(tick, text.charAt(i - 2) === ',' ? 300 : 45);
+    })();
+  }
 
   function setActive(i) {
     active = (i + N) % N;
@@ -716,17 +778,33 @@
     wcName.textContent = NAV[active].name;
     wcDesc.textContent = NAV[active].desc;
   }
-  function openWheel() {
+  function openWheel(intro) {
     if (isOpen) return;
     isOpen = true; lastFocus = document.activeElement;
-    overlay.classList.add('open'); if (!reduce) overlay.classList.add('animate');
-    setActive(0);
+    overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    sectors[0].focus({ preventScroll: true });
+    setActive(0);
+    if (intro) {
+      overlay.classList.add('intro');
+      closeBtn.focus({ preventScroll: true });
+      typewriter(qTxt, QUOTE, function () {
+        overlay.classList.add('attr-shown');
+        setTimeout(function () {
+          overlay.classList.add('wheel-shown');
+          setTimeout(function () { if (isOpen && overlay.classList.contains('intro')) sectors[0].focus({ preventScroll: true }); }, 300);
+        }, 450);
+      });
+      // filet de sécurité : révèle la roue même si l'animation est interrompue
+      setTimeout(function () { overlay.classList.add('attr-shown', 'wheel-shown'); }, 3200);
+    } else {
+      if (!reduce) overlay.classList.add('animate');
+      sectors[0].focus({ preventScroll: true });
+    }
   }
   function closeWheel() {
     if (!isOpen) return;
-    isOpen = false; overlay.classList.remove('open', 'animate');
+    isOpen = false;
+    overlay.classList.remove('open', 'animate', 'intro', 'wheel-shown', 'attr-shown');
     document.body.style.overflow = '';
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
@@ -762,13 +840,11 @@
     else if (/^[1-8]$/.test(e.key)) { go(parseInt(e.key, 10) - 1); }
   });
 
-  // Découverte : ouvre la roue automatiquement à la première visite
-  try {
-    if (!localStorage.getItem('wheelSeen')) {
-      localStorage.setItem('wheelSeen', '1');
-      setTimeout(function () { if (!isOpen) openWheel(); }, 1000);
-    }
-  } catch (e) {}
+  // Accueil : la roue s'ouvre en « écran-titre » à chaque arrivée
+  // (sauf accès direct à une ancre partagée, ex. …/#projets)
+  if (!location.hash) {
+    setTimeout(function () { if (!isOpen) openWheel(true); }, 320);
+  }
 })();
 </script>
 </body>
