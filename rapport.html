@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport de conduite de projet — Clément Reboul</title>
+<meta name="description" content="Rapport de conduite de projet Data : industrialisation et mise en production d'un modèle de scoring crédit (MLOps).">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2310161B'/><text x='50' y='68' font-size='54' font-family='monospace' font-weight='700' fill='%23E4A34B' text-anchor='middle'>CR</text></svg>">
+<script>(function(){try{var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',s||m);}catch(e){}})();</script>
+<style>
+  :root{--bg:#10161B;--surface:#161E24;--surface-2:#1B252C;--border:#26333B;--border-strong:#33454F;--ink:#E9EEEC;--ink-soft:#C4CFD1;--muted:#8698A0;--accent:#E4A34B;--accent-ink:#1B120A;--accent-soft:rgba(228,163,75,.12);--good:#5FB185;--font-sans:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;--font-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;}
+  html[data-theme="light"]{--bg:#F4F6F3;--surface:#FFFFFF;--surface-2:#FBFCFA;--border:#E2E6DF;--border-strong:#CDD4CB;--ink:#19211E;--ink-soft:#31403A;--muted:#5F6E68;--accent:#B7791F;--accent-ink:#FFFFFF;--accent-soft:rgba(183,121,31,.09);--good:#2F855A;}
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:17px;line-height:1.72;-webkit-font-smoothing:antialiased;}
+  .topbar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+  .topbar-in{max-width:900px;margin-inline:auto;padding:0 24px;height:58px;display:flex;align-items:center;gap:16px;}
+  .back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink-soft);font-weight:600;font-size:14.5px;}
+  .back:hover{color:var(--accent);}
+  .back svg{width:16px;height:16px;}
+  .topbar .tt{margin-left:auto;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+  .icon-btn{background:var(--surface);border:1px solid var(--border);color:var(--ink);width:36px;height:36px;border-radius:6px;cursor:pointer;display:grid;place-items:center;}
+  .theme-sun{display:none;} html[data-theme="light"] .theme-sun{display:block;} html[data-theme="light"] .theme-moon{display:none;}
+  .icon-btn svg{width:17px;height:17px;}
+  main{max-width:820px;margin-inline:auto;padding:56px 24px 100px;}
+  h1{font-size:clamp(1.9rem,1.3rem+2.4vw,2.6rem);line-height:1.14;letter-spacing:-.02em;text-wrap:balance;margin:0 0 .2em;}
+  h2{font-size:1.55rem;line-height:1.2;letter-spacing:-.015em;margin:2.4em 0 .1em;padding-top:1.2em;border-top:1px solid var(--border);text-wrap:balance;}
+  h2:first-of-type{border-top:0;padding-top:0;}
+  h3{font-size:1.2rem;margin:1.8em 0 .4em;letter-spacing:-.01em;}
+  h4{font-size:1.02rem;margin:1.4em 0 .3em;color:var(--ink-soft);}
+  p{margin:1em 0;}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent);}
+  a:hover{border-bottom-color:var(--accent);}
+  strong{color:var(--ink);font-weight:700;}
+  hr{border:0;border-top:1px solid var(--border);margin:2.4em 0;}
+  ul,ol{padding-left:1.3em;} li{margin:.4em 0;}
+  blockquote{margin:1.4em 0;padding:.6em 1.2em;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 6px 6px 0;color:var(--ink-soft);font-style:italic;}
+  code{font-family:var(--font-mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:.12em .4em;}
+  pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;overflow-x:auto;line-height:1.5;}
+  pre code{background:none;border:0;padding:0;font-size:.82em;color:var(--ink-soft);}
+  .tablewrap{overflow-x:auto;margin:1.4em 0;border:1px solid var(--border);border-radius:10px;}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums;}
+  th,td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--border);vertical-align:top;}
+  thead th{background:var(--surface-2);color:var(--ink);font-weight:600;white-space:nowrap;position:sticky;top:0;}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr:hover{background:color-mix(in srgb,var(--accent-soft) 55%,transparent);}
+  h1+table,h1+.tablewrap{margin-top:1.6em;}
+  ::selection{background:var(--accent);color:var(--accent-ink);}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  @media print{.topbar{display:none;}main{max-width:none;padding:0;}h2{break-after:avoid;}table,.tablewrap,pre,blockquote{break-inside:avoid;}body{font-size:11pt;}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-in">
+  <a class="back" href="./index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Retour au portfolio</a>
+  <span class="tt">Rapport · conduite de projet</span>
+  <button class="icon-btn" id="tg" aria-label="Basculer le thème">
+    <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></svg>
+  </button>
+</div></div>
+<main>
+<h1 id="rapport-de-conduite-de-projet-data">Rapport de conduite de
+projet Data</h1>
+<h2
+id="industrialisation-et-mise-en-production-dun-modèle-de-scoring-crédit-mlops">Industrialisation
+et mise en production d'un modèle de scoring crédit (MLOps)</h2>
+<div class="tablewrap"><table>
+<tbody>
+<tr class="odd">
+<td><strong>Auteur</strong></td>
+<td>Clément Reboul — AI Engineer</td>
+</tr>
+<tr class="even">
+<td><strong>Projet technique</strong></td>
+<td><em>Credit Scoring MLOps</em> — mise en production du modèle de
+scoring « Prêt à Dépenser »</td>
+</tr>
+<tr class="odd">
+<td><strong>Dépôt GitHub</strong></td>
+<td><a
+href="https://github.com/clementRbl/credit-scoring-mlops">https://github.com/clementRbl/credit-scoring-mlops</a></td>
+</tr>
+<tr class="even">
+<td><strong>API en production</strong></td>
+<td><a
+href="https://clementrbl-credit-scoring-api.hf.space/docs">https://clementrbl-credit-scoring-api.hf.space/docs</a>
+<em>(Hugging Face Spaces)</em></td>
+</tr>
+<tr class="odd">
+<td><strong>Projet amont (modélisation)</strong></td>
+<td><a
+href="https://github.com/clementRbl/pret-a-depenser">https://github.com/clementRbl/pret-a-depenser</a></td>
+</tr>
+<tr class="even">
+<td><strong>Date</strong></td>
+<td>Juillet 2026</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="résumé-exécutif">Résumé exécutif</h2>
+<p>Ce rapport décrit la <strong>conduite de bout en bout</strong> d'un
+projet data représentatif du métier d'AI Engineer : passer d'un modèle
+de machine learning entraîné en environnement de recherche à un
+<strong>service prédictif fiable, déployé et monitoré en
+production</strong>.</p>
+<p>Le cas métier est le <strong>scoring crédit</strong> de la société
+<em>Prêt à Dépenser</em> : prédire la probabilité de défaut de paiement
+d'un client afin d'automatiser la décision d'octroi de crédit. La
+modélisation (comparaison de 5 algorithmes, optimisation d'un
+<strong>coût métier asymétrique</strong>, interprétabilité SHAP,
+tracking MLflow) a abouti à un modèle <strong>LightGBM</strong> (AUC-OOF
+≈ 0,78 ; coût métier minimisé à ≈ 153 000 ; seuil de décision 0,47).</p>
+<p>La phase d'<strong>industrialisation</strong> — objet principal de ce
+rapport — expose ce modèle via une <strong>API FastAPI conteneurisée
+(Docker)</strong>, déployée automatiquement sur <strong>Hugging Face
+Spaces</strong> via un <strong>pipeline CI/CD GitHub Actions</strong>
+(test → build → deploy). La production est <strong>monitorée</strong> :
+journalisation structurée des prédictions (JSONL), analyse de
+<strong>data drift</strong> (Evidently AI) et <strong>dashboard</strong>
+de suivi (Streamlit).</p>
+<p>Le rapport est structuré autour des <strong>5 axes /
+compétences</strong> évalués :</p>
+<ol type="1">
+<li><strong>Collecte des besoins métiers</strong> et analyse du contexte
+de l'organisation ;</li>
+<li><strong>Audit de la solution data</strong> et de son adéquation aux
+besoins ;</li>
+<li><strong>Identification de la solution technique</strong> ;</li>
+<li><strong>Appui stratégique et méthodologique</strong> à la prise de
+décision ;</li>
+<li><strong>Contrôle et analyse du projet</strong> (délais, coûts,
+livrables, performance).</li>
+</ol>
+<hr />
+<h2 id="0-contexte-et-cadrage-du-projet">0. Contexte et cadrage du
+projet</h2>
+<p><strong>Prêt à Dépenser</strong> est une société financière proposant
+des crédits à la consommation à une clientèle disposant de <strong>peu
+ou pas d'historique de prêt</strong>. L'entreprise ne peut donc pas
+s'appuyer sur les scores bancaires classiques et doit construire son
+propre outil d'évaluation du risque à partir de <strong>sources de
+données variées</strong> (données comportementales, historiques d'autres
+institutions, etc.).</p>
+<p>Le projet s'est déroulé en <strong>deux phases</strong>, à l'image
+d'un cycle de vie ML industriel :</p>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>Objet</th>
+<th>Livrable clé</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Phase 1 — Modélisation &amp; MLOps (tracking)</strong></td>
+<td>Construire, comparer et sélectionner un modèle de scoring ; assurer
+la traçabilité des expériences</td>
+<td>Modèle LightGBM + tracking MLflow
+(<code>pret-a-depenser</code>)</td>
+</tr>
+<tr class="even">
+<td><strong>Phase 2 — Industrialisation &amp; mise en
+production</strong></td>
+<td>Exposer, déployer, tester, monitorer le modèle en conditions
+réelles</td>
+<td>API + CI/CD + monitoring (<code>credit-scoring-mlops</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ce rapport traite les deux phases mais <strong>met l'accent sur la
+mise en production</strong> (phase 2), qui correspond au cœur de métier
+de l'AI Engineer et au besoin le plus recherché sur le marché :
+<em>faire passer un modèle du notebook à la production</em>.</p>
+<hr />
+<h2
+id="axe-1--collecte-des-besoins-métiers-et-analyse-du-contexte-de-lorganisation">Axe
+1 — Collecte des besoins métiers et analyse du contexte de
+l'organisation</h2>
+<h3 id="11-besoin-métier-central">1.1 Besoin métier central</h3>
+<p>Le besoin exprimé est d'<strong>automatiser et fiabiliser la décision
+d'octroi de crédit</strong>. Chaque demande doit être classée en
+<strong>crédit accordé</strong> ou <strong>refusé</strong>, à partir
+d'une <strong>probabilité de défaut</strong> calculée
+automatiquement.</p>
+<p>Deux risques métier s'opposent, avec un <strong>coût
+asymétrique</strong> — c'est le point de cadrage le plus structurant du
+projet :</p>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Erreur</th>
+<th>Signification métier</th>
+<th>Conséquence</th>
+<th>Coût relatif</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Faux négatif (FN)</strong></td>
+<td>Mauvais client prédit « bon » → crédit accordé à tort</td>
+<td><strong>Perte en capital</strong> (défaut de remboursement)</td>
+<td><strong>10</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Faux positif (FP)</strong></td>
+<td>Bon client prédit « mauvais » → crédit refusé à tort</td>
+<td><strong>Manque à gagner</strong> (marge perdue)</td>
+<td><strong>1</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Un défaut coûte donc <strong>10 fois plus cher</strong> qu'un refus
+injustifié. Ce ratio impose de <strong>ne pas se contenter d'un seuil de
+décision à 0,5</strong> ni d'optimiser l'accuracy : il faut construire
+une <strong>métrique de coût métier</strong>
+<code>Coût = 10 × FN + 1 × FP</code> et <strong>optimiser le
+seuil</strong> pour la minimiser.</p>
+<h3 id="12-besoins-fonctionnels-et-non-fonctionnels">1.2 Besoins
+fonctionnels et non-fonctionnels</h3>
+<p>Au-delà de la performance prédictive, la <strong>mise en
+production</strong> fait émerger des besoins d'ingénierie souvent
+négligés en phase de recherche :</p>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Besoin</th>
+<th>Traduction technique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fonctionnel</td>
+<td>Prédire à la demande pour un client donné</td>
+<td>API REST temps réel</td>
+</tr>
+<tr class="even">
+<td>Fonctionnel</td>
+<td>Transparence de la décision</td>
+<td>Explicabilité (SHAP global + local)</td>
+</tr>
+<tr class="odd">
+<td>Non-fonctionnel</td>
+<td><strong>Fiabilité</strong></td>
+<td>Tests automatisés, gestion d'erreurs, CI/CD bloquant</td>
+</tr>
+<tr class="even">
+<td>Non-fonctionnel</td>
+<td><strong>Disponibilité &amp; latence</strong></td>
+<td>Service conteneurisé, inférence &lt; 10 ms</td>
+</tr>
+<tr class="odd">
+<td>Non-fonctionnel</td>
+<td><strong>Traçabilité / auditabilité</strong></td>
+<td>Journalisation structurée de chaque prédiction</td>
+</tr>
+<tr class="even">
+<td>Non-fonctionnel</td>
+<td><strong>Maintenabilité</strong></td>
+<td>Détection de drift, monitoring, réentraînement possible</td>
+</tr>
+<tr class="odd">
+<td>Non-fonctionnel</td>
+<td><strong>Conformité (RGPD)</strong></td>
+<td>Logs maîtrisés, décision explicable pour le client</td>
+</tr>
+</tbody>
+</table></div>
+<h3
+id="13-analyse-du-contexte-organisationnel-et-des-parties-prenantes">1.3
+Analyse du contexte organisationnel et des parties prenantes</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Partie prenante</th>
+<th>Attente</th>
+<th>Impact sur la solution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Chargés d'études crédit</strong> (utilisateurs)</td>
+<td>Une décision fiable <strong>et justifiable</strong> auprès du
+client</td>
+<td>Score + décision + explicabilité SHAP</td>
+</tr>
+<tr class="even">
+<td><strong>Équipe Data</strong> (<em>data owners</em>)</td>
+<td>Fournir les données ; mais les schémas peuvent évoluer</td>
+<td>Besoin d'un <strong>contrat de données</strong> et de validation en
+entrée</td>
+</tr>
+<tr class="odd">
+<td><strong>Direction / risque</strong></td>
+<td>Piloter l'arbitrage risque / volume d'octroi</td>
+<td>Seuil de décision = levier stratégique ajustable</td>
+</tr>
+<tr class="even">
+<td><strong>Conformité / DPO</strong></td>
+<td>Respect RGPD, non-discrimination</td>
+<td>Explicabilité, journalisation maîtrisée</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Point de vigilance organisationnel identifié :</strong> en
+entreprise, la donnée est produite par une équipe tierce. Un changement
+silencieux de format, de type ou de casse en amont peut <strong>fausser
+les prédictions sans lever d'erreur</strong> (erreurs silencieuses). Ce
+constat a orienté les recommandations méthodologiques (cf. Axe 4).</p>
+<hr />
+<h2
+id="axe-2--audit-de-la-solution-data-et-de-son-adéquation-aux-besoins">Axe
+2 — Audit de la solution data et de son adéquation aux besoins</h2>
+<h3 id="21-audit-des-données">2.1 Audit des données</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Dimension</th>
+<th>Constat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Sources</strong></td>
+<td>Jeu <em>Home Credit</em> multi-tables : demande courante
+(<code>application</code>), historique bureau (<code>bureau</code>,
+<code>bureau_balance</code>), crédits antérieurs
+(<code>previous_application</code>), soldes (<code>POS_CASH</code>,
+<code>credit_card_balance</code>), échéanciers
+(<code>installments_payments</code>)</td>
+</tr>
+<tr class="even">
+<td><strong>Intégration</strong></td>
+<td>Jointures sur <code>SK_ID_CURR</code> + <strong>feature engineering
+par agrégation</strong> des tables annexes (moyennes, sommes,
+comptes)</td>
+</tr>
+<tr class="odd">
+<td><strong>Volumétrie features</strong></td>
+<td><strong>255 variables</strong> en entrée du modèle final (239
+numériques + 16 catégorielles)</td>
+</tr>
+<tr class="even">
+<td><strong>Qualité</strong></td>
+<td>Valeurs manquantes nombreuses (imputées et documentées), doublons
+contrôlés, visualisation <code>missingno</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Déséquilibre</strong></td>
+<td>Bons clients ≫ défauts → traité par
+<code>class_weight='balanced'</code> (LR, RF, LGBM) et
+<code>scale_pos_weight</code> (XGBoost)</td>
+</tr>
+<tr class="even">
+<td><strong>Fuite de données</strong></td>
+<td>Preprocessing et seuil ajustés <strong>uniquement</strong> sur train
+/ validation <em>out-of-fold</em> → pas de fuite</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="22-audit-du-modèle-et-de-sa-performance">2.2 Audit du modèle et
+de sa performance</h3>
+<p>Cinq familles de modèles ont été comparées en <strong>validation
+croisée StratifiedKFold (5 plis, prédictions OOF)</strong>, évaluées à
+la fois sur des métriques techniques et sur le <strong>coût
+métier</strong> :</p>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Modèle</th>
+<th>AUC-OOF</th>
+<th>Coût métier OOF</th>
+<th>Commentaire</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>LightGBM</strong> <em>(retenu)</em></td>
+<td><strong>≈ 0,78</strong></td>
+<td><strong>≈ 153 000</strong> <em>(minimal)</em></td>
+<td>Gère nativement les catégorielles, meilleur compromis</td>
+</tr>
+<tr class="even">
+<td>XGBoost</td>
+<td>≈ 0,78</td>
+<td>≈ 153 000</td>
+<td>Très proche, plus lourd à servir</td>
+</tr>
+<tr class="odd">
+<td>Random Forest</td>
+<td>≈ 0,77</td>
+<td>≈ 155 000</td>
+<td>Correct, moins performant</td>
+</tr>
+<tr class="even">
+<td>MLP</td>
+<td>≈ 0,77</td>
+<td>≈ 159 000</td>
+<td>Sensible au scaling, peu explicable</td>
+</tr>
+<tr class="odd">
+<td>Régression logistique</td>
+<td>≈ 0,74</td>
+<td>≈ 169 000</td>
+<td>Baseline interprétable</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Seuil de décision retenu : 0,47</strong> (et non 0,5),
+déterminé par balayage de 99 seuils pour <strong>minimiser le coût
+métier</strong>. La courbe <em>coût vs seuil</em> justifie ce choix.</p>
+<p><strong>Garde-fou overfitting :</strong> l'AUC de tête du challenge
+Kaggle <em>Home Credit</em> avoisine 0,80 ; une AUC ≈ 0,78 en OOF est
+donc <strong>performante et crédible</strong>, sans signe de
+surapprentissage.</p>
+<p><strong>Interprétabilité :</strong> importance globale (native
+LightGBM + <em>SHAP summary</em>) et <strong>locale par client</strong>
+(<em>SHAP waterfall / force plot</em>), répondant à l'exigence de
+transparence des chargés d'études.</p>
+<h3 id="23-verdict-daudit--adéquation-vs-écart-dindustrialisation">2.3
+Verdict d'audit : adéquation vs écart d'industrialisation</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Critère de besoin</th>
+<th>Couvert par la solution modèle ?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Prédiction automatique du risque</td>
+<td>✅ Oui (probabilité de défaut)</td>
+</tr>
+<tr class="even">
+<td>Prise en compte du coût métier asymétrique</td>
+<td>✅ Oui (métrique + seuil optimisés)</td>
+</tr>
+<tr class="odd">
+<td>Transparence de la décision</td>
+<td>✅ Oui (SHAP)</td>
+</tr>
+<tr class="even">
+<td>Traçabilité des expériences</td>
+<td>✅ Oui (MLflow : params, métriques, Model Registry)</td>
+</tr>
+<tr class="odd">
+<td><strong>Disponibilité en temps réel</strong></td>
+<td>❌ <strong>Non</strong> — modèle non exposé</td>
+</tr>
+<tr class="even">
+<td><strong>Monitoring en production</strong></td>
+<td>❌ <strong>Non</strong> — pas de suivi du drift</td>
+</tr>
+<tr class="odd">
+<td><strong>Robustesse aux évolutions de données</strong></td>
+<td>⚠️ Partiel — pas de validation en entrée</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conclusion de l'audit :</strong> la solution de
+<strong>modélisation est mature et adéquate</strong> au besoin métier,
+mais <strong>non industrialisée</strong>. L'écart à combler est
+précisément la <strong>mise en production</strong> — objet de la phase 2
+et des axes suivants.</p>
+<hr />
+<h2 id="axe-3--identification-de-la-solution-technique">Axe 3 —
+Identification de la solution technique</h2>
+<h3 id="31-architecture-de-mise-en-production">3.1 Architecture de mise
+en production</h3>
+<pre><code>┌─────────────┐   HTTP    ┌──────────────────────────────┐
+│   Client    │──────────▶│   Hugging Face Spaces         │
+│  (Swagger / │           │   (conteneur Docker)          │
+│   appli)    │◀──────────│   FastAPI + LightGBM · :7860  │
+└─────────────┘   JSON    └──────────────┬────────────────┘
+                                         │ log de chaque prédiction
+                              ┌──────────▼───────────────┐
+                              │  logs/predictions.jsonl   │
+                              │  (JSON structuré)         │
+                              └──────────┬───────────────┘
+                                         │ lecture / analyse
+                    ┌────────────────────▼───────────────────┐
+                    │  Dashboard Streamlit  +  Notebook        │
+                    │  Evidently (data drift)                  │
+                    └─────────────────────────────────────────┘
+
+  CI/CD : GitHub Actions  ──▶  test (pytest) ─▶ build (Docker) ─▶ deploy (HF)</code></pre>
+<h3 id="32-choix-techniques-et-justifications">3.2 Choix techniques et
+justifications</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Besoin</th>
+<th>Outil retenu</th>
+<th>Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Exposition (API)</strong></td>
+<td><strong>FastAPI</strong></td>
+<td>Documentation Swagger auto-générée, validation Pydantic, standard de
+l'industrie ML, asynchrone</td>
+</tr>
+<tr class="even">
+<td><strong>Conteneurisation</strong></td>
+<td><strong>Docker</strong> (<code>python:3.12-slim</code>)</td>
+<td>Reproductibilité, utilisateur non-root (sécurité), ne copie que le
+nécessaire</td>
+</tr>
+<tr class="odd">
+<td><strong>Déploiement</strong></td>
+<td><strong>Hugging Face Spaces</strong> (SDK Docker)</td>
+<td>Gratuit, URL publique, intégration Git, port 7860</td>
+</tr>
+<tr class="even">
+<td><strong>CI/CD</strong></td>
+<td><strong>GitHub Actions</strong></td>
+<td>Gratuit, intégré au dépôt, secrets pour les credentials</td>
+</tr>
+<tr class="odd">
+<td><strong>Journalisation</strong></td>
+<td><strong>JSONL structuré</strong></td>
+<td>Simple, lisible avec pandas, une ligne = un objet JSON (robuste aux
+crashs)</td>
+</tr>
+<tr class="even">
+<td><strong>Détection de drift</strong></td>
+<td><strong>Evidently AI</strong> (0.4.33)</td>
+<td>Standard open-source, tests statistiques automatiques, rapports
+visuels</td>
+</tr>
+<tr class="odd">
+<td><strong>Dashboard monitoring</strong></td>
+<td><strong>Streamlit</strong></td>
+<td>Rapide à construire, lecture directe des logs</td>
+</tr>
+<tr class="even">
+<td><strong>Tests</strong></td>
+<td><strong>pytest + pytest-cov</strong></td>
+<td>7 tests, <strong>98 % de couverture</strong> sur l'API</td>
+</tr>
+<tr class="odd">
+<td><strong>Qualité de code</strong></td>
+<td><strong>Ruff</strong></td>
+<td>Linter rapide, intégré en pre-commit et CI</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="33-détails-dimplémentation-clés">3.3 Détails d'implémentation
+clés</h3>
+<ul>
+<li><strong>Chargement du modèle une seule fois au démarrage</strong>
+(et non à chaque requête) → latence maîtrisée.</li>
+<li><strong>Endpoints :</strong> <code>GET /health</code>,
+<code>POST /predict?SK_ID_CURR=…</code>, <code>GET /docs</code>.</li>
+<li><strong>Réponse type :</strong>
+<code>{ "SK_ID_CURR": 100001, "probability": 0.3718, "decision": "ACCORDE", "threshold": 0.47 }</code>.</li>
+<li><strong>Gestion d'erreurs :</strong> client inconnu →
+<code>404</code>, identifiant non entier → <code>422</code>.</li>
+<li><strong>Journalisation :</strong> chaque appel écrit
+<code>timestamp</code>, <code>SK_ID_CURR</code>,
+<code>probability</code>, <code>decision</code>,
+<code>inference_time_ms</code>.</li>
+<li><strong>Latence mesurée :</strong> ≈ <strong>6 ms</strong> par
+inférence.</li>
+</ul>
+<h3 id="34-décision-dingénierie--onnx-écarté-volontairement">3.4
+Décision d'ingénierie : ONNX écarté volontairement</h3>
+<p>Une conversion <strong>ONNX</strong> du classifieur a été testée :
+<strong>-39 % de taille</strong> et <strong>+6 % de vitesse</strong>.
+Elle a néanmoins été <strong>retirée</strong>, après échange avec le
+mentor, pour trois raisons :</p>
+<ol type="1">
+<li>ONNX ne gère pas nativement les <strong>features
+catégorielles</strong> → nécessite un pré-encodage, source
+d'<strong>erreurs silencieuses</strong> ;</li>
+<li>l'approche hybride (pkl pour le preprocessing, onnx pour
+l'inférence) ajoute un <strong>point de fragilité</strong> ;</li>
+<li>le gain (+6 %) est <strong>marginal</strong> au regard du
+risque.</li>
+</ol>
+<blockquote>
+<p><em>« En production, la fiabilité prime sur une micro-optimisation.
+»</em> — L'API utilise directement <code>pipeline.predict_proba()</code>
+du pipeline scikit-learn, pour ~6 ms d'inférence fiable.</p>
+</blockquote>
+<p>Cette décision illustre une posture d'ingénieur : <strong>arbitrer
+entre performance et robustesse</strong>, et documenter le
+raisonnement.</p>
+<hr />
+<h2
+id="axe-4--appui-stratégique-et-méthodologique-à-la-prise-de-décision">Axe
+4 — Appui stratégique et méthodologique à la prise de décision</h2>
+<h3 id="41-le-projet-comme-outil-daide-à-la-décision">4.1 Le projet
+comme outil d'aide à la décision</h3>
+<p>La solution ne se contente pas de prédire : elle <strong>outille la
+décision</strong> à plusieurs niveaux.</p>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Niveau</th>
+<th>Levier fourni</th>
+<th>Décision facilitée</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Opérationnel</strong> (chargé d'études)</td>
+<td>Score + décision + explicabilité SHAP</td>
+<td>Accorder / refuser <strong>et justifier</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Tactique</strong> (pilotage)</td>
+<td>Dashboard : taux de refus, latence, distribution des scores</td>
+<td>Détecter une dérive, déclencher un réentraînement</td>
+</tr>
+<tr class="odd">
+<td><strong>Stratégique</strong> (direction risque)</td>
+<td><strong>Seuil de décision ajustable</strong> (0,47)</td>
+<td>Arbitrer l'appétence au risque : baisser le seuil = plus prudent
+(moins de défauts, plus de refus) ; le relever = plus de volume</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le <strong>seuil métier</strong> est le levier stratégique central :
+il traduit une décision <strong>business</strong> (combien de risque
+accepter) en paramètre <strong>technique</strong>. Le rapport rend ce
+lien explicite via la courbe <em>coût vs seuil</em>.</p>
+<h3 id="42-vulgarisation-et-communication">4.2 Vulgarisation et
+communication</h3>
+<p>Une part clé de l'appui méthodologique consiste à <strong>traduire le
+technique en enjeux métier</strong> :</p>
+<ul>
+<li>« AUC 0,78 » → <em>« le modèle distingue correctement bons et
+mauvais payeurs »</em> ;</li>
+<li>« drift sur <code>AMT_CREDIT</code> » → <em>« la distribution des
+montants demandés évolue ; à surveiller »</em> ;</li>
+<li>« coût métier 153 000 vs 169 000 » → <em>« le modèle et le seuil
+retenus réduisent les pertes attendues d'environ 10 % par rapport à la
+baseline »</em>.</li>
+</ul>
+<h3 id="43-recommandations-méthodologiques-formulées">4.3
+Recommandations méthodologiques formulées</h3>
+<p>Pour sécuriser l'exploitation en production, plusieurs
+recommandations ont été explicitement documentées :</p>
+<ol type="1">
+<li><strong>Contrat de données (<em>data contract</em>)</strong> avec
+l'équipe Data : figer types, plages et catégories attendues, et faire
+échouer le pipeline <strong>côté fournisseur</strong> plutôt que côté
+modèle.</li>
+<li><strong>Validation des entrées</strong> : vérifier types et bornes ;
+détecter les catégories inconnues
+(<code>ignore_encoding_error=False</code>).</li>
+<li><strong>Stratégie de réaction au drift</strong> : selon l'importance
+de la variable — la retirer, la transformer, pondérer les observations
+récentes (<code>sample_weight</code>) ou <strong>réentraîner</strong>
+(solution de référence).</li>
+<li><strong>Séparation <code>train</code> /
+<code>predict</code></strong> en production, avec un
+<strong>réentraînement planifié</strong> (ex. Airflow) pour empêcher
+l'accumulation de drift.</li>
+</ol>
+<h3 id="44-trade-offs-présentés-pour-éclairer-la-décision">4.4
+Trade-offs présentés pour éclairer la décision</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Décision</th>
+<th>Option retenue</th>
+<th>Alternative</th>
+<th>Arbitrage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Format d'inférence</td>
+<td>Pipeline sklearn</td>
+<td>ONNX</td>
+<td><strong>Fiabilité</strong> &gt; micro-perf</td>
+</tr>
+<tr class="even">
+<td>Stockage des logs</td>
+<td>JSONL fichier</td>
+<td>Base de données</td>
+<td><strong>Simplicité</strong> (POC) vs scalabilité</td>
+</tr>
+<tr class="odd">
+<td>Hébergement</td>
+<td>HF Spaces (gratuit)</td>
+<td>Cloud managé (AWS/GCP)</td>
+<td><strong>Coût nul</strong> vs SLA/robustesse</td>
+</tr>
+<tr class="even">
+<td>Détection de drift</td>
+<td>Evidently</td>
+<td>Great Expectations / Alibi Detect</td>
+<td><strong>Rapidité de mise en œuvre</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Documenter ces arbitrages permet au décideur de <strong>comprendre
+les limites</strong> de la solution et les conditions d'un passage à
+l'échelle.</p>
+<hr />
+<h2
+id="axe-5--contrôle-et-analyse-du-projet-délais-coûts-livrables-performance">Axe
+5 — Contrôle et analyse du projet (délais, coûts, livrables,
+performance)</h2>
+<h3 id="51-livrables-produits-et-contrôle">5.1 Livrables produits et
+contrôle</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Livrable</th>
+<th>Support</th>
+<th>Statut</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Historique de versions (commits, branches,
+<code>.gitignore</code>)</td>
+<td>GitHub (public)</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Scripts API (routes documentées, gestion d'erreurs)</td>
+<td><code>app.py</code> (FastAPI)</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Dockerfile fonctionnel</td>
+<td><code>Dockerfile</code></td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Tests automatisés</td>
+<td><code>tests/test_api.py</code> — 7 tests, <strong>98 %</strong></td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Pipeline CI/CD (test → build → deploy)</td>
+<td><code>.github/workflows/ci-cd.yml</code></td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Analyse de data drift</td>
+<td><code>notebooks/data_drift_analysis.ipynb</code> (Evidently)</td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Stockage production + captures</td>
+<td><code>logs/predictions.jsonl</code> + <code>screenshots/</code></td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Documentation README (lancement, monitoring)</td>
+<td><code>README.md</code></td>
+<td>✅</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="52-performance-mesurée">5.2 Performance mesurée</h3>
+<p><strong>Performance modèle :</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Indicateur</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AUC-OOF (LightGBM)</td>
+<td>≈ 0,78</td>
+</tr>
+<tr class="even">
+<td>Coût métier minimisé</td>
+<td>≈ 153 000 (vs ≈ 169 000 baseline)</td>
+</tr>
+<tr class="odd">
+<td>Seuil de décision optimal</td>
+<td>0,47</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Performance système :</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Indicateur</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Latence d'inférence</td>
+<td>≈ 6 ms</td>
+</tr>
+<tr class="even">
+<td>Couverture de tests</td>
+<td>98 % (7 tests)</td>
+</tr>
+<tr class="odd">
+<td>Jobs CI/CD</td>
+<td>3 (test / build / deploy)</td>
+</tr>
+<tr class="even">
+<td>Taux de refus observé (monitoring)</td>
+<td>≈ 30 % (cohérent avec le seuil)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Monitoring / drift :</strong> sur les 20 variables les plus
+importantes, <strong>3 présentent un drift statistiquement
+significatif</strong> (<code>AMT_CREDIT</code> p=0,0009 ;
+<code>AMT_GOODS_PRICE</code> p=0,0019 ; <code>FLAG_EMAIL</code>
+p&lt;0,0001), mais <strong>pas de drift global</strong> du jeu de
+données (seuil Evidently à 50 %). Le drift sur les montants est attendu
+(périodes de collecte différentes) : <strong>le modèle reste
+pertinent</strong>, sans réentraînement immédiat requis.</p>
+<h3 id="53-analyse-des-coûts">5.3 Analyse des coûts</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Poste</th>
+<th>Coût (POC)</th>
+<th>À prévoir en production réelle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hébergement API</td>
+<td><strong>0 €</strong> (HF Spaces gratuit)</td>
+<td>Instance managée avec SLA</td>
+</tr>
+<tr class="even">
+<td>CI/CD</td>
+<td><strong>0 €</strong> (GitHub Actions)</td>
+<td>Runners dédiés si volume</td>
+</tr>
+<tr class="odd">
+<td>Outillage</td>
+<td><strong>0 €</strong> (open-source : FastAPI, Docker, Evidently,
+Streamlit)</td>
+<td>Licences/observabilité (Grafana, WhyLabs…)</td>
+</tr>
+<tr class="even">
+<td>Stockage logs</td>
+<td><strong>0 €</strong> (fichier local)</td>
+<td>Base persistante (PostgreSQL, S3)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le projet démontre qu'une <strong>mise en production complète et
+crédible</strong> est réalisable à <strong>coût d'infrastructure
+nul</strong> grâce à l'écosystème open-source — un argument fort en
+phase de POC.</p>
+<h3 id="54-gestion-de-projet-délais-et-qualité">5.4 Gestion de projet,
+délais et qualité</h3>
+<ul>
+<li><strong>Approche itérative</strong> et découpée en étapes (cf. cycle
+en deux phases), chaque étape produisant un livrable vérifiable.</li>
+<li><strong>Qualité par construction :</strong> commits réguliers,
+branches, linter Ruff, <strong>CI/CD bloquant</strong> (le déploiement
+échoue si un test échoue) → la qualité n'est pas un contrôle <em>a
+posteriori</em> mais un garde-fou automatisé.</li>
+<li><strong>Definition of Done respectée :</strong> l'intégralité des 8
+livrables attendus est produite et validée.</li>
+</ul>
+<hr />
+<h2 id="bilan-limites-et-perspectives">Bilan, limites et
+perspectives</h2>
+<h3 id="ce-qui-fonctionne">Ce qui fonctionne</h3>
+<ul>
+<li>Un modèle <strong>performant et explicable</strong>, aligné sur un
+<strong>coût métier</strong> réel.</li>
+<li>Une <strong>API fiable, testée (98 %), conteneurisée et
+déployée</strong> en continu.</li>
+<li>Un <strong>monitoring opérationnel</strong> : journalisation, drift,
+dashboard.</li>
+<li>Un coût d'infrastructure <strong>nul</strong>, une
+<strong>reproductibilité</strong> totale.</li>
+</ul>
+<h3 id="limites-assumées">Limites assumées</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Limite</th>
+<th>Impact</th>
+<th>Piste</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Logs en <strong>fichier local</strong> au conteneur</td>
+<td>Non persistant, non scalable</td>
+<td>Base de données / stockage objet</td>
+</tr>
+<tr class="even">
+<td>Pas de <strong>réentraînement automatisé</strong></td>
+<td>Drift potentiellement accumulé</td>
+<td>Pipeline planifié (Airflow)</td>
+</tr>
+<tr class="odd">
+<td>Pas de <strong>validation des données en entrée</strong></td>
+<td>Erreurs silencieuses possibles</td>
+<td>Contrat de données + validation</td>
+</tr>
+<tr class="even">
+<td>Pas d'<strong>alerting</strong> automatique</td>
+<td>Détection manuelle du drift</td>
+<td>Grafana / seuils + notifications</td>
+</tr>
+<tr class="odd">
+<td>Dashboard <strong>local</strong> (non déployé)</td>
+<td>Monitoring non temps réel</td>
+<td>Observabilité managée</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="perspectives-dévolution">Perspectives d'évolution</h3>
+<p>Feature store, réentraînement continu déclenché sur drift, A/B
+testing de modèles, alerting automatisé, et — dans une logique 2026 —
+extension des mêmes principes MLOps aux <strong>systèmes
+GenAI/LLM</strong> (observabilité, évaluation en ligne, suivi
+coût/tokens), déjà explorés dans mon projet RAG
+<em>Puls-Events</em>.</p>
+<h3 id="apports-personnels-réflexivité">Apports personnels
+(réflexivité)</h3>
+<p>Ce projet a fait évoluer ma représentation du métier : l'AI Engineer
+ne se juge pas au score d'un notebook mais à sa capacité à livrer un
+<strong>système fiable, monitoré et maintenable</strong>. Trois
+convictions en ressortent :</p>
+<ol type="1">
+<li><strong>La fiabilité prime sur la micro-optimisation</strong> (cf.
+décision ONNX) ;</li>
+<li><strong>l'évaluation et le monitoring sont le cœur du
+métier</strong>, pas une finition ;</li>
+<li><strong>la valeur naît du lien technique ↔︎ métier</strong> (le
+seuil, le coût, l'explicabilité), pas de la seule modélisation.</li>
+</ol>
+<hr />
+<h2 id="annexes">Annexes</h2>
+<h3 id="a-liens-du-projet">A. Liens du projet</h3>
+<ul>
+<li><strong>Dépôt (mise en production) :</strong> <a
+href="https://github.com/clementRbl/credit-scoring-mlops">https://github.com/clementRbl/credit-scoring-mlops</a></li>
+<li><strong>API en ligne (Swagger) :</strong> <a
+href="https://clementrbl-credit-scoring-api.hf.space/docs">https://clementrbl-credit-scoring-api.hf.space/docs</a></li>
+<li><strong>Dépôt (modélisation &amp; MLflow) :</strong> <a
+href="https://github.com/clementRbl/pret-a-depenser">https://github.com/clementRbl/pret-a-depenser</a></li>
+</ul>
+<h3 id="b-captures-dans-le-dépôt">B. Captures (dans le dépôt)</h3>
+<ul>
+<li><code>screenshots/logs_jsonl.png</code> — journalisation structurée
+des prédictions</li>
+<li><code>screenshots/dashboard_streamlit_1.png</code> /
+<code>_2.png</code> — dashboard de monitoring</li>
+</ul>
+<h3 id="c-glossaire">C. Glossaire</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr class="header">
+<th>Terme</th>
+<th>Définition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Scoring crédit</strong></td>
+<td>Estimation de la probabilité de défaut de paiement d'un client</td>
+</tr>
+<tr class="even">
+<td><strong>Coût métier</strong></td>
+<td>Métrique pondérant les erreurs : <code>10 × FN + 1 × FP</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Seuil de décision</strong></td>
+<td>Probabilité au-delà de laquelle le crédit est refusé (ici 0,47)</td>
+</tr>
+<tr class="even">
+<td><strong>AUC-ROC</strong></td>
+<td>Pouvoir discriminant du modèle (1 = parfait, 0,5 = aléatoire)</td>
+</tr>
+<tr class="odd">
+<td><strong>OOF (<em>out-of-fold</em>)</strong></td>
+<td>Prédiction d'un échantillon par un modèle ne l'ayant pas vu à
+l'entraînement</td>
+</tr>
+<tr class="even">
+<td><strong>Data drift</strong></td>
+<td>Évolution de la distribution des données de production vs
+référence</td>
+</tr>
+<tr class="odd">
+<td><strong>MLOps</strong></td>
+<td>Ensemble des pratiques d'industrialisation du cycle de vie ML</td>
+</tr>
+<tr class="even">
+<td><strong>CI/CD</strong></td>
+<td>Intégration et déploiement continus (automatisation test → build →
+deploy)</td>
+</tr>
+<tr class="odd">
+<td><strong>SHAP</strong></td>
+<td>Méthode d'explicabilité attribuant à chaque variable sa contribution
+au score</td>
+</tr>
+</tbody>
+</table></div>
+
+</main>
+<script>document.getElementById('tg').addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme');var n=c==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}});</script>
+</body>
+</html>
