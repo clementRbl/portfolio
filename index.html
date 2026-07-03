@@ -960,7 +960,7 @@ document.documentElement.classList.add('js');
     var on = false, ctx = null, reloadBuf = null, pluckCache = [];
     try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
     // Mi mineur pentatonique descendant (motif G–E de TLOU) — 1 secteur = 1 note. Modifiable ici.
-    var NOTES = [329.63, 392.00, 329.63, 392.00, 329.63, 392.00, 493.88, 392.00]; // Mi4 Sol4 Mi4 Sol4 Mi4 Sol4 Si4 Sol4 — mélodie TLOU (oscillation sol–mi + si aigu), sens horaire
+    var NOTES = [392.00, 329.63, 440.00, 349.23, 392.00, 349.23, 329.63, 293.66]; // Sol4 Mi4 La4 Fa4 Sol4 Fa4 Mi4 Ré4 — mélodie TLOU intro (La mineur), sens horaire
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
       return ctx;
