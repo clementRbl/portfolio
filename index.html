@@ -9,6 +9,13 @@
 <script>
 document.documentElement.classList.add('js');
 (function () {
+  var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+(function () {
   var m = null; try { m = localStorage.getItem('fxMode'); } catch (e) {}
   document.documentElement.classList.add(m === 'standard' ? 'fx-standard' : 'fx-perfection');
   window.FX = {
@@ -26,7 +33,9 @@ document.documentElement.classList.add('js');
   }
 
   :root {
+    color-scheme: dark;
     --bg: #0A0D0B;
+    --bg-rgb: 10,13,11;
     --bg-2: #0E120E;
     --surface: #12160F;
     --surface-2: #181D14;
@@ -49,6 +58,42 @@ document.documentElement.classList.add('js');
     --font-display: 'Headliner', 'Arial Narrow', 'Oswald', sans-serif;
     --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+
+  /* ---------- THÈME CLAIR (journal de terrain / plein jour) ---------- */
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #EFEADD;
+    --bg-rgb: 239,234,221;
+    --bg-2: #E6DFCE;
+    --surface: #F7F3E9;
+    --surface-2: #ECE5D4;
+    --border: #D3CAB4;
+    --border-2: #BEB398;
+    --ink: #23271C;
+    --ink-dim: #4E5240;
+    --muted: #78785E;
+    --ember: #B0731A;        /* ambre approfondi pour rester lisible sur le clair */
+    --ember-bright: #C98F2E;
+    --ember-glow: rgba(176,115,26,.20);
+    --moss: #6E7C46;
+    --good: #5F7A31;
+  }
+  /* Grain + vignette plus discrets sur fond clair */
+  :root[data-theme="light"] body::before { mix-blend-mode: multiply; opacity: .035; }
+  :root[data-theme="light"] body::after {
+    background:
+      radial-gradient(130% 100% at 50% 0%, transparent 62%, rgba(64,52,24,.10) 100%),
+      linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,.012) 50%);
+    background-size: cover, 100% 3px;
+  }
+  /* La roue reste sombre & cinématique dans les DEUX thèmes (îlot de palette) */
+  .wheel-overlay {
+    --bg: #0A0D0B; --bg-2: #0E120E; --surface: #12160F; --surface-2: #181D14;
+    --border: #29311F; --border-2: #3A4530;
+    --ink: #E7E3D4; --ink-dim: #B6B4A0; --muted: #7F856B;
+    --ember: #E4A34B; --ember-bright: #F2BB63; --ember-glow: rgba(228,163,75,.30);
+    --spore: #4FB39B; --spore-bright: #6FCBB4; --moss: #7C8A56; --good: #8BA05A;
   }
 
   * { box-sizing: border-box; }
@@ -110,7 +155,7 @@ document.documentElement.classList.add('js');
     position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: 60px;
     display: flex; align-items: center; gap: 18px;
     padding: 0 26px;
-    background: linear-gradient(180deg, rgba(10,13,11,.94), rgba(10,13,11,.6) 70%, transparent);
+    background: linear-gradient(180deg, rgba(var(--bg-rgb),.94), rgba(var(--bg-rgb),.6) 70%, transparent);
     backdrop-filter: blur(2px);
   }
   .brand { display: flex; align-items: center; gap: 13px; margin-right: auto; }
@@ -417,6 +462,10 @@ document.documentElement.classList.add('js');
   .icon-btn.on { color: var(--ember); }
   .icon-btn.on .off-ic { display: none; }
   .icon-btn.on .on-ic { display: block; }
+  /* Bascule de thème : soleil en sombre, lune en clair */
+  #theme-toggle .moon-ic { display: none; }
+  :root[data-theme="light"] #theme-toggle .sun-ic { display: none; }
+  :root[data-theme="light"] #theme-toggle .moon-ic { display: block; }
 
   /* ---------- SÉQUENCE DE BOOT (intro) ---------- */
   .wheel-boot {
@@ -548,6 +597,10 @@ document.documentElement.classList.add('js');
   <button class="icon-btn" id="snd-toggle" aria-pressed="false" aria-label="Activer le son" title="Son (tic de la roue)">
     <svg class="off-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
     <svg class="on-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+  </button>
+  <button class="icon-btn" id="theme-toggle" aria-label="Basculer thème clair ou sombre" title="Thème clair / sombre">
+    <svg class="sun-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M19.1 4.9l-1.5 1.5M6.4 17.6l-1.5 1.5"/></svg>
+    <svg class="moon-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
   </button>
   <button class="menu-btn live-border" id="wheel-open" aria-haspopup="dialog" aria-controls="wheel">
     <span class="dot"></span> Naviguer <kbd>M</kbd>
@@ -964,7 +1017,7 @@ document.documentElement.classList.add('js');
       392.00,                     // Sol4       · Accueil
       329.63,                     // Mi4        · Profil
       440.00,                     // La4        · Compétences
-      [349.23, 440.00, 523.25],   // Fa majeur (Fa4-La4-Do5) · Projets
+      349.23,                     // Fa4        · Projets
       392.00,                     // Sol4       · Projet phare
       392.00,                     // Sol4       · Soft skills
       329.63,                     // Mi4        · Réflexivité
@@ -1037,11 +1090,22 @@ document.documentElement.classList.add('js');
   }
   if (sndBtn) { syncSnd(); sndBtn.addEventListener('click', function () { sfx.set(!sfx.isOn()); syncSnd(); if (sfx.isOn()) sfx.pluck(2); }); }
 
+  /* Bascule thème clair / sombre (persistée) */
+  var themeBtn = document.getElementById('theme-toggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function () {
+      var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      var next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  }
+
   /* reload.mp3 sur tout clic de bouton/lien (sauf le toggle son et l'ouverture de la roue = whoosh) */
   document.addEventListener('click', function (e) {
     if (!e.target || !e.target.closest) return;
     var t = e.target.closest('button, a.btn, .proj-links a');
-    if (t && t.id !== 'snd-toggle' && t.id !== 'wheel-open' && t.id !== 'wheel-open-2') sfx.reload();
+    if (t && t.id !== 'snd-toggle' && t.id !== 'theme-toggle' && t.id !== 'wheel-open' && t.id !== 'wheel-open-2') sfx.reload();
   }, true);
 
   /* ---- Séquence de « boot » HUD avant la réplique ---- */
