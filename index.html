@@ -6,7 +6,18 @@
 <title>Clément Reboul — AI Engineer</title>
 <meta name="description" content="Portfolio de Clément Reboul, AI Engineer. Du notebook à la production : machine learning, MLOps et GenAI/RAG.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%230B0E0C'/><text x='50' y='72' font-size='58' font-family='Georgia,serif' font-weight='700' fill='%23E4A34B' text-anchor='middle'>CR</text></svg>">
-<script>document.documentElement.classList.add('js');</script>
+<script>
+document.documentElement.classList.add('js');
+(function () {
+  var m = null; try { m = localStorage.getItem('fxMode'); } catch (e) {}
+  document.documentElement.classList.add(m === 'standard' ? 'fx-standard' : 'fx-perfection');
+  window.FX = {
+    mode: m === 'standard' ? 'standard' : 'perfection', _started: false, _fns: [],
+    onStart: function (fn) { if (this._started) fn(this.mode); else this._fns.push(fn); },
+    start: function (mode) { if (this._started) return; this._started = true; this.mode = mode; for (var i = 0; i < this._fns.length; i++) this._fns[i](mode); }
+  };
+})();
+</script>
 <style>
   @font-face {
     font-family: 'Headliner';
@@ -428,6 +439,68 @@
   @media (prefers-reduced-motion: reduce) { .status .hb polyline { animation: none; stroke-dashoffset: 0; } }
   #kpi-lat { transition: opacity .5s ease; }
 
+  /* ---------- MODES : boutons de l'intro ---------- */
+  .wheel-modes { display: none; gap: 14px; justify-content: center; margin-top: 24px; }
+  .wheel-overlay.modes-shown .wheel-modes { display: flex; flex-wrap: wrap; animation: fadeUp .5s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .mode-btn {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 3px; cursor: pointer; text-align: left;
+    min-width: 188px; padding: 13px 16px; color: var(--ink); background: rgba(20,25,17,.6); border: 1px solid var(--border-2);
+    clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+    transition: border-color .15s, background .15s, transform .12s;
+  }
+  .mode-btn:hover, .mode-btn.sel { border-color: var(--ember); background: rgba(228,163,75,.10); transform: translateY(-2px); }
+  .mode-btn:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+  .mode-btn .mk { font-family: var(--font-mono); font-size: 10px; color: var(--ember); letter-spacing: .1em; }
+  .mode-btn .mn { font-family: var(--font-display); font-size: 1.55rem; text-transform: uppercase; line-height: 1; }
+  .mode-btn .md { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .05em; color: var(--muted); text-transform: uppercase; }
+
+  /* ---------- BLOOM de spores au survol des cartes projet ---------- */
+  .proj::before {
+    content: ""; position: absolute; bottom: -34px; right: -34px; width: 130px; height: 130px; z-index: 0; pointer-events: none;
+    background: radial-gradient(circle, rgba(79,179,155,.22), rgba(228,163,75,.06) 45%, transparent 70%);
+    opacity: 0; transform: scale(.4); transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .proj:hover::before { opacity: 1; transform: scale(1); }
+  .proj > * { position: relative; z-index: 1; }
+
+  /* ---------- BRAISES (hero) ---------- */
+  .embers { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .embers i {
+    position: absolute; bottom: -12px; width: 3px; height: 3px; border-radius: 50%;
+    background: var(--ember-bright); box-shadow: 0 0 6px var(--ember), 0 0 12px var(--ember-glow);
+    opacity: 0; animation: emberRise linear infinite;
+  }
+  @keyframes emberRise {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    12% { opacity: .85; }
+    100% { transform: translateY(-78vh) translateX(24px) scale(.35); opacity: 0; }
+  }
+
+  /* ---------- BALAYAGE scanline (nav via la roue) ---------- */
+  .scan-sweep {
+    position: fixed; left: 0; right: 0; top: -90px; height: 90px; z-index: 7; pointer-events: none; opacity: 0; mix-blend-mode: screen;
+    background: linear-gradient(transparent, rgba(79,179,155,.10), rgba(231,227,212,.16), rgba(79,179,155,.10), transparent);
+  }
+  .scan-sweep.run { animation: scanDown .55s ease-in-out; }
+  @keyframes scanDown { 0% { top: -90px; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { top: 100vh; opacity: 0; } }
+
+  /* ---------- MODE STANDARD (sobre) : on calme tout ---------- */
+  html.fx-standard .live-border::before { animation: none; opacity: .55; }
+  html.fx-standard .status .hb { display: none; }
+  html.fx-standard .embers,
+  html.fx-standard .scan-sweep,
+  html.fx-standard .torch { display: none; }
+  html.fx-standard .proj::before { content: none; }
+  html.fx-standard .menu-btn.pulse { animation: none; }
+  html.fx-standard .status .pulse::after { animation: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .embers i { animation: none; opacity: 0; }
+    .scan-sweep.run { animation: none; }
+    .proj::before { transition: none; }
+  }
+
   /* Révélation au scroll */
   .reveal { transition: opacity .6s ease, transform .6s ease; }
   html.js .reveal:not(.in) { opacity: 0; transform: translateY(20px); }
@@ -485,6 +558,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-bg"></div>
+    <div class="embers" aria-hidden="true"><i style="left:10%;animation-duration:9s;animation-delay:0s"></i><i style="left:24%;animation-duration:12s;animation-delay:3s"></i><i style="left:38%;animation-duration:10s;animation-delay:1.5s"></i><i style="left:55%;animation-duration:13s;animation-delay:4.5s"></i><i style="left:68%;animation-duration:9.5s;animation-delay:2.2s"></i><i style="left:82%;animation-duration:11.5s;animation-delay:6s"></i><i style="left:92%;animation-duration:10.5s;animation-delay:3.8s"></i></div>
     <div class="wrap hero-grid">
       <div>
         <p class="hud-label reveal">AI Engineer · ML · MLOps · GenAI</p>
@@ -526,9 +600,10 @@
       <div class="sec-head reveal"><span class="idx">// 01</span><h2>Profil</h2></div>
       <div class="about-grid reveal">
         <div>
-          <p class="lead"><b>5 ans développeur web</b>, dont lead dev. Aujourd'hui AI Engineer.</p>
-          <p class="muted">Je sais livrer du code : testé, déployé, maintenu. J'apporte cette culture d'ingénieur à l'IA.</p>
-          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production — pas dans le notebook.</p>
+          <p class="lead"><b>5 ans développeur web</b>, dont lead dev, puis reconversion via le parcours <b>AI Engineer</b> d'OpenClassrooms.</p>
+          <p class="muted">De ces années de dev, je garde une culture d'ingénieur : du code testé, déployé, maintenu. C'est souvent ce qui manque entre un notebook et une vraie mise en production.</p>
+          <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et systèmes GenAI (RAG, évaluation LLM).</p>
+          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Objectif : rejoindre une équipe qui met l'IA en prod — MLOps et LLMOps, les sujets les plus demandés de 2026.</p>
         </div>
         <div class="panel"><ul class="facts">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Objectif</b> — AI Engineer / MLOps / GenAI</span></li>
@@ -729,6 +804,10 @@
       <div class="wheel-boot" id="wheel-boot" aria-hidden="true"></div>
       <p class="wheel-quote"><span class="q-txt" id="q-txt"></span><span class="q-caret" id="q-caret" aria-hidden="true">▍</span></p>
       <span class="wheel-quote-attr" id="q-attr">— George E. P. Box</span>
+      <div class="wheel-modes" id="wheel-modes" role="group" aria-label="Choix du mode d'affichage">
+        <button class="mode-btn" data-mode="perfection"><span class="mk">[ 1 ]</span><span class="mn">Perfection</span><span class="md">Expérience complète</span></button>
+        <button class="mode-btn" data-mode="standard"><span class="mk">[ 2 ]</span><span class="mn">Standard</span><span class="md">Sobre · recruteurs</span></button>
+      </div>
     </div>
     <div class="wheel-wrap">
       <svg id="wheel-svg" viewBox="0 0 400 400" aria-hidden="true"></svg>
@@ -902,6 +981,47 @@
     wcName.textContent = NAV[active].name;
     wcDesc.textContent = NAV[active].desc;
   }
+  /* ---- Modes (Standard / Perfection), choisis dans l'intro ---- */
+  var modesEl = document.getElementById('wheel-modes');
+  var modeBtns = modesEl ? [].slice.call(modesEl.querySelectorAll('.mode-btn')) : [];
+  var modeChosen = false, modeTimer = null, modeHi = 'perfection';
+  function curMode() { return document.documentElement.classList.contains('fx-standard') ? 'standard' : 'perfection'; }
+  function highlightMode(m) {
+    modeHi = m;
+    modeBtns.forEach(function (b) { b.classList.toggle('sel', b.getAttribute('data-mode') === m); });
+  }
+  function showModes() {
+    if (modeChosen) return;
+    overlay.classList.add('modes-shown');
+    var saved = null; try { saved = localStorage.getItem('fxMode'); } catch (e) {}
+    highlightMode(saved === 'standard' ? 'standard' : 'perfection');
+    if (modeBtns[0]) modeBtns[0].focus({ preventScroll: true });
+    if (saved) { clearTimeout(modeTimer); modeTimer = setTimeout(function () { if (!modeChosen) chooseMode(saved); }, 2400); }
+  }
+  function chooseMode(m) {
+    if (modeChosen) return; modeChosen = true; clearTimeout(modeTimer);
+    m = (m === 'standard') ? 'standard' : 'perfection';
+    document.documentElement.classList.remove('fx-standard', 'fx-perfection');
+    document.documentElement.classList.add('fx-' + m);
+    try { localStorage.setItem('fxMode', m); } catch (e) {}
+    if (window.FX) window.FX.start(m);
+    overlay.classList.remove('modes-shown');
+    overlay.classList.add('wheel-shown');
+    setTimeout(function () { if (isOpen && overlay.classList.contains('intro')) sectors[0].focus({ preventScroll: true }); }, 320);
+  }
+  modeBtns.forEach(function (b) {
+    b.addEventListener('click', function () { chooseMode(b.getAttribute('data-mode')); });
+    b.addEventListener('mouseenter', function () { highlightMode(b.getAttribute('data-mode')); });
+  });
+
+  /* ---- Balayage scanline lors d'une navigation via la roue ---- */
+  var scanEl = null;
+  function scanSweep() {
+    if (curMode() === 'standard' || reduce) return;
+    if (!scanEl) { scanEl = document.createElement('div'); scanEl.className = 'scan-sweep'; scanEl.setAttribute('aria-hidden', 'true'); document.body.appendChild(scanEl); }
+    scanEl.classList.remove('run'); void scanEl.offsetWidth; scanEl.classList.add('run');
+  }
+
   function openWheel(intro) {
     if (isOpen) return;
     isOpen = true; lastFocus = document.activeElement;
@@ -915,14 +1035,11 @@
       runBoot(function () {
         typewriter(qTxt, QUOTE, function () {
           overlay.classList.add('attr-shown');
-          setTimeout(function () {
-            overlay.classList.add('wheel-shown');
-            setTimeout(function () { if (isOpen && overlay.classList.contains('intro')) sectors[0].focus({ preventScroll: true }); }, 300);
-          }, 450);
+          setTimeout(showModes, 450);
         });
       });
-      // filet de sécurité : révèle la roue même si l'animation est interrompue
-      setTimeout(function () { overlay.classList.add('attr-shown', 'wheel-shown'); }, 5200);
+      // filet de sécurité : affiche le choix de mode même si l'animation est interrompue
+      setTimeout(function () { if (!modeChosen && !overlay.classList.contains('modes-shown')) { overlay.classList.add('attr-shown'); showModes(); } }, 5200);
     } else {
       if (!reduce) overlay.classList.add('animate');
       sectors[0].focus({ preventScroll: true });
@@ -931,14 +1048,16 @@
   function closeWheel() {
     if (!isOpen) return;
     isOpen = false;
-    overlay.classList.remove('open', 'animate', 'intro', 'wheel-shown', 'attr-shown');
+    overlay.classList.remove('open', 'animate', 'intro', 'wheel-shown', 'attr-shown', 'modes-shown');
     document.body.style.overflow = '';
+    if (window.FX && !window.FX._started) window.FX.start(curMode());
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function go(i) {
     setActive(i);
     var el = document.getElementById(NAV[active].id);
     closeWheel();
+    scanSweep();
     if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   }
 
@@ -958,15 +1077,22 @@
   });
   overlay.addEventListener('click', function (e) { if (e.target === overlay) closeWheel(); });
 
-  document.getElementById('wheel-open').addEventListener('click', openWheel);
-  var open2 = document.getElementById('wheel-open-2'); if (open2) open2.addEventListener('click', openWheel);
+  document.getElementById('wheel-open').addEventListener('click', function () { openWheel(); });
+  var open2 = document.getElementById('wheel-open-2'); if (open2) open2.addEventListener('click', function () { openWheel(); });
   document.getElementById('wheel-close').addEventListener('click', closeWheel);
 
   document.addEventListener('keydown', function (e) {
     if (!isOpen && (e.key === 'm' || e.key === 'M') && !/input|textarea/i.test((e.target.tagName || ''))) { e.preventDefault(); openWheel(); return; }
     if (!isOpen) return;
-    if (e.key === 'Escape') { closeWheel(); }
-    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); setActive(active + 1); sectors[active].focus({ preventScroll: true }); }
+    if (e.key === 'Escape') { closeWheel(); return; }
+    if (overlay.classList.contains('modes-shown') && !modeChosen) {
+      if (e.key === '1') { e.preventDefault(); chooseMode('perfection'); }
+      else if (e.key === '2') { e.preventDefault(); chooseMode('standard'); }
+      else if (e.key === 'Enter') { e.preventDefault(); chooseMode(modeHi); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); highlightMode(modeHi === 'perfection' ? 'standard' : 'perfection'); modeBtns.forEach(function (b) { if (b.getAttribute('data-mode') === modeHi) b.focus({ preventScroll: true }); }); }
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); setActive(active + 1); sectors[active].focus({ preventScroll: true }); }
     else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); setActive(active - 1); sectors[active].focus({ preventScroll: true }); }
     else if (e.key === 'Enter') { e.preventDefault(); go(active); }
     else if (/^[1-8]$/.test(e.key)) { go(parseInt(e.key, 10) - 1); }
@@ -976,13 +1102,16 @@
   // (sauf accès direct à une ancre partagée, ex. …/#projets)
   if (!location.hash) {
     setTimeout(function () { if (!isOpen) openWheel(true); }, 320);
+  } else if (window.FX) {
+    window.FX.start(curMode());
   }
 })();
 </script>
 <script>
-/* Spores : fines particules en suspension qui dérivent doucement (ambiance TLOU) */
-(function () {
+/* Spores : fines particules en suspension (mode Perfection uniquement) */
+FX.onStart(function (mode) {
   "use strict";
+  if (mode === 'standard') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var cvs = document.createElement('canvas');
   cvs.setAttribute('aria-hidden', 'true');
@@ -1034,12 +1163,13 @@
   window.addEventListener('resize', resize);
   resize();
   requestAnimationFrame(tick);
-})();
+});
 </script>
 <script>
-/* Curseur torche + HUD « vivant » */
-(function () {
+/* Curseur torche + HUD vivant + parallaxe (mode Perfection uniquement) */
+FX.onStart(function (mode) {
   "use strict";
+  if (mode === 'standard') return;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* --- Torche : halo lumineux qui suit la souris (souris uniquement) --- */
@@ -1073,7 +1203,24 @@
       pr.textContent = (0.36 + Math.random() * 0.03).toFixed(2);
     }, 3200);
   }
-})();
+
+  /* --- Parallaxe de profondeur sur le hero (souris uniquement) --- */
+  if (!reduce && window.matchMedia('(pointer: fine)').matches) {
+    var hbg = document.querySelector('.hero-bg'), hpanel = document.querySelector('.status');
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+    function applyPar() {
+      raf = null; cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
+      if (hbg) hbg.style.transform = 'translate(' + (cx * 14).toFixed(1) + 'px,' + (cy * 12).toFixed(1) + 'px)';
+      if (hpanel) hpanel.style.transform = 'translate(' + (cx * -8).toFixed(1) + 'px,' + (cy * -7).toFixed(1) + 'px)';
+      if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) raf = requestAnimationFrame(applyPar);
+    }
+    window.addEventListener('mousemove', function (e) {
+      tx = (e.clientX / window.innerWidth - 0.5) * 2;
+      ty = (e.clientY / window.innerHeight - 0.5) * 2;
+      if (!raf) raf = requestAnimationFrame(applyPar);
+    }, { passive: true });
+  }
+});
 </script>
 </body>
 </html>
