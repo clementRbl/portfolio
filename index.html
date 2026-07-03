@@ -571,8 +571,8 @@ document.documentElement.classList.add('js');
         </div>
         <div class="hero-stats reveal tnum">
           <div><div class="k">5</div><div class="l">Ans dev web · lead</div></div>
-          <div><div class="k">06</div><div class="l">Projets IA</div></div>
-          <div><div class="k">01</div><div class="l">API en prod</div></div>
+          <div><div class="k">09</div><div class="l">Projets IA</div></div>
+          <div><div class="k">02</div><div class="l">API en prod</div></div>
         </div>
         <p class="wheel-hint reveal">Navigation : appuie sur <b>M</b> ou clique <b>Menu</b> pour la roue de sélection</p>
       </div>
@@ -638,7 +638,7 @@ document.documentElement.classList.add('js');
   <!-- PROJETS -->
   <section id="projets">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 03</span><h2>Projets</h2><p>Six projets couvrant ML, MLOps, GenAI, computer vision et RL. Chaque dépôt est public et documenté.</p></div>
+      <div class="sec-head reveal"><span class="idx">// 03</span><h2>Projets</h2><p>Neuf projets couvrant ML, MLOps, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
       <div class="proj-grid reveal">
 
         <article class="panel proj feat">
@@ -657,6 +657,26 @@ document.documentElement.classList.add('js');
             </div>
             <div class="shot"><img src="assets/mlops-dashboard.png" alt="Dashboard Streamlit de monitoring : distribution des scores, décisions, latence." loading="lazy"></div>
           </div>
+        </article>
+
+        <article class="panel proj">
+          <div class="badges"><span class="badge live">● En production</span><span class="badge">Régression · MLOps</span></div>
+          <h3>Seattle Energy</h3><p class="role">Énergie &amp; CO2 des bâtiments — API déployée</p>
+          <p class="desc">Prédiction multi-cibles : consommation énergétique (Random Forest, R² 0,73) et émissions CO2 (LightGBM, R² 0,92) des bâtiments de Seattle. Modèles servis par une API FastAPI conteneurisée et déployée sur Hugging Face Spaces.</p>
+          <div class="tags"><span class="tag">Random Forest</span><span class="tag">LightGBM</span><span class="tag">FastAPI</span><span class="tag">Docker</span></div>
+          <div class="proj-links">
+            <a href="https://github.com/clementRbl/deploy-ml" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a>
+            <a href="https://clementrbl-deploy-ml.hf.space/docs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg> API</a>
+            <a href="https://github.com/clementRbl/lead_douglas" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Modélisation</a>
+          </div>
+        </article>
+
+        <article class="panel proj">
+          <div class="badges"><span class="badge">Modélisation · SHAP</span></div>
+          <h3>TechNova</h3><p class="role">Attrition RH — causes de démission</p>
+          <p class="desc">HR analytics pour une ESN de 1 470 salariés (turnover 16 %) : classification LightGBM (ROC-AUC 0,80) et interprétation des facteurs de départ par SHAP, du diagnostic métier aux recommandations.</p>
+          <div class="tags"><span class="tag">LightGBM</span><span class="tag">SHAP</span><span class="tag">scikit-learn</span></div>
+          <div class="proj-links"><a href="https://github.com/clementRbl/TechNova-Partners" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
         <article class="panel proj">
@@ -699,6 +719,13 @@ document.documentElement.classList.add('js');
           <p class="desc">Entraînement d'un agent DQN sur LunarLander (Gymnasium), architecture client/serveur (API FastAPI + visualisation Streamlit) et enregistrement vidéo des atterrissages réussis.</p>
           <div class="tags"><span class="tag">Gymnasium</span><span class="tag">DQN</span><span class="tag">stable-baselines3</span></div>
           <div class="proj-links"><a href="https://github.com/clementRbl/astro-dynamics" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
+        </article>
+
+        <article class="panel proj">
+          <div class="badges"><span class="badge">Computer Vision · POC</span></div>
+          <h3>Fashion<span class="dash">-</span>Insta</h3><p class="role">POC de segmentation de vêtements</p>
+          <p class="desc">Preuve de concept de segmentation d'images de vêtements à partir d'un modèle pré-entraîné (Hugging Face) : évaluation par IoU, visualisations, et estimation de coût « build vs buy » pour cadrer la faisabilité.</p>
+          <div class="tags"><span class="tag">Computer Vision</span><span class="tag">Segmentation</span><span class="tag">Hugging Face</span><span class="tag">POC</span></div>
         </article>
 
       </div>
