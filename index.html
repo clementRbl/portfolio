@@ -960,7 +960,7 @@ document.documentElement.classList.add('js');
     var on = false, ctx = null, reloadBuf = null, pluckCache = [];
     try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
     // Mi mineur pentatonique descendant (motif G–E de TLOU) — 1 secteur = 1 note. Modifiable ici.
-    var NOTES = [493.88, 392.00, 329.63, 293.66, 246.94, 220.00, 196.00, 164.81]; // B4 G4 E4 D4 B3 A3 G3 E3
+    var NOTES = [164.81, 196.00, 246.94, 293.66, 329.63, 392.00, 493.88, 587.33]; // E3 G3 B3 D4 E4 G4 B4 D5 — Mi mineur, motif G–E de TLOU, montant dans le sens horaire
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
       return ctx;
