@@ -491,6 +491,8 @@ document.documentElement.classList.add('js');
   /* ---------- MODES : boutons de l'intro ---------- */
   .wheel-modes { display: none; flex-direction: column; align-items: center; gap: 20px; margin-top: 26px; }
   .wheel-overlay.modes-shown .wheel-modes { display: flex; animation: fadeUp .5s ease both; }
+  /* Pendant l'intro (avant révélation), la roue est retirée du flux pour centrer la réplique + le choix au milieu */
+  .wheel-overlay.intro:not(.wheel-shown) .wheel-wrap { display: none; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   .modes-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--ember); }
   .modes-row { display: flex; flex-wrap: wrap; gap: 22px; justify-content: center; }
@@ -633,7 +635,7 @@ document.documentElement.classList.add('js');
           <div><div class="k">09</div><div class="l">Projets IA</div></div>
           <div><div class="k">02</div><div class="l">API en prod</div></div>
         </div>
-        <p class="wheel-hint reveal">Navigation : appuie sur <b>M</b> ou clique <b>Menu</b> pour la roue de sélection</p>
+        <p class="wheel-hint reveal">Navigation : appuyez sur <b>M</b> ou cliquez sur <b>Menu</b> pour la roue de sélection</p>
       </div>
       <div class="hero-panel reveal">
         <div class="panel status" role="img" aria-label="Statut : API de scoring crédit en production, health 200 OK, AUC 0,78, latence 6 ms, couverture de tests 98%.">
@@ -892,7 +894,7 @@ document.documentElement.classList.add('js');
       <p class="wheel-quote"><span class="q-txt" id="q-txt"></span><span class="q-caret" id="q-caret" aria-hidden="true">▍</span></p>
       <span class="wheel-quote-attr" id="q-attr">— George E. P. Box</span>
       <div class="wheel-modes" id="wheel-modes" role="group" aria-label="Choix du mode d'affichage">
-        <p class="modes-title">Choisis ton expérience</p>
+        <p class="modes-title">Choisissez votre expérience</p>
         <div class="modes-row">
           <button class="mode-btn" data-mode="perfection"><span class="mn">Perfection</span><span class="md">Tout l'univers animé</span></button>
           <button class="mode-btn" data-mode="standard"><span class="mn">Standard</span><span class="md">Sobre · sans animations</span></button>
@@ -1011,16 +1013,16 @@ document.documentElement.classList.add('js');
   var sfx = (function () {
     var on = false, ctx = null, reloadBuf = null, pluckCache = [];
     try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
-    // Mélodie TLOU intro (La mineur), sens horaire — 1 secteur = 1 note ; un tableau = un accord. Modifiable ici.
+    // Vrai thème TLOU (tablature) : Mi mineur, ligne descendante par-dessus un Mi grave. Sens horaire, 1 secteur = 1 note.
     var NOTES = [
-      392.00,                     // Sol4       · Accueil
-      329.63,                     // Mi4        · Profil
-      440.00,                     // La4        · Compétences
-      349.23,                     // Fa4        · Projets
-      392.00,                     // Sol4       · Projet phare
-      392.00,                     // Sol4       · Soft skills
-      329.63,                     // Mi4        · Réflexivité
-      440.00                      // La4        · Contact
+      392.00,                     // Sol4  (G4)         · Accueil
+      369.99,                     // Fa#4  (F#4)        · Profil
+      329.63,                     // Mi4   (E4)         · Compétences
+      293.66,                     // Ré4   (D4)         · Projets
+      246.94,                     // Si3   (B3)         · Projet phare
+      196.00,                     // Sol3  (G3)         · Soft skills
+      164.81,                     // Mi3   (E3)         · Réflexivité
+      82.41                       // Mi2 grave (E2, bourdon) · Contact
     ];
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
