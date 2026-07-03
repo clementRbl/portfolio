@@ -1013,16 +1013,16 @@ document.documentElement.classList.add('js');
   var sfx = (function () {
     var on = false, ctx = null, reloadBuf = null, pluckCache = [];
     try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
-    // Vrai thème TLOU (tablature) : Mi mineur, ligne descendante par-dessus un Mi grave. Sens horaire, 1 secteur = 1 note.
+    // Mélodie de la roue (sens horaire, 1 secteur = 1 note). Modifiable ici.
     var NOTES = [
-      392.00,                     // Sol4  (G4)         · Accueil
-      369.99,                     // Fa#4  (F#4)        · Profil
-      329.63,                     // Mi4   (E4)         · Compétences
-      293.66,                     // Ré4   (D4)         · Projets
-      246.94,                     // Si3   (B3)         · Projet phare
-      196.00,                     // Sol3  (G3)         · Soft skills
-      164.81,                     // Mi3   (E3)         · Réflexivité
-      82.41                       // Mi2 grave (E2, bourdon) · Contact
+      392.00,                     // Sol4  · Accueil
+      329.63,                     // Mi4   · Profil
+      440.00,                     // La4   · Compétences
+      369.99,                     // Fa#4  · Projets  (seule note corrigée : Fa -> Fa#)
+      392.00,                     // Sol4  · Projet phare
+      392.00,                     // Sol4  · Soft skills
+      329.63,                     // Mi4   · Réflexivité
+      440.00                      // La4   · Contact
     ];
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
@@ -1106,7 +1106,7 @@ document.documentElement.classList.add('js');
   document.addEventListener('click', function (e) {
     if (!e.target || !e.target.closest) return;
     var t = e.target.closest('button, a.btn, .proj-links a');
-    if (t && t.id !== 'snd-toggle' && t.id !== 'theme-toggle' && t.id !== 'wheel-open' && t.id !== 'wheel-open-2') sfx.reload();
+    if (t) sfx.reload();
   }, true);
 
   /* ---- Séquence de « boot » HUD avant la réplique ---- */
@@ -1328,8 +1328,11 @@ FX.onStart(function (mode) {
     var torch = document.createElement('div');
     torch.className = 'torch'; torch.setAttribute('aria-hidden', 'true');
     document.body.appendChild(torch);
-    var hideT;
+    var hideT, torchOff = false;
+    try { torchOff = localStorage.getItem('torchOff') === '1'; } catch (e) {}
+    if (torchOff) torch.style.display = 'none';
     window.addEventListener('mousemove', function (e) {
+      if (torchOff) return;
       torch.style.setProperty('--mx', e.clientX + 'px');
       torch.style.setProperty('--my', e.clientY + 'px');
       torch.style.opacity = '1';
@@ -1337,6 +1340,15 @@ FX.onStart(function (mode) {
       hideT = setTimeout(function () { torch.style.opacity = '0'; }, 3200);
     }, { passive: true });
     document.addEventListener('mouseleave', function () { torch.style.opacity = '0'; });
+    /* Clic gauche sur une zone NON cliquable → bascule la torche on/off (mémorisé) */
+    document.addEventListener('click', function (e) {
+      var wheel = document.getElementById('wheel');
+      if (wheel && wheel.classList.contains('open')) return;
+      if (e.target.closest('a, button, input, select, textarea, label, kbd, summary, [role="button"], [onclick], .sector, .mode-btn')) return;
+      torchOff = !torchOff;
+      torch.style.display = torchOff ? 'none' : '';
+      try { localStorage.setItem('torchOff', torchOff ? '1' : '0'); } catch (e2) {}
+    });
   }
 
   /* --- HUD « vivant » : latence + proba qui fluctuent --- */
