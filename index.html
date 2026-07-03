@@ -959,8 +959,17 @@ document.documentElement.classList.add('js');
   var sfx = (function () {
     var on = false, ctx = null, reloadBuf = null, pluckCache = [];
     try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
-    // Mi mineur pentatonique descendant (motif G–E de TLOU) — 1 secteur = 1 note. Modifiable ici.
-    var NOTES = [392.00, 329.63, 440.00, 349.23, 392.00, 349.23, 329.63, 293.66]; // Sol4 Mi4 La4 Fa4 Sol4 Fa4 Mi4 Ré4 — mélodie TLOU intro (La mineur), sens horaire
+    // Mélodie TLOU intro (La mineur), sens horaire — 1 secteur = 1 note ; un tableau = un accord. Modifiable ici.
+    var NOTES = [
+      392.00,                     // Sol4       · Accueil
+      329.63,                     // Mi4        · Profil
+      440.00,                     // La4        · Compétences
+      [349.23, 440.00, 523.25],   // Fa majeur (Fa4-La4-Do5) · Projets
+      392.00,                     // Sol4       · Projet phare
+      392.00,                     // Sol4       · Soft skills
+      329.63,                     // Mi4        · Réflexivité
+      440.00                      // La4        · Contact
+    ];
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
       return ctx;
@@ -987,11 +996,13 @@ document.documentElement.classList.add('js');
     function pluck(i) {
       if (!on) return; var c = actx(); if (!c) return; if (c.state === 'suspended') c.resume();
       i = ((i % NOTES.length) + NOTES.length) % NOTES.length;
-      if (!pluckCache[i]) pluckCache[i] = pluckBuffer(NOTES[i]);
-      var src = c.createBufferSource(); src.buffer = pluckCache[i];
+      var freqs = NOTES[i]; if (!(freqs instanceof Array)) freqs = [freqs];
+      if (!pluckCache[i]) { var arr = []; for (var k = 0; k < freqs.length; k++) arr.push(pluckBuffer(freqs[k])); pluckCache[i] = arr; }
+      var bufs = pluckCache[i], t0 = c.currentTime;
       var lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3600; lp.Q.value = 0.4;
-      var g = c.createGain(); g.gain.value = 0.5;
-      src.connect(lp); lp.connect(g); g.connect(c.destination); src.start();
+      var g = c.createGain(); g.gain.value = 0.5 / Math.sqrt(bufs.length);
+      lp.connect(g); g.connect(c.destination);
+      for (var b = 0; b < bufs.length; b++) { var src = c.createBufferSource(); src.buffer = bufs[b]; src.connect(lp); src.start(t0 + b * 0.014); } // léger arpège (strum guitare)
     }
     function reload() {
       if (!on) return; var c = actx(); if (!c || !reloadBuf) return; if (c.state === 'suspended') c.resume();
