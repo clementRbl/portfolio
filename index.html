@@ -569,7 +569,7 @@ document.documentElement.classList.add('js');
       <div>
         <p class="hud-label reveal">AI Engineer · ML · MLOps · GenAI</p>
         <h1 class="reveal">Du notebook <span class="ember">à la production.</span></h1>
-        <p class="lede reveal">Développeur web pendant 5 ans, devenu AI Engineer. Je conçois des modèles — et surtout je les rends <b>fiables, déployés et monitorés</b>, là où naît la valeur.</p>
+        <p class="lede reveal">Développeur web pendant 5 ans, devenu AI Engineer. Je conçois des modèles et surtout je les rends <b>fiables, déployés et monitorés</b> là où naît la valeur.</p>
         <div class="hero-cta reveal">
           <a href="#projets" class="btn btn-primary">Explorer<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a href="./rapport.html" class="btn btn-ghost">Rapport</a>
@@ -820,6 +820,7 @@ document.documentElement.classList.add('js');
       <div class="contact-cta reveal">
         <a class="btn btn-primary" href="mailto:clement.rbl@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg> clement.rbl@gmail.com</a>
         <a class="btn btn-ghost" href="https://github.com/clementRbl" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="https://clement-reboul.fr" target="_blank" rel="noopener">Blog</a>
         <a class="btn btn-ghost" href="./rapport.html">Rapport</a>
       </div>
     </div>
@@ -954,21 +955,50 @@ document.documentElement.classList.add('js');
     })();
   }
 
-  /* ---- Sons discrets (coupés par défaut, WebAudio, aucun fichier) ---- */
+  /* ---- Sons (WebAudio) : guitare acoustique (TLOU) au survol de la roue + reload.mp3 aux clics ---- */
   var sfx = (function () {
-    var on = false, ctx = null;
+    var on = false, ctx = null, reloadBuf = null, pluckCache = [];
     try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
-    function actx() { if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) ctx = new A(); } return ctx; }
-    function blip(freq, dur, type, vol) {
-      if (!on) return; var c = actx(); if (!c) return; if (c.state === 'suspended') c.resume();
-      var o = c.createOscillator(), g = c.createGain();
-      o.type = type || 'triangle'; o.frequency.value = freq;
-      g.gain.setValueAtTime(0.0001, c.currentTime);
-      g.gain.exponentialRampToValueAtTime(vol || 0.05, c.currentTime + 0.006);
-      g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + (dur || 0.05));
-      o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime + (dur || 0.05) + 0.02);
+    // Mi mineur pentatonique descendant (motif G–E de TLOU) — 1 secteur = 1 note. Modifiable ici.
+    var NOTES = [493.88, 392.00, 329.63, 293.66, 246.94, 220.00, 196.00, 164.81]; // B4 G4 E4 D4 B3 A3 G3 E3
+    function actx() {
+      if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
+      return ctx;
     }
-    function tick() { blip(430 + Math.random() * 30, 0.045, 'triangle', 0.05); }
+    function loadReload() {
+      if (reloadBuf || !ctx) return;
+      fetch('assets/reload.mp3').then(function (r) { return r.arrayBuffer(); })
+        .then(function (a) { return ctx.decodeAudioData(a); })
+        .then(function (b) { reloadBuf = b; }).catch(function () {});
+    }
+    // Karplus-Strong : corde pincée (guitare acoustique), buffer calculé puis mis en cache
+    function pluckBuffer(freq) {
+      var sr = ctx.sampleRate, len = Math.floor(sr * 1.5), n = Math.max(2, Math.round(sr / freq));
+      var buf = ctx.createBuffer(1, len, sr), d = buf.getChannelData(0), ring = new Float32Array(n);
+      for (var i = 0; i < n; i++) ring[i] = Math.random() * 2 - 1;
+      var idx = 0, prev = 0, decay = 0.9965;
+      for (var s = 0; s < len; s++) {
+        var cur = ring[idx], out = (cur + prev) * 0.5 * decay;
+        d[s] = out * Math.exp(-2.3 * s / len);
+        ring[idx] = out; prev = cur; idx = (idx + 1) % n;
+      }
+      return buf;
+    }
+    function pluck(i) {
+      if (!on) return; var c = actx(); if (!c) return; if (c.state === 'suspended') c.resume();
+      i = ((i % NOTES.length) + NOTES.length) % NOTES.length;
+      if (!pluckCache[i]) pluckCache[i] = pluckBuffer(NOTES[i]);
+      var src = c.createBufferSource(); src.buffer = pluckCache[i];
+      var lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3600; lp.Q.value = 0.4;
+      var g = c.createGain(); g.gain.value = 0.5;
+      src.connect(lp); lp.connect(g); g.connect(c.destination); src.start();
+    }
+    function reload() {
+      if (!on) return; var c = actx(); if (!c || !reloadBuf) return; if (c.state === 'suspended') c.resume();
+      var src = c.createBufferSource(); src.buffer = reloadBuf;
+      var g = c.createGain(); g.gain.value = 0.55;
+      src.connect(g); g.connect(c.destination); src.start();
+    }
     function whoosh() {
       if (!on) return; var c = actx(); if (!c) return; if (c.state === 'suspended') c.resume();
       var dur = 0.28, buf = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate), d = buf.getChannelData(0);
@@ -983,7 +1013,7 @@ document.documentElement.classList.add('js');
       src.connect(bp); bp.connect(g); g.connect(c.destination); src.start();
     }
     return {
-      tick: tick, whoosh: whoosh, isOn: function () { return on; },
+      pluck: pluck, reload: reload, whoosh: whoosh, isOn: function () { return on; },
       set: function (v) { on = v; try { localStorage.setItem('soundOn', v ? '1' : '0'); } catch (e) {} if (v) { var c = actx(); if (c && c.resume) c.resume(); } }
     };
   })();
@@ -994,7 +1024,14 @@ document.documentElement.classList.add('js');
     sndBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
     sndBtn.setAttribute('aria-label', on ? 'Couper le son' : 'Activer le son');
   }
-  if (sndBtn) { syncSnd(); sndBtn.addEventListener('click', function () { sfx.set(!sfx.isOn()); syncSnd(); if (sfx.isOn()) sfx.tick(); }); }
+  if (sndBtn) { syncSnd(); sndBtn.addEventListener('click', function () { sfx.set(!sfx.isOn()); syncSnd(); if (sfx.isOn()) sfx.pluck(2); }); }
+
+  /* reload.mp3 sur tout clic de bouton/lien (sauf le toggle son et l'ouverture de la roue = whoosh) */
+  document.addEventListener('click', function (e) {
+    if (!e.target || !e.target.closest) return;
+    var t = e.target.closest('button, a.btn, .proj-links a');
+    if (t && t.id !== 'snd-toggle' && t.id !== 'wheel-open' && t.id !== 'wheel-open-2') sfx.reload();
+  }, true);
 
   /* ---- Séquence de « boot » HUD avant la réplique ---- */
   var bootEl = document.getElementById('wheel-boot');
@@ -1011,7 +1048,7 @@ document.documentElement.classList.add('js');
 
   function setActive(i) {
     var n = (i + N) % N;
-    if (n !== active && isOpen) sfx.tick();
+    if (n !== active && isOpen) sfx.pluck(n);
     active = n;
     sectors.forEach(function (s, k) { s.classList.toggle('active', k === active); });
     wcIdx.textContent = '// 0' + (active + 1);
@@ -1092,6 +1129,7 @@ document.documentElement.classList.add('js');
   }
   function go(i) {
     setActive(i);
+    sfx.reload();
     var el = document.getElementById(NAV[active].id);
     closeWheel();
     scanSweep();
