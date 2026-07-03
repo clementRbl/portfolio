@@ -440,9 +440,13 @@ document.documentElement.classList.add('js');
   #kpi-lat { transition: opacity .5s ease; }
 
   /* ---------- MODES : boutons de l'intro ---------- */
-  .wheel-modes { display: none; gap: 14px; justify-content: center; margin-top: 24px; }
-  .wheel-overlay.modes-shown .wheel-modes { display: flex; flex-wrap: wrap; animation: fadeUp .5s ease both; }
+  .wheel-modes { display: none; flex-direction: column; align-items: center; gap: 13px; margin-top: 22px; }
+  .wheel-overlay.modes-shown .wheel-modes { display: flex; animation: fadeUp .5s ease both; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .modes-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--ember); }
+  .modes-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+  .modes-hint { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .05em; color: var(--muted); }
+  .modes-hint kbd { border: 1px solid var(--border-2); border-radius: 3px; padding: 1px 5px; color: var(--ember); }
   .mode-btn {
     display: flex; flex-direction: column; align-items: flex-start; gap: 3px; cursor: pointer; text-align: left;
     min-width: 188px; padding: 13px 16px; color: var(--ink); background: rgba(20,25,17,.6); border: 1px solid var(--border-2);
@@ -494,6 +498,8 @@ document.documentElement.classList.add('js');
   html.fx-standard .proj::before { content: none; }
   html.fx-standard .menu-btn.pulse { animation: none; }
   html.fx-standard .status .pulse::after { animation: none; }
+  html.fx-standard body::before { opacity: .02; }
+  html.fx-standard .hero h1 .ember { text-shadow: none; }
 
   @media (prefers-reduced-motion: reduce) {
     .embers i { animation: none; opacity: 0; }
@@ -832,8 +838,12 @@ document.documentElement.classList.add('js');
       <p class="wheel-quote"><span class="q-txt" id="q-txt"></span><span class="q-caret" id="q-caret" aria-hidden="true">▍</span></p>
       <span class="wheel-quote-attr" id="q-attr">— George E. P. Box</span>
       <div class="wheel-modes" id="wheel-modes" role="group" aria-label="Choix du mode d'affichage">
-        <button class="mode-btn" data-mode="perfection"><span class="mk">[ 1 ]</span><span class="mn">Perfection</span><span class="md">Expérience complète</span></button>
-        <button class="mode-btn" data-mode="standard"><span class="mk">[ 2 ]</span><span class="mn">Standard</span><span class="md">Sobre · recruteurs</span></button>
+        <p class="modes-title">Choisis ton expérience</p>
+        <div class="modes-row">
+          <button class="mode-btn" data-mode="perfection"><span class="mk">[ 1 ]</span><span class="mn">Perfection</span><span class="md">Tout l'univers animé</span></button>
+          <button class="mode-btn" data-mode="standard"><span class="mk">[ 2 ]</span><span class="mn">Standard</span><span class="md">Sobre · sans animations</span></button>
+        </div>
+        <p class="modes-hint">Clique un mode &nbsp;·&nbsp; <kbd>1</kbd> / <kbd>2</kbd> &nbsp;·&nbsp; <kbd>Entrée</kbd></p>
       </div>
     </div>
     <div class="wheel-wrap">
@@ -1022,8 +1032,8 @@ document.documentElement.classList.add('js');
     overlay.classList.add('modes-shown');
     var saved = null; try { saved = localStorage.getItem('fxMode'); } catch (e) {}
     highlightMode(saved === 'standard' ? 'standard' : 'perfection');
-    if (modeBtns[0]) modeBtns[0].focus({ preventScroll: true });
-    if (saved) { clearTimeout(modeTimer); modeTimer = setTimeout(function () { if (!modeChosen) chooseMode(saved); }, 2400); }
+    var pre = modeBtns.filter(function (b) { return b.getAttribute('data-mode') === modeHi; })[0] || modeBtns[0];
+    if (pre) pre.focus({ preventScroll: true });
   }
   function chooseMode(m) {
     if (modeChosen) return; modeChosen = true; clearTimeout(modeTimer);
