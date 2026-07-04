@@ -1027,16 +1027,17 @@ document.documentElement.classList.add('js');
   var sfx = (function () {
     var on = false, ctx = null, reloadBuf = null, pluckCache = [];
     try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
-    // Mélodie de la roue (sens horaire, 1 secteur = 1 note). Modifiable ici.
+    // Notes de la roue (sens horaire, 1 secteur = 1 note). Modifiable ici.
     var NOTES = [
-      392.00,                     // Sol4  · Accueil
-      329.63,                     // Mi4   · Profil
-      440.00,                     // La4   · Compétences
-      369.99,                     // Fa#4  · Projets  (seule note corrigée : Fa -> Fa#)
-      392.00,                     // Sol4  · Projet phare
-      392.00,                     // Sol4  · Soft skills
-      329.63,                     // Mi4   · Réflexivité
-      440.00                      // La4   · Contact
+      392.00,                     // Sol4  · 01 Accueil
+      329.63,                     // Mi4   · 02 Profil
+      440.00,                     // La4   · 03 Hard skills
+      369.99,                     // Fa#4  · 04 Projets
+      392.00,                     // Sol4  · 05 Projet phare
+      392.00,                     // Sol4  · 06 Soft skills
+      329.63,                     // Mi4   · 07 Réflexivité
+      440.00,                     // La4   · 08 CV
+      369.99                      // Fa#4  · 09 Contact  (= même note que le n°4 Projets)
     ];
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
