@@ -679,7 +679,7 @@ document.documentElement.classList.add('js');
   <!-- COMPÉTENCES -->
   <section id="competences">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 02</span><h2>Compétences</h2>
+      <div class="sec-head reveal"><span class="idx">// 02</span><h2>Hard skills</h2>
         <p>Auto-évaluation adossée à des projets concrets et livrables publics. <a href="./carte-mentale.html" target="_blank" rel="noopener" style="color:var(--ember)">Carte mentale interactive →</a></p>
       </div>
       <div class="skills-grid reveal">
@@ -866,10 +866,23 @@ document.documentElement.classList.add('js');
     </div>
   </section>
 
+  <!-- CV -->
+  <section id="cv" class="contact">
+    <div class="wrap">
+      <span class="hud-label reveal" style="justify-content:center">// 07 — CV</span>
+      <h2 class="reveal" style="margin-top:14px">Mon CV en une page</h2>
+      <p class="reveal">5 ans de développement web (dont lead dev), puis reconversion AI Engineer. Le parcours complet, les compétences et les projets — au format PDF.</p>
+      <div class="contact-cta reveal">
+        <a class="btn btn-primary" href="assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> Télécharger mon CV (PDF)</a>
+        <a class="btn btn-ghost" href="#contact">Me contacter</a>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section id="contact" class="contact">
     <div class="wrap">
-      <span class="hud-label reveal" style="justify-content:center">// 07 — Contact</span>
+      <span class="hud-label reveal" style="justify-content:center">// 08 — Contact</span>
       <h2 class="reveal" style="margin-top:14px">Parlons de votre besoin en IA</h2>
       <p class="reveal">Ouvert aux opportunités d'AI Engineer, MLOps et GenAI. Discutons de la façon dont je peux aider votre équipe à mettre l'IA en production.</p>
       <div class="contact-cta reveal">
@@ -934,11 +947,12 @@ document.documentElement.classList.add('js');
   var NAV = [
     { id: 'accueil',      name: 'Accueil',      desc: 'Retour en haut de page',            icon: 'M3 11l9-8 9 8M6 10v9h5v-6h2v6h5v-9' },
     { id: 'profil',       name: 'Profil',       desc: 'Qui je suis, mon objectif',         icon: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 3.5-6 8-6s8 2 8 6' },
-    { id: 'competences',  name: 'Compétences',  desc: 'Stack ML, MLOps, GenAI + niveaux',  icon: 'M4 20V10M10 20V4M16 20v-7M22 20V8' },
+    { id: 'competences',  name: 'Hard skills',  desc: 'Stack technique : ML, MLOps, GenAI',  icon: 'M4 20V10M10 20V4M16 20v-7M22 20V8' },
     { id: 'projets',      name: 'Projets',      desc: '6 projets liés aux dépôts publics', icon: 'M3 4h7v7H3zM14 4h7v7h-7zM3 15h7v5H3zM14 15h7v5h-7z' },
     { id: 'projet-phare', name: 'Projet phare', desc: 'Étude de cas Credit Scoring MLOps', icon: 'M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 100 8 4 4 0 000-8z' },
     { id: 'soft-skills',  name: 'Soft skills',  desc: 'Analyse, vulgarisation, rigueur',   icon: 'M12 21C7 17 4 14 4 10a4 4 0 018-1 4 4 0 018 1c0 4-3 7-8 11z' },
     { id: 'reflexivite',  name: 'Réflexivité',  desc: 'Recul & axes d’amélioration',       icon: 'M9 18h6M10 21h4M12 3a6 6 0 00-4 10c1 1 1 2 1 3h6c0-1 0-2 1-3a6 6 0 00-4-10z' },
+    { id: 'cv',           name: 'CV',           desc: 'Mon parcours au format PDF',         icon: 'M6 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM14 2v4h4M8 13h8M8 17h5' },
     { id: 'contact',      name: 'Contact',      desc: 'Me contacter par e-mail',           icon: 'M3 6l9 6 9-6M3 6h18v12H3z' }
   ];
   var N = NAV.length, STEP = 360 / N;
@@ -994,7 +1008,7 @@ document.documentElement.classList.add('js');
   var overlay = document.getElementById('wheel'), wrap = overlay.querySelector('.wheel-wrap');
   var wcIdx = document.getElementById('wc-idx'), wcName = document.getElementById('wc-name'), wcDesc = document.getElementById('wc-desc');
   var qTxt = document.getElementById('q-txt'), closeBtn = document.getElementById('wheel-close');
-  var active = 0, isOpen = false, lastFocus = null;
+  var active = 0, isOpen = false, lastFocus = null, suppressPluckUntil = 0;
 
   /* Réplique tapée à la machine à écrire (police d'affichage) */
   var QUOTE = 'All models are wrong, but some are useful';
@@ -1054,14 +1068,14 @@ document.documentElement.classList.add('js');
       if (!pluckCache[i]) { var arr = []; for (var k = 0; k < freqs.length; k++) arr.push(pluckBuffer(freqs[k])); pluckCache[i] = arr; }
       var bufs = pluckCache[i], t0 = c.currentTime;
       var lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3600; lp.Q.value = 0.4;
-      var g = c.createGain(); g.gain.value = 0.5 / Math.sqrt(bufs.length);
+      var g = c.createGain(); g.gain.value = 0.3 / Math.sqrt(bufs.length);
       lp.connect(g); g.connect(c.destination);
       for (var b = 0; b < bufs.length; b++) { var src = c.createBufferSource(); src.buffer = bufs[b]; src.connect(lp); src.start(t0 + b * 0.014); } // léger arpège (strum guitare)
     }
     function reload() {
       if (!on) return; var c = actx(); if (!c || !reloadBuf) return; if (c.state === 'suspended') c.resume();
       var src = c.createBufferSource(); src.buffer = reloadBuf;
-      var g = c.createGain(); g.gain.value = 0.55;
+      var g = c.createGain(); g.gain.value = 0.42;
       src.connect(g); g.connect(c.destination); src.start();
     }
     function whoosh() {
@@ -1124,7 +1138,7 @@ document.documentElement.classList.add('js');
 
   function setActive(i) {
     var n = (i + N) % N;
-    if (n !== active && isOpen) sfx.pluck(n);
+    if (n !== active && isOpen && Date.now() > suppressPluckUntil) sfx.pluck(n);
     active = n;
     sectors.forEach(function (s, k) { s.classList.toggle('active', k === active); });
     wcIdx.textContent = '// 0' + (active + 1);
@@ -1157,6 +1171,8 @@ document.documentElement.classList.add('js');
     if (window.FX) window.FX.start(m);
     overlay.classList.remove('modes-shown');
     overlay.classList.add('wheel-shown');
+    suppressPluckUntil = Date.now() + 900; // la roue se révèle sous la souris : on évite la note automatique
+    sfx.set(m === 'perfection'); syncSnd(); // Perfection = son activé, Standard = son coupé
     setTimeout(function () { if (isOpen && overlay.classList.contains('intro')) sectors[0].focus({ preventScroll: true }); }, 320);
   }
   modeBtns.forEach(function (b) {
@@ -1175,6 +1191,7 @@ document.documentElement.classList.add('js');
   function openWheel(intro) {
     if (isOpen) return;
     isOpen = true; lastFocus = document.activeElement;
+    suppressPluckUntil = Date.now() + 600; // pas de note tant que la souris n'a pas bougé volontairement après l'ouverture
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     setActive(0);
