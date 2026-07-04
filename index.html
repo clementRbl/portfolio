@@ -600,14 +600,20 @@ document.documentElement.classList.add('js');
   @media (max-width: 560px) {
     .wrap { padding-inline: 18px; }
     .soft-grid { grid-template-columns: 1fr; }
-    .kpi-row, .status .kpis { grid-template-columns: repeat(3, 1fr); }
+    .status .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }  /* 2 col. : valeurs entières, aucun débordement */
+    .kpi .v { font-size: 1.5rem; }
     .hero h1 { font-size: clamp(2.5rem, 1rem + 12vw, 3.4rem); }
     .hero-stats { gap: 20px; }
     .sec-head h2 { font-size: clamp(2rem, 1.2rem + 6vw, 2.6rem); }
     .btn { padding: 12px 15px; font-size: 11.5px; }
-    .hud-top { gap: 10px; padding: 0 16px; }
+    /* En-tête compact : tout doit tenir sur une ligne sans déborder */
+    .hud-top { gap: 8px; padding: 0 12px; }
     .brand .tag { display: none; }
-    .brand .mono-logo { font-size: 20px; }
+    .brand .mono-logo { font-size: 18px; }
+    .icon-btn { width: 34px; height: 34px; }
+    .menu-btn { padding: 8px 10px; gap: 6px; font-size: 10.5px; letter-spacing: .08em; }
+    .menu-btn kbd { display: none; }      /* pas de clavier sur mobile */
     /* Weapon wheel adaptée au tactile */
     .wheel-wrap { width: min(93vmin, 460px); }
     .wheel-center { padding: 0 25%; }
@@ -687,7 +693,7 @@ document.documentElement.classList.add('js');
       <div class="sec-head reveal"><span class="idx">// 01</span><h2>Profil</h2></div>
       <div class="about-grid reveal">
         <div>
-          <p class="lead"><b>5 ans développeur web</b>, dont lead dev, puis reconversion via le parcours <b>AI Engineer</b> d'OpenClassrooms.</p>
+          <p class="lead"><b>5 ans développeur web</b>, puis reconversion via le parcours <b>AI Engineer</b> d'OpenClassrooms.</p>
           <p class="muted">De ces années de dev, je garde une culture d'ingénieur : du code testé, déployé, maintenu. C'est souvent ce qui manque entre un notebook et une vraie mise en production.</p>
           <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et systèmes GenAI (RAG, évaluation LLM).</p>
           <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Objectif : rejoindre une équipe qui met l'IA en prod — MLOps et LLMOps, les sujets les plus demandés de 2026.</p>
@@ -706,7 +712,7 @@ document.documentElement.classList.add('js');
   <section id="parcours">
     <div class="wrap">
       <div class="sec-head reveal"><span class="idx">// 02</span><h2>Parcours</h2>
-        <p>Cinq ans de développement web (front, back, full-stack) à Paris, puis reconversion AI Engineer. <a href="assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" style="color:var(--ember)">CV complet →</a></p>
+        <p>Cinq ans de développement web (front, back, full-stack) à Paris puis reconversion AI Engineer. <a href="assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" style="color:var(--ember)">CV complet →</a></p>
       </div>
       <div class="timeline-grid reveal">
         <div class="tl-col">
@@ -861,11 +867,11 @@ document.documentElement.classList.add('js');
       <div class="panel flag reveal">
         <div class="kpi-row tnum">
           <div class="kpi"><div class="v">0,78</div><div class="c">AUC-OOF (LightGBM)</div></div>
-          <div class="kpi"><div class="v">~6 ms</div><div class="c">Latence d'inférence</div></div>
-          <div class="kpi"><div class="v">98 %</div><div class="c">Couverture de tests</div></div>
+          <div class="kpi"><div class="v">~6&nbsp;ms</div><div class="c">Latence d'inférence</div></div>
+          <div class="kpi"><div class="v">98&nbsp;%</div><div class="c">Couverture de tests</div></div>
           <div class="kpi"><div class="v">3/20</div><div class="c">Features en drift</div></div>
-          <div class="kpi"><div class="v">3 jobs</div><div class="c">Pipeline CI/CD</div></div>
-          <div class="kpi"><div class="v">0 €</div><div class="c">Coût d'infra</div></div>
+          <div class="kpi"><div class="v">3&nbsp;jobs</div><div class="c">Pipeline CI/CD</div></div>
+          <div class="kpi"><div class="v">0&nbsp;€</div><div class="c">Coût d'infra</div></div>
         </div>
         <div class="flag-body">
           <div>
