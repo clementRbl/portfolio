@@ -558,6 +558,24 @@ document.documentElement.classList.add('js');
     .proj::before { transition: none; }
   }
 
+  /* ---------- PARCOURS (frise Expérience / Formation) ---------- */
+  .timeline-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 28px; }
+  .tl-col > .hud-label { margin-bottom: 18px; }
+  .tl { list-style: none; margin: 0; padding: 2px 0 0 22px; position: relative; }
+  .tl::before { content: ""; position: absolute; left: 4px; top: 8px; bottom: 10px; width: 1px; background: var(--border-2); }
+  .tl-item { position: relative; padding-bottom: 22px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before { content: ""; position: absolute; left: -22px; top: 5px; width: 9px; height: 9px; border-radius: 50%; background: var(--surface-2); border: 1.5px solid var(--border-2); }
+  .tl-item.tl-current::before { background: var(--ember); border-color: var(--ember-bright); box-shadow: 0 0 9px var(--ember-glow); }
+  .tl-when { font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; color: var(--ember); }
+  .tl-role { font-family: var(--font-display); font-size: 1.18rem; text-transform: uppercase; margin-top: 3px; color: var(--ink); line-height: 1.08; }
+  .tl-org { font-size: 13.5px; color: var(--ink-dim); margin-top: 3px; }
+  .tl-tech { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 6px; }
+  .engagement { margin-top: 34px; padding: 20px 24px; }
+  .engagement p { margin-top: 9px; color: var(--ink-dim); font-size: 15px; }
+  .engagement b { color: var(--ink); }
+  @media (max-width: 760px) { .timeline-grid { grid-template-columns: 1fr; gap: 34px; } }
+
   /* Révélation au scroll */
   .reveal { transition: opacity .6s ease, transform .6s ease; }
   html.js .reveal:not(.in) { opacity: 0; transform: translateY(20px); }
@@ -676,10 +694,45 @@ document.documentElement.classList.add('js');
     </div>
   </section>
 
+  <!-- PARCOURS -->
+  <section id="parcours">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="idx">// 02</span><h2>Parcours</h2>
+        <p>Cinq ans de développement web (front, back, full-stack) à Paris, puis reconversion AI Engineer. <a href="assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" style="color:var(--ember)">CV complet →</a></p>
+      </div>
+      <div class="timeline-grid reveal">
+        <div class="tl-col">
+          <span class="hud-label">Expérience</span>
+          <ol class="tl">
+            <li class="tl-item"><div class="tl-when">mai 2025 — oct. 2025</div><div class="tl-role">Développeur Full Stack</div><div class="tl-org">ComeOnLaw · CDI</div><div class="tl-tech">Django · Django REST</div></li>
+            <li class="tl-item"><div class="tl-when">oct. 2024 — mai 2025</div><div class="tl-role">Développeur front-end</div><div class="tl-org">Paris Fashion Shops · CDI</div><div class="tl-tech">Vue.js · TypeScript</div></li>
+            <li class="tl-item"><div class="tl-when">juin 2024 — oct. 2024</div><div class="tl-role">Développeur front-end</div><div class="tl-org">Extracadabra · CDI</div><div class="tl-tech">Quasar · Vue.js</div></li>
+            <li class="tl-item"><div class="tl-when">févr. 2022 — juin 2024</div><div class="tl-role">Développeur front-end</div><div class="tl-org">FAIRLY MADE</div><div class="tl-tech">NestJS · applications web</div></li>
+            <li class="tl-item"><div class="tl-when">janv. 2021 — janv. 2022</div><div class="tl-role">Développeur Full Stack</div><div class="tl-org">Snapkey</div><div class="tl-tech">JavaScript · Git</div></li>
+            <li class="tl-item"><div class="tl-when">mai 2020 — oct. 2020</div><div class="tl-role">Développeur Full Stack · Cofondateur</div><div class="tl-org">Octave</div><div class="tl-tech">Svelte · NestJS · Node.js</div></li>
+          </ol>
+        </div>
+        <div class="tl-col">
+          <span class="hud-label">Formation</span>
+          <ol class="tl">
+            <li class="tl-item tl-current"><div class="tl-when">nov. 2025 — août 2026</div><div class="tl-role">AI Engineer · Bac+5</div><div class="tl-org">OpenClassrooms</div><div class="tl-tech">ML · MLOps · GenAI/RAG · RL · agents · fine-tuning</div></li>
+            <li class="tl-item"><div class="tl-when">2021 — 2022</div><div class="tl-role">Concepteur-développeur · Bac+4</div><div class="tl-org">Simplon.co</div><div class="tl-tech">développement d'applications</div></li>
+            <li class="tl-item"><div class="tl-when">2020</div><div class="tl-role">Dév. Web & Web Mobile · Bac+2</div><div class="tl-org">École O'clock</div><div class="tl-tech">front-end · back-end · sécurité</div></li>
+            <li class="tl-item"><div class="tl-when">2019 — 2020</div><div class="tl-role">Développeur web</div><div class="tl-org">The Hacking Project</div><div class="tl-tech">Ruby on Rails · peer learning</div></li>
+          </ol>
+        </div>
+      </div>
+      <div class="engagement panel reveal">
+        <span class="hud-label">Engagement</span>
+        <p><b>Sapeur-pompier volontaire</b> — dévoué à ma ville et à ses habitants. Sang-froid, esprit d'équipe et sens du service : des réflexes qui dépassent le code et que je porte au quotidien.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- COMPÉTENCES -->
   <section id="competences">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 02</span><h2>Hard skills</h2>
+      <div class="sec-head reveal"><span class="idx">// 03</span><h2>Hard skills</h2>
         <p>Auto-évaluation adossée à des projets concrets et livrables publics. <a href="./carte-mentale.html" target="_blank" rel="noopener" style="color:var(--ember)">Carte mentale interactive →</a></p>
       </div>
       <div class="skills-grid reveal">
@@ -699,7 +752,7 @@ document.documentElement.classList.add('js');
   <!-- PROJETS -->
   <section id="projets">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 03</span><h2>Projets</h2><p>Neuf projets couvrant ML, MLOps, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
+      <div class="sec-head reveal"><span class="idx">// 04</span><h2>Projets</h2><p>Neuf projets couvrant ML, MLOps, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
       <div class="proj-grid reveal">
 
         <article class="panel proj feat">
@@ -796,7 +849,7 @@ document.documentElement.classList.add('js');
   <!-- PROJET PHARE -->
   <section id="projet-phare">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 04 — étude de cas</span><h2>Credit Scoring MLOps</h2><p>Le sujet le plus demandé de 2026 : faire passer un modèle du notebook à une production fiable. Détaillé dans le rapport de conduite de projet.</p></div>
+      <div class="sec-head reveal"><span class="idx">// 05 — étude de cas</span><h2>Credit Scoring MLOps</h2><p>Le sujet le plus demandé de 2026 : faire passer un modèle du notebook à une production fiable. Détaillé dans le rapport de conduite de projet.</p></div>
       <div class="panel flag reveal">
         <div class="kpi-row tnum">
           <div class="kpi"><div class="v">0,78</div><div class="c">AUC-OOF (LightGBM)</div></div>
@@ -833,7 +886,7 @@ document.documentElement.classList.add('js');
   <!-- SOFT SKILLS -->
   <section id="soft-skills">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 05</span><h2>Soft skills</h2></div>
+      <div class="sec-head reveal"><span class="idx">// 06</span><h2>Soft skills</h2></div>
       <div class="soft-grid reveal">
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3>Esprit d'analyse</h3><p>Détection d'une fuite de données par audit MD5 sur BrainScanAI ; arbitrage risque/perf sur le retrait d'ONNX.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/><path d="M9 21h6"/></svg></div><h3>Curiosité continue</h3><p>Du ML classique au GenAI/RAG et au RL en un an ; veille active sur les tendances MLOps/LLMOps 2026.</p></div>
@@ -848,7 +901,7 @@ document.documentElement.classList.add('js');
   <!-- RÉFLEXIVITÉ -->
   <section id="reflexivite">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 06</span><h2>Réflexivité</h2><p>Prendre du recul fait partie du métier. Voici l'évolution de ma représentation du rôle d'AI Engineer.</p></div>
+      <div class="sec-head reveal"><span class="idx">// 07</span><h2>Réflexivité</h2><p>Prendre du recul fait partie du métier. Voici l'évolution de ma représentation du rôle d'AI Engineer.</p></div>
       <div class="refl-grid reveal">
         <div class="panel shift"><span class="tl">Avant</span><p>« Un bon modèle, c'est un bon score dans un notebook. »</p></div>
         <div class="panel shift after"><span class="tl">Aujourd'hui</span><p>« La valeur, c'est un système <b>fiable, monitoré et maintenable</b> en production. »</p></div>
@@ -869,7 +922,7 @@ document.documentElement.classList.add('js');
   <!-- CV -->
   <section id="cv" class="contact">
     <div class="wrap">
-      <span class="hud-label reveal" style="justify-content:center">// 07 — CV</span>
+      <span class="hud-label reveal" style="justify-content:center">// 08 — CV</span>
       <h2 class="reveal" style="margin-top:14px">Mon CV en une page</h2>
       <p class="reveal">5 ans de développement web (dont lead dev), puis reconversion AI Engineer. Le parcours complet, les compétences et les projets — au format PDF.</p>
       <div class="contact-cta reveal">
@@ -882,7 +935,7 @@ document.documentElement.classList.add('js');
   <!-- CONTACT -->
   <section id="contact" class="contact">
     <div class="wrap">
-      <span class="hud-label reveal" style="justify-content:center">// 08 — Contact</span>
+      <span class="hud-label reveal" style="justify-content:center">// 09 — Contact</span>
       <h2 class="reveal" style="margin-top:14px">Parlons de votre besoin en IA</h2>
       <p class="reveal">Ouvert aux opportunités d'AI Engineer, MLOps et GenAI. Discutons de la façon dont je peux aider votre équipe à mettre l'IA en production.</p>
       <div class="contact-cta reveal">
@@ -953,7 +1006,8 @@ document.documentElement.classList.add('js');
     { id: 'soft-skills',  name: 'Soft skills',  desc: 'Analyse, vulgarisation, rigueur',   icon: 'M12 21C7 17 4 14 4 10a4 4 0 018-1 4 4 0 018 1c0 4-3 7-8 11z' },
     { id: 'reflexivite',  name: 'Réflexivité',  desc: 'Recul & axes d’amélioration',       icon: 'M9 18h6M10 21h4M12 3a6 6 0 00-4 10c1 1 1 2 1 3h6c0-1 0-2 1-3a6 6 0 00-4-10z' },
     { id: 'cv',           name: 'CV',           desc: 'Mon parcours au format PDF',         icon: 'M6 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM14 2v4h4M8 13h8M8 17h5' },
-    { id: 'contact',      name: 'Contact',      desc: 'Me contacter par e-mail',           icon: 'M3 6l9 6 9-6M3 6h18v12H3z' }
+    { id: 'contact',      name: 'Contact',      desc: 'Me contacter par e-mail',           icon: 'M3 6l9 6 9-6M3 6h18v12H3z' },
+    { id: 'parcours',     name: 'Parcours',     desc: 'Expérience, formation, engagement',  icon: 'M7.7 4a1.7 1.7 0 1 0-3.4 0 1.7 1.7 0 1 0 3.4 0M6 5.7v4.3a4 4 0 0 0 4 4h4a4 4 0 0 1 4 4v.3M19.7 20a1.7 1.7 0 1 0-3.4 0 1.7 1.7 0 1 0 3.4 0' }
   ];
   var N = NAV.length, STEP = 360 / N;
   var CX = 200, CY = 200, R_OUT = 188, R_IN = 92, GAP = 2.2;
@@ -1037,7 +1091,8 @@ document.documentElement.classList.add('js');
       392.00,                     // Sol4  · 06 Soft skills
       329.63,                     // Mi4   · 07 Réflexivité
       440.00,                     // La4   · 08 CV
-      369.99                      // Fa#4  · 09 Contact  (= même note que le n°4 Projets)
+      369.99,                     // Fa#4  · 09 Contact  (= même note que le n°4 Projets)
+      440.00                      // La4   · 10 Parcours (note la plus aiguë)
     ];
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
@@ -1142,7 +1197,7 @@ document.documentElement.classList.add('js');
     if (n !== active && isOpen && Date.now() > suppressPluckUntil) sfx.pluck(n);
     active = n;
     sectors.forEach(function (s, k) { s.classList.toggle('active', k === active); });
-    wcIdx.textContent = '// 0' + (active + 1);
+    wcIdx.textContent = '// ' + ('0' + (active + 1)).slice(-2);
     wcName.textContent = NAV[active].name;
     wcDesc.textContent = NAV[active].desc;
   }
