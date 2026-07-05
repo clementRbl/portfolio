@@ -475,16 +475,6 @@ document.documentElement.classList.add('js');
   :root[data-theme="light"] #theme-toggle .sun-ic { display: none; }
   :root[data-theme="light"] #theme-toggle .moon-ic { display: block; }
 
-  /* ---------- SÉQUENCE DE BOOT (intro) ---------- */
-  .wheel-boot {
-    display: inline-block; text-align: left; font-family: var(--font-mono);
-    font-size: 12.5px; letter-spacing: .08em; color: var(--good); line-height: 1.7;
-    margin-bottom: 16px; max-height: 120px; overflow: hidden;
-    text-shadow: 0 0 10px rgba(139,160,90,.35);
-    transition: opacity .5s ease, max-height .5s ease, margin .5s ease;
-  }
-  .wheel-boot.fade { opacity: 0; max-height: 0; margin-bottom: 0; }
-
   /* ---------- HUD vivant : battement + valeurs ---------- */
   .status .hb { width: 42px; height: 14px; margin-left: 10px; }
   .status .hb polyline {
@@ -970,7 +960,6 @@ document.documentElement.classList.add('js');
   <button class="wheel-close" id="wheel-close">✕ Fermer <span style="opacity:.6">ESC</span></button>
   <div class="wheel-stage">
     <div class="wheel-head">
-      <div class="wheel-boot" id="wheel-boot" aria-hidden="true"></div>
       <p class="wheel-quote"><span class="q-txt" id="q-txt"></span><span class="q-caret" id="q-caret" aria-hidden="true">▍</span></p>
       <span class="wheel-quote-attr" id="q-attr">— George E. P. Box</span>
       <div class="wheel-modes" id="wheel-modes" role="group" aria-label="Choix du mode d'affichage">
@@ -1197,19 +1186,6 @@ document.documentElement.classList.add('js');
     sfx.reload();
   }, true);
 
-  /* ---- Séquence de « boot » HUD avant la réplique ---- */
-  var bootEl = document.getElementById('wheel-boot');
-  var BOOT = ['> SYSTÈME EN LIGNE', '> SCAN DES MODULES… OK', '> CHARGEMENT DE LA ROUE…'];
-  function runBoot(done) {
-    if (!bootEl || reduce) { if (bootEl) bootEl.textContent = ''; done(); return; }
-    bootEl.classList.remove('fade'); bootEl.innerHTML = ''; var i = 0;
-    (function nextLine() {
-      if (i >= BOOT.length) { setTimeout(function () { bootEl.classList.add('fade'); done(); }, 280); return; }
-      var line = document.createElement('div'); line.textContent = BOOT[i]; bootEl.appendChild(line);
-      i++; setTimeout(nextLine, 260);
-    })();
-  }
-
   function setActive(i) {
     var n = (i + N) % N;
     if (n !== active && isOpen && Date.now() > suppressPluckUntil) sfx.pluck(n);
@@ -1273,11 +1249,9 @@ document.documentElement.classList.add('js');
     if (intro) {
       overlay.classList.add('intro');
       closeBtn.focus({ preventScroll: true });
-      runBoot(function () {
-        typewriter(qTxt, QUOTE, function () {
-          overlay.classList.add('attr-shown');
-          setTimeout(showModes, 450);
-        });
+      typewriter(qTxt, QUOTE, function () {
+        overlay.classList.add('attr-shown');
+        setTimeout(showModes, 450);
       });
       // filet de sécurité : affiche le choix de mode même si l'animation est interrompue
       setTimeout(function () { if (!modeChosen && !overlay.classList.contains('modes-shown')) { overlay.classList.add('attr-shown'); showModes(); } }, 5200);
