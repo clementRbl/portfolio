@@ -686,7 +686,7 @@ document.documentElement.classList.add('js');
           <p class="lead"><b>5 ans développeur web</b>, puis reconversion via le parcours <b>AI Engineer</b> d'OpenClassrooms.</p>
           <p class="muted">De ces années de dev, je garde une culture d'ingénieur : du code testé, déployé, maintenu. C'est souvent ce qui manque entre un notebook et une vraie mise en production.</p>
           <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et systèmes GenAI (RAG, évaluation LLM).</p>
-          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Objectif : rejoindre une équipe qui met l'IA en prod — MLOps et LLMOps, les sujets les plus demandés de 2026.</p>
+          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Objectif : rejoindre une équipe qui met l'IA en prod  MLOps et LLMOps, les sujets les plus demandés de 2026.</p>
         </div>
         <div class="panel"><ul class="facts">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Objectif</b> — AI Engineer / MLOps / GenAI</span></li>
@@ -1175,9 +1175,9 @@ document.documentElement.classList.add('js');
     });
   }
 
-  /* reload.mp3 sur tout clic de bouton/lien — SAUF les boutons qui ont déjà
-     leur propre son (whoosh à l'ouverture/fermeture de la roue, pluck du toggle son) :
-     on évite ainsi deux sons en même temps. */
+  /* reload.mp3 sur tout clic de bouton/lien. Ces boutons-là gèrent déjà leur son
+     ailleurs (ouverture = reload dans openWheel ; fermeture = whoosh dans closeWheel ;
+     toggle son = pluck) : on les exclut ici uniquement pour ne pas jouer 2 fois. */
   var OWN_SOUND = { 'wheel-open': 1, 'wheel-open-2': 1, 'wheel-close': 1, 'snd-toggle': 1 };
   document.addEventListener('click', function (e) {
     if (!e.target || !e.target.closest) return;
@@ -1245,7 +1245,7 @@ document.documentElement.classList.add('js');
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     setActive(0);
-    sfx.whoosh();
+    if (!intro) sfx.reload();   // ouvrir la roue = clic sur un bouton = reload.mp3 (l'intro s'ouvre en silence)
     if (intro) {
       overlay.classList.add('intro');
       closeBtn.focus({ preventScroll: true });
