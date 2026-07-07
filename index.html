@@ -1249,6 +1249,9 @@ document.documentElement.classList.add('js');
     setActive(0);
     if (!intro) sfx.reload();   // ouvrir la roue = clic sur un bouton = reload.mp3 (l'intro s'ouvre en silence)
     if (intro) {
+      // Mémorise l'intro pour cette session d'onglet : pas de ré-affichage au reload
+      // ou en revenant d'une autre page. Réapparaît en nouvel onglet / nouvelle session.
+      try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
       overlay.classList.add('intro');
       closeBtn.focus({ preventScroll: true });
       typewriter(qTxt, QUOTE, function () {
@@ -1317,9 +1320,13 @@ document.documentElement.classList.add('js');
     else if (/^[1-8]$/.test(e.key)) { go(parseInt(e.key, 10) - 1); }
   });
 
-  // Accueil : la roue s'ouvre en « écran-titre » à chaque arrivée
-  // (sauf accès direct à une ancre partagée, ex. …/#projets)
-  if (!location.hash) {
+  // Accueil : la roue s'ouvre en « écran-titre » à la 1re arrivée de la session d'onglet.
+  // Pas de ré-affichage au reload ni en revenant d'une autre page ; réapparaît en
+  // nouvel onglet ou nouvelle session de navigateur (sessionStorage). (sauf accès direct
+  // à une ancre partagée, ex. …/#projets)
+  var introSeen = false;
+  try { introSeen = sessionStorage.getItem('introSeen') === '1'; } catch (e) {}
+  if (!location.hash && !introSeen) {
     setTimeout(function () { if (!isOpen) openWheel(true); }, 320);
   } else if (window.FX) {
     window.FX.start(curMode());
