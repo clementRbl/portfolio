@@ -2,6 +2,8 @@
 *.zip
 *.pdf
 consigne.md
+# Exception : le CV est un livrable public (bouton de téléchargement du portfolio)
+!assets/CV_Reboul_Clement.pdf
 
 # Fichiers de travail / rendus temporaires
 _shot*.html
