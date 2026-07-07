@@ -7,6 +7,10 @@
 <meta name="description" content="Portfolio de Clément Reboul, AI Engineer. Du notebook à la production : machine learning, MLOps et GenAI/RAG.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%230B0E0C'/><text x='50' y='72' font-size='58' font-family='Georgia,serif' font-weight='700' fill='%23E4A34B' text-anchor='middle'>CR</text></svg>">
 <script>
+// Canonicalisation : /portfolio (sans slash) -> /portfolio/ afin que les liens et
+// assets relatifs se résolvent sous /portfolio/ (sinon ils pointent vers la racine du
+// domaine = blog/404). location.replace : pas d'entrée d'historique, pas de boucle.
+if (location.pathname === '/portfolio') { location.replace('/portfolio/' + location.search + location.hash); }
 document.documentElement.classList.add('js');
 (function () {
   var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
