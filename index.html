@@ -3,8 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clément Reboul — AI Engineer</title>
-<meta name="description" content="Portfolio de Clément Reboul, AI Engineer. Du notebook à la production : machine learning, MLOps et GenAI/RAG.">
+<title>Clément Reboul — AI Engineer freelance | Paris, Île-de-France &amp; Hauts-de-France</title>
+<meta name="description" content="AI Engineer freelance à Paris, en Île-de-France, dans l'Oise et les Hauts-de-France. Mise en production de modèles (MLOps), POC IA, audit RAG et renfort front Vue 3 / Quasar. Missions cadrées : périmètre, durée et livrables annoncés.">
+<meta name="keywords" content="AI Engineer freelance, MLOps freelance, expert MLOps, consultant IA freelance, freelance intelligence artificielle Paris, développeur IA Île-de-France, freelance IA Oise, consultant IA Hauts-de-France, expert RAG, audit RAG, LLMOps, mise en production modèle machine learning, MLOps Paris, POC IA, développeur Vue 3 freelance, expert Quasar, migration Vue 2 Vue 3, FastAPI, Docker, LangChain, Python, Clément Reboul">
+<meta name="author" content="Clément Reboul">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://clement-reboul.fr/portfolio/">
+<meta name="geo.region" content="FR-IDF">
+<meta name="geo.placename" content="Paris, Île-de-France, Oise, Hauts-de-France">
+
+<!-- Open Graph / partage sur les réseaux et messageries -->
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Clément Reboul — AI Engineer freelance">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://clement-reboul.fr/portfolio/">
+<meta property="og:title" content="Clément Reboul — AI Engineer freelance | MLOps, GenAI, Vue 3">
+<meta property="og:description" content="Du notebook à la production. Mise en production de modèles, POC IA cadré, audit RAG et renfort front Vue 3 — Paris, Île-de-France, Oise, Hauts-de-France.">
+<meta property="og:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Clément Reboul, AI Engineer freelance — du notebook à la production : MLOps, GenAI/RAG, Vue 3.">
+<meta property="profile:first_name" content="Clément">
+<meta property="profile:last_name" content="Reboul">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Clément Reboul — AI Engineer freelance | MLOps, GenAI, Vue 3">
+<meta name="twitter:description" content="Du notebook à la production. Missions cadrées : mise en prod d'un modèle, POC IA, audit RAG, renfort Vue 3. Paris, Île-de-France, Oise, Hauts-de-France.">
+<meta name="twitter:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%230B0E0C'/><text x='50' y='72' font-size='58' font-family='Georgia,serif' font-weight='700' fill='%23E4A34B' text-anchor='middle'>CR</text></svg>">
 <script>
 // Canonicalisation : /portfolio (sans slash) -> /portfolio/ afin que les liens et
@@ -289,14 +313,9 @@ document.documentElement.classList.add('js');
 
   /* ---------- COMPÉTENCES ---------- */
   .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 54px; }
-  .skill-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 9px; }
+  .skill-head { margin-bottom: 7px; }
   .skill-head .name { font-family: var(--font-mono); font-weight: 600; font-size: 13.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
-  .skill-head .lvl { font-family: var(--font-mono); font-size: 11px; color: var(--ember); letter-spacing: .1em; text-transform: uppercase; }
-  .track { height: 10px; background: var(--surface); border: 1px solid var(--border); position: relative; overflow: hidden;
-    clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 5px, 100% 100%, 5px 100%, 0 calc(100% - 5px)); }
-  .fill { height: 100%; width: 0; background: repeating-linear-gradient(90deg, var(--ember) 0 7px, var(--ember-bright) 7px 8px); transition: width 1.1s cubic-bezier(.2,.7,.2,1); }
-  @media (prefers-reduced-motion: reduce) { .fill { transition: none; } }
-  .skill-tags { margin-top: 9px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .skill-tags { font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.65; }
   .langs { margin-top: 42px; padding-top: 26px; border-top: 1px solid var(--border); display: flex; gap: 30px; flex-wrap: wrap; align-items: center; }
   .langs b { color: var(--ink); }
 
@@ -346,6 +365,22 @@ document.documentElement.classList.add('js');
   .pipe .node.accent { border-color: var(--ember); color: var(--ember); }
   .pipe .node.ok { border-color: var(--moss-dim); color: var(--good); }
   .pipe .arr { color: var(--muted); }
+
+  /* ---------- PRESTATIONS ---------- */
+  .presta-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 22px; align-items: stretch; }
+  .presta { padding: 26px; display: flex; flex-direction: column; transition: transform .16s, border-color .16s; }
+  .presta:hover { transform: translateY(-3px); border-color: var(--border-2); }
+  @media (prefers-reduced-motion: reduce) { .presta:hover { transform: none; } }
+  .presta .presta-top { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .presta h3 { font-size: 1.35rem; text-transform: uppercase; color: var(--ink); line-height: 1.2; }
+  .presta .duree { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ember); border: 1px solid var(--border-2); padding: 5px 10px; white-space: nowrap; flex: none; }
+  .presta .desc { margin-top: 13px; color: var(--ink-dim); font-size: 14.8px; }
+  .presta ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 9px; }
+  .presta ul li { display: flex; gap: 10px; font-size: 14px; color: var(--muted); }
+  .presta ul svg { width: 15px; height: 15px; color: var(--moss); flex: none; margin-top: 3px; }
+  .presta .tags { margin-top: auto; padding-top: 18px; }
+  .presta-foot { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--border); display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .presta-foot p { color: var(--muted); font-size: 14.4px; max-width: 62ch; }
 
   /* ---------- SOFT SKILLS ---------- */
   .soft-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
@@ -584,7 +619,7 @@ document.documentElement.classList.add('js');
   @media (prefers-reduced-motion: reduce) { html.js .reveal:not(.in) { opacity: 1; transform: none; } .reveal { transition: none; } }
 
   @media (max-width: 900px) {
-    .hero-grid, .about-grid, .skills-grid, .proj-grid, .proj.feat .layout, .flag-body, .refl-grid { grid-template-columns: 1fr; }
+    .hero-grid, .about-grid, .skills-grid, .proj-grid, .proj.feat .layout, .flag-body, .refl-grid, .presta-grid { grid-template-columns: 1fr; }
     .soft-grid { grid-template-columns: 1fr 1fr; }
     .hero { min-height: auto; padding-top: 104px; padding-bottom: 46px; }
     section { padding-block: 62px; }
@@ -618,12 +653,81 @@ document.documentElement.classList.add('js');
 </style>
 <!-- Analytics Umami (cookieless, sans bannière) -->
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d6a8ee08-52c7-4346-96f9-3fccf5c0fa87"></script>
+<!-- Données structurées : identité, zone d'intervention et catalogue de prestations -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://clement-reboul.fr/portfolio/#clement-reboul",
+      "name": "Clément Reboul",
+      "givenName": "Clément",
+      "familyName": "Reboul",
+      "jobTitle": "AI Engineer freelance",
+      "description": "AI Engineer freelance spécialisé en MLOps, GenAI/RAG et mise en production de modèles de machine learning. Cinq ans de développement web (Vue 3, Quasar, TypeScript) avant la reconversion.",
+      "url": "https://clement-reboul.fr/portfolio/",
+      "email": "mailto:clement.rbl@gmail.com",
+      "image": "https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png",
+      "sameAs": [
+        "https://github.com/clementRbl",
+        "https://clement-reboul.fr"
+      ],
+      "address": { "@type": "PostalAddress", "addressRegion": "Île-de-France", "addressCountry": "FR" },
+      "alumniOf": { "@type": "EducationalOrganization", "name": "OpenClassrooms", "sameAs": "https://openclassrooms.com" },
+      "knowsLanguage": ["fr", "en"],
+      "knowsAbout": [
+        "MLOps", "LLMOps", "Machine learning", "Mise en production de modèles",
+        "GenAI", "RAG (Retrieval-Augmented Generation)", "Évaluation de LLM",
+        "Python", "FastAPI", "Docker", "CI/CD", "MLflow", "Evidently", "LangChain",
+        "Vue 3", "Quasar", "TypeScript", "PostgreSQL", "Computer vision"
+      ]
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://clement-reboul.fr/portfolio/#prestations",
+      "name": "Clément Reboul — AI Engineer freelance",
+      "description": "Missions freelance cadrées : mise en production de modèles de machine learning, POC IA, audit de systèmes RAG et renfort front Vue 3 / Quasar.",
+      "url": "https://clement-reboul.fr/portfolio/#prestations",
+      "image": "https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png",
+      "provider": { "@id": "https://clement-reboul.fr/portfolio/#clement-reboul" },
+      "priceRange": "€€",
+      "areaServed": [
+        { "@type": "City", "name": "Paris" },
+        { "@type": "AdministrativeArea", "name": "Île-de-France" },
+        { "@type": "AdministrativeArea", "name": "Oise" },
+        { "@type": "AdministrativeArea", "name": "Hauts-de-France" },
+        { "@type": "Country", "name": "France" }
+      ],
+      "availableLanguage": ["fr", "en"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Prestations",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Renfort front Vue 3 / Quasar", "serviceType": "Développement front-end", "description": "Renfort sur une équipe front existante ou migration Vue 2 vers Vue 3, tests inclus. Facturation à la journée." } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Mise en production d'un modèle de machine learning", "serviceType": "MLOps", "description": "API FastAPI documentée et conteneurisée, CI/CD, journalisation des prédictions et détection de drift. Mission de 10 jours." } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "POC IA cadré", "serviceType": "Intelligence artificielle", "description": "Du besoin métier à une API déployée et évaluée sur vos données, avec note de synthèse coûts et limites. Mission de 10 à 15 jours." } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Audit d'un système RAG", "serviceType": "GenAI / LLMOps", "description": "Jeu d'évaluation sur vos questions réelles, mesure Ragas, correctifs priorisés par impact et effort. Mission de 5 jours." } }
+        ]
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://clement-reboul.fr/portfolio/#site",
+      "url": "https://clement-reboul.fr/portfolio/",
+      "name": "Portfolio de Clément Reboul — AI Engineer freelance",
+      "inLanguage": "fr-FR",
+      "about": { "@id": "https://clement-reboul.fr/portfolio/#clement-reboul" }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a href="#profil" class="skip">Aller au contenu</a>
 
 <header class="hud-top">
-  <a href="#accueil" class="brand"><span class="mono-logo">Clément&nbsp;Reboul</span><span class="tag">AI&nbsp;Engineer</span></a>
+  <a href="#accueil" class="brand"><span class="mono-logo">Clément&nbsp;Reboul</span><span class="tag">AI&nbsp;Engineer&nbsp;freelance</span></a>
   <button class="icon-btn" id="snd-toggle" aria-pressed="false" aria-label="Activer le son" title="Son (tic de la roue)">
     <svg class="off-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
     <svg class="on-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
@@ -638,7 +742,7 @@ document.documentElement.classList.add('js');
 </header>
 <noscript>
   <nav aria-label="Navigation" style="position:fixed;top:60px;left:0;right:0;z-index:59;display:flex;flex-wrap:wrap;gap:16px;justify-content:center;padding:12px;background:#12160F;border-bottom:1px solid #29311F;font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em">
-    <a href="#profil" style="color:#E4A34B">Profil</a><a href="#competences" style="color:#E4A34B">Compétences</a><a href="#projets" style="color:#E4A34B">Projets</a><a href="#projet-phare" style="color:#E4A34B">Projet phare</a><a href="#reflexivite" style="color:#E4A34B">Réflexivité</a><a href="#contact" style="color:#E4A34B">Contact</a>
+    <a href="#profil" style="color:#E4A34B">Profil</a><a href="#competences" style="color:#E4A34B">Compétences</a><a href="#projets" style="color:#E4A34B">Projets</a><a href="#projet-phare" style="color:#E4A34B">Projet phare</a><a href="#prestations" style="color:#E4A34B">Prestations</a><a href="#reflexivite" style="color:#E4A34B">Réflexivité</a><a href="#contact" style="color:#E4A34B">Contact</a>
   </nav>
 </noscript>
 
@@ -650,9 +754,9 @@ document.documentElement.classList.add('js');
     <div class="embers" aria-hidden="true"><i style="left:10%;animation-duration:9s;animation-delay:0s"></i><i style="left:24%;animation-duration:12s;animation-delay:3s"></i><i style="left:38%;animation-duration:10s;animation-delay:1.5s"></i><i style="left:55%;animation-duration:13s;animation-delay:4.5s"></i><i style="left:68%;animation-duration:9.5s;animation-delay:2.2s"></i><i style="left:82%;animation-duration:11.5s;animation-delay:6s"></i><i style="left:92%;animation-duration:10.5s;animation-delay:3.8s"></i></div>
     <div class="wrap hero-grid">
       <div>
-        <p class="hud-label reveal">AI Engineer · ML · MLOps · GenAI</p>
+        <p class="hud-label reveal">AI Engineer freelance · MLOps · GenAI · Paris &amp; Hauts-de-France</p>
         <h1 class="reveal">Du notebook <span class="ember">à la production.</span></h1>
-        <p class="lede reveal">Développeur web pendant 5 ans, devenu AI Engineer. Je conçois des modèles et surtout je les rends <b>fiables, déployés et monitorés</b> là où naît la valeur.</p>
+        <p class="lede reveal"><b>AI Engineer freelance</b> — développeur web pendant 5 ans, devenu ingénieur IA. Je conçois des modèles et surtout je les rends <b>fiables, déployés et monitorés</b> là où naît la valeur. Missions en Île-de-France, dans l'Oise et les Hauts-de-France, ou à distance.</p>
         <div class="hero-cta reveal">
           <a href="#projets" class="btn btn-primary">Explorer<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a href="https://clement-reboul.fr/portfolio/rapport.html" class="btn btn-ghost">Rapport</a>
@@ -692,13 +796,13 @@ document.documentElement.classList.add('js');
           <p class="lead"><b>5 ans développeur web</b>, puis reconversion via le parcours <b>AI Engineer</b> d'OpenClassrooms.</p>
           <p class="muted">De ces années de dev, je garde une culture d'ingénieur : du code testé, déployé, maintenu. C'est souvent ce qui manque entre un notebook et une vraie mise en production.</p>
           <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et systèmes GenAI (RAG, évaluation LLM).</p>
-          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Objectif : rejoindre une équipe qui met l'IA en prod  MLOps et LLMOps, les sujets les plus demandés de 2026.</p>
+          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Disponible pour des missions freelance en MLOps et LLMOps, les sujets les plus demandés de 2026.</p>
         </div>
         <div class="panel"><ul class="facts">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Objectif</b> — AI Engineer / MLOps / GenAI</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Disponibilité</b> — missions freelance, MLOps / GenAI</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Expérience</b> — 5 ans en dev web, dont lead dev</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Stack</b> — Python, FastAPI, Docker, MLflow, LangChain</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Basé en</b> France — mobile / télétravail</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Basé en</b> Île-de-France &amp; Hauts-de-France — sur site / télétravail</span></li>
         </ul></div>
       </div>
     </div>
@@ -743,17 +847,17 @@ document.documentElement.classList.add('js');
   <section id="competences">
     <div class="wrap">
       <div class="sec-head reveal"><span class="idx">// 03</span><h2>Hard skills</h2>
-        <p>Auto-évaluation adossée à des projets concrets et livrables publics. <a href="https://clement-reboul.fr/portfolio/carte-mentale.html" target="_blank" rel="noopener" style="color:var(--ember)">Carte mentale interactive →</a></p>
+        <p>La stack que j'utilise en mission, adossée à des projets concrets et des livrables publics. <a href="https://clement-reboul.fr/portfolio/carte-mentale.html" target="_blank" rel="noopener" style="color:var(--ember)">Carte mentale interactive →</a></p>
       </div>
       <div class="skills-grid reveal">
-        <div><div class="skill-head"><span class="name">Machine Learning &amp; Modélisation</span><span class="lvl">Avancé</span></div><div class="track"><div class="fill" data-w="83"></div></div><div class="skill-tags">scikit-learn · LightGBM · XGBoost · SHAP · coût métier</div></div>
-        <div><div class="skill-head"><span class="name">MLOps &amp; Mise en production</span><span class="lvl">Avancé</span></div><div class="track"><div class="fill" data-w="80"></div></div><div class="skill-tags">FastAPI · Docker · CI/CD · MLflow · Evidently</div></div>
-        <div><div class="skill-head"><span class="name">GenAI &amp; LLM / RAG</span><span class="lvl">Confirmé</span></div><div class="track"><div class="fill" data-w="70"></div></div><div class="skill-tags">LangChain · Faiss · Mistral · Ragas · guardrails</div></div>
-        <div><div class="skill-head"><span class="name">Deep Learning &amp; Computer Vision</span><span class="lvl">Intermédiaire</span></div><div class="track"><div class="fill" data-w="63"></div></div><div class="skill-tags">PyTorch · ResNet-50 · transfer learning · semi-supervisé</div></div>
-        <div><div class="skill-head"><span class="name">Data Engineering</span><span class="lvl">Intermédiaire</span></div><div class="track"><div class="fill" data-w="60"></div></div><div class="skill-tags">Airflow · PostgreSQL · ETL · pandas</div></div>
-        <div><div class="skill-head"><span class="name">Reinforcement Learning</span><span class="lvl">En cours</span></div><div class="track"><div class="fill" data-w="57"></div></div><div class="skill-tags">Gymnasium · DQN · stable-baselines3</div></div>
-        <div><div class="skill-head"><span class="name">Langages &amp; outils</span><span class="lvl">Expert</span></div><div class="track"><div class="fill" data-w="90"></div></div><div class="skill-tags">Python · SQL · Git · Streamlit · pytest · Ruff</div></div>
-        <div><div class="skill-head"><span class="name">Conduite de projet data</span><span class="lvl">Confirmé</span></div><div class="track"><div class="fill" data-w="72"></div></div><div class="skill-tags">cadrage besoins · audit · trade-offs · vulgarisation</div></div>
+        <div><div class="skill-head"><span class="name">Machine Learning &amp; Modélisation</span></div><div class="skill-tags">scikit-learn · LightGBM · XGBoost · SHAP · coût métier</div></div>
+        <div><div class="skill-head"><span class="name">MLOps &amp; Mise en production</span></div><div class="skill-tags">FastAPI · Docker · CI/CD · MLflow · Evidently</div></div>
+        <div><div class="skill-head"><span class="name">GenAI &amp; LLM / RAG</span></div><div class="skill-tags">LangChain · Faiss · Mistral · Ragas · guardrails</div></div>
+        <div><div class="skill-head"><span class="name">Deep Learning &amp; Computer Vision</span></div><div class="skill-tags">PyTorch · ResNet-50 · transfer learning · semi-supervisé</div></div>
+        <div><div class="skill-head"><span class="name">Data Engineering</span></div><div class="skill-tags">Airflow · PostgreSQL · ETL · pandas</div></div>
+        <div><div class="skill-head"><span class="name">Reinforcement Learning</span></div><div class="skill-tags">Gymnasium · DQN · stable-baselines3</div></div>
+        <div><div class="skill-head"><span class="name">Langages &amp; outils</span></div><div class="skill-tags">Python · SQL · Git · Streamlit · pytest · Ruff</div></div>
+        <div><div class="skill-head"><span class="name">Conduite de projet data</span></div><div class="skill-tags">cadrage besoins · audit · trade-offs · vulgarisation</div></div>
       </div>
       <div class="langs reveal"><span class="hud-label">Langues</span><span><b>Français</b> <span class="muted">— natif</span></span><span><b>Anglais</b> <span class="muted">— professionnel</span></span></div>
     </div>
@@ -893,10 +997,70 @@ document.documentElement.classList.add('js');
     </div>
   </section>
 
+  <!-- PRESTATIONS -->
+  <section id="prestations">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="idx">// 06</span><h2>Prestations</h2>
+        <p>Des missions freelance cadrées, avec un périmètre et une durée annoncés. Chacune s'appuie sur ce que montrent les projets ci-dessus.</p>
+      </div>
+      <div class="presta-grid reveal">
+
+        <article class="panel presta">
+          <div class="presta-top"><h3>Renfort front Vue&nbsp;3 / Quasar</h3><span class="duree">À la journée</span></div>
+          <p class="desc">Renfort sur une équipe front existante, ou migration Vue&nbsp;2 → Vue&nbsp;3. Cinq ans de développement front en production, dont Quasar et TypeScript en CDI.</p>
+          <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Développement de composants et d'écrans, revue de code incluse</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Migration progressive Options API → Composition API, dépendances remises à jour</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Tests Vitest sur ce qui est repris, pour ne pas migrer à l'aveugle</span></li>
+          </ul>
+          <div class="tags"><span class="tag">Vue 3</span><span class="tag">Quasar</span><span class="tag">TypeScript</span><span class="tag">Composition API</span><span class="tag">Vitest</span></div>
+        </article>
+
+        <article class="panel presta">
+          <div class="presta-top"><h3>Mise en production d'un modèle</h3><span class="duree">10 jours</span></div>
+          <p class="desc">Votre modèle sort du notebook : API documentée, conteneurisée, déployée en continu et surveillée. Exactement le périmètre de l'étude de cas Credit Scoring ci-dessus.</p>
+          <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>API FastAPI documentée (Swagger), conteneurisée, erreurs et cas limites gérés</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>CI/CD : tests → build → déploiement automatique à chaque push</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Journalisation des prédictions, détection de drift et dashboard de suivi</span></li>
+          </ul>
+          <div class="tags"><span class="tag">FastAPI</span><span class="tag">Docker</span><span class="tag">GitHub Actions</span><span class="tag">MLflow</span><span class="tag">Evidently</span></div>
+        </article>
+
+        <article class="panel presta">
+          <div class="presta-top"><h3>POC IA cadré</h3><span class="duree">10 à 15 jours</span></div>
+          <p class="desc">Du besoin métier à une API déployée que vos équipes peuvent tester. Objectif : décider sur pièces si le sujet mérite un vrai projet — pas une démo jetable.</p>
+          <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Cadrage : le besoin métier, le critère de réussite et ce qu'on ne fera pas</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Prototype fonctionnel évalué sur vos données, pas sur un jeu de démo</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>API déployée + note de synthèse : coûts, limites, ce qu'il faudrait pour industrialiser</span></li>
+          </ul>
+          <div class="tags"><span class="tag">LangChain</span><span class="tag">Mistral</span><span class="tag">Faiss</span><span class="tag">FastAPI</span><span class="tag">Streamlit</span></div>
+        </article>
+
+        <article class="panel presta">
+          <div class="presta-top"><h3>Audit d'un système RAG</h3><span class="duree">5 jours</span></div>
+          <p class="desc">Votre RAG est en place mais les réponses déçoivent. Mesure avant tout jugement : jeu d'évaluation, métriques, puis un plan d'action priorisé.</p>
+          <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Jeu d'évaluation construit sur vos questions réelles</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Mesure Ragas : fidélité, pertinence du contexte, rappel — chunking et retrieval passés au crible</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Rapport avec correctifs priorisés par impact et par effort</span></li>
+          </ul>
+          <div class="tags"><span class="tag">Ragas</span><span class="tag">chunking</span><span class="tag">reranking</span><span class="tag">guardrails</span><span class="tag">coût / tokens</span></div>
+        </article>
+
+      </div>
+      <div class="presta-foot reveal">
+        <p><b>Zones d'intervention</b> — Paris et l'Île-de-France, l'Oise et les Hauts-de-France, sur site ou en télétravail ; le reste de la France à distance. Un besoin qui ne rentre dans aucune de ces cases ? Décrivez-le-moi : je vous dis en une réponse si je suis la bonne personne, et sous quel format.</p>
+        <a class="btn btn-primary" href="#contact">Discuter d'une mission</a>
+      </div>
+    </div>
+  </section>
+
   <!-- SOFT SKILLS -->
   <section id="soft-skills">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 06</span><h2>Soft skills</h2></div>
+      <div class="sec-head reveal"><span class="idx">// 07</span><h2>Soft skills</h2></div>
       <div class="soft-grid reveal">
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3>Esprit d'analyse</h3><p>Détection d'une fuite de données par audit MD5 sur BrainScanAI ; arbitrage risque/perf sur le retrait d'ONNX.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/><path d="M9 21h6"/></svg></div><h3>Curiosité continue</h3><p>Du ML classique au GenAI/RAG et au RL en un an ; veille active sur les tendances MLOps/LLMOps 2026.</p></div>
@@ -911,7 +1075,7 @@ document.documentElement.classList.add('js');
   <!-- RÉFLEXIVITÉ -->
   <section id="reflexivite">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 07</span><h2>Réflexivité</h2><p>Prendre du recul fait partie du métier. Voici l'évolution de ma représentation du rôle d'AI Engineer.</p></div>
+      <div class="sec-head reveal"><span class="idx">// 08</span><h2>Réflexivité</h2><p>Prendre du recul fait partie du métier. Voici l'évolution de ma représentation du rôle d'AI Engineer.</p></div>
       <div class="refl-grid reveal">
         <div class="panel shift"><span class="tl">Avant</span><p>« Un bon modèle, c'est un bon score dans un notebook. »</p></div>
         <div class="panel shift after"><span class="tl">Aujourd'hui</span><p>« La valeur, c'est un système <b>fiable, monitoré et maintenable</b> en production. »</p></div>
@@ -932,9 +1096,9 @@ document.documentElement.classList.add('js');
   <!-- CV -->
   <section id="cv" class="contact">
     <div class="wrap">
-      <span class="hud-label reveal" style="justify-content:center">// 08 — CV</span>
+      <span class="hud-label reveal" style="justify-content:center">// 09 — CV</span>
       <h2 class="reveal" style="margin-top:14px">Mon CV en une page</h2>
-      <p class="reveal">5 ans de développement web (dont lead dev), puis reconversion AI Engineer. Le parcours complet, les compétences et les projets — au format PDF.</p>
+      <p class="reveal">5 ans de développement web (dont lead dev), puis reconversion AI Engineer. Le parcours complet, l'expertise technique et les projets — au format PDF.</p>
       <div class="contact-cta reveal">
         <a class="btn btn-primary" href="https://clement-reboul.fr/portfolio/assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> Télécharger mon CV (PDF)</a>
         <a class="btn btn-ghost" href="#contact">Me contacter</a>
@@ -945,9 +1109,9 @@ document.documentElement.classList.add('js');
   <!-- CONTACT -->
   <section id="contact" class="contact">
     <div class="wrap">
-      <span class="hud-label reveal" style="justify-content:center">// 09 — Contact</span>
-      <h2 class="reveal" style="margin-top:14px">Parlons de votre besoin en IA</h2>
-      <p class="reveal">Ouvert aux opportunités d'AI Engineer, MLOps et GenAI. Discutons de la façon dont je peux aider votre équipe à mettre l'IA en production.</p>
+      <span class="hud-label reveal" style="justify-content:center">// 10 — Contact</span>
+      <h2 class="reveal" style="margin-top:14px">Un besoin en IA ? Parlons-en</h2>
+      <p class="reveal"><b>AI Engineer freelance</b> disponible pour des missions en MLOps, GenAI/RAG et front Vue&nbsp;3 — Paris, Île-de-France, Oise, Hauts-de-France et remote. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
       <div class="contact-cta reveal">
         <a class="btn btn-primary" href="mailto:clement.rbl@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg> clement.rbl@gmail.com</a>
         <a class="btn btn-ghost" href="https://github.com/clementRbl" target="_blank" rel="noopener">GitHub</a>
@@ -959,7 +1123,7 @@ document.documentElement.classList.add('js');
 
 </main>
 
-<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL — AI ENGINEER</span><span class="muted">Construit à la main · thème « survivant »</span></div></footer>
+<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL — AI ENGINEER FREELANCE · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit à la main · thème « survivant »</span></div></footer>
 
 <!-- WEAPON WHEEL -->
 <div class="wheel-overlay" id="wheel" role="dialog" aria-modal="true" aria-label="Roue de navigation">
@@ -995,7 +1159,6 @@ document.documentElement.classList.add('js');
   /* ---- Révélation au scroll + jauges ---- */
   function revealEl(el) {
     el.classList.add('in');
-    el.querySelectorAll('.fill').forEach(function (f) { f.style.width = f.getAttribute('data-w') + '%'; });
   }
   var reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
@@ -1013,6 +1176,7 @@ document.documentElement.classList.add('js');
     { id: 'competences',  name: 'Hard skills',  desc: 'Stack technique : ML, MLOps, GenAI',  icon: 'M4 20V10M10 20V4M16 20v-7M22 20V8' },
     { id: 'projets',      name: 'Projets',      desc: '6 projets liés aux dépôts publics', icon: 'M3 4h7v7H3zM14 4h7v7h-7zM3 15h7v5H3zM14 15h7v5h-7z' },
     { id: 'projet-phare', name: 'Projet phare', desc: 'Étude de cas Credit Scoring MLOps', icon: 'M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 100 8 4 4 0 000-8z' },
+    { id: 'prestations',  name: 'Prestations',  desc: 'Missions cadrées : périmètre et durée', icon: 'M20 7H4a1 1 0 00-1 1v11a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1zM9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M3 12h18' },
     { id: 'soft-skills',  name: 'Soft skills',  desc: 'Analyse, vulgarisation, rigueur',   icon: 'M12 21C7 17 4 14 4 10a4 4 0 018-1 4 4 0 018 1c0 4-3 7-8 11z' },
     { id: 'reflexivite',  name: 'Réflexivité',  desc: 'Recul & axes d’amélioration',       icon: 'M9 18h6M10 21h4M12 3a6 6 0 00-4 10c1 1 1 2 1 3h6c0-1 0-2 1-3a6 6 0 00-4-10z' },
     { id: 'cv',           name: 'CV',           desc: 'Mon parcours au format PDF',         icon: 'M6 2h8l4 4v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM14 2v4h4M8 13h8M8 17h5' },
@@ -1098,10 +1262,11 @@ document.documentElement.classList.add('js');
       369.99,                     // Fa#4  · 04 Hard skills
       392.00,                     // Sol4  · 05 Projets
       392.00,                     // Sol4  · 06 Projet phare
-      329.63,                     // Mi4   · 07 Soft skills
-      440.00,                     // La4   · 08 Réflexivité
-      369.99,                     // Fa#4  · 09 CV
-      493.88                      // Si4   · 10 Contact — note finale, la plus aiguë
+      293.66,                     // Ré4   · 07 Prestations
+      329.63,                     // Mi4   · 08 Soft skills
+      440.00,                     // La4   · 09 Réflexivité
+      369.99,                     // Fa#4  · 10 CV
+      493.88                      // Si4   · 11 Contact — note finale, la plus aiguë
     ];
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
