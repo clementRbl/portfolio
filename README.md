@@ -1,6 +1,7 @@
-# Portfolio — Clément Reboul, AI Engineer
+# Portfolio — Clément Reboul, AI Engineer freelance
 
 Portfolio personnel et professionnel : du notebook à la production (Machine Learning, MLOps, GenAI/RAG).
+Sert aussi de support commercial : la section **Prestations** liste des missions freelance cadrées (périmètre, durée).
 
 **En ligne :** https://clementrbl.github.io/portfolio/
 
@@ -8,10 +9,11 @@ Portfolio personnel et professionnel : du notebook à la production (Machine Lea
 
 | Page | Description |
 |---|---|
-| `index.html` | Portfolio : profil, compétences, projets, projet phare, réflexivité, contact |
+| `index.html` | Portfolio : profil, compétences, projets, projet phare, **prestations**, réflexivité, contact |
 | `rapport.html` | Rapport de conduite de projet Data (industrialisation d'un modèle de scoring crédit, MLOps) |
 | `carte-mentale.html` | Carte mentale interactive des compétences |
-| `assets/` | Captures des projets |
+| `assets/` | Captures des projets, CV PDF, image de partage Open Graph |
+| `sitemap.xml` | Plan de site (à déclarer dans Google Search Console) |
 
 ## Lancer en local
 
