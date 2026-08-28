@@ -52,3 +52,14 @@ API FastAPI conteneurisée, CI/CD (GitHub Actions → Hugging Face Spaces), moni
 
 Site statique : HTML/CSS + JavaScript vanilla, **aucune dépendance**.
 Thème clair/sombre, responsive, accessible (navigation clavier, contenu visible sans JavaScript, textes alternatifs).
+
+### Deux directions artistiques
+
+Le site se charge en mode **Standard** : palette froide, angles droits, surfaces
+propres — registre instrument de mesure. La navigation y passe par une **palette
+de commandes** (`⌘K` / `Ctrl K`, ou `M`).
+
+Le mode **Game** (DA « survivant » : ambre, coins biseautés, grain, braises,
+curseur torche, roue de sélection) s'active depuis la palette et se retient dans
+le `localStorage`. Basculer de mode recharge la page : les effets du mode Game
+s'initialisent une seule fois par chargement.
