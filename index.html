@@ -92,6 +92,10 @@ document.documentElement.classList.add('js');
     --blood: #9B3B2A;        /* sang séché — très rare */
     --good: #8BA05A;
     --ember-glow: rgba(228,163,75,.30);
+    --on-accent: #140b04;              /* texte posé SUR l'accent */
+    --accent-soft: rgba(228,163,75,.10);
+    --accent-soft-2: rgba(228,163,75,.20);
+    --grain: .05;                      /* opacité du grain */
     --bevel: 14px;
     --maxw: 1200px;
     --font-display: 'Anton', 'Oswald', 'Arial Narrow', 'Impact', sans-serif;
@@ -120,12 +124,66 @@ document.documentElement.classList.add('js');
   }
   /* Grain + vignette plus discrets sur fond clair */
   :root[data-theme="light"] body::before { mix-blend-mode: multiply; opacity: .035; }
+  :root[data-theme="light"] { --on-accent: #FFFFFF; --accent-soft: rgba(176,115,26,.10); --accent-soft-2: rgba(176,115,26,.18); }
   :root[data-theme="light"] body::after {
     background:
       radial-gradient(130% 100% at 50% 0%, transparent 62%, rgba(64,52,24,.10) 100%),
       linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,.012) 50%);
     background-size: cover, 100% 3px;
   }
+  /* ---------- MODE STANDARD : DA « instrument » ----------
+     Palette froide et neutre, angles droits, surfaces propres. Le mode Game
+     garde la DA « survivant » (ambre, biseaux, grain). Les deux thèmes clair
+     et sombre existent dans chaque mode : quatre combinaisons au total. */
+  html.fx-standard {
+    --bg: #0B0D10;
+    --bg-rgb: 11,13,16;
+    --bg-2: #0F1216;
+    --surface: #12161B;
+    --surface-2: #171C22;
+    --border: #232932;
+    --border-2: #333B46;
+    --ink: #E7EAEF;
+    --ink-dim: #B0B8C4;
+    --muted: #7B8593;
+    --ember: #7AA2FF;                  /* bleu instrument — accent principal */
+    --ember-bright: #9BBAFF;
+    --ember-glow: rgba(122,162,255,.28);
+    --on-accent: #08101F;
+    --accent-soft: rgba(122,162,255,.10);
+    --accent-soft-2: rgba(122,162,255,.18);
+    --spore: #4FB39B;
+    --spore-bright: #6FCBB4;
+    --moss: #7288A0;                   /* ardoise — secondaire */
+    --moss-dim: #46596B;
+    --blood: #C1584A;
+    --good: #4FB39B;                   /* teal — états « en production » */
+    --grain: .02;
+    --bevel: 0px;                      /* angles droits : plus de HUD biseauté */
+  }
+  :root[data-theme="light"].fx-standard {
+    --bg: #F1F3F6;
+    --bg-rgb: 241,243,246;
+    --bg-2: #E7EAEF;
+    --surface: #FFFFFF;
+    --surface-2: #F5F7FA;
+    --border: #DCE1E8;
+    --border-2: #BCC5D1;
+    --ink: #12161C;
+    --ink-dim: #3C4552;
+    --muted: #667080;
+    --ember: #3355D8;
+    --ember-bright: #4466EC;
+    --ember-glow: rgba(51,85,216,.18);
+    --on-accent: #FFFFFF;
+    --accent-soft: rgba(51,85,216,.08);
+    --accent-soft-2: rgba(51,85,216,.14);
+    --moss: #5A6B7D;
+    --moss-dim: #8A97A6;
+    --good: #1F7A63;
+    --grain: 0;
+  }
+
   /* La roue reste sombre & cinématique dans les DEUX thèmes (îlot de palette) */
   .wheel-overlay {
     --bg: #0A0D0B; --bg-2: #0E120E; --surface: #12160F; --surface-2: #181D14;
@@ -147,14 +205,14 @@ document.documentElement.classList.add('js');
   p { margin: 0; }
   a { color: inherit; text-decoration: none; }
   img { max-width: 100%; display: block; }
-  ::selection { background: var(--ember); color: #140b04; }
+  ::selection { background: var(--ember); color: var(--on-accent); }
   :focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
 
   /* Textures cinématiques : grain + vignette + scanlines */
   body::before, body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9998; }
   body::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    opacity: .05; mix-blend-mode: overlay;
+    opacity: var(--grain); mix-blend-mode: overlay;
   }
   body::after {
     background:
@@ -173,6 +231,7 @@ document.documentElement.classList.add('js');
   .hud-label::before { content: ""; width: 22px; height: 1px; background: var(--ember); opacity: .8; }
   .muted { color: var(--muted); }
   .mono { font-family: var(--font-mono); }
+  .sl { font-style: normal; }   /* le « // » des numéros de section, retiré en mode Standard */
   .tnum { font-variant-numeric: tabular-nums; }
 
   /* Panneaux HUD à coins biseautés */
@@ -186,7 +245,7 @@ document.documentElement.classList.add('js');
     background: linear-gradient(225deg, var(--border-2) 0 45%, transparent 46%);
   }
 
-  .skip { position: absolute; left: -9999px; top: 0; background: var(--ember); color: #140b04; padding: 10px 16px; z-index: 10000; font-weight: 700; }
+  .skip { position: absolute; left: -9999px; top: 0; background: var(--ember); color: var(--on-accent); padding: 10px 16px; z-index: 10000; font-weight: 700; }
   .skip:focus { left: 0; }
 
   /* ---------- Barre HUD supérieure ---------- */
@@ -209,11 +268,11 @@ document.documentElement.classList.add('js');
   .menu-btn {
     display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
     font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--ink); background: rgba(228,163,75,.10); border: 1px solid var(--border-2);
+    color: var(--ink); background: var(--accent-soft); border: 1px solid var(--border-2);
     padding: 9px 15px; clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
     transition: background .15s, border-color .15s;
   }
-  .menu-btn:hover { background: rgba(228,163,75,.20); border-color: var(--ember); }
+  .menu-btn:hover { background: var(--accent-soft-2); border-color: var(--ember); }
   .menu-btn.pulse { animation: btnpulse 2.6s ease-in-out infinite; }
   @keyframes btnpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(228,163,75,0); border-color: var(--border-2); } 50% { box-shadow: 0 0 0 4px rgba(228,163,75,.13), 0 0 18px rgba(228,163,75,.30); border-color: var(--ember); } }
   @media (prefers-reduced-motion: reduce) { .menu-btn.pulse { animation: none; } }
@@ -248,7 +307,7 @@ document.documentElement.classList.add('js');
     transition: transform .14s, background .15s, border-color .15s, color .15s;
   }
   .btn svg { width: 15px; height: 15px; }
-  .btn-primary { background: var(--ember); color: #140b04; }
+  .btn-primary { background: var(--ember); color: var(--on-accent); }
   .btn-primary:hover { background: var(--ember-bright); transform: translateY(-2px); }
   .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border-2); }
   .btn-ghost:hover { border-color: var(--ember); color: var(--ember); }
@@ -331,7 +390,7 @@ document.documentElement.classList.add('js');
   .proj.feat .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
   .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
   .badge { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border-2); color: var(--muted); }
-  .badge.star { background: var(--ember); color: #140b04; border-color: var(--ember); font-weight: 600; }
+  .badge.star { background: var(--ember); color: var(--on-accent); border-color: var(--ember); font-weight: 600; }
   .badge.live { color: var(--good); border-color: var(--moss-dim); }
   .proj h3 { font-size: 1.7rem; text-transform: uppercase; color: var(--ink); }
   .proj.feat h3 { font-size: 2.3rem; }
@@ -487,8 +546,11 @@ document.documentElement.classList.add('js');
   .wheel-center .wc-desc { font-size: 12.5px; color: var(--muted); margin-top: 10px; max-width: 24ch; }
   .wheel-center .wc-go { margin-top: 16px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-dim); }
   .wheel-center .wc-go kbd { border: 1px solid var(--border-2); border-radius: 3px; padding: 1px 6px; color: var(--ember); }
-  .wheel-close { position: absolute; top: 22px; right: 26px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--border-2); padding: 8px 12px; cursor: pointer; }
-  .wheel-close:hover { color: var(--ember); border-color: var(--ember); }
+  .wheel-exit { position: absolute; top: 22px; left: 26px; }
+  .wheel-close, .wheel-exit { position: absolute; top: 22px; right: 26px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid var(--border-2); padding: 8px 12px; cursor: pointer; }
+  .wheel-exit { right: auto; left: 26px; }
+  .wheel-overlay.intro:not(.wheel-shown) .wheel-exit { display: none; }
+  .wheel-close:hover, .wheel-exit:hover { color: var(--ember); border-color: var(--ember); }
 
   /* ---------- TORCHE (curseur lampe) ---------- */
   .torch {
@@ -581,16 +643,51 @@ document.documentElement.classList.add('js');
   @keyframes scanDown { 0% { top: -90px; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { top: 100vh; opacity: 0; } }
 
   /* ---------- MODE STANDARD (sobre) : on calme tout ---------- */
-  html.fx-standard .live-border::before { animation: none; opacity: .55; }
-  html.fx-standard .status .hb { display: none; }
+  /* Effets animés : coupés */
   html.fx-standard .embers,
   html.fx-standard .scan-sweep,
-  html.fx-standard .torch { display: none; }
+  html.fx-standard .torch,
+  html.fx-standard .status .hb { display: none; }
   html.fx-standard .proj::before { content: none; }
   html.fx-standard .menu-btn.pulse { animation: none; }
   html.fx-standard .status .pulse::after { animation: none; }
-  html.fx-standard body::before { opacity: .02; }
   html.fx-standard .hero h1 .ember { text-shadow: none; }
+
+  /* Bordure « vivante » : dégradé conique multicolore = rareté d'objet. Retirée. */
+  html.fx-standard .live-border::before { display: none; }
+
+  /* Angles droits : les coins biseautés sont la signature du HUD de jeu.
+     .panel suit --bevel ; ces quatre-là ont un biseau écrit en dur. */
+  html.fx-standard .panel::after { display: none; }
+  html.fx-standard .btn,
+  html.fx-standard .menu-btn,
+  html.fx-standard .icon-btn,
+  html.fx-standard .soft .ico { clip-path: none; }
+  html.fx-standard .icon-btn { background: var(--surface); }
+
+  /* Surfaces propres : ni vignette, ni scanlines (le grain passe par --grain) */
+  html.fx-standard body::after { display: none; }
+
+  /* Étiquettes : label d'axe plutôt qu'affichage tête haute */
+  html.fx-standard .hud-label { letter-spacing: .14em; color: var(--muted); }
+  html.fx-standard .hud-label::before { display: none; }
+  html.fx-standard .sl { display: none; }           /* le « // » des numéros de section */
+  html.fx-standard .sec-head .idx { letter-spacing: .14em; }
+  html.fx-standard .axes .chip::before { content: "·"; }
+  html.fx-standard .badge.star { background: none; color: var(--ember); font-weight: 500; }
+
+  /* Fond du hero : grille de graphique, pas carte tactique */
+  html.fx-standard .hero-bg {
+    background:
+      radial-gradient(75% 55% at 78% 26%, rgba(122,162,255,.10), transparent 62%),
+      radial-gradient(60% 70% at 12% 88%, rgba(79,179,155,.07), transparent 62%);
+  }
+  html.fx-standard .hero-bg::before { background-size: 28px 28px; opacity: .26; }
+  :root[data-theme="light"].fx-standard .hero-bg {
+    background:
+      radial-gradient(75% 55% at 78% 26%, rgba(51,85,216,.07), transparent 62%),
+      radial-gradient(60% 70% at 12% 88%, rgba(31,122,99,.05), transparent 62%);
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .embers i { animation: none; opacity: 0; }
@@ -615,6 +712,54 @@ document.documentElement.classList.add('js');
   .engagement p { margin-top: 10px; color: var(--ink-dim); font-size: 15.5px; line-height: 1.6; }
   .engagement b { color: var(--ink); }
   @media (max-width: 760px) { .timeline-grid { grid-template-columns: 1fr; gap: 34px; } }
+
+  /* ---------- PALETTE DE COMMANDES (mode Standard) ----------
+     Remplace la roue : même navigation au clavier, registre outil de dev. */
+  .cmdk-overlay {
+    position: fixed; inset: 0; z-index: 9999; display: none;
+    background: rgba(var(--bg-rgb), .78); backdrop-filter: blur(6px);
+    padding: 12vh 20px 20px; justify-content: center; align-items: flex-start;
+  }
+  .cmdk-overlay.open { display: flex; }
+  html.js .cmdk-overlay.open .cmdk { animation: cmdkIn .16s ease both; }
+  @keyframes cmdkIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { html.js .cmdk-overlay.open .cmdk { animation: none; } }
+  .cmdk {
+    width: 100%; max-width: 580px; background: var(--surface); border: 1px solid var(--border-2);
+    box-shadow: 0 24px 70px rgba(0,0,0,.45); display: flex; flex-direction: column; max-height: 70vh;
+  }
+  :root[data-theme="light"] .cmdk { box-shadow: 0 24px 70px rgba(30,40,60,.16); }
+  .cmdk-field { display: flex; align-items: center; gap: 11px; padding: 15px 18px; border-bottom: 1px solid var(--border); }
+  .cmdk-field svg { width: 17px; height: 17px; color: var(--muted); flex: none; }
+  .cmdk-field input {
+    flex: 1; background: none; border: 0; outline: none; color: var(--ink);
+    font-family: var(--font-body); font-size: 16px; min-width: 0;
+  }
+  .cmdk-field input::placeholder { color: var(--muted); }
+  .cmdk-list { list-style: none; margin: 0; padding: 6px; overflow-y: auto; }
+  .cmdk-group {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted); padding: 12px 12px 6px;
+  }
+  .cmdk-item {
+    display: flex; align-items: center; gap: 12px; padding: 10px 12px; cursor: pointer;
+    border-left: 2px solid transparent; color: var(--ink-dim);
+  }
+  .cmdk-item svg { width: 16px; height: 16px; color: var(--muted); flex: none; }
+  .cmdk-item .lb { flex: 1; font-size: 14.6px; color: var(--ink); min-width: 0; }
+  .cmdk-item .ht { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); text-align: right; }
+  .cmdk-item.sel { background: var(--accent-soft); border-left-color: var(--ember); }
+  .cmdk-item.sel svg, .cmdk-item.sel .ht { color: var(--ember); }
+  .cmdk-empty { padding: 26px 14px; text-align: center; color: var(--muted); font-size: 14.5px; }
+  .cmdk-foot {
+    display: flex; gap: 18px; flex-wrap: wrap; padding: 11px 18px; border-top: 1px solid var(--border);
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em;
+  }
+  .cmdk-foot kbd {
+    font-family: var(--font-mono); font-size: 10px; background: var(--surface-2);
+    border: 1px solid var(--border-2); border-radius: 3px; padding: 1px 5px; color: var(--ink-dim); margin-right: 5px;
+  }
+  @media (max-width: 560px) { .cmdk-overlay { padding-top: 8vh; } .cmdk-foot { display: none; } }
 
   /* Révélation au scroll */
   .reveal { transition: opacity .6s ease, transform .6s ease; }
@@ -652,6 +797,7 @@ document.documentElement.classList.add('js');
     .wheel-center .wc-name { font-size: 1.4rem; }
     .wheel-center .wc-desc { display: none; }
     .wheel-close { top: 14px; right: 14px; }
+    .wheel-exit { top: 14px; left: 14px; }
   }
 </style>
 <!-- Analytics Umami (cookieless, sans bannière) -->
@@ -793,7 +939,7 @@ document.documentElement.classList.add('js');
   <!-- PROFIL -->
   <section id="profil">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 01</span><h2>Profil</h2></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 01</span><h2>Profil</h2></div>
       <div class="about-grid reveal">
         <div>
           <p class="lead"><b>5 ans développeur web</b>, puis reconversion via le parcours <b>AI Engineer</b> d'OpenClassrooms.</p>
@@ -814,7 +960,7 @@ document.documentElement.classList.add('js');
   <!-- PARCOURS -->
   <section id="parcours">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 02</span><h2>Parcours</h2>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 02</span><h2>Parcours</h2>
         <p>Cinq ans de développement web (front, back, full-stack) à Paris puis reconversion AI Engineer. <a href="https://clement-reboul.fr/portfolio/assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" style="color:var(--ember)">CV complet →</a></p>
       </div>
       <div class="timeline-grid reveal">
@@ -849,7 +995,7 @@ document.documentElement.classList.add('js');
   <!-- COMPÉTENCES -->
   <section id="competences">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 03</span><h2>Hard skills</h2>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 03</span><h2>Hard skills</h2>
         <p>La stack que j'utilise en mission, adossée à des projets concrets et des livrables publics. <a href="https://clement-reboul.fr/portfolio/carte-mentale.html" target="_blank" rel="noopener" style="color:var(--ember)">Carte mentale interactive →</a></p>
       </div>
       <div class="skills-grid reveal">
@@ -869,7 +1015,7 @@ document.documentElement.classList.add('js');
   <!-- PROJETS -->
   <section id="projets">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 04</span><h2>Projets</h2><p>Neuf projets couvrant ML, MLOps, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 04</span><h2>Projets</h2><p>Neuf projets couvrant ML, MLOps, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
       <div class="proj-grid reveal">
 
         <article class="panel proj feat">
@@ -966,7 +1112,7 @@ document.documentElement.classList.add('js');
   <!-- PROJET PHARE -->
   <section id="projet-phare">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 05 — étude de cas</span><h2>Credit Scoring MLOps</h2><p>Le sujet le plus demandé de 2026 : faire passer un modèle du notebook à une production fiable. Détaillé dans le rapport de conduite de projet.</p></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 05 — étude de cas</span><h2>Credit Scoring MLOps</h2><p>Le sujet le plus demandé de 2026 : faire passer un modèle du notebook à une production fiable. Détaillé dans le rapport de conduite de projet.</p></div>
       <div class="panel flag reveal">
         <div class="kpi-row tnum">
           <div class="kpi"><div class="v">0,78</div><div class="c">AUC-OOF (LightGBM)</div></div>
@@ -1003,7 +1149,7 @@ document.documentElement.classList.add('js');
   <!-- PRESTATIONS -->
   <section id="prestations">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 06</span><h2>Prestations</h2>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 06</span><h2>Prestations</h2>
         <p>Des missions freelance cadrées, avec un périmètre et une durée annoncés. Chacune s'appuie sur ce que montrent les projets ci-dessus.</p>
       </div>
       <div class="presta-grid reveal">
@@ -1063,7 +1209,7 @@ document.documentElement.classList.add('js');
   <!-- SOFT SKILLS -->
   <section id="soft-skills">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 07</span><h2>Soft skills</h2></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 07</span><h2>Soft skills</h2></div>
       <div class="soft-grid reveal">
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3>Esprit d'analyse</h3><p>Détection d'une fuite de données par audit MD5 sur BrainScanAI ; arbitrage risque/perf sur le retrait d'ONNX.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/><path d="M9 21h6"/></svg></div><h3>Curiosité continue</h3><p>Du ML classique au GenAI/RAG et au RL en un an ; veille active sur les tendances MLOps/LLMOps 2026.</p></div>
@@ -1078,7 +1224,7 @@ document.documentElement.classList.add('js');
   <!-- RÉFLEXIVITÉ -->
   <section id="reflexivite">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx">// 08</span><h2>Réflexivité</h2><p>Prendre du recul fait partie du métier. Voici l'évolution de ma représentation du rôle d'AI Engineer.</p></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 08</span><h2>Réflexivité</h2><p>Prendre du recul fait partie du métier. Voici l'évolution de ma représentation du rôle d'AI Engineer.</p></div>
       <div class="refl-grid reveal">
         <div class="panel shift"><span class="tl">Avant</span><p>« Un bon modèle, c'est un bon score dans un notebook. »</p></div>
         <div class="panel shift after"><span class="tl">Aujourd'hui</span><p>« La valeur, c'est un système <b>fiable, monitoré et maintenable</b> en production. »</p></div>
@@ -1099,7 +1245,7 @@ document.documentElement.classList.add('js');
   <!-- CV -->
   <section id="cv" class="contact">
     <div class="wrap">
-      <span class="hud-label reveal" style="justify-content:center">// 09 — CV</span>
+      <span class="hud-label reveal" style="justify-content:center"><i class="sl">//</i> 09 — CV</span>
       <h2 class="reveal" style="margin-top:14px">Mon CV en une page</h2>
       <p class="reveal">5 ans de développement web (dont lead dev), puis reconversion AI Engineer. Le parcours complet, l'expertise technique et les projets — au format PDF.</p>
       <div class="contact-cta reveal">
@@ -1112,7 +1258,7 @@ document.documentElement.classList.add('js');
   <!-- CONTACT -->
   <section id="contact" class="contact">
     <div class="wrap">
-      <span class="hud-label reveal" style="justify-content:center">// 10 — Contact</span>
+      <span class="hud-label reveal" style="justify-content:center"><i class="sl">//</i> 10 — Contact</span>
       <h2 class="reveal" style="margin-top:14px">Un besoin en IA ? Parlons-en</h2>
       <p class="reveal"><b>AI Engineer freelance</b> disponible pour des missions en MLOps, GenAI/RAG et front Vue&nbsp;3 — Paris, Île-de-France, Oise, Hauts-de-France et remote. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
       <div class="contact-cta reveal">
@@ -1126,10 +1272,29 @@ document.documentElement.classList.add('js');
 
 </main>
 
-<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL — AI ENGINEER FREELANCE · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit à la main · thème « survivant »</span></div></footer>
+<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL — AI ENGINEER FREELANCE · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit à la main · sans dépendance</span></div></footer>
+
+<!-- PALETTE DE COMMANDES (mode Standard) -->
+<div class="cmdk-overlay" id="cmdk" role="dialog" aria-modal="true" aria-label="Palette de commandes">
+  <div class="cmdk">
+    <div class="cmdk-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="cmdk-input" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Aller à une section, ouvrir un livrable…"
+             role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list">
+    </div>
+    <ul class="cmdk-list" id="cmdk-list" role="listbox" aria-label="Commandes"></ul>
+    <div class="cmdk-foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd>naviguer</span>
+      <span><kbd>↵</kbd>ouvrir</span>
+      <span><kbd>ESC</kbd>fermer</span>
+    </div>
+  </div>
+</div>
 
 <!-- WEAPON WHEEL -->
 <div class="wheel-overlay" id="wheel" role="dialog" aria-modal="true" aria-label="Roue de navigation">
+  <button class="wheel-exit" id="wheel-to-standard">← Mode Standard</button>
   <button class="wheel-close" id="wheel-close">✕ Fermer <span style="opacity:.6">ESC</span></button>
   <div class="wheel-stage">
     <div class="wheel-head">
@@ -1333,7 +1498,7 @@ document.documentElement.classList.add('js');
   /* ---- Modes (Standard par défaut / Game), choisis dans l'intro ---- */
   var modesEl = document.getElementById('wheel-modes');
   var modeBtns = modesEl ? [].slice.call(modesEl.querySelectorAll('.mode-btn')) : [];
-  var modeChosen = false, modeTimer = null, modeHi = 'standard';
+  var modeChosen = false, modeTimer = null, modeHi = 'standard', introSkipModes = false;
   function curMode() { return document.documentElement.classList.contains('fx-game') ? 'game' : 'standard'; }
   function highlightMode(m) {
     modeHi = m;
@@ -1347,22 +1512,181 @@ document.documentElement.classList.add('js');
     var pre = modeBtns.filter(function (b) { return b.getAttribute('data-mode') === modeHi; })[0] || modeBtns[0];
     if (pre) pre.focus({ preventScroll: true });
   }
+  /* Bascule de mode. Les effets « Game » (spores, torche) s'initialisent une
+     seule fois par chargement via FX.start et créent des éléments hors CSS :
+     un vrai changement de mode recharge donc la page. C'est aussi ce qui fait
+     rejouer l'écran-titre à l'entrée dans Game. Renvoie true si ça recharge. */
+  function setMode(m) {
+    m = (m === 'game') ? 'game' : 'standard';
+    if (curMode() === m) { sfx.set(m === 'game'); syncSnd(); return false; }
+    try { localStorage.setItem('fxMode', m); } catch (e) {}
+    try {
+      if (m === 'game') sessionStorage.setItem('introPending', '1');
+      else sessionStorage.removeItem('introPending');
+    } catch (e) {}
+    sfx.set(m === 'game');           // persiste soundOn avant le rechargement
+    location.reload();
+    return true;
+  }
   function chooseMode(m) {
     if (modeChosen) return; modeChosen = true; clearTimeout(modeTimer);
-    m = (m === 'game') ? 'game' : 'standard';
-    document.documentElement.classList.remove('fx-standard', 'fx-game');
-    document.documentElement.classList.add('fx-' + m);
-    try { localStorage.setItem('fxMode', m); } catch (e) {}
-    if (window.FX) window.FX.start(m);
+    if (setMode(m)) return;          // rechargement en cours : rien de plus à faire
     overlay.classList.remove('modes-shown');
     overlay.classList.add('wheel-shown');
-    sfx.set(m === 'game'); syncSnd(); // Game = son activé, Standard = son coupé
     setTimeout(function () { if (isOpen && overlay.classList.contains('intro')) sectors[0].focus({ preventScroll: true }); }, 320);
   }
   modeBtns.forEach(function (b) {
     b.addEventListener('click', function () { chooseMode(b.getAttribute('data-mode')); });
     b.addEventListener('mouseenter', function () { highlightMode(b.getAttribute('data-mode')); });
   });
+
+
+  /* ---- PALETTE DE COMMANDES (mode Standard) ----
+     Même navigation au clavier que la roue, registre outil de développeur. */
+  var IC = {
+    ext:  'M14 3h7v7M21 3l-9 9M19 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6',
+    dl:   'M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3',
+    mail: 'M3 6l9 6 9-6M3 6h18v12H3z',
+    sun:  'M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4M12 8a4 4 0 100 8 4 4 0 000-8z',
+    snd:  'M11 5L6 9H2v6h4l5 4V5zM15.5 8.5a5 5 0 010 7',
+    game: 'M6 12h4M8 10v4M15 11h.01M18 13h.01M2 12a5 5 0 015-5h10a5 5 0 010 10H7a5 5 0 01-5-5z'
+  };
+  var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || '');
+  var cmdkEl = document.getElementById('cmdk');
+  var cmdkInput = document.getElementById('cmdk-input');
+  var cmdkList = document.getElementById('cmdk-list');
+  var cmdkOpen = false, cmdkItems = [], cmdkSel = 0, cmdkLastFocus = null;
+
+  function buildCommands() {
+    var list = NAV.map(function (item, i) {
+      return { g: 'Sections', label: item.name, hint: ('0' + (i + 1)).slice(-2), icon: item.icon,
+               run: function () { goTo(item.id); } };
+    });
+    return list.concat([
+      { g: 'Livrables', label: 'Télécharger le CV (PDF)', hint: 'PDF', icon: IC.dl,
+        run: function () { window.open('https://clement-reboul.fr/portfolio/assets/CV_Reboul_Clement.pdf', '_blank', 'noopener'); } },
+      { g: 'Livrables', label: 'Rapport de conduite de projet', hint: 'Page', icon: IC.ext,
+        run: function () { location.href = 'https://clement-reboul.fr/portfolio/rapport.html'; } },
+      { g: 'Livrables', label: 'Carte mentale des compétences', hint: 'Page', icon: IC.ext,
+        run: function () { window.open('https://clement-reboul.fr/portfolio/carte-mentale.html', '_blank', 'noopener'); } },
+      { g: 'Livrables', label: 'Tester l’API de scoring en production', hint: 'Swagger', icon: IC.ext,
+        run: function () { window.open('https://clementrbl-credit-scoring-api.hf.space/docs', '_blank', 'noopener'); } },
+      { g: 'Contact', label: 'M’écrire un e-mail', hint: 'clement.rbl@gmail.com', icon: IC.mail,
+        run: function () { location.href = 'mailto:clement.rbl@gmail.com'; } },
+      { g: 'Contact', label: 'GitHub', hint: 'clementRbl', icon: IC.ext,
+        run: function () { window.open('https://github.com/clementRbl', '_blank', 'noopener'); } },
+      { g: 'Affichage', label: 'Basculer le thème clair / sombre', hint: 'Thème', icon: IC.sun,
+        run: function () { if (themeBtn) themeBtn.click(); } },
+      { g: 'Affichage', label: 'Activer ou couper le son', hint: 'Son', icon: IC.snd,
+        run: function () { sfx.set(!sfx.isOn()); syncSnd(); } },
+      { g: 'Affichage', label: 'Passer en mode Game', hint: 'Univers animé', icon: IC.game,
+        run: function () { setMode('game'); } }
+    ]);
+  }
+  var COMMANDS = buildCommands();
+
+  function goTo(id) {
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }
+  function norm(t) {
+    return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+  function renderCmdk() {
+    var q = norm(cmdkInput.value.trim());
+    cmdkItems = COMMANDS.filter(function (c) {
+      return !q || norm(c.label + ' ' + c.g + ' ' + c.hint).indexOf(q) !== -1;
+    });
+    cmdkList.innerHTML = '';
+    if (!cmdkItems.length) {
+      var em = document.createElement('li');
+      em.className = 'cmdk-empty'; em.textContent = 'Aucune commande pour « ' + cmdkInput.value.trim() +' »';
+      cmdkList.appendChild(em);
+      cmdkInput.removeAttribute('aria-activedescendant');
+      return;
+    }
+    if (cmdkSel >= cmdkItems.length) cmdkSel = 0;
+    var group = null;
+    cmdkItems.forEach(function (c, i) {
+      if (c.g !== group) {
+        group = c.g;
+        var h = document.createElement('li');
+        h.className = 'cmdk-group'; h.setAttribute('role', 'presentation'); h.textContent = group;
+        cmdkList.appendChild(h);
+      }
+      var li = document.createElement('li');
+      li.className = 'cmdk-item' + (i === cmdkSel ? ' sel' : '');
+      li.id = 'cmdk-opt-' + i;
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', i === cmdkSel ? 'true' : 'false');
+      li.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="' +
+        c.icon + '"/></svg><span class="lb"></span><span class="ht"></span>';
+      li.querySelector('.lb').textContent = c.label;
+      li.querySelector('.ht').textContent = c.hint;
+      li.addEventListener('click', function () { runCmdk(i); });
+      li.addEventListener('mousemove', function () { if (cmdkSel !== i) { cmdkSel = i; markCmdk(); } });
+      cmdkList.appendChild(li);
+    });
+    markCmdk();
+  }
+  function markCmdk() {
+    var rows = cmdkList.querySelectorAll('.cmdk-item');
+    for (var i = 0; i < rows.length; i++) {
+      var on = i === cmdkSel;
+      rows[i].classList.toggle('sel', on);
+      rows[i].setAttribute('aria-selected', on ? 'true' : 'false');
+      if (on) { cmdkInput.setAttribute('aria-activedescendant', rows[i].id); rows[i].scrollIntoView({ block: 'nearest' }); }
+    }
+  }
+  function moveCmdk(d) {
+    if (!cmdkItems.length) return;
+    cmdkSel = (cmdkSel + d + cmdkItems.length) % cmdkItems.length;
+    markCmdk();
+  }
+  function runCmdk(i) {
+    var c = cmdkItems[typeof i === 'number' ? i : cmdkSel];
+    if (!c) return;
+    closePalette();
+    c.run();
+  }
+  function openPalette() {
+    if (cmdkOpen) return;
+    cmdkOpen = true; cmdkLastFocus = document.activeElement;
+    cmdkEl.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    cmdkInput.value = ''; cmdkSel = 0; renderCmdk();
+    cmdkInput.focus({ preventScroll: true });
+  }
+  function closePalette() {
+    if (!cmdkOpen) return;
+    cmdkOpen = false;
+    cmdkEl.classList.remove('open');
+    document.body.style.overflow = '';
+    if (cmdkLastFocus && cmdkLastFocus.focus) cmdkLastFocus.focus({ preventScroll: true });
+  }
+  cmdkInput.addEventListener('input', function () { cmdkSel = 0; renderCmdk(); });
+  cmdkEl.addEventListener('click', function (e) { if (e.target === cmdkEl) closePalette(); });
+  cmdkEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.preventDefault(); closePalette(); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); moveCmdk(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); moveCmdk(-1); }
+    else if (e.key === 'Enter') { e.preventDefault(); runCmdk(); }
+    else if (e.key === 'Tab') { e.preventDefault(); } // dialogue à un seul champ : on garde le focus
+  });
+
+  /* Le bouton « Naviguer » ouvre la roue en Game, la palette en Standard. */
+  function openNav() { if (curMode() === 'game') openWheel(); else openPalette(); }
+  function syncNavLabels() {
+    var game = curMode() === 'game';
+    var b2 = document.getElementById('wheel-open-2');
+    if (b2) b2.textContent = game ? 'Menu radial' : 'Palette de commandes';
+    var hint = document.querySelector('.wheel-hint');
+    if (hint) {
+      hint.innerHTML = game
+        ? 'Navigation : appuyez sur <b>M</b> ou cliquez sur <b>Naviguer</b> pour la roue de sélection'
+        : 'Navigation : <b>' + (isMac ? '⌘' : 'Ctrl') + ' K</b> ou <b>M</b> pour la palette de commandes';
+    }
+  }
 
   /* ---- Balayage scanline lors d'une navigation via la roue ---- */
   var scanEl = null;
@@ -1385,12 +1709,17 @@ document.documentElement.classList.add('js');
       try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
       overlay.classList.add('intro');
       closeBtn.focus({ preventScroll: true });
-      typewriter(qTxt, QUOTE, function () {
-        overlay.classList.add('attr-shown');
-        setTimeout(showModes, 450);
-      });
-      // filet de sécurité : affiche le choix de mode même si l'animation est interrompue
-      setTimeout(function () { if (!modeChosen && !overlay.classList.contains('modes-shown')) { overlay.classList.add('attr-shown'); showModes(); } }, 5200);
+      // Le mode vient d'être demandé explicitement (palette) : inutile de le redemander.
+      var afterQuote = introSkipModes
+        ? function () { overlay.classList.add('attr-shown', 'wheel-shown'); modeChosen = true;
+                        setTimeout(function () { if (isOpen) sectors[0].focus({ preventScroll: true }); }, 320); }
+        : function () { overlay.classList.add('attr-shown'); setTimeout(showModes, 450); };
+      typewriter(qTxt, QUOTE, afterQuote);
+      // filet de sécurité : débloque l'écran-titre même si l'animation est interrompue
+      setTimeout(function () {
+        if (modeChosen || overlay.classList.contains('modes-shown') || overlay.classList.contains('wheel-shown')) return;
+        overlay.classList.add('attr-shown'); afterQuote();
+      }, 5200);
     } else {
       if (!reduce) overlay.classList.add('animate');
       sectors[0].focus({ preventScroll: true });
@@ -1430,12 +1759,21 @@ document.documentElement.classList.add('js');
   });
   overlay.addEventListener('click', function (e) { if (e.target === overlay) closeWheel(); });
 
-  document.getElementById('wheel-open').addEventListener('click', function () { openWheel(); });
-  var open2 = document.getElementById('wheel-open-2'); if (open2) open2.addEventListener('click', function () { openWheel(); });
+  document.getElementById('wheel-open').addEventListener('click', function () { openNav(); });
+  var open2 = document.getElementById('wheel-open-2'); if (open2) open2.addEventListener('click', function () { openNav(); });
   document.getElementById('wheel-close').addEventListener('click', function () { closeWheel(); });
+  var exitBtn = document.getElementById('wheel-to-standard');
+  if (exitBtn) exitBtn.addEventListener('click', function () { setMode('standard'); });
 
   document.addEventListener('keydown', function (e) {
-    if (!isOpen && (e.key === 'm' || e.key === 'M') && !/input|textarea/i.test((e.target.tagName || ''))) { e.preventDefault(); openWheel(); return; }
+    var typing = /input|textarea/i.test((e.target.tagName || ''));
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+      e.preventDefault();
+      if (cmdkOpen) closePalette(); else if (!isOpen) openPalette();
+      return;
+    }
+    if (cmdkOpen) return;   // la palette gère ses propres touches
+    if (!isOpen && (e.key === 'm' || e.key === 'M') && !typing) { e.preventDefault(); openNav(); return; }
     if (!isOpen) return;
     if (e.key === 'Escape') { closeWheel(); return; }
     if (overlay.classList.contains('modes-shown') && !modeChosen) {
@@ -1451,16 +1789,21 @@ document.documentElement.classList.add('js');
     else if (/^[1-8]$/.test(e.key)) { go(parseInt(e.key, 10) - 1); }
   });
 
-  // Accueil : la roue s'ouvre en « écran-titre » à la 1re arrivée de la session d'onglet.
-  // Pas de ré-affichage au reload ni en revenant d'une autre page ; réapparaît en
-  // nouvel onglet ou nouvelle session de navigateur (sessionStorage). (sauf accès direct
-  // à une ancre partagée, ex. …/#projets)
-  var introSeen = false;
-  try { introSeen = sessionStorage.getItem('introSeen') === '1'; } catch (e) {}
-  if (!location.hash && !introSeen) {
-    setTimeout(function () { if (!isOpen) openWheel(true); }, 320);
-  } else if (window.FX) {
-    window.FX.start(curMode());
+  syncNavLabels();
+  if (window.FX) window.FX.start(curMode());
+
+  // L'écran-titre appartient au mode Game : le site ne l'impose plus à l'arrivée.
+  // Il se déclenche à l'entrée dans Game depuis la palette (introPending), puis une
+  // fois par session d'onglet tant qu'on y reste. Jamais sur une ancre partagée.
+  var introSeen = false, introPending = false;
+  try {
+    introSeen = sessionStorage.getItem('introSeen') === '1';
+    introPending = sessionStorage.getItem('introPending') === '1';
+    if (introPending) sessionStorage.removeItem('introPending');
+  } catch (e) {}
+  if (curMode() === 'game' && (introPending || (!location.hash && !introSeen))) {
+    introSkipModes = introPending;
+    setTimeout(function () { if (!isOpen) openWheel(true); }, introPending ? 120 : 320);
   }
 })();
 </script>
