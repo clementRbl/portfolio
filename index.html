@@ -596,6 +596,8 @@ document.documentElement.classList.add('js');
   .status .pulse.warn { background: var(--ember); box-shadow: 0 0 8px var(--ember); }
   .status .pulse.warn::after { border-color: var(--ember); }
   .status .row .ok.err { color: var(--ember); }
+  #log-line { transition: opacity .25s ease; }
+  #log-line.pending { opacity: .35; }
   .api-note { padding: 0 17px 13px; font-family: var(--font-mono); font-size: 10.5px;
     letter-spacing: .06em; color: var(--muted); }
   .api-note a { color: var(--ember); border-bottom: 1px solid currentColor; }
@@ -831,6 +833,9 @@ document.documentElement.classList.add('js');
   .cmdk-item.sel { background: var(--accent-soft); border-left-color: var(--ember); }
   .cmdk-item.sel svg, .cmdk-item.sel .ht { color: var(--ember); }
   .cmdk-empty { padding: 26px 14px; text-align: center; color: var(--muted); font-size: 14.5px; }
+  .cmdk-item .sc { font-family: var(--font-mono); font-size: 10.5px; color: var(--moss); flex: none; }
+  .cmdk-item.sel .sc { color: var(--ember); }
+  .cmdk-group .hint { text-transform: none; letter-spacing: .02em; color: var(--moss); margin-left: 8px; }
   .cmdk-foot {
     display: flex; gap: 18px; flex-wrap: wrap; padding: 11px 18px; border-top: 1px solid var(--border);
     font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em;
@@ -1381,7 +1386,7 @@ document.documentElement.classList.add('js');
     <div class="cmdk-field">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <input id="cmdk-input" type="text" autocomplete="off" spellcheck="false"
-             placeholder="Aller à une section, ouvrir un livrable…"
+             placeholder="Posez une question, ou allez à une section…"
              role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list">
     </div>
     <ul class="cmdk-list" id="cmdk-list" role="listbox" aria-label="Commandes"></ul>
@@ -1389,6 +1394,7 @@ document.documentElement.classList.add('js');
       <span><kbd>↑</kbd><kbd>↓</kbd>naviguer</span>
       <span><kbd>↵</kbd>ouvrir</span>
       <span><kbd>ESC</kbd>fermer</span>
+      <span style="margin-left:auto;opacity:.75">recherche vectorielle</span>
     </div>
   </div>
 </div>
@@ -1658,10 +1664,81 @@ document.documentElement.classList.add('js');
   var cmdkList = document.getElementById('cmdk-list');
   var cmdkOpen = false, cmdkItems = [], cmdkSel = 0, cmdkLastFocus = null;
 
+
+  /* ---- Recherche vectorielle sur les sections (LSA) ----
+     L'index est construit hors ligne par tools/build_index.py : TF-IDF puis SVD
+     tronquée sur le contenu du site. Une requête est la somme des vecteurs de
+     ses termes ; on classe les sections par similarité cosinus. La palette
+     répond donc à une question formulée en langage naturel, sans qu'aucun mot
+     de la section n'ait été tapé.
+     Normalisation partagée avec le script Python via les tables de l'index :
+     la dupliquer ici garantirait une dérive silencieuse. */
+  var VEC = null, vecState = 'idle';
+  function loadVectors() {
+    if (vecState !== 'idle') return;
+    vecState = 'loading';
+    fetch('assets/search-index.json')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (ix) {
+        if (!ix) { vecState = 'failed'; return; }
+        ix.stopSet = {};
+        for (var i = 0; i < ix.stop.length; i++) ix.stopSet[ix.stop[i]] = 1;
+        ix.pos = {};
+        for (var j = 0; j < ix.vocab.length; j++) ix.pos[ix.vocab[j]] = j;
+        VEC = ix; vecState = 'ready';
+        if (cmdkOpen && cmdkInput.value.trim()) renderCmdk();
+      })
+      .catch(function () { vecState = 'failed'; });
+  }
+  function vecStem(w) {
+    for (var i = 0; i < VEC.suffixes.length; i++) {
+      var suf = VEC.suffixes[i];
+      if (w.length > suf.length + 3 && w.slice(-suf.length) === suf) return w.slice(0, -suf.length);
+    }
+    return w;
+  }
+  function vecTokens(text) {
+    var t = norm(text), out = [];
+    var m = t.match(/[a-z0-9][a-z0-9+#.\-]{1,}/g) || [];
+    for (var i = 0; i < m.length; i++) {
+      var w = m[i].replace(/^[.\-]+|[.\-]+$/g, '');
+      if (w.length < 2 || VEC.stopSet[w] || /^\d+$/.test(w)) continue;
+      out.push(vecStem(w));
+    }
+    return out;
+  }
+  function vecSearch(q) {
+    if (!VEC) return [];
+    var toks = vecTokens(q), v = new Array(VEC.k), i;
+    for (i = 0; i < VEC.k; i++) v[i] = 0;
+    var used = 0;
+    for (i = 0; i < toks.length; i++) {
+      var p = VEC.pos[toks[i]];
+      if (p === undefined) continue;
+      used++;
+      var row = VEC.terms[p], w = VEC.idf[p];
+      for (var d = 0; d < VEC.k; d++) v[d] += row[d] * w;
+    }
+    if (!used) return [];
+    var n = 0;
+    for (i = 0; i < VEC.k; i++) n += v[i] * v[i];
+    n = Math.sqrt(n);
+    if (!n) return [];
+    for (i = 0; i < VEC.k; i++) v[i] /= n;
+    var out = [];
+    for (i = 0; i < VEC.docs.length; i++) {
+      var dv = VEC.docs[i].v, sc = 0;
+      for (var c = 0; c < VEC.k; c++) sc += dv[c] * v[c];
+      if (sc >= 0.34) out.push({ id: VEC.docs[i].id, title: VEC.docs[i].title, score: sc });
+    }
+    out.sort(function (a, b) { return b.score - a.score; });
+    return out.slice(0, 3);
+  }
+
   function buildCommands() {
     var list = NAV.map(function (item, i) {
       return { g: 'Sections', label: item.name, hint: ('0' + (i + 1)).slice(-2), icon: item.icon,
-               run: function () { goTo(item.id); } };
+               sectionId: item.id, run: function () { goTo(item.id); } };
     });
     return list.concat([
       { g: 'Livrables', label: 'Télécharger le CV (PDF)', hint: 'PDF', icon: IC.dl,
@@ -1694,10 +1771,28 @@ document.documentElement.classList.add('js');
     return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
   function renderCmdk() {
-    var q = norm(cmdkInput.value.trim());
+    var raw = cmdkInput.value.trim();
+    var q = norm(raw);
     cmdkItems = COMMANDS.filter(function (c) {
       return !q || norm(c.label + ' ' + c.g + ' ' + c.hint).indexOf(q) !== -1;
     });
+    // Une question en langage naturel ne contient presque jamais le libellé de
+    // la section cherchée : le lexical seul ne renvoie rien. Le vectoriel prend
+    // le relais dès que la requête ressemble à une question.
+    if (raw.split(/\s+/).length >= 2) {
+      var hits = vecSearch(raw), extra = [];
+      for (var h = 0; h < hits.length; h++) {
+        var hit = hits[h];
+        var already = cmdkItems.some(function (c) { return c.sectionId === hit.id; });
+        if (already) continue;
+        var nav = NAV.filter(function (it) { return it.id === hit.id; })[0];
+        extra.push({ g: 'Sections proches de votre question', label: nav ? nav.name : hit.title,
+                     hint: Math.round(hit.score * 100) + '%', icon: nav ? nav.icon : IC.ext,
+                     score: true, sectionId: hit.id,
+                     run: (function (id) { return function () { goTo(id); }; })(hit.id) });
+      }
+      cmdkItems = extra.concat(cmdkItems);
+    }
     cmdkList.innerHTML = '';
     if (!cmdkItems.length) {
       var em = document.createElement('li');
@@ -1724,6 +1819,7 @@ document.documentElement.classList.add('js');
         c.icon + '"/></svg><span class="lb"></span><span class="ht"></span>';
       li.querySelector('.lb').textContent = c.label;
       li.querySelector('.ht').textContent = c.hint;
+      if (c.score) li.querySelector('.ht').classList.add('sc');
       li.addEventListener('click', function () { runCmdk(i); });
       li.addEventListener('mousemove', function () { if (cmdkSel !== i) { cmdkSel = i; markCmdk(); } });
       cmdkList.appendChild(li);
@@ -1755,6 +1851,7 @@ document.documentElement.classList.add('js');
     cmdkOpen = true; cmdkLastFocus = document.activeElement;
     cmdkEl.classList.add('open');
     document.body.style.overflow = 'hidden';
+    loadVectors();
     cmdkInput.value = ''; cmdkSel = 0; renderCmdk();
     cmdkInput.focus({ preventScroll: true });
   }
@@ -2096,6 +2193,7 @@ window.CREDIT_API = (function () {
     var c = API.CLIENTS[ci % API.CLIENTS.length]; ci++;
     if (reqEl) reqEl.textContent = '/predict?SK_ID_CURR=' + c.id;
     if (codeEl) { codeEl.textContent = '…'; codeEl.classList.remove('err'); }
+    line.classList.add('pending');
     API.predict(c.id).then(function (r) {
       setState(r.live);
       if (codeEl) { codeEl.textContent = r.live ? '200' : 'cache'; codeEl.classList.toggle('err', !r.live); }
@@ -2105,6 +2203,7 @@ window.CREDIT_API = (function () {
         paintSpark();
       }
       var d = r.data;
+      line.classList.remove('pending');
       write('→ { "decision":"' + d.decision + '", "probability":' + d.probability +
             ', "threshold":' + d.threshold + ' }', function () {
         setTimeout(cycle, 7000);       // ~1 appel toutes les 10 s, onglet visible seulement
@@ -2310,73 +2409,102 @@ FX.onStart(function (mode) {
     setTimeout(function () { grids.forEach(function (g) { g.classList.add('stg-in'); }); }, 6000);
   }
 
-  /* --- 5. Graphe latent : nuage de points reliés, dérive lente, dans le hero --- */
+  /* --- 5. Carte latente : les sections du site à leurs vraies coordonnées ---
+     Les positions ne sont pas décoratives : ce sont les sections du portfolio
+     projetées en 2D depuis l'espace latent construit par tools/build_index.py,
+     le même qui répond aux questions dans la palette. Les arêtes sont les
+     similarités cosinus réelles. Au chargement, les points convergent depuis
+     des positions aléatoires vers leur coordonnée : la projection se résout. */
   var hero = document.querySelector('.hero');
-  if (hero && !reduce && window.matchMedia('(min-width: 700px)').matches) {
-    var cvs = document.createElement('canvas');
-    cvs.setAttribute('aria-hidden', 'true');
-    cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none';
-    hero.insertBefore(cvs, hero.firstChild);
-    var ctx = cvs.getContext('2d'), W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var css = getComputedStyle(document.documentElement);
-    var accent = (css.getPropertyValue('--ember') || '#7AA2FF').trim();
-    function hex2rgb(h) {
-      h = h.replace('#', '');
-      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
-      var n = parseInt(h, 16);
-      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-    }
-    var RGB = /^#/.test(accent) ? hex2rgb(accent) : [122, 162, 255];
-    var RGBS = RGB.join(',');
-    var pts = [];
-    function size() {
-      W = hero.clientWidth; H = hero.clientHeight;
-      cvs.width = Math.round(W * dpr); cvs.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    function seed() {
-      var n = Math.max(18, Math.min(38, Math.round(W / 40)));
-      pts = [];
-      for (var i = 0; i < n; i++) {
-        pts.push({ x: Math.random() * W, y: Math.random() * H,
-                   vx: (Math.random() - 0.5) * 0.14, vy: (Math.random() - 0.5) * 0.14,
-                   r: 1 + Math.random() * 1.4 });
+  if (hero && !reduce && window.matchMedia('(min-width: 700px)').matches && window.fetch) {
+    fetch('assets/search-index.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (ix) {
+      if (!ix || !ix.docs) return;
+      var cvs = document.createElement('canvas');
+      cvs.setAttribute('aria-hidden', 'true');
+      cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none';
+      hero.insertBefore(cvs, hero.firstChild);
+      var ctx = cvs.getContext('2d'), W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var accent = (getComputedStyle(document.documentElement).getPropertyValue('--ember') || '#7AA2FF').trim();
+      function hex2rgb(h) {
+        h = h.replace('#', '');
+        if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+        var n = parseInt(h, 16);
+        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
       }
-    }
-    size(); seed();
-    window.addEventListener('resize', function () { size(); seed(); }, { passive: true });
-    var LINK = 172, raf2 = null;
-    function draw() {
-      raf2 = requestAnimationFrame(draw);
-      if (document.hidden) return;
-      ctx.clearRect(0, 0, W, H);
-      for (var i = 0; i < pts.length; i++) {
-        var p = pts[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
-        if (p.y < -10) p.y = H + 10; else if (p.y > H + 10) p.y = -10;
-      }
-      // arêtes : voisins proches, comme un graphe k-NN sur un espace latent
-      ctx.lineWidth = 1;
-      for (var a = 0; a < pts.length; a++) {
-        for (var b = a + 1; b < pts.length; b++) {
-          var dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
-          var d = Math.sqrt(dx * dx + dy * dy);
-          if (d > LINK) continue;
-          ctx.strokeStyle = 'rgba(' + RGBS + ',' + (0.22 * (1 - d / LINK)).toFixed(3) + ')';
-          ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[b].x, pts[b].y); ctx.stroke();
+      var RGBS = (/^#/.test(accent) ? hex2rgb(accent) : [122, 162, 255]).join(',');
+
+      // Similarités cosinus entre sections : ce sont les arêtes du graphe.
+      var docs = ix.docs, N = docs.length, sim = [], a, b;
+      for (a = 0; a < N; a++) {
+        sim.push([]);
+        for (b = 0; b < N; b++) {
+          var sc = 0;
+          for (var c = 0; c < ix.k; c++) sc += docs[a].v[c] * docs[b].v[c];
+          sim[a].push(sc);
         }
       }
-      for (var c = 0; c < pts.length; c++) {
-        ctx.fillStyle = 'rgba(' + RGBS + ',.42)';
-        ctx.beginPath(); ctx.arc(pts[c].x, pts[c].y, pts[c].r, 0, Math.PI * 2); ctx.fill();
+      var deg = docs.map(function (_, i) {
+        var t = 0;
+        for (var j = 0; j < N; j++) if (j !== i) t += Math.max(0, sim[i][j]);
+        return t;
+      });
+      var degMax = Math.max.apply(null, deg) || 1;
+
+      var pts = docs.map(function (d, i) {
+        return { ax: 0, ay: 0, x: 0, y: 0, sx: Math.random(), sy: Math.random(),
+                 ph: Math.random() * Math.PI * 2, sp: 0.25 + Math.random() * 0.4,
+                 r: 1.6 + (deg[i] / degMax) * 2.6 };
+      });
+      function size() {
+        W = hero.clientWidth; H = hero.clientHeight;
+        cvs.width = Math.round(W * dpr); cvs.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var padX = W * 0.12, padY = H * 0.16;
+        pts.forEach(function (p, i) {
+          p.ax = padX + ((docs[i].xy[0] + 1) / 2) * (W - 2 * padX);
+          p.ay = padY + ((docs[i].xy[1] + 1) / 2) * (H - 2 * padY);
+        });
       }
-    }
-    draw();
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) { cancelAnimationFrame(raf2); raf2 = null; }
-      else if (!raf2) draw();
-    });
+      size();
+      window.addEventListener('resize', size, { passive: true });
+
+      var t0 = null, CONV = 1700, raf2 = null;
+      function draw(ts) {
+        raf2 = requestAnimationFrame(draw);
+        if (document.hidden) return;
+        if (t0 === null) t0 = ts;
+        var el = ts - t0;
+        var k = Math.min(1, el / CONV);
+        k = 1 - Math.pow(1 - k, 4);                 // convergence
+        var drift = el / 1000;
+        ctx.clearRect(0, 0, W, H);
+        pts.forEach(function (p) {
+          var rx = p.sx * W, ry = p.sy * H;         // position initiale, dispersée
+          var ox = Math.cos(drift * p.sp + p.ph) * 9;
+          var oy = Math.sin(drift * p.sp * 0.85 + p.ph) * 7;
+          p.x = rx + (p.ax + ox - rx) * k;
+          p.y = ry + (p.ay + oy - ry) * k;
+        });
+        ctx.lineWidth = 1;
+        for (a = 0; a < N; a++) {
+          for (b = a + 1; b < N; b++) {
+            var w = sim[a][b];
+            if (w < 0.08) continue;
+            ctx.strokeStyle = 'rgba(' + RGBS + ',' + (Math.min(0.30, w * 0.42) * k).toFixed(3) + ')';
+            ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[b].x, pts[b].y); ctx.stroke();
+          }
+        }
+        pts.forEach(function (p) {
+          ctx.fillStyle = 'rgba(' + RGBS + ',' + (0.5 * k).toFixed(3) + ')';
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+      raf2 = requestAnimationFrame(draw);
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) { cancelAnimationFrame(raf2); raf2 = null; }
+        else if (!raf2) raf2 = requestAnimationFrame(draw);
+      });
+    }).catch(function () {});
   }
 });
 </script>
