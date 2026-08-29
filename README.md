@@ -13,6 +13,8 @@ Sert aussi de support commercial : la section **Prestations** liste des missions
 | `rapport.html` | Rapport de conduite de projet Data (industrialisation d'un modèle de scoring crédit, MLOps) |
 | `carte-mentale.html` | Carte mentale interactive des compétences |
 | `assets/` | Captures des projets, CV PDF, image de partage Open Graph |
+| `assets/search-index.json` | Index de recherche vectorielle de la palette (généré) |
+| `tools/build_index.py` | Génère l'index : TF-IDF + SVD tronquée sur `tools/corpus.json` |
 | `sitemap.xml` | Plan de site (à déclarer dans Google Search Console) |
 
 ## Lancer en local
@@ -35,6 +37,32 @@ Puis ouvrir **http://localhost:8000/** dans le navigateur.
 ### Option 2 — Ouvrir directement le fichier
 
 Double-cliquer sur `index.html` (ouverture en `file://`). Fonctionne pour l'essentiel ; le serveur local reste préférable pour reproduire fidèlement le comportement en ligne.
+
+## Le portfolio calcule
+
+Deux éléments ne sont pas des maquettes :
+
+**L'API de scoring en production.** Le panneau du hero et la démo de l'étude de
+cas appellent réellement `POST /predict` sur le Space Hugging Face. La latence
+affichée est l'aller-retour mesuré dans le navigateur. Si le Space dort, l'état
+passe à « API en veille » et les réponses viennent d'un jeu relevé à l'avance —
+dit explicitement.
+
+**La recherche vectorielle de la palette.** `tools/build_index.py` construit
+hors ligne un espace latent (TF-IDF puis SVD tronquée, rang 10) sur le contenu
+du site ; le navigateur y projette la requête et classe les sections par
+similarité cosinus. Taper « comment tu surveilles un modèle en prod » remonte
+l'étude de cas sans qu'aucun de ses mots n'ait été saisi.
+
+Les mêmes vecteurs placent les points de la carte latente animée dans le hero :
+ce sont les sections du site à leurs vraies coordonnées, reliées par leurs
+similarités réelles.
+
+Regénérer l'index après avoir modifié `tools/corpus.json` :
+
+```bash
+python3 tools/build_index.py   # numpy requis
+```
 
 ## Déploiement
 
