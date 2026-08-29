@@ -600,6 +600,41 @@ document.documentElement.classList.add('js');
     letter-spacing: .06em; color: var(--muted); }
   .api-note a { color: var(--ember); border-bottom: 1px solid currentColor; }
 
+
+  /* ---------- DÉMO JOUABLE : SCORING EN DIRECT ---------- */
+  .tryout { border-top: 1px solid var(--border); margin-top: 30px; padding: 26px 28px 30px; }
+  .tryout h3 { font-family: var(--font-mono); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--ember); margin-bottom: 8px; }
+  .tryout .sub { color: var(--muted); font-size: 14px; max-width: 68ch; }
+  .try-clients { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .try-chip {
+    font-family: var(--font-mono); font-size: 12px; padding: 7px 11px; cursor: pointer;
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--ink-dim);
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .try-chip:hover { border-color: var(--ember); color: var(--ember); }
+  .try-chip.sel { border-color: var(--ember); color: var(--on-accent); background: var(--ember); }
+  .try-chip[disabled] { opacity: .5; cursor: progress; }
+  .try-panel { margin-top: 22px; display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
+  .gauge-head { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .06em; }
+  .gauge-head .val { font-size: 2.1rem; font-weight: 700; color: var(--ink); letter-spacing: -.01em; line-height: 1; }
+  .gauge { position: relative; height: 30px; margin-top: 14px; background: var(--surface-2); border: 1px solid var(--border); }
+  .gauge .fillp { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--good); opacity: .55; transition: width .5s cubic-bezier(.2,.7,.2,1); }
+  .gauge.refuse .fillp { background: var(--blood); }
+  .gauge .thr { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--ember); left: 47%; }
+  .gauge .thr::after { content: "seuil 0,47"; position: absolute; top: -17px; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; color: var(--ember); white-space: nowrap; }
+  .gauge-scale { display: flex; justify-content: space-between; margin-top: 7px; font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); }
+  .verdict { margin-top: 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .verdict .tag-d { font-family: var(--font-mono); font-size: 13px; letter-spacing: .12em; padding: 8px 14px; border: 1px solid var(--moss-dim); color: var(--good); }
+  .verdict .tag-d.refuse { border-color: var(--blood); color: var(--blood); }
+  .verdict .meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .try-raw { background: var(--surface-2); border: 1px solid var(--border); padding: 15px; font-family: var(--font-mono);
+    font-size: 12px; color: var(--ink-dim); line-height: 1.75; overflow-x: auto; }
+  .try-raw .k { color: var(--ember); }
+  .try-raw .rq { color: var(--muted); display: block; margin-bottom: 9px; word-break: break-all; }
+  @media (max-width: 900px) { .try-panel { grid-template-columns: 1fr; } }
+
   /* ---------- MODES : boutons de l'intro ---------- */
   .wheel-modes { display: none; flex-direction: column; align-items: center; gap: 20px; margin-top: 26px; }
   .wheel-overlay.modes-shown .wheel-modes { display: flex; animation: fadeUp .5s ease both; }
@@ -1183,6 +1218,26 @@ document.documentElement.classList.add('js');
             </div>
           </div>
           <div class="shot"><img src="assets/mlops-logs.png" alt="Journalisation JSONL : chaque prédiction enregistre timestamp, id client, probabilité, décision, temps d'inférence." loading="lazy"></div>
+        </div>
+        <div class="tryout">
+          <h3>Essayez le modèle</h3>
+          <p class="sub">Chaque dossier ci-dessous existe dans le jeu de données servi par l'API. Cliquez : la requête part vers le Space en production, la réponse affichée est la sienne.</p>
+          <div class="try-clients" id="try-clients" role="group" aria-label="Choisir un dossier client"></div>
+          <div class="try-panel">
+            <div>
+              <div class="gauge-head">
+                <span>Probabilité de défaut</span>
+                <span class="val tnum" id="try-val">—</span>
+              </div>
+              <div class="gauge" id="try-gauge"><div class="fillp" id="try-fill"></div><div class="thr"></div></div>
+              <div class="gauge-scale"><span>0,00</span><span>1,00</span></div>
+              <div class="verdict">
+                <span class="tag-d" id="try-dec">—</span>
+                <span class="meta" id="try-meta">Sélectionnez un dossier</span>
+              </div>
+            </div>
+            <div class="try-raw"><span class="rq" id="try-req">POST /predict</span><span id="try-json">—</span></div>
+          </div>
         </div>
         <div class="pipe" role="img" aria-label="Pipeline MLOps : client vers API FastAPI Docker sur Hugging Face Spaces, logs JSONL, drift Evidently et dashboard Streamlit ; en parallèle CI/CD GitHub Actions test build deploy.">
           <div class="lane"><span class="lane-label">Serving</span><span class="node">Client</span><span class="arr">→</span><span class="node accent">FastAPI · Docker</span><span class="arr">→</span><span class="node ok">HF Spaces</span><span class="arr">→</span><span class="node">logs JSONL</span><span class="arr">→</span><span class="node">Evidently · Streamlit</span></div>
@@ -2065,6 +2120,83 @@ window.CREDIT_API = (function () {
   }
 
   API.health(7000).then(function (ok) { setState(ok); cycle(); });
+})();
+
+/* ---- Démo jouable : scoring en direct sur l'API de production ---- */
+(function () {
+  "use strict";
+  var API = window.CREDIT_API;
+  var wrap = document.getElementById('try-clients');
+  if (!wrap || !API) return;
+  var valEl = document.getElementById('try-val'), fill = document.getElementById('try-fill');
+  var gauge = document.getElementById('try-gauge'), decEl = document.getElementById('try-dec');
+  var metaEl = document.getElementById('try-meta'), reqEl = document.getElementById('try-req');
+  var jsonEl = document.getElementById('try-json');
+  var busy = false;
+
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  function render(id, r) {
+    var d = r.data, p = d.probability, refuse = d.decision === 'REFUSE';
+    valEl.textContent = p.toFixed(4).replace('.', ',');
+    fill.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+    gauge.classList.toggle('refuse', refuse);
+    decEl.textContent = d.decision;
+    decEl.classList.toggle('refuse', refuse);
+    var ecart = Math.abs(p - d.threshold).toFixed(3).replace('.', ',');
+    metaEl.textContent = (r.live ? r.ms + ' ms — réponse de l’API' : 'réponse en cache, Space en veille')
+      + ' · à ' + ecart + ' du seuil';
+    reqEl.textContent = 'POST ' + API.BASE.replace('https://', '') + '/predict?SK_ID_CURR=' + id;
+    jsonEl.innerHTML =
+      '{<br>&nbsp;&nbsp;<span class="k">"SK_ID_CURR"</span>: ' + esc(d.SK_ID_CURR) + ',<br>' +
+      '&nbsp;&nbsp;<span class="k">"probability"</span>: ' + esc(d.probability) + ',<br>' +
+      '&nbsp;&nbsp;<span class="k">"decision"</span>: "' + esc(d.decision) + '",<br>' +
+      '&nbsp;&nbsp;<span class="k">"threshold"</span>: ' + esc(d.threshold) + '<br>}';
+  }
+
+  function pick(btn, id) {
+    if (busy) return;
+    busy = true;
+    [].slice.call(wrap.children).forEach(function (b) { b.classList.toggle('sel', b === btn); b.disabled = true; });
+    metaEl.textContent = 'appel en cours…';
+    API.predict(id).then(function (r) {
+      render(id, r);
+      busy = false;
+      [].slice.call(wrap.children).forEach(function (b) { b.disabled = false; });
+    });
+  }
+
+  API.CLIENTS.forEach(function (c) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'try-chip'; b.textContent = c.id;
+    b.setAttribute('aria-label', 'Scorer le dossier ' + c.id);
+    b.addEventListener('click', function () { pick(b, c.id); });
+    wrap.appendChild(b);
+  });
+
+  var rnd = document.createElement('button');
+  rnd.type = 'button'; rnd.className = 'try-chip'; rnd.textContent = 'Tirer au hasard';
+  rnd.addEventListener('click', function () {
+    var c = API.CLIENTS[Math.floor(Math.random() * API.CLIENTS.length)];
+    var target = [].slice.call(wrap.children).filter(function (b) { return b.textContent === String(c.id); })[0];
+    pick(target || rnd, c.id);
+  });
+  wrap.appendChild(rnd);
+
+  /* Premier scoring au moment où la démo entre à l'écran, pas au chargement :
+     inutile de solliciter l'API pour un visiteur qui n'arrivera jamais ici. */
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        var c = API.CLIENTS[9];   // 100106 : 0,434, juste sous le seuil — le cas qui parle
+        var b = [].slice.call(wrap.children).filter(function (x) { return x.textContent === String(c.id); })[0];
+        pick(b, c.id);
+      });
+    }, { threshold: 0.3 });
+    io.observe(wrap.parentNode);
+  }
 })();
 </script>
 <script>
