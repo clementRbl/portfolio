@@ -590,6 +590,16 @@ document.documentElement.classList.add('js');
   @media (prefers-reduced-motion: reduce) { .status .hb polyline { animation: none; stroke-dashoffset: 0; } }
   #kpi-lat { transition: opacity .5s ease; }
 
+
+  /* ---------- APPELS EN DIRECT À L'API DE PRODUCTION ---------- */
+  .status .st-top .s.warn { color: var(--ember); }
+  .status .pulse.warn { background: var(--ember); box-shadow: 0 0 8px var(--ember); }
+  .status .pulse.warn::after { border-color: var(--ember); }
+  .status .row .ok.err { color: var(--ember); }
+  .api-note { padding: 0 17px 13px; font-family: var(--font-mono); font-size: 10.5px;
+    letter-spacing: .06em; color: var(--muted); }
+  .api-note a { color: var(--ember); border-bottom: 1px solid currentColor; }
+
   /* ---------- MODES : boutons de l'intro ---------- */
   .wheel-modes { display: none; flex-direction: column; align-items: center; gap: 20px; margin-top: 26px; }
   .wheel-overlay.modes-shown .wheel-modes { display: flex; animation: fadeUp .5s ease both; }
@@ -954,18 +964,19 @@ document.documentElement.classList.add('js');
         <p class="wheel-hint reveal">Navigation : appuyez sur <b>M</b> ou cliquez sur <b>Menu</b> pour la roue de sélection</p>
       </div>
       <div class="hero-panel reveal">
-        <div class="panel status" role="img" aria-label="Statut : API de scoring crédit en production, health 200 OK, AUC 0,78, latence 6 ms, couverture de tests 98%.">
-          <div class="st-top"><span class="pulse"></span><span class="s">EN&nbsp;PRODUCTION</span><svg class="hb" viewBox="0 0 44 16" aria-hidden="true"><polyline points="0,8 10,8 13,8 16,3 20,13 24,8 44,8"/></svg><span class="h">credit-scoring-api</span></div>
+        <div class="panel status" role="status" aria-live="off" aria-label="Appels en direct à l'API de scoring crédit en production : santé, prédiction et latence mesurée.">
+          <div class="st-top"><span class="pulse" id="st-pulse"></span><span class="s" id="st-state">EN&nbsp;PRODUCTION</span><svg class="hb" viewBox="0 0 44 16" aria-hidden="true"><polyline points="0,8 10,8 13,8 16,3 20,13 24,8 44,8"/></svg><span class="h">credit-scoring-api</span></div>
           <div class="st-body">
-            <div class="row"><span class="v">GET</span><span>/health</span><span class="ok">200 OK</span></div>
-            <div class="row"><span class="v">POST</span><span>/predict?SK_ID_CURR=100001</span><span class="ok">200</span></div>
-            <div class="row"><span class="muted" id="log-line">→ { "decision":"ACCORDE", "proba":<span id="log-proba">0.37</span> }</span></div>
+            <div class="row"><span class="v">GET</span><span>/health</span><span class="ok" id="st-health">200 OK</span></div>
+            <div class="row"><span class="v">POST</span><span id="st-req">/predict?SK_ID_CURR=100001</span><span class="ok" id="st-code">200</span></div>
+            <div class="row"><span class="muted" id="log-line">→ { "decision":"ACCORDE", "proba":0.37 }</span></div>
           </div>
           <div class="kpis tnum">
             <div><div class="n">0.78</div><div class="c">AUC</div></div>
-            <div><div class="n" id="kpi-lat">6ms</div><div class="c">Latence</div></div>
+            <div><div class="n" id="kpi-lat">—</div><div class="c">Latence réelle</div></div>
             <div><div class="n">98%</div><div class="c">Tests</div></div>
           </div>
+          <p class="api-note" id="api-note">Appels réels à l'API en production — <a href="https://clementrbl-credit-scoring-api.hf.space/docs" target="_blank" rel="noopener">vérifiez vous-même</a></p>
         </div>
       </div>
     </div>
@@ -1294,7 +1305,7 @@ document.documentElement.classList.add('js');
   <section id="contact" class="contact">
     <div class="wrap">
       <span class="hud-label reveal" style="justify-content:center"><i class="sl">//</i> 10 — Contact</span>
-      <h2 class="reveal" style="margin-top:14px">Un besoin en IA ? Parlons-en</h2>
+      <h2 class="reveal" style="margin-top:14px">Un besoin ? Parlons-en</h2>
       <p class="reveal"><b>AI Engineer freelance</b> disponible pour des missions en MLOps, GenAI/RAG et front Vue&nbsp;3 — Paris, Île-de-France, Oise, Hauts-de-France et remote. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
       <div class="contact-cta reveal">
         <a class="btn btn-primary" href="mailto:clement.rbl@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg> clement.rbl@gmail.com</a>
@@ -1901,6 +1912,162 @@ FX.onStart(function (mode) {
 });
 </script>
 <script>
+/* ---------------------------------------------------------------------------
+   API DE SCORING EN PRODUCTION — appels réels, dans les deux modes.
+   Le panneau du hero interrogeait une simulation ; il interroge maintenant
+   l'API déployée sur Hugging Face Spaces. La latence affichée est le
+   temps d'aller-retour réellement mesuré dans le navigateur.
+   Repli honnête si le Space dort : réponses en cache, état signalé.
+   --------------------------------------------------------------------------- */
+window.CREDIT_API = (function () {
+  "use strict";
+  var BASE = 'https://clementrbl-credit-scoring-api.hf.space';
+  var THRESHOLD = 0.47;
+
+  /* Identifiants réellement présents dans le jeu de données servi par l'API,
+     relevés en la sondant. Les probabilités ne servent QUE de repli hors ligne :
+     en fonctionnement normal, c'est l'API qui les renvoie. */
+  var CLIENTS = [
+    { id: 100057, p: 0.0706 }, { id: 100117, p: 0.1280 }, { id: 100512, p: 0.1412 },
+    { id: 100150, p: 0.1980 }, { id: 100141, p: 0.2616 }, { id: 100042, p: 0.2809 },
+    { id: 100128, p: 0.3031 }, { id: 100001, p: 0.3718 }, { id: 100109, p: 0.3862 },
+    { id: 100106, p: 0.4340 }, { id: 100311, p: 0.5411 }, { id: 100005, p: 0.6660 },
+    { id: 100038, p: 0.6987 }, { id: 456250, p: 0.7310 }, { id: 100107, p: 0.7932 }
+  ];
+
+  var online = null;          // null = pas encore su, true/false ensuite
+  var budget = 40;            // plafond d'appels par visite : l'API est sur un Space gratuit
+
+  function decisionFor(p) { return p < THRESHOLD ? 'ACCORDE' : 'REFUSE'; }
+
+  function cached(id) {
+    for (var i = 0; i < CLIENTS.length; i++) if (CLIENTS[i].id === id) return CLIENTS[i];
+    return CLIENTS[0];
+  }
+
+  /* Renvoie toujours une réponse exploitable : { data, ms, live } */
+  function predict(id, timeoutMs) {
+    var c = cached(id);
+    var fallback = function (ms) {
+      return { live: false, ms: ms || 0,
+               data: { SK_ID_CURR: id, probability: c.p, decision: decisionFor(c.p), threshold: THRESHOLD } };
+    };
+    if (budget <= 0 || !window.fetch || !window.AbortController) return Promise.resolve(fallback());
+    budget--;
+    var ctrl = new AbortController();
+    var to = setTimeout(function () { ctrl.abort(); }, timeoutMs || 6000);
+    var t0 = (window.performance || Date).now();
+    return fetch(BASE + '/predict?SK_ID_CURR=' + id, { method: 'POST', signal: ctrl.signal })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (d) {
+        clearTimeout(to); online = true;
+        return { live: true, ms: Math.round((window.performance || Date).now() - t0), data: d };
+      })
+      .catch(function () { clearTimeout(to); online = false; return fallback(); });
+  }
+
+  function health(timeoutMs) {
+    if (!window.fetch || !window.AbortController) return Promise.resolve(false);
+    var ctrl = new AbortController();
+    var to = setTimeout(function () { ctrl.abort(); }, timeoutMs || 6000);
+    return fetch(BASE + '/health', { signal: ctrl.signal })
+      .then(function (r) { clearTimeout(to); online = r.ok; return r.ok; })
+      .catch(function () { clearTimeout(to); online = false; return false; });
+  }
+
+  return { BASE: BASE, THRESHOLD: THRESHOLD, CLIENTS: CLIENTS,
+           predict: predict, health: health, decisionFor: decisionFor,
+           isOnline: function () { return online; } };
+})();
+
+/* ---- Panneau du hero : santé, prédiction, latence mesurée ---- */
+(function () {
+  "use strict";
+  var API = window.CREDIT_API;
+  var line = document.getElementById('log-line');
+  if (!line) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pulse = document.getElementById('st-pulse'), state = document.getElementById('st-state');
+  var hEl = document.getElementById('st-health'), reqEl = document.getElementById('st-req');
+  var codeEl = document.getElementById('st-code'), latEl = document.getElementById('kpi-lat');
+  var note = document.getElementById('api-note');
+  var spark = document.querySelector('.status .hb polyline');
+
+  var txt = document.createElement('span');
+  line.textContent = ''; line.appendChild(txt);
+  var cur = null;
+  if (!reduce) { cur = document.createElement('i'); cur.className = 'cur'; cur.setAttribute('aria-hidden', 'true'); line.appendChild(cur); }
+
+  /* Sparkline alimentée par les latences réellement mesurées */
+  var series = [];
+  function paintSpark() {
+    if (!spark || !series.length) return;
+    var lo = Math.min.apply(null, series), hi = Math.max.apply(null, series);
+    var span = Math.max(30, hi - lo);
+    var pts = series.map(function (v, i) {
+      var x = series.length === 1 ? 44 : (i / (series.length - 1)) * 44;
+      var y = 13 - ((v - lo) / span) * 10;
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    });
+    spark.setAttribute('points', pts.join(' '));
+  }
+
+  function setState(live) {
+    var warn = !live;
+    if (pulse) pulse.classList.toggle('warn', warn);
+    if (state) { state.classList.toggle('warn', warn); state.innerHTML = warn ? 'API&nbsp;EN&nbsp;VEILLE' : 'EN&nbsp;PRODUCTION'; }
+    if (hEl) { hEl.textContent = warn ? '—' : '200 OK'; hEl.classList.toggle('err', warn); }
+    if (note) note.innerHTML = warn
+      ? 'Space en veille : réponses en cache — <a href="' + API.BASE + '/docs" target="_blank" rel="noopener">réveiller l\'API</a>'
+      : 'Appels réels à l\'API en production — <a href="' + API.BASE + '/docs" target="_blank" rel="noopener">vérifiez vous-même</a>';
+  }
+
+  function write(full, done) {
+    if (reduce) { txt.textContent = full; if (done) done(); return; }
+    var i = 0;
+    (function tick() {
+      txt.textContent = full.slice(0, i);
+      if (i > full.length) { if (done) done(); return; }
+      i++;
+      setTimeout(tick, 14 + Math.random() * 24);   // cadence de génération
+    })();
+  }
+
+  var ci = Math.floor(Math.random() * API.CLIENTS.length);
+  var visible = true, focused = true;
+
+  function cycle() {
+    if (document.hidden || !visible) { setTimeout(cycle, 2000); return; }
+    var c = API.CLIENTS[ci % API.CLIENTS.length]; ci++;
+    if (reqEl) reqEl.textContent = '/predict?SK_ID_CURR=' + c.id;
+    if (codeEl) { codeEl.textContent = '…'; codeEl.classList.remove('err'); }
+    API.predict(c.id).then(function (r) {
+      setState(r.live);
+      if (codeEl) { codeEl.textContent = r.live ? '200' : 'cache'; codeEl.classList.toggle('err', !r.live); }
+      if (r.live) {
+        if (latEl) latEl.textContent = r.ms + 'ms';
+        series.push(r.ms); if (series.length > 22) series.shift();
+        paintSpark();
+      }
+      var d = r.data;
+      write('→ { "decision":"' + d.decision + '", "probability":' + d.probability +
+            ', "threshold":' + d.threshold + ' }', function () {
+        setTimeout(cycle, 7000);       // ~1 appel toutes les 10 s, onglet visible seulement
+      });
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var pio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { visible = e.isIntersecting; });
+    }, { threshold: 0.15 });
+    pio.observe(document.querySelector('.status'));
+  }
+
+  API.health(7000).then(function (ok) { setState(ok); cycle(); });
+})();
+</script>
+<script>
 /* Animations du mode Standard : registre instrument / outil de développeur.
    Chaque mouvement représente une donnée réelle du projet — flux d'inférence,
    latence, pipeline CI/CD — plutôt qu'un effet décoratif. */
@@ -1927,60 +2094,7 @@ FX.onStart(function (mode) {
     drawProg();
   }
 
-  /* --- 2. Flux d'inférence : la réponse de l'API s'écrit jeton par jeton --- */
-  var line = document.getElementById('log-line');
-  if (line && !reduce) {
-    var cur = document.createElement('i');
-    cur.className = 'cur'; cur.setAttribute('aria-hidden', 'true');
-    var txt = document.createElement('span');
-    line.textContent = ''; line.appendChild(txt); line.appendChild(cur);
-    var cases = [
-      { d: 'ACCORDE', p: [0.31, 0.42] },
-      { d: 'ACCORDE', p: [0.28, 0.39] },
-      { d: 'REFUSE',  p: [0.57, 0.71] }
-    ];
-    var ci = 0, timer = null;
-    function stream() {
-      if (document.hidden) { timer = setTimeout(stream, 1200); return; }
-      var c = cases[ci % cases.length]; ci++;
-      var proba = (c.p[0] + Math.random() * (c.p[1] - c.p[0])).toFixed(2);
-      var full = '→ { "decision":"' + c.d + '", "proba":' + proba + ' }';
-      var i = 0;
-      (function tick() {
-        txt.textContent = full.slice(0, i);
-        if (i > full.length) { timer = setTimeout(stream, 3400); return; }
-        i++;
-        timer = setTimeout(tick, 16 + Math.random() * 26);   // cadence de génération
-      })();
-    }
-    timer = setTimeout(stream, 700);
-  }
-
-  /* --- 3. Latence : valeur + sparkline qui défile, comme un graphe de monitoring --- */
-  var lat = document.getElementById('kpi-lat');
-  var spark = document.querySelector('.status .hb polyline');
-  if (lat || spark) {
-    var series = [], NPT = 22;
-    for (var k = 0; k < NPT; k++) series.push(5.5 + Math.random() * 1.6);
-    function paint() {
-      if (!spark) return;
-      var pts = series.map(function (v, i) {
-        var x = (i / (NPT - 1)) * 44;   // viewBox 0 0 44 16
-        var y = 13 - Math.max(0, Math.min(1, (v - 4) / 5)) * 10;   // 4-9 ms -> 13-3
-        return x.toFixed(1) + ',' + y.toFixed(1);
-      });
-      spark.setAttribute('points', pts.join(' '));
-    }
-    paint();   // même en mouvement réduit : une trace statique plutôt que l'ECG du mode Game
-    if (!reduce) setInterval(function () {
-      if (document.hidden) return;
-      series.push(5 + Math.random() * 2.4); series.shift();
-      paint();
-      if (lat) lat.textContent = Math.round(series[series.length - 1]) + 'ms';
-    }, 1700);
-  }
-
-  /* --- 4. Compteurs : les métriques se chargent au lieu d'être posées là --- */
+  /* --- 2. Compteurs : les métriques se chargent au lieu d'être posées là --- */
   var COUNT_SEL = '.hero-stats .k, .status .kpis .n, .kpi .v';
   function countUp(el) {
     if (el.dataset.counted) return;
@@ -2017,7 +2131,7 @@ FX.onStart(function (mode) {
     counters.forEach(function (el) { cio.observe(el); });
   }
 
-  /* --- 5. Pipeline : un jeton parcourt les étapes du diagramme MLOps --- */
+  /* --- 3. Pipeline : un jeton parcourt les étapes du diagramme MLOps --- */
   var lanes = [].slice.call(document.querySelectorAll('.pipe .lane'));
   if (lanes.length && !reduce && 'IntersectionObserver' in window) {
     var pipeOn = false, li = 0, ni = 0, pipeTimer = null;
@@ -2048,7 +2162,7 @@ FX.onStart(function (mode) {
     pio.observe(lanes[0].parentNode);
   }
 
-  /* --- 6. Grilles : apparition échelonnée des cartes --- */
+  /* --- 4. Grilles : apparition échelonnée des cartes --- */
   var grids = [].slice.call(document.querySelectorAll('.proj-grid, .presta-grid, .soft-grid, .skills-grid'));
   if (grids.length && !reduce && 'IntersectionObserver' in window) {
     grids.forEach(function (g) {
@@ -2064,7 +2178,7 @@ FX.onStart(function (mode) {
     setTimeout(function () { grids.forEach(function (g) { g.classList.add('stg-in'); }); }, 6000);
   }
 
-  /* --- 7. Graphe latent : nuage de points reliés, dérive lente, dans le hero --- */
+  /* --- 5. Graphe latent : nuage de points reliés, dérive lente, dans le hero --- */
   var hero = document.querySelector('.hero');
   if (hero && !reduce && window.matchMedia('(min-width: 700px)').matches) {
     var cvs = document.createElement('canvas');
@@ -2167,22 +2281,6 @@ FX.onStart(function (mode) {
       torch.style.display = torchOff ? 'none' : '';
       try { localStorage.setItem('torchOff', torchOff ? '1' : '0'); } catch (e2) {}
     });
-  }
-
-  /* --- HUD « vivant » : latence + proba qui fluctuent --- */
-  if (!reduce) {
-    var lat = document.getElementById('kpi-lat'), pr = document.getElementById('log-proba');
-    var lats = ['5ms', '6ms', '7ms', '6ms', '5ms', '7ms'], li = 0;
-    if (lat) setInterval(function () {
-      if (document.hidden) return;
-      li = (li + 1) % lats.length; lat.textContent = lats[li];
-      lat.style.opacity = '.45';
-      requestAnimationFrame(function () { lat.style.opacity = '1'; });
-    }, 1900);
-    if (pr) setInterval(function () {
-      if (document.hidden) return;
-      pr.textContent = (0.36 + Math.random() * 0.03).toFixed(2);
-    }, 3200);
   }
 
   /* --- Parallaxe de profondeur sur le hero (souris uniquement) --- */
