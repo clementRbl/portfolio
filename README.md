@@ -59,6 +59,12 @@ Le site se charge en mode **Standard** : palette froide, angles droits, surfaces
 propres — registre instrument de mesure. La navigation y passe par une **palette
 de commandes** (`⌘K` / `Ctrl K`, ou `M`).
 
+Le mode Standard a ses propres animations, toutes adossées à une donnée réelle
+du projet : flux d'inférence qui s'écrit jeton par jeton dans le panneau de
+statut, sparkline de latence, compteurs de métriques, jeton qui parcourt le
+pipeline MLOps, graphe latent en fond de hero, barre de progression de lecture.
+Toutes se désactivent sous `prefers-reduced-motion`.
+
 Le mode **Game** (DA « survivant » : ambre, coins biseautés, grain, braises,
 curseur torche, roue de sélection) s'active depuis la palette et se retient dans
 le `localStorage`. Basculer de mode recharge la page : les effets du mode Game

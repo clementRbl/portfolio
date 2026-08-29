@@ -676,6 +676,41 @@ document.documentElement.classList.add('js');
   html.fx-standard .axes .chip::before { content: "·"; }
   html.fx-standard .badge.star { background: none; color: var(--ember); font-weight: 500; }
 
+  /* ---------- ANIMATIONS DU MODE STANDARD ----------
+     Registre instrument : flux d'inférence, métriques qui vivent, pipeline qui
+     tourne. Rien de décoratif : chaque mouvement représente quelque chose. */
+
+  /* Barre de progression de lecture */
+  .rprog { position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 70;
+    background: var(--ember); transition: width .1s linear; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { .rprog { display: none; } }
+
+  /* Curseur de flux dans le panneau de statut */
+  .cur { display: inline-block; width: 6px; height: 1em; margin-left: 2px; background: var(--good);
+    vertical-align: -2px; animation: curblink 1.05s steps(1) infinite; }
+  @keyframes curblink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .cur { animation: none; opacity: .5; } }
+
+  /* Sparkline de latence : trace de métrique, pas battement de cœur */
+  html.fx-standard .status .hb { display: block; width: 54px; height: 14px; }
+  html.fx-standard .status .hb polyline {
+    animation: none; stroke-dashoffset: 0; stroke-dasharray: none;
+    stroke: var(--good); stroke-width: 1.4; filter: none; opacity: .9;
+    transition: none;
+  }
+
+  /* Pipeline MLOps : le jeton parcourt les étapes */
+  html.fx-standard .pipe .node { transition: color .3s ease, border-color .3s ease, background .3s ease; }
+  html.fx-standard .pipe .node.hot { color: var(--ember); border-color: var(--ember); background: var(--accent-soft); }
+
+  /* Apparition échelonnée des grilles (classe posée par JS : sans JS, rien n'est masqué) */
+  html.js.fx-standard .stg > * { transition: opacity .5s ease, transform .5s ease; }
+  html.js.fx-standard .stg:not(.stg-in) > * { opacity: 0; transform: translateY(10px); }
+  @media (prefers-reduced-motion: reduce) {
+    html.js.fx-standard .stg:not(.stg-in) > * { opacity: 1; transform: none; }
+    html.js.fx-standard .stg > * { transition: none; }
+  }
+
   /* Fond du hero : grille de graphique, pas carte tactique */
   html.fx-standard .hero-bg {
     background:
@@ -924,7 +959,7 @@ document.documentElement.classList.add('js');
           <div class="st-body">
             <div class="row"><span class="v">GET</span><span>/health</span><span class="ok">200 OK</span></div>
             <div class="row"><span class="v">POST</span><span>/predict?SK_ID_CURR=100001</span><span class="ok">200</span></div>
-            <div class="row"><span class="muted">→ { "decision":"ACCORDE", "proba":<span id="log-proba">0.37</span> }</span></div>
+            <div class="row"><span class="muted" id="log-line">→ { "decision":"ACCORDE", "proba":<span id="log-proba">0.37</span> }</span></div>
           </div>
           <div class="kpis tnum">
             <div><div class="n">0.78</div><div class="c">AUC</div></div>
@@ -1863,6 +1898,240 @@ FX.onStart(function (mode) {
   window.addEventListener('resize', resize);
   resize();
   requestAnimationFrame(tick);
+});
+</script>
+<script>
+/* Animations du mode Standard : registre instrument / outil de développeur.
+   Chaque mouvement représente une donnée réelle du projet — flux d'inférence,
+   latence, pipeline CI/CD — plutôt qu'un effet décoratif. */
+FX.onStart(function (mode) {
+  "use strict";
+  if (mode !== 'standard') return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- 1. Barre de progression de lecture --- */
+  if (!reduce) {
+    var bar = document.createElement('div');
+    bar.className = 'rprog'; bar.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(bar);
+    var ticking = false;
+    function drawProg() {
+      ticking = false;
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (h > 0 ? Math.min(1, window.scrollY / h) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(drawProg); }
+    }, { passive: true });
+    window.addEventListener('resize', drawProg, { passive: true });
+    drawProg();
+  }
+
+  /* --- 2. Flux d'inférence : la réponse de l'API s'écrit jeton par jeton --- */
+  var line = document.getElementById('log-line');
+  if (line && !reduce) {
+    var cur = document.createElement('i');
+    cur.className = 'cur'; cur.setAttribute('aria-hidden', 'true');
+    var txt = document.createElement('span');
+    line.textContent = ''; line.appendChild(txt); line.appendChild(cur);
+    var cases = [
+      { d: 'ACCORDE', p: [0.31, 0.42] },
+      { d: 'ACCORDE', p: [0.28, 0.39] },
+      { d: 'REFUSE',  p: [0.57, 0.71] }
+    ];
+    var ci = 0, timer = null;
+    function stream() {
+      if (document.hidden) { timer = setTimeout(stream, 1200); return; }
+      var c = cases[ci % cases.length]; ci++;
+      var proba = (c.p[0] + Math.random() * (c.p[1] - c.p[0])).toFixed(2);
+      var full = '→ { "decision":"' + c.d + '", "proba":' + proba + ' }';
+      var i = 0;
+      (function tick() {
+        txt.textContent = full.slice(0, i);
+        if (i > full.length) { timer = setTimeout(stream, 3400); return; }
+        i++;
+        timer = setTimeout(tick, 16 + Math.random() * 26);   // cadence de génération
+      })();
+    }
+    timer = setTimeout(stream, 700);
+  }
+
+  /* --- 3. Latence : valeur + sparkline qui défile, comme un graphe de monitoring --- */
+  var lat = document.getElementById('kpi-lat');
+  var spark = document.querySelector('.status .hb polyline');
+  if (lat || spark) {
+    var series = [], NPT = 22;
+    for (var k = 0; k < NPT; k++) series.push(5.5 + Math.random() * 1.6);
+    function paint() {
+      if (!spark) return;
+      var pts = series.map(function (v, i) {
+        var x = (i / (NPT - 1)) * 44;   // viewBox 0 0 44 16
+        var y = 13 - Math.max(0, Math.min(1, (v - 4) / 5)) * 10;   // 4-9 ms -> 13-3
+        return x.toFixed(1) + ',' + y.toFixed(1);
+      });
+      spark.setAttribute('points', pts.join(' '));
+    }
+    paint();   // même en mouvement réduit : une trace statique plutôt que l'ECG du mode Game
+    if (!reduce) setInterval(function () {
+      if (document.hidden) return;
+      series.push(5 + Math.random() * 2.4); series.shift();
+      paint();
+      if (lat) lat.textContent = Math.round(series[series.length - 1]) + 'ms';
+    }, 1700);
+  }
+
+  /* --- 4. Compteurs : les métriques se chargent au lieu d'être posées là --- */
+  var COUNT_SEL = '.hero-stats .k, .status .kpis .n, .kpi .v';
+  function countUp(el) {
+    if (el.dataset.counted) return;
+    var raw = el.textContent.trim();
+    // « 0,78 », « 98 % », « 09 » : on n'anime qu'un nombre simple, préfixe et
+    // suffixe conservés. « 3/20 » ou « 0 € » restent tels quels.
+    var m = raw.match(/^(\D*?)(\d+(?:[.,]\d+)?)(\D*)$/);
+    if (!m || /\//.test(raw)) { el.dataset.counted = '1'; return; }
+    el.dataset.counted = '1';
+    var pre = m[1], numTxt = m[2], suf = m[3];
+    var dec = (numTxt.split(/[.,]/)[1] || '').length;
+    var sep = numTxt.indexOf(',') !== -1 ? ',' : '.';
+    var target = parseFloat(numTxt.replace(',', '.'));
+    var pad = dec === 0 && numTxt.length > 1 && numTxt[0] === '0' ? numTxt.length : 0;
+    var t0 = null, DUR = 850;
+    function frame(ts) {
+      if (t0 === null) t0 = ts;
+      var p = Math.min(1, (ts - t0) / DUR);
+      var e = 1 - Math.pow(1 - p, 3);
+      var v = (target * e).toFixed(dec).replace('.', sep);
+      if (pad) v = ('0000' + v).slice(-pad);
+      el.textContent = pre + v + suf;
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  var counters = [].slice.call(document.querySelectorAll(COUNT_SEL));
+  if (reduce || !('IntersectionObserver' in window)) {
+    counters.forEach(function (el) { el.dataset.counted = '1'; });
+  } else {
+    var cio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { countUp(e.target); cio.unobserve(e.target); } });
+    }, { threshold: 0.6 });
+    counters.forEach(function (el) { cio.observe(el); });
+  }
+
+  /* --- 5. Pipeline : un jeton parcourt les étapes du diagramme MLOps --- */
+  var lanes = [].slice.call(document.querySelectorAll('.pipe .lane'));
+  if (lanes.length && !reduce && 'IntersectionObserver' in window) {
+    var pipeOn = false, li = 0, ni = 0, pipeTimer = null;
+    function stepPipe() {
+      if (!pipeOn) return;
+      if (document.hidden) { pipeTimer = setTimeout(stepPipe, 700); return; }
+      lanes.forEach(function (l) {
+        [].slice.call(l.querySelectorAll('.node')).forEach(function (n) { n.classList.remove('hot'); });
+      });
+      var nodes = [].slice.call(lanes[li].querySelectorAll('.node'));
+      if (nodes[ni]) nodes[ni].classList.add('hot');
+      ni++;
+      var last = ni >= nodes.length;
+      if (last) { ni = 0; li = (li + 1) % lanes.length; }
+      pipeTimer = setTimeout(stepPipe, last ? 1100 : 460);
+    }
+    var pio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting && !pipeOn) { pipeOn = true; stepPipe(); }
+        else if (!e.isIntersecting && pipeOn) {
+          pipeOn = false; clearTimeout(pipeTimer);
+          lanes.forEach(function (l) {
+            [].slice.call(l.querySelectorAll('.node')).forEach(function (n) { n.classList.remove('hot'); });
+          });
+        }
+      });
+    }, { threshold: 0.25 });
+    pio.observe(lanes[0].parentNode);
+  }
+
+  /* --- 6. Grilles : apparition échelonnée des cartes --- */
+  var grids = [].slice.call(document.querySelectorAll('.proj-grid, .presta-grid, .soft-grid, .skills-grid'));
+  if (grids.length && !reduce && 'IntersectionObserver' in window) {
+    grids.forEach(function (g) {
+      g.classList.add('stg');
+      [].slice.call(g.children).forEach(function (c, i) { c.style.transitionDelay = Math.min(i * 55, 400) + 'ms'; });
+    });
+    var gio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('stg-in'); gio.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+    grids.forEach(function (g) { gio.observe(g); });
+    // Filet : une grille masquée est du contenu perdu. Si l'observateur n'a rien
+    // déclenché au bout de 6 s, on révèle tout plutôt que de risquer des cartes vides.
+    setTimeout(function () { grids.forEach(function (g) { g.classList.add('stg-in'); }); }, 6000);
+  }
+
+  /* --- 7. Graphe latent : nuage de points reliés, dérive lente, dans le hero --- */
+  var hero = document.querySelector('.hero');
+  if (hero && !reduce && window.matchMedia('(min-width: 700px)').matches) {
+    var cvs = document.createElement('canvas');
+    cvs.setAttribute('aria-hidden', 'true');
+    cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none';
+    hero.insertBefore(cvs, hero.firstChild);
+    var ctx = cvs.getContext('2d'), W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var css = getComputedStyle(document.documentElement);
+    var accent = (css.getPropertyValue('--ember') || '#7AA2FF').trim();
+    function hex2rgb(h) {
+      h = h.replace('#', '');
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      var n = parseInt(h, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+    var RGB = /^#/.test(accent) ? hex2rgb(accent) : [122, 162, 255];
+    var RGBS = RGB.join(',');
+    var pts = [];
+    function size() {
+      W = hero.clientWidth; H = hero.clientHeight;
+      cvs.width = Math.round(W * dpr); cvs.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function seed() {
+      var n = Math.max(18, Math.min(38, Math.round(W / 40)));
+      pts = [];
+      for (var i = 0; i < n; i++) {
+        pts.push({ x: Math.random() * W, y: Math.random() * H,
+                   vx: (Math.random() - 0.5) * 0.14, vy: (Math.random() - 0.5) * 0.14,
+                   r: 1 + Math.random() * 1.4 });
+      }
+    }
+    size(); seed();
+    window.addEventListener('resize', function () { size(); seed(); }, { passive: true });
+    var LINK = 172, raf2 = null;
+    function draw() {
+      raf2 = requestAnimationFrame(draw);
+      if (document.hidden) return;
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < pts.length; i++) {
+        var p = pts[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -10) p.x = W + 10; else if (p.x > W + 10) p.x = -10;
+        if (p.y < -10) p.y = H + 10; else if (p.y > H + 10) p.y = -10;
+      }
+      // arêtes : voisins proches, comme un graphe k-NN sur un espace latent
+      ctx.lineWidth = 1;
+      for (var a = 0; a < pts.length; a++) {
+        for (var b = a + 1; b < pts.length; b++) {
+          var dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
+          var d = Math.sqrt(dx * dx + dy * dy);
+          if (d > LINK) continue;
+          ctx.strokeStyle = 'rgba(' + RGBS + ',' + (0.22 * (1 - d / LINK)).toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[b].x, pts[b].y); ctx.stroke();
+        }
+      }
+      for (var c = 0; c < pts.length; c++) {
+        ctx.fillStyle = 'rgba(' + RGBS + ',.42)';
+        ctx.beginPath(); ctx.arc(pts[c].x, pts[c].y, pts[c].r, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    draw();
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { cancelAnimationFrame(raf2); raf2 = null; }
+      else if (!raf2) draw();
+    });
+  }
 });
 </script>
 <script>
