@@ -1,0 +1,173 @@
+[
+ {
+  "id": "accueil",
+  "title": "Accueil",
+  "text": "Du notebook à la production. AI Engineer freelance, MLOps, GenAI, Paris, Île-de-France, Oise, Hauts-de-France. API de scoring en production, AUC 0,78, latence, couverture de tests.",
+  "queries": [
+   "retour en haut",
+   "page d'accueil",
+   "qui es-tu",
+   "présentation générale",
+   "c'est quoi ce site"
+  ]
+ },
+ {
+  "id": "profil",
+  "title": "Profil",
+  "text": "Cinq ans développeur web puis reconversion AI Engineer via OpenClassrooms. Culture d'ingénieur, code testé déployé maintenu. Disponible pour des missions freelance. Basé en Île-de-France et Hauts-de-France, sur site ou télétravail.",
+  "queries": [
+   "es-tu disponible",
+   "tu travailles où",
+   "quelle est ta situation",
+   "freelance ou salarié",
+   "ton parcours en deux mots",
+   "tu habites où",
+   "tu te déplaces"
+  ]
+ },
+ {
+  "id": "parcours",
+  "title": "Parcours",
+  "text": "Expérience professionnelle et formation. Développeur front-end chez Paris Fashion Shops, Extracadabra, FAIRLY MADE, Snapkey. Vue.js, TypeScript, Quasar, NestJS. École O'clock, développeur web et web mobile. Lead dev. Sapeur-pompier volontaire.",
+  "queries": [
+   "ton cv",
+   "tes expériences passées",
+   "où as-tu travaillé",
+   "quelles entreprises",
+   "ta formation",
+   "tes études",
+   "depuis quand tu codes",
+   "combien d'années d'expérience"
+  ]
+ },
+ {
+  "id": "competences",
+  "title": "Hard skills",
+  "text": "Stack technique. Machine learning, scikit-learn, LightGBM, XGBoost, SHAP, coût métier. MLOps, FastAPI, Docker, CI/CD, MLflow, Evidently. GenAI, LangChain, Faiss, Mistral, Ragas, guardrails. PyTorch, ResNet-50, transfer learning. Airflow, PostgreSQL, ETL, pandas. Gymnasium, DQN, stable-baselines3. Python, SQL, Git, Streamlit, pytest, Ruff.",
+  "queries": [
+   "quelles technologies tu maîtrises",
+   "tu connais quoi",
+   "tu fais du python",
+   "tu utilises quels outils",
+   "quel framework",
+   "tu sais faire du deep learning",
+   "tu connais pytorch",
+   "tu fais du sql"
+  ]
+ },
+ {
+  "id": "projets",
+  "title": "Projets",
+  "text": "Neuf projets couvrant machine learning, MLOps, GenAI, computer vision, régression et reinforcement learning. Dépôts publics et documentés. Credit scoring, BrainScanAI, RAG, Seattle Energy, segmentation client.",
+  "queries": [
+   "montre-moi ton travail",
+   "tes réalisations",
+   "qu'est-ce que tu as construit",
+   "des exemples concrets",
+   "tes dépôts github",
+   "du code à voir"
+  ]
+ },
+ {
+  "id": "projet-phare",
+  "title": "Projet phare — Credit Scoring MLOps",
+  "text": "Mise en production d'un modèle de scoring crédit. API FastAPI conteneurisée, déploiement continu GitHub Actions vers Hugging Face Spaces, journalisation des prédictions, détection de data drift avec Evidently, dashboard de monitoring Streamlit. AUC 0,78, latence six millisecondes, couverture de tests 98 pour cent, seuil de décision 0,47. Arbitrage ONNX écarté. Essayez le modèle en direct.",
+  "queries": [
+   "comment tu surveilles un modèle en production",
+   "tu gères le drift",
+   "comment tu déploies un modèle",
+   "tu monitores quoi",
+   "mise en prod concrète",
+   "tu sais industrialiser",
+   "montre un modèle qui tourne",
+   "tester ton api",
+   "essayer le modèle",
+   "comment tu passes du notebook à la prod",
+   "monitoring",
+   "observabilité",
+   "détection de drift",
+   "data drift",
+   "dérive des données",
+   "surveiller la dérive",
+   "alerting sur un modèle",
+   "évaluer un modèle en production"
+  ]
+ },
+ {
+  "id": "prestations",
+  "title": "Prestations",
+  "text": "Missions freelance cadrées avec périmètre et durée annoncés. Renfort front Vue 3 et Quasar ou migration Vue 2 vers Vue 3, à la journée. Mise en production d'un modèle, API, CI/CD, monitoring, dix jours. POC IA cadré du besoin à l'API déployée, dix à quinze jours. Audit d'un système RAG existant, cinq jours. Zones d'intervention Paris, Île-de-France, Oise, Hauts-de-France.",
+  "queries": [
+   "combien tu coûtes",
+   "tes tarifs",
+   "tu proposes quoi",
+   "je veux te recruter",
+   "une mission pour toi",
+   "tu peux m'aider sur quoi",
+   "combien de jours",
+   "tu fais du front",
+   "tu peux auditer mon rag",
+   "j'ai besoin d'un poc",
+   "devis",
+   "prestation",
+   "tarif journalier",
+   "TJM",
+   "prix de la journée",
+   "quel est ton taux journalier",
+   "budget pour une mission",
+   "combien pour dix jours"
+  ]
+ },
+ {
+  "id": "soft-skills",
+  "title": "Soft skills",
+  "text": "Esprit d'analyse, une fuite de données repérée par audit MD5. Curiosité continue, veille MLOps et LLMOps. Vulgarisation, traduire AUC drift et coût métier en enjeux business. Gestion de projet, découpage itératif, definition of done. Créativité. Rigueur, tests automatisés, reproductibilité, documentation.",
+  "queries": [
+   "comment tu travailles en équipe",
+   "tu communiques bien",
+   "tu sais vulgariser",
+   "ta façon de bosser",
+   "tes qualités humaines",
+   "tu es autonome"
+  ]
+ },
+ {
+  "id": "reflexivite",
+  "title": "Réflexivité",
+  "text": "Recul sur le métier et axes d'amélioration. La fiabilité prime sur la micro-optimisation. Évaluation et monitoring au cœur du métier. Prochains défis, agents IA orchestration multi-outils, fine-tuning de LLM, cloud managé et observabilité, réentraînement automatisé sur drift, LLMOps suivi coût et tokens.",
+  "queries": [
+   "tes limites",
+   "ce que tu ne sais pas encore",
+   "tes axes de progression",
+   "tu apprends quoi en ce moment",
+   "tes convictions",
+   "fine-tuning",
+   "agents ia"
+  ]
+ },
+ {
+  "id": "cv",
+  "title": "CV",
+  "text": "Parcours complet, compétences et projets au format PDF, téléchargeable.",
+  "queries": [
+   "télécharger ton cv",
+   "cv en pdf",
+   "ton curriculum",
+   "un document à envoyer aux rh"
+  ]
+ },
+ {
+  "id": "contact",
+  "title": "Contact",
+  "text": "Me contacter par e-mail, discuter d'une mission, périmètre durée et prix. GitHub, blog, rapport de conduite de projet.",
+  "queries": [
+   "comment te joindre",
+   "ton email",
+   "je veux te parler",
+   "prendre contact",
+   "discuter d'un projet",
+   "ton adresse mail",
+   "te contacter"
+  ]
+ }
+]
