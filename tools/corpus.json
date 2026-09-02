@@ -97,7 +97,7 @@
  {
   "id": "projet-phare",
   "title": "Projet phare - Credit Scoring MLOps",
-  "text": "Mise en production d'un modèle de scoring crédit. API FastAPI conteneurisée, déploiement continu GitHub Actions vers Hugging Face Spaces, journalisation des prédictions, détection de data drift avec Evidently, dashboard de monitoring Streamlit. AUC 0,78, latence six millisecondes, couverture de tests 98 pour cent, seuil de décision 0,47. Arbitrage ONNX écarté. Essayez le modèle en direct.",
+  "text": "Mise en production d'un modèle de scoring crédit. API FastAPI conteneurisée, déploiement continu GitHub Actions vers Hugging Face Spaces, journalisation des prédictions, détection de data drift avec Evidently, dashboard de monitoring Streamlit. AUC 0,78, latence six millisecondes, couverture de tests 96 pour cent, seuil de décision 0,47. Arbitrage ONNX écarté. Essayez le modèle en direct.",
   "queries": [
    "comment tu surveilles un modèle en production",
    "tu gères le drift",
@@ -122,7 +122,7 @@
    "vous gérez le monitoring",
    "votre meilleur projet"
   ],
-  "answer": "Credit Scoring MLOps : un LightGBM servi par une API FastAPI conteneurisée, déployée en continu, journalisée et surveillée pour le drift. AUC 0,78, environ 6 ms d'inférence, 98 % de couverture de tests."
+  "answer": "Credit Scoring MLOps : un LightGBM servi par une API FastAPI conteneurisée, déployée en continu, journalisée et surveillée pour le drift. AUC 0,78, environ 6 ms d'inférence, 96 % de couverture de tests, sur 14 tests."
  },
  {
   "id": "prestations",
