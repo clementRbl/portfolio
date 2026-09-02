@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rapport de conduite de projet — Clément Reboul</title>
+<title>Rapport de conduite de projet - Clément Reboul</title>
 <meta name="description" content="Rapport de conduite de projet Data : industrialisation et mise en production d'un modèle de scoring crédit (MLOps).">
 <link rel="canonical" href="https://clement-reboul.fr/portfolio/rapport.html">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://clement-reboul.fr/portfolio/rapport.html">
-<meta property="og:title" content="Mise en production d'un modèle de scoring crédit — rapport MLOps">
+<meta property="og:title" content="Mise en production d'un modèle de scoring crédit - rapport MLOps">
 <meta property="og:description" content="Étude de cas MLOps détaillée par Clément Reboul, AI Engineer freelance : API FastAPI, CI/CD, monitoring de drift et arbitrages d'ingénieur.">
 <meta property="og:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -81,7 +81,7 @@ et mise en production d'un modèle de scoring crédit (MLOps)</h2>
 <tbody>
 <tr class="odd">
 <td><strong>Auteur</strong></td>
-<td>Clément Reboul — AI Engineer</td>
+<td>Clément Reboul - AI Engineer</td>
 </tr>
 <tr class="even">
 <td><strong>Portfolio en ligne</strong></td>
@@ -90,7 +90,7 @@ href="https://clementrbl.github.io/portfolio/">https://clementrbl.github.io/port
 </tr>
 <tr class="odd">
 <td><strong>Projet technique</strong></td>
-<td><em>Credit Scoring MLOps</em> — mise en production du modèle de
+<td><em>Credit Scoring MLOps</em> - mise en production du modèle de
 scoring « Prêt à Dépenser »</td>
 </tr>
 <tr class="even">
@@ -129,8 +129,8 @@ modélisation (comparaison de 5 algorithmes, optimisation d'un
 <strong>coût métier asymétrique</strong>, interprétabilité SHAP,
 tracking MLflow) a abouti à un modèle <strong>LightGBM</strong> (AUC-OOF
 ≈ 0,78 ; coût métier minimisé à ≈ 153 000 ; seuil de décision 0,47).</p>
-<p>La phase d'<strong>industrialisation</strong> — objet principal de ce
-rapport — expose ce modèle via une <strong>API FastAPI conteneurisée
+<p>La phase d'<strong>industrialisation</strong> - objet principal de ce
+rapport - expose ce modèle via une <strong>API FastAPI conteneurisée
 (Docker)</strong>, déployée automatiquement sur <strong>Hugging Face
 Spaces</strong> via un <strong>pipeline CI/CD GitHub Actions</strong>
 (test → build → deploy). La production est <strong>monitorée</strong> :
@@ -172,14 +172,14 @@ d'un cycle de vie ML industriel :</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Phase 1 — Modélisation &amp; MLOps (tracking)</strong></td>
+<td><strong>Phase 1 - Modélisation &amp; MLOps (tracking)</strong></td>
 <td>Construire, comparer et sélectionner un modèle de scoring ; assurer
 la traçabilité des expériences</td>
 <td>Modèle LightGBM + tracking MLflow
 (<code>pret-a-depenser</code>)</td>
 </tr>
 <tr class="even">
-<td><strong>Phase 2 — Industrialisation &amp; mise en
+<td><strong>Phase 2 - Industrialisation &amp; mise en
 production</strong></td>
 <td>Exposer, déployer, tester, monitorer le modèle en conditions
 réelles</td>
@@ -194,7 +194,7 @@ de l'AI Engineer et au besoin le plus recherché sur le marché :
 <hr />
 <h2
 id="axe-1--collecte-des-besoins-métiers-et-analyse-du-contexte-de-lorganisation">Axe
-1 — Collecte des besoins métiers et analyse du contexte de
+1 - Collecte des besoins métiers et analyse du contexte de
 l'organisation</h2>
 <h3 id="11-besoin-métier-central">1.1 Besoin métier central</h3>
 <p>Le besoin exprimé est d'<strong>automatiser et fiabiliser la décision
@@ -203,7 +203,7 @@ d'octroi de crédit</strong>. Chaque demande doit être classée en
 d'une <strong>probabilité de défaut</strong> calculée
 automatiquement.</p>
 <p>Deux risques métier s'opposent, avec un <strong>coût
-asymétrique</strong> — c'est le point de cadrage le plus structurant du
+asymétrique</strong> - c'est le point de cadrage le plus structurant du
 projet :</p>
 <div class="tablewrap"><table>
 <thead>
@@ -330,7 +330,7 @@ constat a orienté les recommandations méthodologiques (cf. Axe 4).</p>
 <hr />
 <h2
 id="axe-2--audit-de-la-solution-data-et-de-son-adéquation-aux-besoins">Axe
-2 — Audit de la solution data et de son adéquation aux besoins</h2>
+2 - Audit de la solution data et de son adéquation aux besoins</h2>
 <h3 id="21-audit-des-données">2.1 Audit des données</h3>
 <div class="tablewrap"><table>
 <thead>
@@ -465,26 +465,25 @@ Verdict d'audit : adéquation vs écart d'industrialisation</h3>
 </tr>
 <tr class="odd">
 <td><strong>Disponibilité en temps réel</strong></td>
-<td>❌ <strong>Non</strong> — modèle non exposé</td>
+<td>❌ <strong>Non</strong> - modèle non exposé</td>
 </tr>
 <tr class="even">
 <td><strong>Monitoring en production</strong></td>
-<td>❌ <strong>Non</strong> — pas de suivi du drift</td>
+<td>❌ <strong>Non</strong> - pas de suivi du drift</td>
 </tr>
 <tr class="odd">
 <td><strong>Robustesse aux évolutions de données</strong></td>
-<td>⚠️ Partiel — pas de validation en entrée</td>
+<td>⚠️ Partiel - pas de validation en entrée</td>
 </tr>
 </tbody>
 </table></div>
 <p><strong>Conclusion de l'audit :</strong> la solution de
 <strong>modélisation est mature et adéquate</strong> au besoin métier,
 mais <strong>non industrialisée</strong>. L'écart à combler est
-précisément la <strong>mise en production</strong> — objet de la phase 2
+précisément la <strong>mise en production</strong> - objet de la phase 2
 et des axes suivants.</p>
 <hr />
-<h2 id="axe-3--identification-de-la-solution-technique">Axe 3 —
-Identification de la solution technique</h2>
+<h2 id="axe-3--identification-de-la-solution-technique">Axe 3 - Identification de la solution technique</h2>
 <h3 id="31-architecture-de-mise-en-production">3.1 Architecture de mise
 en production</h3>
 <pre><code>┌─────────────┐   HTTP    ┌──────────────────────────────┐
@@ -601,7 +600,7 @@ risque.</li>
 </ol>
 <blockquote>
 <p><em>« En production, la fiabilité prime sur une micro-optimisation.
-»</em> — L'API utilise directement <code>pipeline.predict_proba()</code>
+»</em> - L'API utilise directement <code>pipeline.predict_proba()</code>
 du pipeline scikit-learn, pour ~6 ms d'inférence fiable.</p>
 </blockquote>
 <p>Cette décision illustre une posture d'ingénieur : <strong>arbitrer
@@ -610,7 +609,7 @@ raisonnement.</p>
 <hr />
 <h2
 id="axe-4--appui-stratégique-et-méthodologique-à-la-prise-de-décision">Axe
-4 — Appui stratégique et méthodologique à la prise de décision</h2>
+4 - Appui stratégique et méthodologique à la prise de décision</h2>
 <h3 id="41-le-projet-comme-outil-daide-à-la-décision">4.1 Le projet
 comme outil d'aide à la décision</h3>
 <p>La solution ne se contente pas de prédire : elle <strong>outille la
@@ -672,7 +671,7 @@ modèle.</li>
 détecter les catégories inconnues
 (<code>ignore_encoding_error=False</code>).</li>
 <li><strong>Stratégie de réaction au drift</strong> : selon l'importance
-de la variable — la retirer, la transformer, pondérer les observations
+de la variable - la retirer, la transformer, pondérer les observations
 récentes (<code>sample_weight</code>) ou <strong>réentraîner</strong>
 (solution de référence).</li>
 <li><strong>Séparation <code>train</code> /
@@ -724,7 +723,7 @@ l'échelle.</p>
 <hr />
 <h2
 id="axe-5--contrôle-et-analyse-du-projet-délais-coûts-livrables-performance">Axe
-5 — Contrôle et analyse du projet (délais, coûts, livrables,
+5 - Contrôle et analyse du projet (délais, coûts, livrables,
 performance)</h2>
 <h3 id="51-livrables-produits-et-contrôle">5.1 Livrables produits et
 contrôle</h3>
@@ -760,7 +759,7 @@ contrôle</h3>
 <tr class="even">
 <td>4</td>
 <td>Tests automatisés</td>
-<td><code>tests/test_api.py</code> — 7 tests, <strong>98 %</strong></td>
+<td><code>tests/test_api.py</code> - 7 tests, <strong>98 %</strong></td>
 <td>✅</td>
 </tr>
 <tr class="odd">
@@ -883,7 +882,7 @@ Streamlit)</td>
 </table></div>
 <p>Le projet démontre qu'une <strong>mise en production complète et
 crédible</strong> est réalisable à <strong>coût d'infrastructure
-nul</strong> grâce à l'écosystème open-source — un argument fort en
+nul</strong> grâce à l'écosystème open-source - un argument fort en
 phase de POC.</p>
 <h3 id="54-gestion-de-projet-délais-et-qualité">5.4 Gestion de projet,
 délais et qualité</h3>
@@ -950,8 +949,7 @@ dashboard.</li>
 </table></div>
 <h3 id="perspectives-dévolution">Perspectives d'évolution</h3>
 <p>Feature store, réentraînement continu déclenché sur drift, A/B
-testing de modèles, alerting automatisé, et — dans une logique 2026 —
-extension des mêmes principes MLOps aux <strong>systèmes
+testing de modèles, alerting automatisé, et - dans une logique 2026 - extension des mêmes principes MLOps aux <strong>systèmes
 GenAI/LLM</strong> (observabilité, évaluation en ligne, suivi
 coût/tokens), déjà explorés dans mon projet RAG
 <em>Puls-Events</em>.</p>
@@ -982,10 +980,10 @@ href="https://github.com/clementRbl/pret-a-depenser">https://github.com/clementR
 </ul>
 <h3 id="b-captures-dans-le-dépôt">B. Captures (dans le dépôt)</h3>
 <ul>
-<li><code>screenshots/logs_jsonl.png</code> — journalisation structurée
+<li><code>screenshots/logs_jsonl.png</code> - journalisation structurée
 des prédictions</li>
 <li><code>screenshots/dashboard_streamlit_1.png</code> /
-<code>_2.png</code> — dashboard de monitoring</li>
+<code>_2.png</code> - dashboard de monitoring</li>
 </ul>
 <h3 id="c-glossaire">C. Glossaire</h3>
 <div class="tablewrap"><table>
