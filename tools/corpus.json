@@ -2,7 +2,7 @@
  {
   "id": "accueil",
   "title": "Accueil",
-  "text": "Du notebook à la production. AI Engineer freelance, MLOps, GenAI, Paris, Île-de-France, Oise, Hauts-de-France. API de scoring en production, AUC 0,78, latence, couverture de tests.",
+  "text": "Du notebook à la production. AI Engineer freelance ou CDI, MLOps, GenAI, Paris, Île-de-France, Oise, Hauts-de-France. API de scoring en production, AUC 0,78, latence, couverture de tests.",
   "queries": [
    "retour en haut",
    "page d'accueil",
@@ -10,12 +10,12 @@
    "présentation générale",
    "c'est quoi ce site"
   ],
-  "answer": "AI Engineer freelance. Je viens du développement web, cinq ans, et j'industrialise aujourd'hui des modèles : API, CI/CD, monitoring. Deux API tournent en production, celle du haut de page répond en direct."
+  "answer": "AI Engineer, disponible en freelance ou en CDI. Je viens du développement web, cinq ans, et j'industrialise aujourd'hui des modèles : API, CI/CD, monitoring. Deux API tournent en production, celle du haut de page répond en direct."
  },
  {
   "id": "profil",
   "title": "Profil",
-  "text": "Cinq ans développeur web puis reconversion AI Engineer via OpenClassrooms. Culture d'ingénieur, code testé déployé maintenu. Disponible pour des missions freelance. Basé en Île-de-France et Hauts-de-France, sur site ou télétravail.",
+  "text": "Cinq ans développeur web puis reconversion AI Engineer via OpenClassrooms. Culture d'ingénieur, code testé déployé maintenu. Disponible en freelance ou en CDI, poste salarié comme mission. Basé en Île-de-France et Hauts-de-France, sur site ou télétravail.",
   "queries": [
    "es-tu disponible",
    "tu travailles où",
@@ -27,9 +27,15 @@
    "vous travaillez où",
    "vous êtes disponible",
    "vous vous déplacez",
-   "vous êtes basé où"
+   "vous êtes basé où",
+   "vous acceptez un cdi",
+   "vous cherchez un poste",
+   "cdi ou freelance",
+   "vous êtes ouvert au salariat",
+   "vous voulez être embauché",
+   "un poste salarié"
   ],
-  "answer": "Disponible pour des missions freelance en MLOps et GenAI. Basé en Île-de-France et dans les Hauts-de-France, sur site ou à distance."
+  "answer": "Disponible en freelance comme en CDI, sur des sujets MLOps et GenAI. Basé en Île-de-France et dans les Hauts-de-France, sur site ou à distance."
  },
  {
   "id": "parcours",
@@ -46,7 +52,7 @@
    "combien d'années d'expérience",
    "votre parcours",
    "vos expériences précédentes",
-   "vous avez travaillé où avant"
+   "vos employeurs précédents"
   ],
   "answer": "Cinq ans de développement web à Paris (Vue, TypeScript, NestJS, Django), puis le parcours AI Engineer d'OpenClassrooms de novembre 2025 à août 2026."
  },
@@ -121,7 +127,7 @@
  {
   "id": "prestations",
   "title": "Prestations",
-  "text": "Missions freelance cadrées avec périmètre et durée annoncés. Renfort front Vue 3 et Quasar ou migration Vue 2 vers Vue 3, à la journée. Mise en production d'un modèle, API, CI/CD, monitoring, dix jours. POC IA cadré du besoin à l'API déployée, dix à quinze jours. Audit d'un système RAG existant, cinq jours. Zones d'intervention Paris, Île-de-France, Oise, Hauts-de-France.",
+  "text": "Missions freelance cadrées avec périmètre et durée annoncés. Renfort front Vue 3 et Quasar ou migration Vue 2 vers Vue 3, à la journée. Mise en production d'un modèle, API, CI/CD, monitoring, dix jours. POC IA cadré du besoin à l'API déployée, dix à quinze jours. Audit d'un système RAG existant, cinq jours. Zones d'intervention Paris, Île-de-France, Oise, Hauts-de-France. Ces offres décrivent le format freelance, un poste en CDI se discute aussi.",
   "queries": [
    "combien tu coûtes",
    "tes tarifs",
@@ -147,7 +153,7 @@
    "vous acceptez quelles missions",
    "vos offres"
   ],
-  "answer": "Quatre missions cadrées : renfort front Vue 3 ou Quasar à la journée, mise en production d'un modèle en 10 jours, POC IA en 10 à 15 jours, audit d'un système RAG en 5 jours."
+  "answer": "Quatre missions cadrées : renfort front Vue 3 ou Quasar à la journée, mise en production d'un modèle en 10 jours, POC IA en 10 à 15 jours, audit d'un système RAG en 5 jours. En CDI, c'est le même périmètre sans la borne de durée."
  },
  {
   "id": "soft-skills",

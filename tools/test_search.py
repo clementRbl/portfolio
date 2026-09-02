@@ -95,6 +95,31 @@ def test_pluriels_preserves():
         assert rs == rp, 'racines divergentes : %s -> %s, %s -> %s' % (singulier, rs, pluriel, rp)
 
 
+def test_intentions_connues():
+    """Questions courantes et section attendue. Deux sections peuvent être
+    plausibles ; ces cas-là ont une seule bonne réponse et l'ont déjà perdue
+    une fois, quand une reformulation de « Parcours » s'est réduite à la même
+    racine que « vous travaillez où »."""
+    attendus = [
+        ('Vous travaillez où ?', 'profil'),
+        ('Vous êtes basé où ?', 'profil'),
+        ('Vous acceptez un CDI ?', 'profil'),
+        ('Vous êtes disponible ?', 'profil'),
+        ('Votre parcours ?', 'parcours'),
+        ('Vos employeurs précédents ?', 'parcours'),
+        ('Vous connaissez Docker ?', 'competences'),
+        ('Combien coûte un POC ?', 'prestations'),
+        ('Vous faites du RAG ?', 'projets'),
+    ]
+    ecarts = []
+    for q, attendu in attendus:
+        hits = search(INDEX, q)
+        obtenu = hits[0][1] if hits else 'RIEN'
+        if obtenu != attendu:
+            ecarts.append('« %s » -> %s au lieu de %s' % (q, obtenu, attendu))
+    assert not ecarts, ' ; '.join(ecarts)
+
+
 def test_hors_sujet_ne_renvoie_rien():
     """Une question sans rapport doit tomber dans le repli honnête, pas inventer."""
     hits = search(INDEX, 'xylophone banane trampoline')
