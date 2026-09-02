@@ -2,19 +2,20 @@
  {
   "id": "accueil",
   "title": "Accueil",
-  "text": "Du notebook à la production. AI Engineer freelance, MLOps, GenAI, Paris, Île-de-France, Oise, Hauts-de-France. API de scoring en production, AUC 0,78, latence, couverture de tests.",
+  "text": "Du notebook à la production. AI Engineer freelance ou CDI, MLOps, GenAI, Paris, Île-de-France, Oise, Hauts-de-France. API de scoring en production, AUC 0,78, latence, couverture de tests.",
   "queries": [
    "retour en haut",
    "page d'accueil",
    "qui es-tu",
    "présentation générale",
    "c'est quoi ce site"
-  ]
+  ],
+  "answer": "AI Engineer, disponible en freelance ou en CDI. Je viens du développement web, cinq ans, et j'industrialise aujourd'hui des modèles : API, CI/CD, monitoring. Deux API tournent en production, celle du haut de page répond en direct."
  },
  {
   "id": "profil",
   "title": "Profil",
-  "text": "Cinq ans développeur web puis reconversion AI Engineer via OpenClassrooms. Culture d'ingénieur, code testé déployé maintenu. Disponible pour des missions freelance. Basé en Île-de-France et Hauts-de-France, sur site ou télétravail.",
+  "text": "Cinq ans développeur web puis reconversion AI Engineer via OpenClassrooms. Culture d'ingénieur, code testé déployé maintenu. Disponible en freelance ou en CDI, poste salarié comme mission. Basé en Île-de-France et Hauts-de-France, sur site ou télétravail.",
   "queries": [
    "es-tu disponible",
    "tu travailles où",
@@ -22,8 +23,19 @@
    "freelance ou salarié",
    "ton parcours en deux mots",
    "tu habites où",
-   "tu te déplaces"
-  ]
+   "tu te déplaces",
+   "vous travaillez où",
+   "vous êtes disponible",
+   "vous vous déplacez",
+   "vous êtes basé où",
+   "vous acceptez un cdi",
+   "vous cherchez un poste",
+   "cdi ou freelance",
+   "vous êtes ouvert au salariat",
+   "vous voulez être embauché",
+   "un poste salarié"
+  ],
+  "answer": "Disponible en freelance comme en CDI, sur des sujets MLOps et GenAI. Basé en Île-de-France et dans les Hauts-de-France, sur site ou à distance."
  },
  {
   "id": "parcours",
@@ -37,8 +49,12 @@
    "ta formation",
    "tes études",
    "depuis quand tu codes",
-   "combien d'années d'expérience"
-  ]
+   "combien d'années d'expérience",
+   "votre parcours",
+   "vos expériences précédentes",
+   "vos employeurs précédents"
+  ],
+  "answer": "Cinq ans de développement web à Paris (Vue, TypeScript, NestJS, Django), puis le parcours AI Engineer d'OpenClassrooms de novembre 2025 à août 2026."
  },
  {
   "id": "competences",
@@ -52,8 +68,14 @@
    "quel framework",
    "tu sais faire du deep learning",
    "tu connais pytorch",
-   "tu fais du sql"
-  ]
+   "tu fais du sql",
+   "vous connaissez quoi",
+   "vous maîtrisez quelles technologies",
+   "vos compétences techniques",
+   "vous savez faire quoi",
+   "votre stack"
+  ],
+  "answer": "Python, FastAPI, Docker, CI/CD, MLflow et Evidently côté MLOps. scikit-learn, LightGBM et SHAP côté modèle. LangChain, Faiss, Mistral et Ragas côté GenAI."
  },
  {
   "id": "projets",
@@ -65,8 +87,12 @@
    "qu'est-ce que tu as construit",
    "des exemples concrets",
    "tes dépôts github",
-   "du code à voir"
-  ]
+   "du code à voir",
+   "vos projets",
+   "vous avez fait quoi",
+   "montrez-moi vos réalisations"
+  ],
+  "answer": "Neuf projets : scoring crédit, énergie des bâtiments, attrition RH, RAG culturel, IRM cérébrales, ETL multimodal, agent RL. La plupart des dépôts sont publics et documentés."
  },
  {
   "id": "projet-phare",
@@ -90,13 +116,18 @@
    "dérive des données",
    "surveiller la dérive",
    "alerting sur un modèle",
-   "évaluer un modèle en production"
-  ]
+   "évaluer un modèle en production",
+   "vous savez déployer un modèle",
+   "vous avez mis un modèle en production",
+   "vous gérez le monitoring",
+   "votre meilleur projet"
+  ],
+  "answer": "Credit Scoring MLOps : un LightGBM servi par une API FastAPI conteneurisée, déployée en continu, journalisée et surveillée pour le drift. AUC 0,78, environ 6 ms d'inférence, 98 % de couverture de tests."
  },
  {
   "id": "prestations",
   "title": "Prestations",
-  "text": "Missions freelance cadrées avec périmètre et durée annoncés. Renfort front Vue 3 et Quasar ou migration Vue 2 vers Vue 3, à la journée. Mise en production d'un modèle, API, CI/CD, monitoring, dix jours. POC IA cadré du besoin à l'API déployée, dix à quinze jours. Audit d'un système RAG existant, cinq jours. Zones d'intervention Paris, Île-de-France, Oise, Hauts-de-France.",
+  "text": "Missions freelance cadrées avec périmètre et durée annoncés. Renfort front Vue 3 et Quasar ou migration Vue 2 vers Vue 3, à la journée. Mise en production d'un modèle, API, CI/CD, monitoring, dix jours. POC IA cadré du besoin à l'API déployée, dix à quinze jours. Audit d'un système RAG existant, cinq jours. Zones d'intervention Paris, Île-de-France, Oise, Hauts-de-France. Ces offres décrivent le format freelance, un poste en CDI se discute aussi.",
   "queries": [
    "combien tu coûtes",
    "tes tarifs",
@@ -115,8 +146,14 @@
    "prix de la journée",
    "quel est ton taux journalier",
    "budget pour une mission",
-   "combien pour dix jours"
-  ]
+   "combien pour dix jours",
+   "vos tarifs",
+   "combien vous coûtez",
+   "vous proposez quoi",
+   "vous acceptez quelles missions",
+   "vos offres"
+  ],
+  "answer": "Quatre missions cadrées : renfort front Vue 3 ou Quasar à la journée, mise en production d'un modèle en 10 jours, POC IA en 10 à 15 jours, audit d'un système RAG en 5 jours. En CDI, c'est le même périmètre sans la borne de durée."
  },
  {
   "id": "soft-skills",
@@ -128,8 +165,11 @@
    "tu sais vulgariser",
    "ta façon de bosser",
    "tes qualités humaines",
-   "tu es autonome"
-  ]
+   "tu es autonome",
+   "vos qualités",
+   "vos points forts"
+  ],
+  "answer": "Analyse, curiosité, vulgarisation, conduite de projet, créativité et rigueur. Chacune est adossée à un fait précis plutôt qu'à une auto-évaluation."
  },
  {
   "id": "reflexivite",
@@ -142,8 +182,12 @@
    "tu apprends quoi en ce moment",
    "tes convictions",
    "fine-tuning",
-   "agents ia"
-  ]
+   "agents ia",
+   "vos limites",
+   "vos axes de progrès",
+   "vos convictions"
+  ],
+  "answer": "Trois convictions : la fiabilité prime sur la micro-optimisation, l'évaluation et le monitoring sont le cœur du métier, la valeur naît du lien entre la technique et le métier."
  },
  {
   "id": "cv",
@@ -153,8 +197,11 @@
    "télécharger ton cv",
    "cv en pdf",
    "ton curriculum",
-   "un document à envoyer aux rh"
-  ]
+   "un document à envoyer aux rh",
+   "votre cv",
+   "vous avez un cv"
+  ],
+  "answer": "Le CV tient en une page et se télécharge en PDF depuis cette section. Il est à jour."
  },
  {
   "id": "contact",
@@ -167,7 +214,11 @@
    "prendre contact",
    "discuter d'un projet",
    "ton adresse mail",
-   "te contacter"
-  ]
+   "te contacter",
+   "vous contacter",
+   "votre adresse mail",
+   "comment vous joindre"
+  ],
+  "answer": "Écrivez à clement.rbl@gmail.com en décrivant votre besoin : je réponds sur le périmètre, la durée et le prix."
  }
 ]
