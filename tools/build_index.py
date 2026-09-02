@@ -2,7 +2,7 @@
 """Construit l'index de recherche vectorielle de la palette de commandes.
 
 Analyse latente (LSA) : TF-IDF sur les sections du portfolio, puis SVD tronquée.
-Le corpus fait une quinzaine de documents, donc le rang utile est faible — on
+Le corpus fait une quinzaine de documents, donc le rang utile est faible - on
 garde 12 composantes. Sortie : assets/search-index.json, lu par index.html.
 
     python3 tools/build_index.py
@@ -126,8 +126,8 @@ if __name__ == '__main__':
                                             ' '.join(d.get('queries', []))]))
             for d in corpus]
     index = build(docs)
-    index['generated'] = 'tools/build_index.py — LSA rang %d sur %d documents' % (index['k'], len(docs))
+    index['generated'] = 'tools/build_index.py - LSA rang %d sur %d documents' % (index['k'], len(docs))
     out = ROOT / 'assets' / 'search-index.json'
     out.write_text(json.dumps(index, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
-    print('%s — %d documents, %d termes, rang %d, %.1f Ko'
+    print('%s - %d documents, %d termes, rang %d, %.1f Ko'
           % (out.name, len(docs), len(index['vocab']), index['k'], out.stat().st_size / 1024))
