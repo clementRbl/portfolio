@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clément Reboul - AI Engineer freelance | Paris, Île-de-France &amp; Hauts-de-France</title>
-<meta name="description" content="AI Engineer freelance à Paris, en Île-de-France, dans l'Oise et les Hauts-de-France. Mise en production de modèles (MLOps), POC IA, audit RAG et renfort front Vue 3 / Quasar. Missions cadrées : périmètre, durée et livrables annoncés.">
-<meta name="keywords" content="AI Engineer freelance, MLOps freelance, expert MLOps, consultant IA freelance, freelance intelligence artificielle Paris, développeur IA Île-de-France, freelance IA Oise, consultant IA Hauts-de-France, expert RAG, audit RAG, LLMOps, mise en production modèle machine learning, MLOps Paris, POC IA, développeur Vue 3 freelance, expert Quasar, migration Vue 2 Vue 3, FastAPI, Docker, LangChain, Python, Clément Reboul">
+<title>Clément Reboul - AI Engineer freelance ou CDI | Paris &amp; Hauts-de-France</title>
+<meta name="description" content="AI Engineer disponible en freelance ou en CDI, à Paris, en Île-de-France, dans l'Oise et les Hauts-de-France. Mise en production de modèles (MLOps), POC IA, audit RAG et renfort front Vue 3 / Quasar. Missions cadrées ou poste en CDI : périmètre, durée et livrables annoncés.">
+<meta name="keywords" content="AI Engineer freelance, AI Engineer CDI, ingénieur IA CDI, emploi AI Engineer, MLOps freelance, expert MLOps, consultant IA freelance, freelance intelligence artificielle Paris, développeur IA Île-de-France, freelance IA Oise, consultant IA Hauts-de-France, expert RAG, audit RAG, LLMOps, mise en production modèle machine learning, MLOps Paris, POC IA, développeur Vue 3 freelance, expert Quasar, migration Vue 2 Vue 3, FastAPI, Docker, LangChain, Python, Clément Reboul">
 <meta name="author" content="Clément Reboul">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="https://clement-reboul.fr/portfolio/">
@@ -14,19 +14,19 @@
 
 <!-- Open Graph / partage sur les réseaux et messageries -->
 <meta property="og:type" content="profile">
-<meta property="og:site_name" content="Clément Reboul - AI Engineer freelance">
+<meta property="og:site_name" content="Clément Reboul - AI Engineer">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://clement-reboul.fr/portfolio/">
-<meta property="og:title" content="Clément Reboul - AI Engineer freelance | MLOps, GenAI, Vue 3">
+<meta property="og:title" content="Clément Reboul - AI Engineer freelance ou CDI | MLOps, GenAI, Vue 3">
 <meta property="og:description" content="Du notebook à la production. Mise en production de modèles, POC IA cadré, audit RAG et renfort front Vue 3 - Paris, Île-de-France, Oise, Hauts-de-France.">
 <meta property="og:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Clément Reboul, AI Engineer freelance - du notebook à la production : MLOps, GenAI/RAG, Vue 3.">
+<meta property="og:image:alt" content="Clément Reboul, AI Engineer - du notebook à la production : MLOps, GenAI/RAG, Vue 3.">
 <meta property="profile:first_name" content="Clément">
 <meta property="profile:last_name" content="Reboul">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Clément Reboul - AI Engineer freelance | MLOps, GenAI, Vue 3">
+<meta name="twitter:title" content="Clément Reboul - AI Engineer freelance ou CDI | MLOps, GenAI, Vue 3">
 <meta name="twitter:description" content="Du notebook à la production. Missions cadrées : mise en prod d'un modèle, POC IA, audit RAG, renfort Vue 3. Paris, Île-de-France, Oise, Hauts-de-France.">
 <meta name="twitter:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
 <link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3C/svg%3E">
@@ -65,6 +65,22 @@ document.documentElement.classList.add('js');
     if (el) el.setAttribute('href', 'data:image/svg+xml,' + svg);
   };
   try { window.setFavicon(game); } catch (e) {}
+
+  /* Le titre du hero s'écrit mot à mot en mode Standard, mais son découpage a
+     lieu en bas de page. D'ici là le navigateur a eu le temps de peindre le
+     titre entier, et le masquer après coup produirait un clignotement. On le
+     retient donc dès l'en-tête. Garde-fou obligatoire : si le script d'animation
+     ne s'exécute jamais, le titre réapparaît seul au bout de deux secondes. Un
+     titre masqué pour cause de JS cassé serait pire que pas d'animation. */
+  if (!game) {
+    try {
+      if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+        document.documentElement.classList.add('h1-hold');
+        setTimeout(function () { document.documentElement.classList.remove('h1-hold'); }, 2000);
+      }
+    } catch (e) {}
+  }
+
   window.FX = {
     mode: game ? 'game' : 'standard', _started: false, _fns: [],
     onStart: function (fn) { if (this._started) fn(this.mode); else this._fns.push(fn); },
@@ -246,6 +262,16 @@ document.documentElement.classList.add('js');
     --ember: #E4A34B; --ember-bright: #F2BB63; --ember-glow: rgba(228,163,75,.30);
     --spore: #4FB39B; --spore-bright: #6FCBB4; --moss: #7C8A56; --good: #8BA05A;
   }
+
+  /* Une bascule de mode passe par un rechargement (les effets s'initialisent
+     une fois par chargement). Sans ceci, le visiteur voit un flash blanc entre
+     les deux univers ; avec, il voit un fondu. Ignoré là où c'est inconnu. */
+  @view-transition { navigation: auto; }
+
+  /* Lu par les lecteurs d'écran, invisible à l'œil : sert à annoncer une
+     réponse en une fois là où l'affichage l'écrit caractère par caractère. */
+  .vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+        overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -804,6 +830,256 @@ document.documentElement.classList.add('js');
   }
 
 
+  /* ---------- MODE STANDARD : COMPOSANTS 2026 ----------
+     Le mode Standard visait « pas gamer ». Il en gardait pourtant un
+     vocabulaire daté : angles vifs partout, capitales sur tous les titres,
+     panneaux posés à plat sans profondeur, libellés de boutons en capitales
+     monospace. Les outils que lisent les leads techniques aujourd'hui, consoles
+     LLM et tableaux de bord d'observabilité, tiennent un autre discours :
+     rayons francs, liserés d'un pixel, ombres basses et larges, capitales
+     réservées aux étiquettes techniques. C'est ce que pose ce bloc. */
+  html.fx-standard {
+    --r: 12px;                 /* panneaux */
+    --r-sm: 9px;               /* boutons, champs */
+    --hair: rgba(255,255,255,.055);   /* liseré haut : la lumière vient d'en haut */
+    --sh-1: 0 1px 2px rgba(0,0,0,.30), 0 10px 26px -14px rgba(0,0,0,.75);
+    --sh-2: 0 1px 2px rgba(0,0,0,.34), 0 22px 48px -20px rgba(0,0,0,.85);
+  }
+  :root[data-theme="light"].fx-standard {
+    --hair: transparent;       /* sur une surface blanche, un liseré blanc ne dit rien */
+    --sh-1: 0 1px 2px rgba(24,34,52,.05), 0 10px 24px -16px rgba(24,34,52,.30);
+    --sh-2: 0 1px 3px rgba(24,34,52,.07), 0 22px 44px -22px rgba(24,34,52,.36);
+  }
+
+  /* Panneaux. Le clip-path du HUD doit sauter : il rogne l'ombre portée. */
+  html.fx-standard .panel {
+    clip-path: none; border-radius: var(--r);
+    box-shadow: var(--sh-1), inset 0 1px 0 var(--hair);
+    transition: box-shadow .3s ease, border-color .3s ease;
+  }
+  html.fx-standard .proj:hover,
+  html.fx-standard .presta:hover { box-shadow: var(--sh-2), inset 0 1px 0 var(--hair); }
+
+  /* Halo suivant le curseur. Le biseau ::after est libre en mode Standard : on
+     le réemploie plutôt que d'ajouter un élément. --px / --py sont posées en JS. */
+  @media (hover: hover) and (pointer: fine) {
+    html.fx-standard .panel::after {
+      display: block; inset: 0; width: auto; height: auto; border-radius: inherit;
+      background: radial-gradient(300px circle at var(--px, 50%) var(--py, 50%),
+                                  var(--accent-soft), transparent 68%);
+      opacity: 0; transition: opacity .4s ease; pointer-events: none;
+    }
+    html.fx-standard .panel:hover::after { opacity: 1; }
+  }
+
+  /* Boutons : le monospace en capitales est une étiquette technique, pas un
+     libellé d'action. On rend l'action à la grotesque du corps de texte. */
+  html.fx-standard .btn {
+    font-family: var(--font-body); font-size: 14.5px; font-weight: 600;
+    text-transform: none; letter-spacing: -.005em; padding: 11px 18px;
+    border-radius: var(--r-sm);
+  }
+  html.fx-standard .btn-primary:hover { box-shadow: 0 8px 22px -8px var(--ember-glow); }
+  html.fx-standard .btn-ghost { background: var(--surface); }
+  html.fx-standard .btn-ghost:hover { background: var(--surface-2); }
+  html.fx-standard .icon-btn { border-radius: var(--r-sm); }
+  html.fx-standard .menu-btn { border-radius: var(--r-sm); }
+  html.fx-standard .invite .go { border-radius: var(--r-sm); }
+
+  /* Étiquettes : pilules. Le monospace reste, c'est là qu'il est juste. */
+  html.fx-standard .badge,
+  html.fx-standard .tag,
+  html.fx-standard .axes .chip,
+  html.fx-standard .duree { border-radius: 999px; }
+  html.fx-standard .pipe .node,
+  html.fx-standard .pipe,
+  html.fx-standard .gauge,
+  html.fx-standard .try-panel,
+  html.fx-standard .try-raw,
+  html.fx-standard .cmdk-item,
+  html.fx-standard .engagement { border-radius: 8px; }
+  html.fx-standard .cmdk,
+  html.fx-standard .invite { border-radius: 14px; }
+  /* Une capture à angles vifs dans une carte arrondie trahit le montage. */
+  html.fx-standard .cover,
+  html.fx-standard .shot { border-radius: 9px; }
+  html.fx-standard .cmdk { box-shadow: var(--sh-2); }
+  html.fx-standard .sec-head .idx {
+    display: inline-block; padding: 3px 10px; border: 1px solid var(--border);
+    border-radius: 999px; font-size: 11px; color: var(--moss);
+  }
+
+  /* Barre supérieure : flou progressif, et un filet qui n'apparaît qu'une fois
+     la page défilée. Au repos, l'en-tête ne doit pas exister. */
+  html.fx-standard header.hud-top {
+    background: rgba(var(--bg-rgb), .68);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid transparent;
+    transition: background .3s ease, border-color .3s ease;
+  }
+  html.fx-standard.scrolled header.hud-top {
+    background: rgba(var(--bg-rgb), .88); border-bottom-color: var(--border);
+  }
+
+  /* Casse. Les capitales sur un titre de 4,7rem sont un parti d'affiche : elles
+     appartiennent au mode Game. Un outil écrit ses titres comme des phrases. */
+  html.fx-standard .hero h1,
+  html.fx-standard .sec-head h2,
+  html.fx-standard .contact h2,
+  html.fx-standard .proj h3,
+  html.fx-standard .presta h3,
+  html.fx-standard .soft h3,
+  html.fx-standard .tl-role { text-transform: none; }
+  html.fx-standard .tl-role { font-weight: 650; font-size: 1.24rem; letter-spacing: -.012em; }
+  html.fx-standard .flag-body h3,
+  html.fx-standard .tryout h3 { letter-spacing: -.01em; text-transform: none; }
+
+  /* ---------- ANIMATIONS PILOTÉES PAR LE DÉFILEMENT ----------
+     animation-timeline lie l'animation à la position de l'élément dans la
+     fenêtre plutôt qu'à une horloge : ni observateur, ni requestAnimationFrame,
+     et le mouvement suit exactement le doigt sur le trackpad, y compris en
+     remontant. Là où le navigateur ne connaît pas view(), le chemin JS
+     d'origine reprend la main (voir le @supports not plus haut). */
+  @keyframes cardIn { from { opacity: 0; translate: 0 26px; } to { opacity: 1; translate: 0 0; } }
+  @keyframes headIn { from { opacity: .3; font-weight: 300; translate: 0 12px; }
+                        to { opacity: 1; font-weight: 800; translate: 0 0; } }
+  @keyframes progScale { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      html.js.fx-standard .stg > * {
+        animation: cardIn linear both;
+        animation-timeline: view(); animation-range: entry 3% cover 22%;
+      }
+      /* Le titre prend sa graisse en entrant : Inter est une variable, autant
+         que la typographie elle-même serve d'animation. */
+      html.js.fx-standard .sec-head h2 {
+        animation: headIn linear both;
+        animation-timeline: view(); animation-range: entry 6% cover 32%;
+      }
+      html.js.fx-standard .rprog {
+        width: 100%; transform-origin: 0 50%; transform: scaleX(0);
+        animation: progScale linear;
+        animation-timeline: scroll(root block);
+      }
+    }
+  }
+
+  /* ---------- HERO : LE TITRE S'ÉCRIT ----------
+     Les mots arrivent un à un, sortant du flou, curseur en bout de ligne : le
+     geste d'un modèle qui produit son texte. Une seule fois, au chargement, et
+     jamais si le visiteur a demandé moins de mouvement. */
+  html.fx-standard.h1-hold .hero h1 { opacity: 0; }
+  html.fx-standard .hero h1 .w { display: inline-block; }
+  html.js.fx-standard .hero h1.gen .w {
+    opacity: 0; translate: 0 .4em; filter: blur(8px);
+    animation: wordIn .52s cubic-bezier(.2,.75,.2,1) both; animation-delay: var(--d, 0ms);
+  }
+  @keyframes wordIn { to { opacity: 1; translate: 0 0; filter: blur(0); } }
+  .gen-caret {
+    display: inline-block; width: .46ch; height: .8em; margin-left: .14em;
+    background: var(--ember); vertical-align: -.04em; animation: genCaret .9s steps(1) infinite;
+  }
+  @keyframes genCaret { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+
+  /* ---------- RAIL SÉMANTIQUE ----------
+     Les traits marquent les sections. Le trait actif est plein ; les traits
+     estompés sont les sections que l'index vectoriel juge proches de celle
+     qu'on lit. Ce ne sont pas des voisins de sommaire : ce sont des cosinus. */
+  .rail {
+    position: fixed; left: 22px; top: 50%; translate: 0 -50%; z-index: 55;
+    display: none; flex-direction: column; gap: 11px;
+  }
+  html.js.fx-standard .rail { display: flex; }
+  .rail a { display: flex; align-items: center; gap: 11px; padding: 3px 0; }
+  .rail .bar {
+    width: 18px; height: 2px; flex: none; background: var(--border-2); border-radius: 2px;
+    transition: width .3s cubic-bezier(.2,.8,.2,1), background .3s ease;
+  }
+  .rail a.near .bar { background: var(--moss); background: color-mix(in srgb, var(--ember) 42%, var(--border-2)); }
+  .rail a.on .bar { width: 34px; background: var(--ember); }
+  .rail a:hover .bar { background: var(--ember-bright); }
+  .rail .lb {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--muted); white-space: nowrap;
+    opacity: 0; translate: -6px 0; transition: opacity .22s ease, translate .22s ease;
+  }
+  .rail:hover .lb, .rail a:focus-visible .lb { opacity: 1; translate: 0 0; }
+  .rail a.on .lb { color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .rail .bar, .rail .lb { transition: none; } }
+  @media (max-width: 1300px) { html.js.fx-standard .rail { display: none; } }
+
+  /* ---------- CV : FICHE DE MODÈLE ----------
+     Un CV se lit en trente secondes par quelqu'un qui en lit trente par jour.
+     Le présenter dans le format que cette personne consulte déjà toute la
+     journée sur Hugging Face, model card comprise, lui épargne la traduction.
+     La rubrique « limites » n'est pas un aveu : c'est ce qui rend le reste
+     crédible, et c'est le premier réflexe qu'on attend d'un ingénieur IA. */
+  .contact .wrap.cv-wrap { max-width: 980px; }
+  .card-model { text-align: left; margin-top: 34px; overflow: hidden; }
+  .cm-top {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 15px 22px; border-bottom: 1px solid var(--border); background: var(--surface-2);
+  }
+  .cm-id { font-family: var(--font-mono); font-size: 14.5px; }
+  .cm-org, .cm-sep { color: var(--muted); }
+  .cm-name { color: var(--ink); font-weight: 600; }
+  .cm-ver { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .cm-top .badge { margin-left: auto; }
+  .cm-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--border); }
+  .cm-meta > div { background: var(--surface); padding: 13px 22px; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .cm-k { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); min-width: 116px; }
+  .cm-v { font-size: 14.6px; color: var(--ink-dim); }
+  .cm-v.ok { color: var(--good); }
+  .cm-metrics { display: flex; flex-wrap: wrap; border-top: 1px solid var(--border); }
+  .cm-metrics > div { flex: 1 1 132px; padding: 16px 22px; border-right: 1px solid var(--border); }
+  .cm-metrics > div:last-child { border-right: 0; }
+  .cm-metrics .n { font-family: var(--font-mono); font-size: 1.42rem; font-weight: 700; color: var(--ember); line-height: 1; }
+  .cm-metrics .c { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); margin-top: 7px; }
+  .cm-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; padding: 24px 22px; border-top: 1px solid var(--border); }
+  .cm-cols h3 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ember); font-weight: 600; }
+  .cm-cols ul { list-style: none; margin: 13px 0 0; padding: 0; display: grid; gap: 10px; }
+  .cm-cols li { font-size: 14.4px; color: var(--ink-dim); line-height: 1.5; padding-left: 15px; position: relative; }
+  .cm-cols li::before { content: ""; position: absolute; left: 0; top: .68em; width: 6px; height: 1px; background: var(--moss-dim); }
+  .cm-cta { display: flex; gap: 13px; flex-wrap: wrap; padding: 20px 22px; border-top: 1px solid var(--border); background: var(--surface-2); }
+  @media (max-width: 820px) { .cm-cols, .cm-meta { grid-template-columns: 1fr; } }
+
+  /* ---------- INTERROGER LE CV ----------
+     Le moteur est celui de la palette : l'index LSA construit hors ligne. La
+     recherche est vectorielle, la réponse ne l'est pas : chaque section porte
+     une phrase écrite à la main. Rien n'est produit à la volée, donc rien ne
+     peut être inventé - et la démonstration porte sur ce qui est réellement
+     démontrable : la récupération. */
+  .ask { text-align: left; margin-top: 26px; padding: 22px; }
+  .ask-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .ask-eng { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .ask-form { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .ask-form input {
+    flex: 1 1 240px; min-width: 0; background: var(--surface-2); border: 1px solid var(--border-2);
+    color: var(--ink); font-family: var(--font-body); font-size: 15.5px; padding: 12px 14px; outline: none;
+  }
+  .ask-form input::placeholder { color: var(--muted); }
+  .ask-form input:focus { border-color: var(--ember); }
+  html.fx-standard .ask-form input { border-radius: var(--r-sm); }
+  .ask-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+  .ask-chips button {
+    font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-dim); background: none;
+    border: 1px solid var(--border); padding: 6px 11px; cursor: pointer; border-radius: 999px;
+  }
+  .ask-chips button:hover { border-color: var(--ember); color: var(--ember); }
+  .ask-out { margin-top: 18px; display: none; }
+  .ask-out.on { display: block; }
+  .ask-toks { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-family: var(--font-mono); font-size: 11px; }
+  .ask-toks .tk { padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--ember); }
+  .ask-toks .tk.out { background: none; color: var(--muted); border: 1px solid var(--border); text-decoration: line-through; }
+  .ask-toks .meta { color: var(--muted); margin-left: 6px; }
+  .ask-a { font-size: 16px; color: var(--ink); line-height: 1.55; margin-top: 15px; min-height: 1.55em; }
+  .ask-src { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 15px; font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
+  .ask-src a { color: var(--ember); border-bottom: 1px solid currentColor; }
+  .ask-bar { width: 74px; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .ask-bar i { display: block; height: 100%; width: 0; background: var(--ember); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+  @media (prefers-reduced-motion: reduce) { .ask-bar i { transition: none; } }
+
   /* ---------- INVITATION AU MODE GAME ----------
      Bande ancree en bas, jamais une modale : elle ne bloque pas la lecture,
      ne recouvre pas le contenu et se referme d'un clic. Declenchee par
@@ -868,12 +1144,15 @@ document.documentElement.classList.add('js');
   html.fx-standard .pipe .node { transition: color .3s ease, border-color .3s ease, background .3s ease; }
   html.fx-standard .pipe .node.hot { color: var(--ember); border-color: var(--ember); background: var(--accent-soft); }
 
-  /* Apparition échelonnée des grilles (classe posée par JS : sans JS, rien n'est masqué) */
-  html.js.fx-standard .stg > * { transition: opacity .5s ease, transform .5s ease; }
-  html.js.fx-standard .stg:not(.stg-in) > * { opacity: 0; transform: translateY(10px); }
-  @media (prefers-reduced-motion: reduce) {
-    html.js.fx-standard .stg:not(.stg-in) > * { opacity: 1; transform: none; }
-    html.js.fx-standard .stg > * { transition: none; }
+  /* Apparition échelonnée des grilles (classe posée par JS : sans JS, rien n'est masqué).
+     Chemin de repli : ne sert que là où animation-timeline: view() manque. */
+  @supports not (animation-timeline: view()) {
+    html.js.fx-standard .stg > * { transition: opacity .5s ease, transform .5s ease; }
+    html.js.fx-standard .stg:not(.stg-in) > * { opacity: 0; transform: translateY(10px); }
+    @media (prefers-reduced-motion: reduce) {
+      html.js.fx-standard .stg:not(.stg-in) > * { opacity: 1; transform: none; }
+      html.js.fx-standard .stg > * { transition: none; }
+    }
   }
 
   /* Fond du hero : grille de graphique, pas carte tactique */
@@ -1016,8 +1295,8 @@ document.documentElement.classList.add('js');
       "name": "Clément Reboul",
       "givenName": "Clément",
       "familyName": "Reboul",
-      "jobTitle": "AI Engineer freelance",
-      "description": "AI Engineer freelance spécialisé en MLOps, GenAI/RAG et mise en production de modèles de machine learning. Cinq ans de développement web (Vue 3, Quasar, TypeScript) avant la reconversion.",
+      "jobTitle": "AI Engineer",
+      "description": "AI Engineer disponible en freelance ou en CDI, spécialisé en MLOps, GenAI/RAG et mise en production de modèles de machine learning. Cinq ans de développement web (Vue 3, Quasar, TypeScript) avant la reconversion.",
       "url": "https://clement-reboul.fr/portfolio/",
       "email": "mailto:clement.rbl@gmail.com",
       "image": "https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png",
@@ -1038,8 +1317,8 @@ document.documentElement.classList.add('js');
     {
       "@type": "ProfessionalService",
       "@id": "https://clement-reboul.fr/portfolio/#prestations",
-      "name": "Clément Reboul - AI Engineer freelance",
-      "description": "Missions freelance cadrées : mise en production de modèles de machine learning, POC IA, audit de systèmes RAG et renfort front Vue 3 / Quasar.",
+      "name": "Clément Reboul - AI Engineer",
+      "description": "Missions freelance cadrées, ou poste en CDI : mise en production de modèles de machine learning, POC IA, audit de systèmes RAG et renfort front Vue 3 / Quasar.",
       "url": "https://clement-reboul.fr/portfolio/#prestations",
       "image": "https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png",
       "provider": { "@id": "https://clement-reboul.fr/portfolio/#clement-reboul" },
@@ -1067,7 +1346,7 @@ document.documentElement.classList.add('js');
       "@type": "WebSite",
       "@id": "https://clement-reboul.fr/portfolio/#site",
       "url": "https://clement-reboul.fr/portfolio/",
-      "name": "Portfolio de Clément Reboul - AI Engineer freelance",
+      "name": "Portfolio de Clément Reboul - AI Engineer",
       "inLanguage": "fr-FR",
       "about": { "@id": "https://clement-reboul.fr/portfolio/#clement-reboul" }
     }
@@ -1079,7 +1358,7 @@ document.documentElement.classList.add('js');
 <a href="#profil" class="skip">Aller au contenu</a>
 
 <header class="hud-top">
-  <a href="#accueil" class="brand"><span class="mono-logo">Clément&nbsp;Reboul</span><span class="tag">AI&nbsp;Engineer&nbsp;freelance</span></a>
+  <a href="#accueil" class="brand"><span class="mono-logo">Clément&nbsp;Reboul</span><span class="tag">AI&nbsp;Engineer&nbsp;·&nbsp;freelance ou CDI</span></a>
   <button class="icon-btn" id="snd-toggle" aria-pressed="false" aria-label="Activer le son" title="Son (effets de la roue)">
     <svg class="off-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
     <svg class="on-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
@@ -1110,9 +1389,9 @@ document.documentElement.classList.add('js');
     <div class="embers" aria-hidden="true"><i style="left:10%;animation-duration:9s;animation-delay:0s"></i><i style="left:24%;animation-duration:12s;animation-delay:3s"></i><i style="left:38%;animation-duration:10s;animation-delay:1.5s"></i><i style="left:55%;animation-duration:13s;animation-delay:4.5s"></i><i style="left:68%;animation-duration:9.5s;animation-delay:2.2s"></i><i style="left:82%;animation-duration:11.5s;animation-delay:6s"></i><i style="left:92%;animation-duration:10.5s;animation-delay:3.8s"></i></div>
     <div class="wrap hero-grid">
       <div>
-        <p class="hud-label reveal">AI Engineer freelance · MLOps · GenAI · Paris &amp; Hauts-de-France</p>
+        <p class="hud-label reveal">AI Engineer · freelance ou CDI · MLOps · GenAI · Paris &amp; Hauts-de-France</p>
         <h1 class="reveal">Du notebook <span class="ember">à la production.</span></h1>
-        <p class="lede reveal"><b>AI Engineer freelance</b> - développeur web pendant 5 ans, devenu ingénieur IA. Je conçois des modèles et surtout je les rends <b>fiables, déployés et monitorés</b> là où naît la valeur. Missions en Île-de-France, dans l'Oise et les Hauts-de-France, ou à distance.</p>
+        <p class="lede reveal"><b>AI Engineer</b> - développeur web pendant 5 ans, devenu ingénieur IA. Je conçois des modèles et surtout je les rends <b>fiables, déployés et monitorés</b> là où naît la valeur. Disponible en freelance ou en CDI, en Île-de-France, dans l'Oise et les Hauts-de-France, ou à distance.</p>
         <div class="hero-cta reveal">
           <a href="#projets" class="btn btn-primary">Explorer<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a href="https://clement-reboul.fr/portfolio/rapport.html" class="btn btn-ghost">Rapport</a>
@@ -1153,10 +1432,10 @@ document.documentElement.classList.add('js');
           <p class="lead"><b>5 ans développeur web</b>, puis reconversion via le parcours <b>AI Engineer</b> Master.</p>
           <p class="muted">De ces années de dev, je garde une culture d'ingénieur : du code testé, déployé, maintenu. C'est souvent ce qui manque entre un notebook et une vraie mise en production.</p>
           <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et systèmes GenAI (RAG, évaluation LLM).</p>
-          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Disponible pour des missions freelance en MLOps et LLMOps, les sujets les plus demandés de 2026.</p>
+          <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Disponible en freelance ou en CDI sur les sujets MLOps et LLMOps, les plus demandés de 2026.</p>
         </div>
         <div class="panel"><ul class="facts">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Disponibilité</b> - missions freelance, MLOps / GenAI</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Disponibilité</b> - freelance ou CDI, MLOps / GenAI</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Expérience</b> - 5 ans en dev web, dont lead dev</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Stack</b> - Python, FastAPI, Docker, MLflow, LangChain</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Basé en</b> Île-de-France &amp; Hauts-de-France - sur site / télétravail</span></li>
@@ -1428,7 +1707,7 @@ document.documentElement.classList.add('js');
 
       </div>
       <div class="presta-foot reveal">
-        <p><b>Zones d'intervention</b> - Paris et l'Île-de-France, l'Oise et les Hauts-de-France, sur site ou en télétravail ; le reste de la France à distance. Un besoin qui ne rentre dans aucune de ces cases ? Décrivez-le-moi : je vous dis en une réponse si je suis la bonne personne, et sous quel format.</p>
+        <p><b>Zones d'intervention</b> - Paris et l'Île-de-France, l'Oise et les Hauts-de-France, sur site ou en télétravail ; le reste de la France à distance. Ces offres décrivent le format freelance ; un poste en CDI se discute tout aussi bien. Un besoin qui ne rentre dans aucune de ces cases ? Décrivez-le-moi : je vous dis en une réponse si je suis la bonne personne, et sous quel format.</p>
         <a class="btn btn-primary" href="#contact">Discuter d'une mission</a>
       </div>
     </div>
@@ -1472,13 +1751,75 @@ document.documentElement.classList.add('js');
 
   <!-- CV -->
   <section id="cv" class="contact">
-    <div class="wrap">
+    <div class="wrap cv-wrap">
       <span class="hud-label reveal" style="justify-content:center"><i class="sl">//</i> 09 - CV</span>
-      <h2 class="reveal" style="margin-top:14px">Mon CV en une page</h2>
-      <p class="reveal">5 ans de développement web (dont lead dev), puis reconversion AI Engineer. Le parcours complet, l'expertise technique et les projets - au format PDF.</p>
-      <div class="contact-cta reveal">
-        <a class="btn btn-primary" href="https://clement-reboul.fr/portfolio/assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> Télécharger mon CV (PDF)</a>
-        <a class="btn btn-ghost" href="#contact">Me contacter</a>
+      <h2 class="reveal" style="margin-top:14px">Mon CV en fiche modèle</h2>
+      <p class="reveal">Le PDF d'une page se télécharge en bas de la fiche. Au-dessus, le même parcours au format que vos équipes lisent déjà tous les jours.</p>
+
+      <article class="panel card-model reveal">
+        <header class="cm-top">
+          <span class="cm-id"><span class="cm-org">clement-reboul</span><span class="cm-sep">/</span><span class="cm-name">ai-engineer</span></span>
+          <span class="cm-ver">v2026.09</span>
+          <span class="badge">Model card</span>
+        </header>
+        <div class="cm-meta">
+          <div><span class="cm-k">base_model</span><span class="cm-v">Développeur web, 5 ans en production</span></div>
+          <div><span class="cm-k">fine_tuned_on</span><span class="cm-v">AI Engineer Bac+5, OpenClassrooms</span></div>
+          <div><span class="cm-k">languages</span><span class="cm-v">FR natif et anglais professionnel</span></div>
+          <div><span class="cm-k">deployment</span><span class="cm-v">Île-de-France, Hauts-de-France, remote</span></div>
+          <div><span class="cm-k">status</span><span class="cm-v ok">Disponible en freelance &amp; CDI</span></div>
+          <div><span class="cm-k">license</span><span class="cm-v">Mission cadrée, périmètre annoncé</span></div>
+        </div>
+        <div class="cm-metrics tnum">
+          <div><div class="n">09</div><div class="c">Projets IA</div></div>
+          <div><div class="n">02</div><div class="c">API en production</div></div>
+          <div><div class="n">98&nbsp;%</div><div class="c">Couverture de tests</div></div>
+          <div><div class="n">0,78</div><div class="c">AUC du modèle servi</div></div>
+          <div><div class="n">~6&nbsp;ms</div><div class="c">Latence d'inférence</div></div>
+        </div>
+        <div class="cm-cols">
+          <div>
+            <h3>Intended use</h3>
+            <ul>
+              <li>Mise en production d'un modèle : API, CI/CD, monitoring de drift</li>
+              <li>Systèmes GenAI : RAG, évaluation, garde-fous</li>
+              <li>Renfort front Vue&nbsp;3 ou Quasar, migration Vue&nbsp;2 vers 3</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Out of scope</h3>
+            <ul>
+              <li>Volumes à l'échelle Spark ou Databricks</li>
+              <li>Recherche fondamentale et entraînement de modèles de base</li>
+              <li>Data science qui s'arrête au notebook : ce n'est pas là que j'aide</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Limites connues</h3>
+            <ul>
+              <li>Un an d'IA appliquée, posé sur cinq ans de code livré</li>
+              <li>Cloud managé AWS et GCP en montée : mes déploiements tournent sur Docker et Hugging&nbsp;Face</li>
+              <li>Jeux de données jusqu'à quelques centaines de milliers de lignes</li>
+            </ul>
+          </div>
+        </div>
+        <div class="cm-cta">
+          <a class="btn btn-primary" href="https://clement-reboul.fr/portfolio/assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> Télécharger le CV (PDF)</a>
+          <a class="btn btn-ghost" href="#contact">Me contacter</a>
+        </div>
+      </article>
+
+      <div class="panel ask reveal" id="ask">
+        <div class="ask-head">
+          <span class="hud-label">Interrogez le CV</span>
+          <span class="ask-eng">TF-IDF + SVD, rang 10, 11 documents · l'index tient dans la page, aucune requête ne part</span>
+        </div>
+        <form class="ask-form" id="ask-form" autocomplete="off">
+          <input id="ask-q" type="text" aria-label="Posez une question sur le CV" placeholder="Vous connaissez Docker ? Vous êtes disponible ?">
+          <button class="btn btn-primary" type="submit">Demander</button>
+        </form>
+        <div class="ask-chips" id="ask-chips"></div>
+        <div class="ask-out" id="ask-out" role="status" aria-live="polite"></div>
       </div>
     </div>
   </section>
@@ -1488,7 +1829,7 @@ document.documentElement.classList.add('js');
     <div class="wrap">
       <span class="hud-label reveal" style="justify-content:center"><i class="sl">//</i> 10 - Contact</span>
       <h2 class="reveal" style="margin-top:14px">Un besoin ? Parlons-en</h2>
-      <p class="reveal"><b>AI Engineer freelance</b> disponible pour des missions en MLOps, GenAI/RAG et front Vue&nbsp;3 - Paris, Île-de-France, Oise, Hauts-de-France et remote. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
+      <p class="reveal"><b>AI Engineer</b> disponible en freelance ou en CDI, en MLOps, GenAI/RAG et front Vue&nbsp;3 - Paris, Île-de-France, Oise, Hauts-de-France et remote. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
       <div class="contact-cta reveal">
         <a class="btn btn-primary" href="mailto:clement.rbl@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg> clement.rbl@gmail.com</a>
         <a class="btn btn-ghost" href="https://github.com/clementRbl" target="_blank" rel="noopener">GitHub</a>
@@ -1500,7 +1841,7 @@ document.documentElement.classList.add('js');
 
 </main>
 
-<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL - AI ENGINEER FREELANCE · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit à la main · sans dépendance</span></div></footer>
+<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL - AI ENGINEER · FREELANCE OU CDI · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit à la main · sans dépendance</span></div></footer>
 
 <div class="invite" id="invite" role="region" aria-label="Proposition de changer de mode" hidden>
   <p class="txt"><b>Ce site a un second visage.</b> Le mode Game rallume l'univers animé : braises, curseur torche, roue de sélection.</p>
@@ -1706,8 +2047,15 @@ document.documentElement.classList.add('js');
     themeBtn.addEventListener('click', function () {
       var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
       var next = cur === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
+      function swap() {
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+      }
+      /* Bascule clair / sombre : sans fondu, toute la page saute d'un coup.
+         startViewTransition n'existe pas partout, d'où le repli direct. */
+      var soft = document.startViewTransition &&
+                 !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (soft) document.startViewTransition(swap); else swap();
     });
   }
 
@@ -1821,7 +2169,15 @@ document.documentElement.classList.add('js');
   function vecStem(w) {
     for (var i = 0; i < VEC.suffixes.length; i++) {
       var suf = VEC.suffixes[i];
-      if (w.length > suf.length + 3 && w.slice(-suf.length) === suf) return w.slice(0, -suf.length);
+      if (w.length > suf.length + 3 && w.slice(-suf.length) === suf) { w = w.slice(0, -suf.length); break; }
+    }
+    /* Réécritures de fin de racine, table exportée par build_index.py au même
+       titre que les suffixes : le français alterne y et i selon la personne
+       (déployer / déploie), et les deux formes doivent tomber au même endroit. */
+    var rw = VEC.rewrites || [];
+    for (var j = 0; j < rw.length; j++) {
+      var a = rw[j][0];
+      if (w.length > 3 && w.slice(-a.length) === a) return w.slice(0, -a.length) + rw[j][1];
     }
     return w;
   }
@@ -1835,8 +2191,10 @@ document.documentElement.classList.add('js');
     }
     return out;
   }
-  function vecSearch(q) {
+  function vecSearch(q, min, lim) {
     if (!VEC) return [];
+    if (min === undefined) min = 0.34;
+    if (!lim) lim = 3;
     var toks = vecTokens(q), v = new Array(VEC.k), i;
     for (i = 0; i < VEC.k; i++) v[i] = 0;
     var used = 0;
@@ -1857,11 +2215,45 @@ document.documentElement.classList.add('js');
     for (i = 0; i < VEC.docs.length; i++) {
       var dv = VEC.docs[i].v, sc = 0;
       for (var c = 0; c < VEC.k; c++) sc += dv[c] * v[c];
-      if (sc >= 0.34) out.push({ id: VEC.docs[i].id, title: VEC.docs[i].title, score: sc });
+      if (sc >= min) out.push({ id: VEC.docs[i].id, title: VEC.docs[i].title,
+                               score: sc, a: VEC.docs[i].a || '' });
     }
     out.sort(function (a, b) { return b.score - a.score; });
-    return out.slice(0, 3);
+    return out.slice(0, lim);
   }
+
+  /* Le moteur ne sert pas que la palette : la boîte « Interrogez le CV » et le
+     rail sémantique s'appuient sur le même index. L'exposer une fois évite d'en
+     charger un second, et garantit que les deux surfaces répondent pareil. */
+  window.LSA = {
+    load: function (cb) {
+      if (vecState === 'ready') { cb(VEC); return; }
+      if (vecState === 'failed') { cb(null); return; }
+      loadVectors();
+      var w = setInterval(function () {
+        if (vecState === 'ready') { clearInterval(w); cb(VEC); }
+        else if (vecState === 'failed') { clearInterval(w); cb(null); }
+      }, 60);
+    },
+    /* Renvoie ce que la question devient une fois passée au tokeniseur, en plus
+       du classement : montrer les termes retenus vaut mieux que promettre une
+       compréhension qui n'existe pas. */
+    ask: function (q) {
+      var res = { toks: [], kept: 0, total: 0, hits: [] };
+      if (!VEC) return res;
+      var m = norm(q).match(/[a-z0-9][a-z0-9+#.\-]{1,}/g) || [];
+      for (var i = 0; i < m.length; i++) {
+        var w = m[i].replace(/^[.\-]+|[.\-]+$/g, '');
+        if (w.length < 2 || VEC.stopSet[w] || /^\d+$/.test(w)) continue;
+        res.total++;
+        var st = vecStem(w), known = VEC.pos[st] !== undefined;
+        if (known) res.kept++;
+        res.toks.push({ w: st, ok: known });
+      }
+      res.hits = vecSearch(q, 0, 3);
+      return res;
+    }
+  };
 
   function buildCommands() {
     var list = NAV.map(function (item, i) {
@@ -2490,6 +2882,13 @@ FX.onStart(function (mode) {
   if (mode !== 'standard') return;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* Les timelines de défilement natives remplacent deux boucles JS entières.
+     On teste la prise en charge une fois, ici, et les deux blocs concernés
+     s'effacent devant le moteur CSS quand elle est là. */
+  var CS = window.CSS && CSS.supports;
+  var hasScrollTL = !!(CS && CSS.supports('animation-timeline: scroll()'));
+  var hasViewTL = !!(CS && CSS.supports('animation-timeline: view()'));
+
   /* --- 1. Barre de progression de lecture --- */
   if (!reduce) {
     var bar = document.createElement('div');
@@ -2501,11 +2900,15 @@ FX.onStart(function (mode) {
       var h = document.documentElement.scrollHeight - window.innerHeight;
       bar.style.width = (h > 0 ? Math.min(1, window.scrollY / h) * 100 : 0) + '%';
     }
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(drawProg); }
-    }, { passive: true });
-    window.addEventListener('resize', drawProg, { passive: true });
-    drawProg();
+    if (!hasScrollTL) {
+      window.addEventListener('scroll', function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(drawProg); }
+      }, { passive: true });
+    }
+    if (!hasScrollTL) {
+      window.addEventListener('resize', drawProg, { passive: true });
+      drawProg();
+    }
   }
 
   /* --- 2. Compteurs : les métriques se chargent au lieu d'être posées là --- */
@@ -2578,9 +2981,11 @@ FX.onStart(function (mode) {
 
   /* --- 4. Grilles : apparition échelonnée des cartes --- */
   var grids = [].slice.call(document.querySelectorAll('.proj-grid, .presta-grid, .soft-grid, .skills-grid'));
-  if (grids.length && !reduce && 'IntersectionObserver' in window) {
+  if (grids.length && !reduce) {
+    grids.forEach(function (g) { g.classList.add('stg'); });
+  }
+  if (grids.length && !reduce && !hasViewTL && 'IntersectionObserver' in window) {
     grids.forEach(function (g) {
-      g.classList.add('stg');
       [].slice.call(g.children).forEach(function (c, i) { c.style.transitionDelay = Math.min(i * 55, 400) + 'ms'; });
     });
     var gio = new IntersectionObserver(function (es) {
@@ -2688,6 +3093,233 @@ FX.onStart(function (mode) {
         else if (!raf2) raf2 = requestAnimationFrame(draw);
       });
     }).catch(function () {});
+  }
+
+  /* --- 6. En-tête : un filet n'apparaît qu'une fois la page quittée --- */
+  var docEl = document.documentElement, stuck = false;
+  function markScroll() {
+    var v = window.scrollY > 12;
+    if (v !== stuck) { stuck = v; docEl.classList.toggle('scrolled', v); }
+  }
+  window.addEventListener('scroll', markScroll, { passive: true });
+  markScroll();
+
+  /* --- 7. Halo de curseur sur les panneaux ---
+     Le dégradé est peint par le CSS ; le JS ne fait que déposer la position du
+     pointeur relative à la carte survolée. Souris uniquement : au doigt, il n'y
+     a pas de survol, et le halo resterait collé au dernier point touché. */
+  if (!reduce && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    var spotRaf = null;
+    document.addEventListener('pointermove', function (e) {
+      if (spotRaf || !e.target || !e.target.closest) return;
+      var card = e.target.closest('.panel');
+      if (!card) return;
+      spotRaf = requestAnimationFrame(function () {
+        spotRaf = null;
+        var r = card.getBoundingClientRect();
+        card.style.setProperty('--px', Math.round(e.clientX - r.left) + 'px');
+        card.style.setProperty('--py', Math.round(e.clientY - r.top) + 'px');
+      });
+    }, { passive: true });
+  }
+
+  /* --- 8. Le titre s'écrit ---
+     Les mots sortent du flou l'un après l'autre, curseur en bout de ligne : le
+     geste d'un modèle qui produit son texte. Le découpage se fait en JS sur les
+     nœuds de texte, ce qui préserve le <span> d'accent déjà présent dans le
+     titre. Sans JS ou en mouvement réduit, le titre est simplement là. */
+  var heroH1 = document.querySelector('.hero h1');
+  if (heroH1 && !reduce) {
+    var wi = 0;
+    (function wrapWords(node) {
+      [].slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.nodeValue.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            var sp = document.createElement('span');
+            sp.className = 'w'; sp.textContent = part;
+            sp.style.setProperty('--d', (wi++ * 60) + 'ms');
+            frag.appendChild(sp);
+          });
+          node.replaceChild(frag, n);
+        } else if (n.nodeType === 1) wrapWords(n);
+      });
+    })(heroH1);
+    if (!wi) docEl.classList.remove('h1-hold');
+    if (wi) {
+      heroH1.classList.add('gen');
+      docEl.classList.remove('h1-hold');
+      var hCaret = document.createElement('i');
+      hCaret.className = 'gen-caret'; hCaret.setAttribute('aria-hidden', 'true');
+      heroH1.appendChild(hCaret);
+      /* On retire la classe une fois la dernière lettre posée : un filter, même
+         à blur(0), laisse le texte sur sa propre couche et le rend plus mou. */
+      setTimeout(function () {
+        heroH1.classList.remove('gen');
+        if (hCaret.parentNode) hCaret.parentNode.removeChild(hCaret);
+      }, (wi - 1) * 60 + 520 + 800);
+    }
+  }
+
+  /* --- 9. Rail sémantique ---
+     Les traits estompés ne sont pas les sections voisines dans le sommaire :
+     ce sont les deux plus proches de celle qu'on lit, au cosinus, dans le même
+     espace latent que la recherche. Construit depuis l'index pour qu'aucune
+     liste de sections ne soit maintenue à deux endroits. */
+  if (window.LSA && window.matchMedia('(min-width: 1301px)').matches) {
+    window.LSA.load(function (ix) {
+      if (!ix || !ix.docs || !ix.docs.length) return;
+      var ids = ix.docs.map(function (d) { return d.id; });
+      var labels = ix.docs.map(function (d) { return d.title.split(' - ')[0]; });
+      var nav = document.createElement('nav');
+      nav.className = 'rail';
+      nav.setAttribute('aria-label', 'Sections du site');
+      var links = ids.map(function (id, i) {
+        var a = document.createElement('a');
+        a.href = '#' + id;
+        a.appendChild(document.createElement('span')).className = 'bar';
+        var lb = a.appendChild(document.createElement('span'));
+        lb.className = 'lb'; lb.textContent = labels[i];
+        nav.appendChild(a);
+        return a;
+      });
+      document.body.appendChild(nav);
+
+      function dot(a, b) { var t = 0; for (var c = 0; c < ix.k; c++) t += a[c] * b[c]; return t; }
+      var secs = ids.map(function (id) { return document.getElementById(id); });
+      var cur = -1;
+      function mark(i) {
+        var near = [];
+        for (var j = 0; j < ids.length; j++) if (j !== i) near.push([j, dot(ix.docs[i].v, ix.docs[j].v)]);
+        near.sort(function (a, b) { return b[1] - a[1]; });
+        var keep = {};
+        near.slice(0, 2).forEach(function (n) { if (n[1] >= 0.30) keep[n[0]] = n[1]; });
+        links.forEach(function (a, j) {
+          a.classList.toggle('on', j === i);
+          var k = keep[j] !== undefined;
+          a.classList.toggle('near', k);
+          if (k) a.title = 'Proche de « ' + labels[i] + ' » : ' + Math.round(keep[j] * 100) + ' % de similarité';
+          else a.removeAttribute('title');
+          a.setAttribute('aria-current', j === i ? 'true' : 'false');
+        });
+      }
+      var rRaf = null;
+      function pick() {
+        rRaf = null;
+        var y = window.scrollY + window.innerHeight * 0.35, best = 0;
+        for (var j = 0; j < secs.length; j++) if (secs[j] && secs[j].offsetTop <= y) best = j;
+        if (best !== cur) { cur = best; mark(best); }
+      }
+      window.addEventListener('scroll', function () { if (!rRaf) rRaf = requestAnimationFrame(pick); }, { passive: true });
+      window.addEventListener('resize', function () { cur = -1; pick(); }, { passive: true });
+      pick();
+    });
+  }
+
+  /* --- 10. Interrogez le CV ---
+     Même index que la palette. La recherche est vectorielle ; la réponse, elle,
+     est une phrase écrite à la main et rangée dans l'index à côté de chaque
+     section. C'est le point : rien n'est produit à la volée, donc rien ne peut
+     être inventé, et ce qui est démontré est ce qui est réellement démontrable,
+     la récupération. Les termes retenus sont affichés pour la même raison. */
+  var askForm = document.getElementById('ask-form');
+  if (askForm && window.LSA) {
+    var askQ = document.getElementById('ask-q');
+    var askOut = document.getElementById('ask-out');
+    var askChips = document.getElementById('ask-chips');
+    var typer = null;
+    var SUGG = ['Vous connaissez Docker ?', 'Vous êtes disponible ?', 'Vous acceptez un CDI ?',
+                'Vous avez déjà déployé un modèle ?', 'Vous faites du RAG ?',
+                'Vous travaillez où ?', 'Combien coûte un POC ?'];
+    SUGG.forEach(function (q) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.textContent = q;
+      b.addEventListener('click', function () { askQ.value = q; askRun(q); });
+      askChips.appendChild(b);
+    });
+    askForm.addEventListener('submit', function (e) { e.preventDefault(); askRun(askQ.value); });
+
+    function askRun(q) {
+      q = (q || '').trim();
+      if (!q) return;
+      askOut.classList.add('on');
+      askOut.textContent = 'Recherche en cours…';
+      window.LSA.load(function (ix) {
+        if (!ix) { askOut.textContent = "L'index n'a pas pu être chargé. Écrivez-moi : clement.rbl@gmail.com"; return; }
+        askRender(window.LSA.ask(q));
+      });
+    }
+
+    function askRender(r) {
+      if (typer) { clearInterval(typer); typer = null; }
+      askOut.textContent = '';
+
+      var toks = document.createElement('div');
+      toks.className = 'ask-toks';
+      r.toks.forEach(function (t) {
+        var sp = document.createElement('span');
+        sp.className = 'tk' + (t.ok ? '' : ' out');
+        sp.textContent = t.w;
+        sp.title = t.ok ? 'Racine présente dans le vocabulaire de l’index'
+                        : 'Racine absente du vocabulaire : elle ne pèse rien dans le calcul';
+        toks.appendChild(sp);
+      });
+      var meta = document.createElement('span');
+      meta.className = 'meta';
+      meta.textContent = r.total
+        ? r.kept + (r.kept > 1 ? ' termes retenus sur ' : ' terme retenu sur ') + r.total
+        : 'aucun terme exploitable';
+      toks.appendChild(meta);
+      askOut.appendChild(toks);
+
+      var ans = document.createElement('p');
+      ans.className = 'ask-a';
+      askOut.appendChild(ans);
+
+      var top = r.hits[0];
+      if (!top || top.score < 0.22 || !top.a) {
+        ans.textContent = 'Aucune section ne répond vraiment à cette question. Écrivez-moi : clement.rbl@gmail.com';
+        return;
+      }
+
+      /* La réponse est annoncée en une fois aux lecteurs d'écran ; l'écriture
+         lettre à lettre reste purement visuelle, sinon la zone live débiterait
+         la phrase une syllabe à la fois. */
+      var sr = document.createElement('span');
+      sr.className = 'vh'; sr.textContent = top.a;
+      askOut.appendChild(sr);
+
+      var src = document.createElement('div');
+      src.className = 'ask-src';
+      var lbl = document.createElement('span');
+      lbl.textContent = 'source : ' + top.title.split(' - ')[0] + ' · similarité ' +
+                        top.score.toFixed(2).replace('.', ',');
+      var gauge = document.createElement('span');
+      gauge.className = 'ask-bar';
+      var fill = gauge.appendChild(document.createElement('i'));
+      var go = document.createElement('a');
+      go.href = '#' + top.id; go.textContent = 'Aller à la section →';
+      src.appendChild(lbl); src.appendChild(gauge); src.appendChild(go);
+      askOut.appendChild(src);
+      requestAnimationFrame(function () { fill.style.width = Math.round(Math.min(1, top.score) * 100) + '%'; });
+
+      if (reduce) { ans.textContent = top.a; return; }
+      ans.setAttribute('aria-hidden', 'true');
+      var span = ans.appendChild(document.createElement('span'));
+      var car = ans.appendChild(document.createElement('i'));
+      car.className = 'gen-caret';
+      var k = 0, txt = top.a;
+      typer = setInterval(function () {
+        k += 2 + Math.floor(Math.random() * 3);
+        span.textContent = txt.slice(0, k);
+        if (k >= txt.length) {
+          clearInterval(typer); typer = null;
+          setTimeout(function () { if (car.parentNode) car.parentNode.removeChild(car); }, 900);
+        }
+      }, 18);
+    }
   }
 });
 </script>
