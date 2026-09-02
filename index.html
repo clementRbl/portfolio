@@ -1456,7 +1456,7 @@ document.documentElement.classList.add('js');
       <div>
         <p class="hud-label reveal">AI Engineer · freelance ou CDI · MLOps · GenAI · Paris &amp; Hauts-de-France</p>
         <h1 class="reveal">Du notebook <span class="ember">à la production.</span></h1>
-        <p class="lede reveal"><b>AI Engineer</b> - développeur web pendant 5 ans, devenu ingénieur IA. Je conçois des modèles et surtout je les rends <b>fiables, déployés et monitorés</b> là où naît la valeur. Disponible en freelance ou en CDI, en Île-de-France, dans l'Oise et les Hauts-de-France, ou à distance.</p>
+        <p class="lede reveal"><b>AI Engineer</b> - Développeur pendant 5 ans et à présent ingénieur IA. Je conçois des modèles que je rends <b>fiables, déployés et monitorés</b> là où naît la valeur. Disponible en freelance ou en CDI, en Île-de-France, dans les Hauts-de-France ou à distance.</p>
         <div class="hero-cta reveal">
           <a href="#projets" class="btn btn-primary">Explorer<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a href="https://clement-reboul.fr/portfolio/rapport.html" class="btn btn-ghost">Rapport</a>
@@ -1935,7 +1935,7 @@ document.documentElement.classList.add('js');
 
 </main>
 
-<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL - AI ENGINEER · FREELANCE OU CDI · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit à la main · sans dépendance</span></div></footer>
+<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL - AI ENGINEER · FREELANCE OU CDI · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit sans dépendance</span></div></footer>
 
 <div class="invite" id="invite" role="region" aria-label="Proposition de changer de mode" hidden>
   <p class="txt"><b>Ce site a un second visage.</b> Le mode Game rallume l'univers animé : braises, curseur torche, roue de sélection.</p>
@@ -2960,8 +2960,9 @@ window.CREDIT_API = (function () {
       if ((pp < t) !== (pp < API.THRESHOLD)) bascule++;
     });
     if (thrCount) {
-      thrCount.innerHTML = 'Sur les ' + API.CLIENTS.length + ' dossiers proposés : <b>' + acc +
-        ' accordés</b>, <b>' + ref + ' refusés</b>.' +
+      var s = function (n, mot) { return n + ' ' + mot + (n > 1 ? 's' : ''); };
+      thrCount.innerHTML = 'Sur les ' + API.CLIENTS.length + ' dossiers proposés : <b>' +
+        s(acc, 'accordé') + '</b>, <b>' + s(ref, 'refusé') + '</b>.' +
         (bascule ? ' <span class="off">' + bascule + (bascule > 1 ? ' basculent' : ' bascule') +
                    ' par rapport à 0,47.</span>' : '');
     }
