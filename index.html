@@ -468,6 +468,10 @@ document.documentElement.classList.add('js');
   .about-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 46px; align-items: start; }
   .about-grid .lead { font-size: 1.22rem; color: var(--ink); }
   .about-grid p + p { margin-top: 15px; }
+  .ident { display: flex; align-items: center; gap: 15px; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+  .ident img { width: 74px; height: 74px; flex: none; object-fit: cover; border: 1px solid var(--border-2); filter: saturate(.9); }
+  .ident .nm { color: var(--ink); font-weight: 700; font-size: 15.5px; }
+  .ident .rl { display: block; margin-top: 3px; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .04em; color: var(--ember); }
   .facts { list-style: none; margin: 0; padding: 24px; display: grid; gap: 15px; }
   .facts li { display: flex; gap: 12px; font-size: 14.5px; }
   .facts svg { width: 17px; height: 17px; color: var(--ember); flex: none; margin-top: 3px; }
@@ -499,13 +503,13 @@ document.documentElement.classList.add('js');
   .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
   .tag { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-dim); background: var(--surface-2); border: 1px solid var(--border); padding: 4px 9px; }
   .cover { margin-top: 16px; border: 1px solid var(--border); overflow: hidden; filter: saturate(.8) contrast(1.02); }
-  .cover img { width: 100%; height: 158px; object-fit: cover; object-position: top center; }
+  .cover img { display: block; width: 100%; height: auto; aspect-ratio: 12 / 5; object-fit: cover; }
   .proj-links { display: flex; gap: 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
   .proj-links a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-dim); }
   .proj-links a:hover { color: var(--ember); }
   .proj-links svg { width: 14px; height: 14px; }
   .shot { border: 1px solid var(--border); overflow: hidden; background: var(--surface-2); filter: saturate(.85); }
-  .shot img { width: 100%; }
+  .shot img { display: block; width: 100%; height: auto; }
 
   /* ---------- PROJET PHARE ---------- */
   .flag { padding: 0; }
@@ -988,6 +992,8 @@ document.documentElement.classList.add('js');
   /* Une capture à angles vifs dans une carte arrondie trahit le montage. */
   html.fx-standard .cover,
   html.fx-standard .shot { border-radius: 9px; }
+  /* Le mode Game garde l'angle vif de son HUD, le Standard arrondit. */
+  html.fx-standard .ident img { border-radius: 50%; }
   html.fx-standard .cmdk { box-shadow: var(--sh-2); }
   html.fx-standard .sec-head .idx {
     display: inline-block; padding: 3px 10px; border: 1px solid var(--border);
@@ -1524,7 +1530,12 @@ document.documentElement.classList.add('js');
           <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et systèmes GenAI (RAG, évaluation LLM).</p>
           <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Disponible en freelance ou en CDI sur les sujets MLOps et LLMOps, les plus demandés de 2026.</p>
         </div>
-        <div class="panel"><ul class="facts">
+        <div class="panel">
+          <div class="ident">
+            <img src="assets/portrait-clement-reboul.webp" width="240" height="240" alt="Portrait de Clément Reboul" loading="lazy" decoding="async">
+            <div><span class="nm">Clément Reboul</span><span class="rl">AI Engineer · MLOps &amp; GenAI</span></div>
+          </div>
+          <ul class="facts">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Disponibilité</b> - freelance ou CDI, MLOps / GenAI</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Expérience</b> - 5 ans en dev web, dont lead dev</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span><b>Stack</b> - Python, FastAPI, Docker, MLflow, LangChain</span></li>
@@ -1609,7 +1620,7 @@ document.documentElement.classList.add('js');
                 <a href="#projet-phare"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Détails</a>
               </div>
             </div>
-            <div class="shot"><img src="assets/mlops-dashboard.png" alt="Dashboard Streamlit de monitoring : distribution des scores, décisions, latence." loading="lazy"></div>
+            <div class="shot"><img src="assets/mlops-dashboard.webp" width="1200" height="438" alt="Dashboard Streamlit de monitoring : distribution des scores, décisions, latence." loading="lazy" decoding="async"></div>
           </div>
         </article>
 
@@ -1618,6 +1629,7 @@ document.documentElement.classList.add('js');
           <h3>Seattle Energy</h3><p class="role">Énergie &amp; CO2 des bâtiments - API déployée</p>
           <p class="desc">Prédiction multi-cibles : consommation énergétique (Random Forest, R² 0,73) et émissions CO2 (LightGBM, R² 0,92) des bâtiments de Seattle. Modèles servis par une API FastAPI conteneurisée et déployée sur Hugging Face Spaces.</p>
           <div class="tags"><span class="tag">Random Forest</span><span class="tag">LightGBM</span><span class="tag">FastAPI</span><span class="tag">Docker</span></div>
+          <div class="cover"><img src="assets/seattle-energy.webp" width="1200" height="500" alt="Surface des bâtiments et consommation d'énergie en échelle logarithmique : un point par bâtiment, coloré par ses émissions de CO2." loading="lazy" decoding="async"></div>
           <div class="proj-links">
             <a href="https://github.com/clementRbl/deploy-ml" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a>
             <a href="https://clementrbl-deploy-ml.hf.space/docs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg> API</a>
@@ -1630,6 +1642,7 @@ document.documentElement.classList.add('js');
           <h3>TechNova</h3><p class="role">Attrition RH - causes de démission</p>
           <p class="desc">HR analytics pour une ESN de 1 470 salariés (turnover 16 %) : classification LightGBM (ROC-AUC 0,80) et interprétation des facteurs de départ par SHAP, du diagnostic métier aux recommandations.</p>
           <div class="tags"><span class="tag">LightGBM</span><span class="tag">SHAP</span><span class="tag">scikit-learn</span></div>
+          <div class="cover"><img src="assets/technova-shap.webp" width="1200" height="500" alt="Graphique SHAP : heures supplémentaires, participation au PEE et satisfaction globale dominent la probabilité de départ." loading="lazy" decoding="async"></div>
           <div class="proj-links"><a href="https://github.com/clementRbl/TechNova-Partners" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
@@ -1638,7 +1651,7 @@ document.documentElement.classList.add('js');
           <h3>Puls<span class="dash">-</span>Events</h3><p class="role">Chatbot RAG d'événements culturels</p>
           <p class="desc">RAG de bout en bout : ingestion (16 000+ événements), vectorisation Faiss, chaîne LangChain + Mistral avec garde-fous anti-hallucination, API FastAPI et évaluation Ragas.</p>
           <div class="tags"><span class="tag">LangChain</span><span class="tag">Faiss</span><span class="tag">Mistral</span><span class="tag">Ragas</span></div>
-          <div class="cover"><img src="assets/rag-architecture.png" alt="Architecture RAG Puls-Events : ingestion, vectorisation Faiss, chaîne LangChain + Mistral, API." loading="lazy"></div>
+          <div class="cover"><img src="assets/rag-architecture.webp" width="1200" height="500" alt="Architecture RAG Puls-Events : ingestion, vectorisation Faiss, chaîne LangChain + Mistral, API." loading="lazy" decoding="async"></div>
           <div class="proj-links"><a href="https://github.com/clementRbl/pull-events" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
@@ -1647,7 +1660,7 @@ document.documentElement.classList.add('js');
           <h3>BrainScanAI</h3><p class="role">Détection de tumeurs sur IRM</p>
           <p class="desc">Apprentissage semi-supervisé sur un large corpus non labellisé : features ResNet-50, clustering (GMM), pré-entraînement sur labels faibles. Audit de fuite (dédup MD5) - recall cancer 0,90–1,00.</p>
           <div class="tags"><span class="tag">PyTorch</span><span class="tag">ResNet-50</span><span class="tag">clustering</span><span class="tag">SSL</span></div>
-          <div class="cover"><img src="assets/brainscan-comparison.png" alt="Comparaison supervisé vs semi-supervisé : accuracy, F1, AUC, recall cancer." loading="lazy"></div>
+          <div class="cover"><img src="assets/brainscan-comparison.webp" width="1200" height="500" alt="Matrices de confusion des deux phases et courbes ROC : supervisé AUC 0,99, semi-supervisé AUC 0,98." loading="lazy" decoding="async"></div>
           <div class="proj-links"><a href="https://github.com/clementRbl/curelytics-ia" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
@@ -1656,6 +1669,7 @@ document.documentElement.classList.add('js');
           <h3>Prêt à Dépenser</h3><p class="role">Scoring crédit &amp; tracking MLflow</p>
           <p class="desc">Comparaison de 5 modèles en validation croisée, optimisation d'un coût métier asymétrique et du seuil, interprétabilité SHAP, tracking complet MLflow (params, métriques, registry).</p>
           <div class="tags"><span class="tag">LightGBM</span><span class="tag">MLflow</span><span class="tag">SHAP</span><span class="tag">scikit-learn</span></div>
+          <div class="cover"><img src="assets/pret-mlflow.webp" width="1200" height="500" alt="Interface MLflow : les runs comparés, triés par coût métier, chacun avec son seuil et sa stratégie de validation croisée." loading="lazy" decoding="async"></div>
           <div class="proj-links"><a href="https://github.com/clementRbl/pret-a-depenser" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
@@ -1664,6 +1678,7 @@ document.documentElement.classList.add('js');
           <h3>CheckItAI</h3><p class="role">Pipeline d'acquisition multimodale</p>
           <p class="desc">Pipeline ETL reproductible (texte + image) pour un détecteur de fake news : extraction automatisée, transformation, orchestration Airflow, chargement PostgreSQL, dashboard KPI et plan de monitoring.</p>
           <div class="tags"><span class="tag">Airflow</span><span class="tag">PostgreSQL</span><span class="tag">Docker</span><span class="tag">Streamlit</span></div>
+          <div class="cover"><img src="assets/checkitai-dashboard.webp" width="1200" height="500" alt="Tableau de bord du pipeline : 29 publications retenues, 90 % de validité, exécution complète en 0,99 seconde." loading="lazy" decoding="async"></div>
           <div class="proj-links"><a href="https://github.com/clementRbl/checkitai" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
@@ -1672,6 +1687,7 @@ document.documentElement.classList.add('js');
           <h3>Astro Dynamics</h3><p class="role">Agent RL - atterrisseur lunaire</p>
           <p class="desc">Entraînement d'un agent DQN sur LunarLander (Gymnasium), architecture client/serveur (API FastAPI + visualisation Streamlit) et enregistrement vidéo des atterrissages réussis.</p>
           <div class="tags"><span class="tag">Gymnasium</span><span class="tag">DQN</span><span class="tag">stable-baselines3</span></div>
+          <div class="cover"><img src="assets/astro-rewards.webp" width="1200" height="500" alt="Courbes de récompense des quatre expériences DQN : seule la quatrième, à un million de pas, franchit l'objectif de 200." loading="lazy" decoding="async"></div>
           <div class="proj-links"><a href="https://github.com/clementRbl/astro-dynamics" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
@@ -1680,6 +1696,7 @@ document.documentElement.classList.add('js');
           <h3>Fashion<span class="dash">-</span>Insta</h3><p class="role">POC de segmentation de vêtements</p>
           <p class="desc">Preuve de concept de segmentation d'images de vêtements à partir d'un modèle pré-entraîné (Hugging Face) : évaluation par IoU, visualisations, et estimation de coût « build vs buy » pour cadrer la faisabilité.</p>
           <div class="tags"><span class="tag">Computer Vision</span><span class="tag">Segmentation</span><span class="tag">Hugging Face</span><span class="tag">POC</span></div>
+          <div class="cover"><img src="assets/fashion-segmentation.webp" width="1200" height="500" alt="Une photo de vêtement, son masque de segmentation par classe et la superposition des deux." loading="lazy" decoding="async"></div>
         </article>
 
       </div>
@@ -1713,7 +1730,7 @@ document.documentElement.classList.add('js');
               <a class="btn btn-ghost" href="https://clementrbl-credit-scoring-api.hf.space/docs" target="_blank" rel="noopener">Tester l'API</a>
             </div>
           </div>
-          <div class="shot"><img src="assets/mlops-logs.png" alt="Journalisation JSONL : chaque prédiction enregistre timestamp, id client, probabilité, décision, temps d'inférence." loading="lazy"></div>
+          <div class="shot"><img src="assets/mlops-logs.png" width="1000" height="674" alt="Journalisation JSONL : chaque prédiction enregistre timestamp, id client, probabilité, décision, temps d'inférence." loading="lazy" decoding="async"></div>
         </div>
         <div class="tryout">
           <h3>Essayez le modèle</h3>

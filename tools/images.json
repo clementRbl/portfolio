@@ -1,0 +1,147 @@
+[
+ {
+  "out": "portrait-clement-reboul.webp",
+  "from": "file",
+  "src": "~/Images/moi.jpeg",
+  "size": [
+   240,
+   240
+  ],
+  "quality": 84,
+  "note": "Portrait, encart identite de la section Profil"
+ },
+ {
+  "out": "mlops-dashboard.webp",
+  "from": "file",
+  "src": "Projet-8/screenshots/dashboard_streamlit_1.png",
+  "size": [
+   1200,
+   438
+  ],
+  "note": "Dashboard Streamlit de monitoring - carte Credit Scoring MLOps"
+ },
+ {
+  "out": "mlops-logs.png",
+  "from": "file",
+  "src": "Projet-8/screenshots/logs_jsonl.png",
+  "size": [
+   1000,
+   674
+  ],
+  "note": "Journalisation JSONL des predictions - etude de cas",
+  "colors": 64
+ },
+ {
+  "out": "seattle-energy.webp",
+  "from": "plotly",
+  "src": "Projet 3/P3_template_modelistation_supervisee_data_scientist.ipynb",
+  "n": 5,
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Surface vs consommation energetique, colorees par emissions de CO2"
+ },
+ {
+  "out": "technova-shap.webp",
+  "from": "notebook",
+  "src": "Projet 4/technova_partners.ipynb",
+  "n": 7,
+  "crop": [
+   710,
+   296,
+   "northwest",
+   0,
+   38
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "SHAP beeswarm, sept premiers facteurs de depart"
+ },
+ {
+  "out": "rag-architecture.webp",
+  "from": "file",
+  "src": "pull-events/docs/architecture.png",
+  "crop": [
+   1568,
+   653,
+   "north"
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Chaine RAG Puls-Events, moitie haute du schema"
+ },
+ {
+  "out": "brainscan-comparison.webp",
+  "from": "file",
+  "src": "curelytics-ia/outputs/comparaison_supervisé_semisupervisé.png",
+  "fit": "contain",
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Supervise vs semi-supervise : accuracy, F1, AUC, recall cancer"
+ },
+ {
+  "out": "pret-mlflow.webp",
+  "from": "file",
+  "src": "pret-a-depenser/docs/screenshots/mlflow_runs_overview.png",
+  "crop": [
+   1200,
+   500,
+   "northwest"
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Runs MLflow tries par cout metier, avec seuil et strategie de CV"
+ },
+ {
+  "out": "checkitai-dashboard.webp",
+  "from": "file",
+  "src": "CheckItAI/docs/captures/07_dashboard_qualite_rapidite.png",
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Tableau de bord du pipeline : qualite des donnees et duree par etape",
+  "fit": "contain"
+ },
+ {
+  "out": "astro-rewards.webp",
+  "from": "notebook",
+  "src": "astro-dynamics/mission_atterrisseur.ipynb",
+  "n": 2,
+  "crop": [
+   1176,
+   490,
+   "center"
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Courbes de recompense des quatre experiences DQN, objectif 200"
+ },
+ {
+  "out": "fashion-segmentation.webp",
+  "from": "notebook",
+  "src": "Projet 2/Reboul_Clement_1_notebook_122025/validation_and_visualization.ipynb",
+  "n": 2,
+  "crop": [
+   1416,
+   590,
+   "center"
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Image d'origine, masque de segmentation et superposition"
+ }
+]
