@@ -424,6 +424,11 @@ document.documentElement.classList.add('js');
   .btn-ghost:hover { border-color: var(--ember); color: var(--ember); }
   @media (prefers-reduced-motion: reduce) { .btn:hover { transform: none; } }
 
+  /* La barre HUD est fixe : sans marge de defilement, une ancre depose le titre
+     de section derriere elle. On reserve sa hauteur, exacte au pixel. */
+  section, [id] { scroll-margin-top: 72px; }
+  @media (max-width: 560px) { section, [id] { scroll-margin-top: 66px; } }
+
   section { padding-block: 92px; position: relative; }
   .sec-head { margin-bottom: 46px; max-width: 760px; }
   .sec-head .idx { font-family: var(--font-mono); color: var(--moss); font-size: 12px; letter-spacing: .2em; }
@@ -1383,7 +1388,10 @@ document.documentElement.classList.add('js');
   @media (prefers-reduced-motion: reduce) { html.js .reveal:not(.in) { opacity: 1; transform: none; } .reveal { transition: none; } }
 
   @media (max-width: 900px) {
-    .hero-grid, .about-grid, .skills-grid, .proj-grid, .proj.feat .layout, .flag-body, .refl-grid, .presta-grid { grid-template-columns: 1fr; }
+    /* « minmax(0, 1fr) » et non « 1fr » : une piste de grille refuse par defaut
+       de descendre sous la largeur intrinseque de son contenu, et un mot mono
+       un peu long faisait deborder toute la colonne hors de la marge. */
+    .hero-grid, .about-grid, .skills-grid, .proj-grid, .proj.feat .layout, .flag-body, .refl-grid, .presta-grid { grid-template-columns: minmax(0, 1fr); }
     .soft-grid { grid-template-columns: 1fr 1fr; }
     .hero { min-height: auto; padding-top: 104px; padding-bottom: 46px; }
     section { padding-block: 62px; }
@@ -1392,6 +1400,34 @@ document.documentElement.classList.add('js');
   }
   @media (max-width: 560px) {
     .wrap { padding-inline: 18px; }
+    /* Schema du pipeline : en dessous de 560 px, les nœuds ne tiennent plus sur
+       une ligne et le flex-wrap les casse en escalier, fleches orphelines en
+       bout de ligne. On passe donc a une lecture verticale assumee : le libelle
+       de voie coiffe sa colonne, un nœud par ligne, la fleche devient un chevron
+       vers le bas entre deux nœuds. */
+    .pipe { margin-inline: 0; padding: 18px 16px; }
+    .pipe .lane { display: grid; justify-items: start; gap: 6px; }
+    .pipe .lane-label { min-width: 0; margin-bottom: 2px; }
+    .pipe .node { width: 100%; white-space: normal; text-align: center; }
+    .pipe .arr { font-size: 0; line-height: 0; align-self: center; justify-self: center; }
+    .pipe .arr::before { content: "\2193"; font-size: 13px; line-height: 1; }
+
+    /* Contact : « Appeler 07 61 06 01 37 » est le plus long libelle du site.
+       Aligne en ligne avec quatre autres boutons, il forcait une rangee
+       bancale ou le dernier bouton depassait. Une pile pleine largeur donne
+       en prime des cibles confortables au pouce. */
+    .contact-cta { flex-direction: column; align-items: stretch; gap: 10px; }
+    .contact-cta .btn { justify-content: center; width: 100%; }
+
+    /* Titres de la frise : Anton en 1.5rem ne laisse pas passer
+       « Developpeur Full Stack · Cofondateur » sans mordre la marge. */
+    .tl-role { font-size: 1.22rem; }
+    .tl-item::before { left: -18px; }
+
+    /* Les chaines mono sans espace (listes de competences, mots techniques)
+       debordent sinon d'un ou deux caracteres. « break-word » ne coupe qu'en
+       dernier recours : un mot long ne se brise que si aucune ligne ne l'accueille. */
+    .skills-grid, .refl-grid, .tl-col { overflow-wrap: break-word; }
     .soft-grid { grid-template-columns: 1fr; }
     .status .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }  /* 2 col. : valeurs entières, aucun débordement */
@@ -1400,20 +1436,40 @@ document.documentElement.classList.add('js');
     .hero-stats { gap: 20px; }
     .sec-head h2 { font-size: clamp(2rem, 1.2rem + 6vw, 2.6rem); }
     .btn { padding: 12px 15px; font-size: 11.5px; }
-    /* En-tête compact : tout doit tenir sur une ligne sans déborder */
-    .hud-top { gap: 8px; padding: 0 12px; }
-    .brand .tag { display: none; }
-    .brand .mono-logo { font-size: 18px; }
-    .icon-btn { width: 34px; height: 34px; }
-    .menu-btn { padding: 8px 10px; gap: 6px; font-size: 10.5px; letter-spacing: .08em; }
-    .menu-btn kbd { display: none; }      /* pas de clavier sur mobile */
-    /* Weapon wheel adaptée au tactile */
+    /* En-tête compact : tout doit tenir sur une ligne sans deborder.
+       Les selecteurs reprennent « header.hud-top » : la regle de base porte le
+       meme poids, une simple classe se ferait battre et la barre resterait
+       large. Le libelle du bouton disparait aussi : sur un ecran de 360 px,
+       trois icones plus « Naviguer » ne tiennent pas. */
+    header.hud-top { gap: 6px; padding: 0 12px; height: 56px; }
+    header.hud-top .brand { gap: 0; min-width: 0; }
+    header.hud-top .brand .tag { display: none; }
+    header.hud-top .brand .mono-logo {
+      font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    header.hud-top .icon-btn { width: 40px; height: 40px; flex: none; }
+    header.hud-top .menu-btn {
+      padding: 0; gap: 0; flex: none; width: 40px; height: 40px;
+      justify-content: center; font-size: 0; letter-spacing: 0;
+    }
+    header.hud-top .menu-btn kbd { display: none; }   /* pas de clavier sur mobile */
+    header.hud-top .menu-btn .dot { width: 9px; height: 9px; }
+
+    /* Roue de selection : elle ne s'ouvre plus au doigt, mais reste atteignable
+       dans une fenetre etroite sur ordinateur. */
     .wheel-wrap { width: min(93vmin, 460px); }
     .wheel-center { padding: 0 25%; }
     .wheel-center .wc-name { font-size: 1.4rem; }
     .wheel-center .wc-desc { display: none; }
     .wheel-close { top: 14px; right: 14px; }
     .wheel-exit { top: 14px; left: 14px; }
+  }
+  /* Les tres petits ecrans (iPhone SE, 320 px) : quatre cibles de 40 px plus le
+     nom ne rentrent qu'en resserrant marges et gouttiere. */
+  @media (max-width: 360px) {
+    .wrap { padding-inline: 14px; }
+    header.hud-top { gap: 3px; padding: 0 8px; }
+    header.hud-top .brand .mono-logo { font-size: 15px; }
   }
 </style>
 <!-- Analytics Umami (cookieless, sans bannière) -->
@@ -1505,7 +1561,7 @@ document.documentElement.classList.add('js');
     <svg class="sun-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M19.1 4.9l-1.5 1.5M6.4 17.6l-1.5 1.5"/></svg>
     <svg class="moon-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
   </button>
-  <button class="menu-btn live-border" id="wheel-open" aria-haspopup="dialog" aria-controls="wheel">
+  <button class="menu-btn live-border" id="wheel-open" aria-haspopup="dialog" aria-controls="wheel" aria-label="Ouvrir la navigation">
     <span class="dot"></span> Naviguer <kbd>M</kbd>
   </button>
 </header>
@@ -2043,18 +2099,20 @@ document.documentElement.classList.add('js');
 <footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL - AI ENGINEER · FREELANCE OU CDI · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit sans dépendance</span></div></footer>
 
 <div class="invite" id="invite" role="region" aria-label="Proposition de changer de mode" hidden>
-  <p class="txt"><b>Ce site a un second visage.</b> Le mode Game rallume l'univers animé : braises, curseur torche, roue de sélection.</p>
+  <p class="txt" id="invite-txt"><b>Ce site a un second visage.</b> Le mode Game rallume l'univers animé : braises, curseur torche, roue de sélection.</p>
   <button class="go" id="invite-go" type="button">Essayer</button>
   <button class="no" id="invite-no" type="button" aria-label="Non merci, ne plus proposer">✕</button>
 </div>
 
 <!-- PALETTE DE COMMANDES (mode Standard) -->
-<div class="cmdk-overlay" id="cmdk" role="dialog" aria-modal="true" aria-label="Palette de commandes">
+<div class="cmdk-overlay" id="cmdk" role="dialog" aria-modal="true" aria-label="Palette de commandes" tabindex="-1">
   <div class="cmdk">
     <div class="cmdk-field">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <input id="cmdk-input" type="text" autocomplete="off" spellcheck="false"
-             placeholder="Posez une question, ou allez à une section…"
+             placeholder="Rechercher une section…"
+             data-ph-large="Posez une question, ou allez à une section…"
+             aria-label="Rechercher une section ou poser une question"
              role="combobox" aria-expanded="true" aria-controls="cmdk-list" aria-autocomplete="list">
     </div>
     <ul class="cmdk-list" id="cmdk-list" role="listbox" aria-label="Commandes"></ul>
@@ -2618,6 +2676,12 @@ document.documentElement.classList.add('js');
     closePalette();
     c.run();
   }
+  /* « Pointeur grossier » = doigt : on s'appuie sur la capacite reelle du
+     pointeur, pas sur la largeur de la fenetre, qu'une fenetre etroite sur
+     ordinateur fausserait. */
+  function coarsePointer() {
+    return window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  }
   function openPalette() {
     if (cmdkOpen) return;
     cmdkOpen = true; cmdkLastFocus = document.activeElement;
@@ -2625,7 +2689,12 @@ document.documentElement.classList.add('js');
     document.body.style.overflow = 'hidden';
     loadVectors();
     cmdkInput.value = ''; cmdkSel = 0; renderCmdk();
-    cmdkInput.focus({ preventScroll: true });
+    /* Sur un ecran tactile, donner le focus au champ leve le clavier virtuel :
+       il masque la moitie de la liste alors que le visiteur veut d'abord voir
+       les sections. On attend donc qu'il touche la barre de recherche. Au
+       clavier physique, le focus immediat reste le comportement attendu. */
+    if (coarsePointer()) cmdkEl.focus({ preventScroll: true });
+    else cmdkInput.focus({ preventScroll: true });
   }
   function closePalette() {
     if (!cmdkOpen) return;
@@ -2634,6 +2703,20 @@ document.documentElement.classList.add('js');
     document.body.style.overflow = '';
     if (cmdkLastFocus && cmdkLastFocus.focus) cmdkLastFocus.focus({ preventScroll: true });
   }
+  /* Le libelle long ne tient pas dans un champ de 320 px : il se coupe en
+     plein mot. Le HTML porte la version courte (mobile d'abord) et on rend la
+     phrase complete des que la place existe. */
+  (function () {
+    var full = cmdkInput.getAttribute('data-ph-large');
+    var short = cmdkInput.getAttribute('placeholder');
+    if (!full) return;
+    var mq = window.matchMedia('(min-width: 561px)');
+    function sync() { cmdkInput.setAttribute('placeholder', mq.matches ? full : short); }
+    sync();
+    if (mq.addEventListener) mq.addEventListener('change', sync);
+    else if (mq.addListener) mq.addListener(sync);
+  })();
+
   cmdkInput.addEventListener('input', function () { cmdkSel = 0; renderCmdk(); });
   cmdkEl.addEventListener('click', function (e) { if (e.target === cmdkEl) closePalette(); });
   cmdkEl.addEventListener('keydown', function (e) {
@@ -2645,16 +2728,25 @@ document.documentElement.classList.add('js');
   });
 
   /* Le bouton « Naviguer » ouvre la roue en Game, la palette en Standard. */
-  function openNav() { if (curMode() === 'game') openWheel(); else openPalette(); }
+  /* La roue de selection se pilote a la souris : on choisit un secteur en
+     visant un angle. Au doigt, la couronne tombe sous la main et les secteurs
+     d'un ecran de 360 px sont trop etroits pour etre vises. Le mode Game garde
+     son decor, mais sa navigation passe par la palette. */
+  function wheelUsable() { return !coarsePointer(); }
+  function openNav() { if (curMode() === 'game' && wheelUsable()) openWheel(); else openPalette(); }
   function syncNavLabels() {
-    var game = curMode() === 'game';
+    /* Au doigt la roue n'existe pas : les libelles ne doivent pas promettre un
+       « menu radial » qui ouvrira la palette, ni citer des touches absentes. */
+    var game = curMode() === 'game' && wheelUsable();
+    var touch = coarsePointer();
     var b2 = document.getElementById('wheel-open-2');
-    if (b2) b2.textContent = game ? 'Menu radial' : 'Palette de commandes';
+    if (b2) b2.textContent = game ? 'Menu radial' : (touch ? 'Rechercher' : 'Palette de commandes');
     var combo = (isMac ? '⌘' : 'Ctrl') + ' K';
     var kbd = document.querySelector('#wheel-open kbd');
     if (kbd) kbd.textContent = game ? 'M' : combo;
     var hint = document.querySelector('.wheel-hint');
     if (hint) {
+      hint.hidden = touch;   // aucun raccourci clavier a annoncer
       hint.innerHTML = game
         ? 'Navigation : <b>M</b> ou <b>' + combo + '</b> pour la roue de sélection'
         : 'Navigation : <b>' + combo + '</b> pour la palette de commandes';
@@ -2745,6 +2837,10 @@ document.documentElement.classList.add('js');
   (function () {
     var box = document.getElementById('invite');
     if (!box || curMode() === 'game') return;
+    if (coarsePointer()) {
+      var t = document.getElementById('invite-txt');
+      if (t) t.innerHTML = "<b>Ce site a un second visage.</b> Le mode Game rallume l'univers animé : braises, halo de lumière, typographie de jeu.";
+    }
     var refused = false;
     try { refused = localStorage.getItem('inviteOff') === '1'; } catch (e) {}
     if (refused || !('IntersectionObserver' in window)) return;
@@ -2840,7 +2936,7 @@ document.documentElement.classList.add('js');
     introPending = sessionStorage.getItem('introPending') === '1';
     if (introPending) sessionStorage.removeItem('introPending');
   } catch (e) {}
-  if (curMode() === 'game' && (introPending || (!location.hash && !introSeen))) {
+  if (curMode() === 'game' && wheelUsable() && (introPending || (!location.hash && !introSeen))) {
     introSkipModes = introPending;
     setTimeout(function () { if (!isOpen) openWheel(true); }, introPending ? 120 : 320);
   }

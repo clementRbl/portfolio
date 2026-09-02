@@ -93,6 +93,42 @@
   h1+table,h1+.tablewrap{margin-top:1.6em;}
   ::selection{background:var(--accent);color:var(--accent-ink);}
   :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  /* ---------- Mobile ----------
+     Le rapport n'avait aucun palier : sur un telephone la barre du haut passait
+     sur deux lignes, les URL en pleine longueur debordaient de leur cellule et
+     les tableaux se lisaient dans un couloir de defilement etroit. */
+  @media (max-width: 620px){
+    body{font-size:16px;}
+    main{padding:34px 16px 72px;}
+    .topbar-in{padding:0 14px;height:52px;gap:10px;}
+    .back{font-size:0;gap:0;}            /* la fleche suffit : le libelle passait a la ligne */
+    .back svg{width:20px;height:20px;}
+    .topbar .tt{font-size:10.5px;letter-spacing:.02em;text-align:right;line-height:1.25;}
+    .icon-btn{width:40px;height:40px;flex:none;}
+    /* Cellules : on autorise la coupure des URL, sinon une adresse d'une seule
+       piece impose sa largeur a toute la colonne. */
+    /* Les cellules cassent les mots au besoin : une URL d'un seul tenant
+       imposerait sinon sa largeur a toute la colonne, et le tableau entier
+       partirait dans un couloir de defilement. On borne aussi la largeur des
+       cellules pour que le navigateur repartisse les colonnes au lieu de
+       laisser la premiere prendre toute la place. */
+    th,td{padding:9px 11px;font-size:13.5px;overflow-wrap:anywhere;word-break:break-word;}
+    table{table-layout:auto;max-width:100%;}
+    /* Un « code » en ligne (chemin de fichier, nom de variable) n'a pas de
+       conteneur a defilement : sans coupure, il pousse toute la page et
+       provoque le defilement horizontal du document. */
+    li code, p code, td code{overflow-wrap:anywhere;}
+    a[href^="http"]{overflow-wrap:anywhere;}   /* URL nue citee dans le corps du texte */
+    ul,ol{padding-left:20px;}
+    table{font-size:13.5px;}
+    .tablewrap{margin-inline:-2px;}
+    h1{font-size:1.75rem;line-height:1.2;}
+    h2{font-size:1.35rem;}
+    h3{font-size:1.12rem;}
+    pre{padding:13px;font-size:13px;}
+    img,svg{max-width:100%;height:auto;}
+  }
+
   @media print{.topbar{display:none;}main{max-width:none;padding:0;}h2{break-after:avoid;}table,.tablewrap,pre,blockquote{break-inside:avoid;}body{font-size:11pt;}}
 </style>
 <!-- Analytics Umami (cookieless, sans bannière) -->
@@ -100,7 +136,7 @@
 </head>
 <body>
 <div class="topbar"><div class="topbar-in">
-  <a class="back" href="https://clement-reboul.fr/portfolio/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Retour au portfolio</a>
+  <a class="back" href="https://clement-reboul.fr/portfolio/" aria-label="Retour au portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Retour au portfolio</a>
   <span class="tt">Rapport · conduite de projet</span>
   <button class="icon-btn" id="tg" aria-label="Basculer le thème">
     <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
