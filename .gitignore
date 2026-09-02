@@ -33,3 +33,7 @@ desktop.ini
 .idea/
 *.swp
 *~
+
+# Artefacts Python
+__pycache__/
+*.pyc
