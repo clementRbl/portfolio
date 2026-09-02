@@ -126,6 +126,11 @@ if __name__ == '__main__':
                                             ' '.join(d.get('queries', []))]))
             for d in corpus]
     index = build(docs)
+    # Réponse rédigée à la main, servie telle quelle par la boîte « Interrogez
+    # mon CV » : la recherche est vectorielle, la réponse ne l'est pas. Rien
+    # n'est généré à la volée, donc rien ne peut être inventé.
+    for i, d in enumerate(corpus):
+        index['docs'][i]['a'] = d.get('answer', '')
     index['generated'] = 'tools/build_index.py - LSA rang %d sur %d documents' % (index['k'], len(docs))
     out = ROOT / 'assets' / 'search-index.json'
     out.write_text(json.dumps(index, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')

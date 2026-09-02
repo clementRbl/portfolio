@@ -9,7 +9,8 @@
    "qui es-tu",
    "présentation générale",
    "c'est quoi ce site"
-  ]
+  ],
+  "answer": "AI Engineer freelance. Je viens du développement web, cinq ans, et j'industrialise aujourd'hui des modèles : API, CI/CD, monitoring. Deux API tournent en production, celle du haut de page répond en direct."
  },
  {
   "id": "profil",
@@ -23,7 +24,8 @@
    "ton parcours en deux mots",
    "tu habites où",
    "tu te déplaces"
-  ]
+  ],
+  "answer": "Disponible pour des missions freelance en MLOps et GenAI. Basé en Île-de-France et dans les Hauts-de-France, sur site ou à distance."
  },
  {
   "id": "parcours",
@@ -38,7 +40,8 @@
    "tes études",
    "depuis quand tu codes",
    "combien d'années d'expérience"
-  ]
+  ],
+  "answer": "Cinq ans de développement web à Paris (Vue, TypeScript, NestJS, Django), puis le parcours AI Engineer d'OpenClassrooms de novembre 2025 à août 2026."
  },
  {
   "id": "competences",
@@ -53,7 +56,8 @@
    "tu sais faire du deep learning",
    "tu connais pytorch",
    "tu fais du sql"
-  ]
+  ],
+  "answer": "Python, FastAPI, Docker, CI/CD, MLflow et Evidently côté MLOps. scikit-learn, LightGBM et SHAP côté modèle. LangChain, Faiss, Mistral et Ragas côté GenAI."
  },
  {
   "id": "projets",
@@ -66,7 +70,8 @@
    "des exemples concrets",
    "tes dépôts github",
    "du code à voir"
-  ]
+  ],
+  "answer": "Neuf projets : scoring crédit, énergie des bâtiments, attrition RH, RAG culturel, IRM cérébrales, ETL multimodal, agent RL. La plupart des dépôts sont publics et documentés."
  },
  {
   "id": "projet-phare",
@@ -91,7 +96,8 @@
    "surveiller la dérive",
    "alerting sur un modèle",
    "évaluer un modèle en production"
-  ]
+  ],
+  "answer": "Credit Scoring MLOps : un LightGBM servi par une API FastAPI conteneurisée, déployée en continu, journalisée et surveillée pour le drift. AUC 0,78, environ 6 ms d'inférence, 98 % de couverture de tests."
  },
  {
   "id": "prestations",
@@ -116,7 +122,8 @@
    "quel est ton taux journalier",
    "budget pour une mission",
    "combien pour dix jours"
-  ]
+  ],
+  "answer": "Quatre missions cadrées : renfort front Vue 3 ou Quasar à la journée, mise en production d'un modèle en 10 jours, POC IA en 10 à 15 jours, audit d'un système RAG en 5 jours."
  },
  {
   "id": "soft-skills",
@@ -129,7 +136,8 @@
    "ta façon de bosser",
    "tes qualités humaines",
    "tu es autonome"
-  ]
+  ],
+  "answer": "Analyse, curiosité, vulgarisation, conduite de projet, créativité et rigueur. Chacune est adossée à un fait précis plutôt qu'à une auto-évaluation."
  },
  {
   "id": "reflexivite",
@@ -143,7 +151,8 @@
    "tes convictions",
    "fine-tuning",
    "agents ia"
-  ]
+  ],
+  "answer": "Trois convictions : la fiabilité prime sur la micro-optimisation, l'évaluation et le monitoring sont le cœur du métier, la valeur naît du lien entre la technique et le métier."
  },
  {
   "id": "cv",
@@ -154,7 +163,8 @@
    "cv en pdf",
    "ton curriculum",
    "un document à envoyer aux rh"
-  ]
+  ],
+  "answer": "Le CV tient en une page et se télécharge en PDF depuis cette section. Il est à jour."
  },
  {
   "id": "contact",
@@ -168,6 +178,7 @@
    "discuter d'un projet",
    "ton adresse mail",
    "te contacter"
-  ]
+  ],
+  "answer": "Écrivez à clement.rbl@gmail.com en décrivant votre besoin : je réponds sur le périmètre, la durée et le prix."
  }
 ]
