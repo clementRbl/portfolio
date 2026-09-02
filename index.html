@@ -1753,7 +1753,7 @@ document.documentElement.classList.add('js');
   <section id="cv" class="contact">
     <div class="wrap cv-wrap">
       <span class="hud-label reveal" style="justify-content:center"><i class="sl">//</i> 09 - CV</span>
-      <h2 class="reveal" style="margin-top:14px">Mon CV, en fiche de modèle</h2>
+      <h2 class="reveal" style="margin-top:14px">Mon CV en fiche modèle</h2>
       <p class="reveal">Le PDF d'une page se télécharge en bas de la fiche. Au-dessus, le même parcours au format que vos équipes lisent déjà tous les jours.</p>
 
       <article class="panel card-model reveal">
@@ -1763,12 +1763,12 @@ document.documentElement.classList.add('js');
           <span class="badge">Model card</span>
         </header>
         <div class="cm-meta">
-          <div><span class="cm-k">base_model</span><span class="cm-v">développeur web, 5 ans en production</span></div>
+          <div><span class="cm-k">base_model</span><span class="cm-v">Développeur web, 5 ans en production</span></div>
           <div><span class="cm-k">fine_tuned_on</span><span class="cm-v">AI Engineer Bac+5, OpenClassrooms</span></div>
-          <div><span class="cm-k">languages</span><span class="cm-v">fr natif, en professionnel</span></div>
+          <div><span class="cm-k">languages</span><span class="cm-v">FR natif et anglais professionnel</span></div>
           <div><span class="cm-k">deployment</span><span class="cm-v">Île-de-France, Hauts-de-France, remote</span></div>
-          <div><span class="cm-k">status</span><span class="cm-v ok">disponible en freelance</span></div>
-          <div><span class="cm-k">license</span><span class="cm-v">mission cadrée, périmètre annoncé</span></div>
+          <div><span class="cm-k">status</span><span class="cm-v ok">Disponible en freelance &amp; CDI</span></div>
+          <div><span class="cm-k">license</span><span class="cm-v">Mission cadrée, périmètre annoncé</span></div>
         </div>
         <div class="cm-metrics tnum">
           <div><div class="n">09</div><div class="c">Projets IA</div></div>
@@ -2169,7 +2169,15 @@ document.documentElement.classList.add('js');
   function vecStem(w) {
     for (var i = 0; i < VEC.suffixes.length; i++) {
       var suf = VEC.suffixes[i];
-      if (w.length > suf.length + 3 && w.slice(-suf.length) === suf) return w.slice(0, -suf.length);
+      if (w.length > suf.length + 3 && w.slice(-suf.length) === suf) { w = w.slice(0, -suf.length); break; }
+    }
+    /* Réécritures de fin de racine, table exportée par build_index.py au même
+       titre que les suffixes : le français alterne y et i selon la personne
+       (déployer / déploie), et les deux formes doivent tomber au même endroit. */
+    var rw = VEC.rewrites || [];
+    for (var j = 0; j < rw.length; j++) {
+      var a = rw[j][0];
+      if (w.length > 3 && w.slice(-a.length) === a) return w.slice(0, -a.length) + rw[j][1];
     }
     return w;
   }
