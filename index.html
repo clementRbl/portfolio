@@ -1052,7 +1052,7 @@ document.documentElement.classList.add('js');
      estompés sont les sections que l'index vectoriel juge proches de celle
      qu'on lit. Ce ne sont pas des voisins de sommaire : ce sont des cosinus. */
   .rail {
-    position: fixed; left: 22px; top: 50%; translate: 0 -50%; z-index: 55;
+    position: fixed; left: 16px; top: 50%; translate: 0 -50%; z-index: 55;
     display: none; flex-direction: column; gap: 11px;
   }
   html.js.fx-standard .rail { display: flex; }
@@ -1065,14 +1065,19 @@ document.documentElement.classList.add('js');
   .rail a.on .bar { width: 34px; background: var(--ember); }
   .rail a:hover .bar { background: var(--ember-bright); }
   .rail .lb {
-    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
     text-transform: uppercase; color: var(--muted); white-space: nowrap;
     opacity: 0; translate: -6px 0; transition: opacity .22s ease, translate .22s ease;
   }
   .rail:hover .lb, .rail a:focus-visible .lb { opacity: 1; translate: 0 0; }
-  .rail a.on .lb { color: var(--ink); }
+  /* Le libellé de la section courante reste affiché. Onze tirets anonymes ne
+     sont pas une navigation, ce sont des traits : il faut qu'un seul mot dise
+     de quoi la colonne parle avant qu'on ait l'idée de la survoler. */
+  .rail a.on .lb { opacity: 1; translate: 0 0; color: var(--ink); }
   @media (prefers-reduced-motion: reduce) { .rail .bar, .rail .lb { transition: none; } }
-  @media (max-width: 1300px) { html.js.fx-standard .rail { display: none; } }
+  /* Sous 1440 px, la marge est plus étroite que le plus long des libellés : le
+     rail chevaucherait le texte. Mieux vaut pas de rail qu'un rail illisible. */
+  @media (max-width: 1439px) { html.js.fx-standard .rail { display: none; } }
 
   /* ---------- CV : FICHE DE MODÈLE ----------
      Un CV se lit en trente secondes par quelqu'un qui en lit trente par jour.
@@ -2492,11 +2497,14 @@ document.documentElement.classList.add('js');
     var game = curMode() === 'game';
     var b2 = document.getElementById('wheel-open-2');
     if (b2) b2.textContent = game ? 'Menu radial' : 'Palette de commandes';
+    var combo = (isMac ? '⌘' : 'Ctrl') + ' K';
+    var kbd = document.querySelector('#wheel-open kbd');
+    if (kbd) kbd.textContent = game ? 'M' : combo;
     var hint = document.querySelector('.wheel-hint');
     if (hint) {
       hint.innerHTML = game
-        ? 'Navigation : appuyez sur <b>M</b> ou cliquez sur <b>Naviguer</b> pour la roue de sélection'
-        : 'Navigation : <b>' + (isMac ? '⌘' : 'Ctrl') + ' K</b> ou <b>M</b> pour la palette de commandes';
+        ? 'Navigation : <b>M</b> ou <b>' + combo + '</b> pour la roue de sélection'
+        : 'Navigation : <b>' + combo + '</b> pour la palette de commandes';
     }
   }
 
@@ -2634,13 +2642,24 @@ document.documentElement.classList.add('js');
 
   document.addEventListener('keydown', function (e) {
     var typing = /input|textarea/i.test((e.target.tagName || ''));
+    /* Une touche, un menu, et c'est le menu du mode courant. Ctrl/⌘ K est la
+       convention universelle des palettes de commandes : elle ouvre donc la
+       palette en Standard et la roue en Game, plutôt que d'exposer deux menus
+       concurrents dans le même mode. */
     if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
       e.preventDefault();
-      if (cmdkOpen) closePalette(); else if (!isOpen) openPalette();
+      if (cmdkOpen) closePalette();
+      else if (isOpen) closeWheel();
+      else openNav();
       return;
     }
     if (cmdkOpen) return;   // la palette gère ses propres touches
-    if (!isOpen && (e.key === 'm' || e.key === 'M') && !typing) { e.preventDefault(); openNav(); return; }
+    /* M sans modificateur appartient au registre du jeu, et une touche nue qui
+       ouvre une fenêtre pendant qu'on lit surprend plus qu'elle ne sert. On la
+       garde en Game, où le raccourci d'une lettre est idiomatique. */
+    if (!isOpen && curMode() === 'game' && (e.key === 'm' || e.key === 'M') && !typing) {
+      e.preventDefault(); openNav(); return;
+    }
     if (!isOpen) return;
     if (e.key === 'Escape') { closeWheel(); return; }
     if (overlay.classList.contains('modes-shown') && !modeChosen) {
@@ -3363,7 +3382,7 @@ FX.onStart(function (mode) {
      ce sont les deux plus proches de celle qu'on lit, au cosinus, dans le même
      espace latent que la recherche. Construit depuis l'index pour qu'aucune
      liste de sections ne soit maintenue à deux endroits. */
-  if (window.LSA && window.matchMedia('(min-width: 1301px)').matches) {
+  if (window.LSA && window.matchMedia('(min-width: 1440px)').matches) {
     window.LSA.load(function (ix) {
       if (!ix || !ix.docs || !ix.docs.length) return;
       var ids = ix.docs.map(function (d) { return d.id; });
