@@ -723,6 +723,71 @@ document.documentElement.classList.add('js');
   .try-raw .rq { color: var(--muted); display: block; margin-bottom: 9px; word-break: break-all; }
   @media (max-width: 900px) { .try-panel { grid-template-columns: 1fr; } }
 
+  /* Le repère de seuil devient pilotable : sa position et son libellé viennent
+     du curseur, plus d'une valeur écrite en dur dans la feuille de style. */
+  .gauge .thr { left: calc(var(--thr, 47) * 1%); transition: left .12s linear; }
+  .gauge .thr::after { content: "seuil " attr(data-lbl); }
+
+  /* ---------- SEUIL PILOTABLE ----------
+     L'arbitrage le plus intéressant du projet était invisible : le seuil est à
+     0,47 et non 0,50 parce que le coût métier est asymétrique. On le rend
+     manipulable, parce qu'on comprend un arbitrage en le déplaçant, pas en le
+     lisant. Aucun appel réseau : tout se recalcule sur les probabilités déjà
+     obtenues de l'API. */
+  .thr-ctl { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .thr-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted); }
+  .thr-head .thr-val { font-size: 1.35rem; font-weight: 700; color: var(--ember);
+    letter-spacing: -.01em; text-transform: none; }
+  .thr-head button {
+    margin-left: auto; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em;
+    background: none; border: 1px solid var(--border-2); color: var(--ink-dim);
+    padding: 5px 10px; cursor: pointer; border-radius: 999px; text-transform: none;
+  }
+  .thr-head button:hover { border-color: var(--ember); color: var(--ember); }
+  .thr-head button[disabled] { opacity: .4; cursor: default; }
+  .thr-ctl input[type="range"] {
+    -webkit-appearance: none; appearance: none; width: 100%; margin: 14px 0 0;
+    height: 4px; background: var(--border-2); border-radius: 3px; outline: none; cursor: pointer;
+  }
+  .thr-ctl input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 17px; height: 17px; border-radius: 50%;
+    background: var(--ember); border: 2px solid var(--surface); cursor: grab;
+    box-shadow: 0 0 0 1px var(--ember);
+  }
+  .thr-ctl input[type="range"]::-moz-range-thumb {
+    width: 15px; height: 15px; border-radius: 50%; background: var(--ember);
+    border: 2px solid var(--surface); cursor: grab;
+  }
+  .thr-ctl input[type="range"]:focus-visible { outline: 2px solid var(--ember); outline-offset: 4px; }
+  .thr-why { margin-top: 16px; font-size: 14.2px; color: var(--ink-dim); line-height: 1.55; max-width: 70ch; }
+  .thr-why b { color: var(--ink); }
+  .thr-count { margin-top: 11px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .thr-count b { color: var(--ink-dim); font-weight: 400; }
+  .thr-count .off { color: var(--ember); }
+
+  /* ---------- FICHE DU DOSSIER ----------
+     Une probabilité sans contexte n'est qu'un nombre. Valeurs réelles lues dans
+     le jeu servi par l'API, pas des exemples inventés. */
+  .try-id { background: var(--surface-2); border: 1px solid var(--border); padding: 15px; margin-bottom: 14px; }
+  html.fx-standard .try-id { border-radius: 8px; }
+  .try-id .ti-head { display: flex; align-items: baseline; gap: 8px; font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+    padding-bottom: 11px; margin-bottom: 11px; border-bottom: 1px solid var(--border); }
+  .try-id .ti-head .n { color: var(--ember); letter-spacing: .04em; }
+  .try-id dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 7px 12px; }
+  .try-id dt { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
+  .try-id dd { margin: 0; font-size: 13.5px; color: var(--ink-dim); text-align: right; }
+  .try-id .ti-note { margin-top: 12px; font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+
+  /* ---------- GLOSSAIRE ----------
+     Le portfolio est lu par des leads techniques ET par des recruteurs. Un
+     terme de métier souligné, une phrase au survol : personne n'est bloqué. */
+  .gl { border-bottom: 1px dotted var(--moss); cursor: help; }
+  .gl:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+
+
   /* ---------- MODES : boutons de l'intro ---------- */
   .wheel-modes { display: none; flex-direction: column; align-items: center; gap: 20px; margin-top: 26px; }
   .wheel-overlay.modes-shown .wheel-modes { display: flex; animation: fadeUp .5s ease both; }
@@ -1627,7 +1692,8 @@ document.documentElement.classList.add('js');
         </div>
         <div class="tryout">
           <h3>Essayez le modèle</h3>
-          <p class="sub">Chaque dossier ci-dessous existe dans le jeu de données servi par l'API. Cliquez : la requête part vers le Space en production, la réponse affichée est la sienne.</p>
+          <p class="sub"><b>Le problème :</b> une banque reçoit une demande de prêt et doit décider de l'accorder ou non, sans savoir si la personne remboursera. Le modèle estime une <span class="gl" tabindex="0" title="Probabilité que la personne ne rembourse pas son crédit. Entre 0 et 1 : plus c'est haut, plus le risque est élevé.">probabilité de défaut</span>, et un <span class="gl" tabindex="0" title="Valeur au-dessus de laquelle la demande est refusée. Ce n'est pas le modèle qui la fixe : c'est une décision de gestion, arbitrée sur le coût des erreurs.">seuil</span> la transforme en décision.</p>
+          <p class="sub" style="margin-top:10px"><b>Les dossiers :</b> de vraies demandes du jeu Home&nbsp;Credit anonymisé, servies par l'API en production. Le <span class="gl" tabindex="0" title="Identifiant anonymisé d'une demande de crédit dans le jeu Home Credit. C'est la seule donnée que prend l'API : elle retrouve le dossier et le passe au modèle."><code>SK_ID_CURR</code></span> est l'identifiant de la demande. Cliquez : la requête part vers le Space, la réponse affichée est la sienne.</p>
           <div class="try-clients" id="try-clients" role="group" aria-label="Choisir un dossier client"></div>
           <div class="try-panel">
             <div>
@@ -1635,14 +1701,42 @@ document.documentElement.classList.add('js');
                 <span>Probabilité de défaut</span>
                 <span class="val tnum" id="try-val">-</span>
               </div>
-              <div class="gauge" id="try-gauge"><div class="fillp" id="try-fill"></div><div class="thr"></div></div>
-              <div class="gauge-scale"><span>0,00</span><span>1,00</span></div>
+              <div class="gauge" id="try-gauge"><div class="fillp" id="try-fill"></div><div class="thr" data-lbl="0,47"></div></div>
+              <div class="gauge-scale"><span>0,00 remboursement certain</span><span>défaut certain 1,00</span></div>
               <div class="verdict">
                 <span class="tag-d" id="try-dec">-</span>
                 <span class="meta" id="try-meta">Sélectionnez un dossier</span>
               </div>
+
+              <div class="thr-ctl">
+                <div class="thr-head">
+                  <label for="thr-range">Seuil de décision</label>
+                  <span class="thr-val tnum" id="thr-val">0,47</span>
+                  <button type="button" id="thr-reset" disabled>revenir à 0,47</button>
+                </div>
+                <input type="range" id="thr-range" min="5" max="95" step="1" value="47"
+                       aria-label="Seuil de décision, en centièmes" aria-describedby="thr-why">
+                <p class="thr-why" id="thr-why"><b>Pourquoi 0,47 et pas 0,50 ?</b> Parce que les deux erreurs ne coûtent pas pareil. Accorder un prêt à quelqu'un qui ne remboursera pas fait perdre le capital ; refuser un bon client ne fait perdre qu'une marge. Le projet chiffre ce rapport à <b>dix contre un</b>, et 0,47 est le seuil qui minimise la facture totale sur le jeu de validation. Déplacez-le : à gauche la banque devient frileuse, à droite elle prête les yeux fermés.</p>
+                <p class="thr-count" id="thr-count"></p>
+              </div>
             </div>
-            <div class="try-raw"><span class="rq" id="try-req">POST /predict</span><span id="try-json">-</span></div>
+            <div>
+              <div class="try-id" id="try-id" hidden>
+                <div class="ti-head"><span>dossier</span><span class="n" id="ti-num">-</span></div>
+                <dl>
+                  <div style="display:contents"><dt>Âge</dt><dd id="ti-age">-</dd></div>
+                  <div style="display:contents"><dt>Situation</dt><dd id="ti-occ">-</dd></div>
+                  <div style="display:contents"><dt>Ancienneté</dt><dd id="ti-emp">-</dd></div>
+                  <div style="display:contents"><dt>Enfants</dt><dd id="ti-enf">-</dd></div>
+                  <div style="display:contents"><dt>Revenu annuel</dt><dd id="ti-rev">-</dd></div>
+                  <div style="display:contents"><dt>Prêt demandé</dt><dd id="ti-pret">-</dd></div>
+                  <div style="display:contents"><dt>Annuité</dt><dd id="ti-men">-</dd></div>
+                  <div style="display:contents"><dt>Effort</dt><dd id="ti-eff">-</dd></div>
+                </dl>
+                <p class="ti-note">Valeurs réelles du dossier. Les montants sont dans l'unité du jeu de données, qui ne précise aucune devise.</p>
+              </div>
+              <div class="try-raw"><span class="rq" id="try-req">POST /predict</span><span id="try-json">-</span></div>
+            </div>
           </div>
         </div>
         <div class="pipe" role="img" aria-label="Pipeline MLOps : client vers API FastAPI Docker sur Hugging Face Spaces, logs JSONL, drift Evidently et dashboard Streamlit ; en parallèle CI/CD GitHub Actions test build deploy.">
@@ -2662,6 +2756,29 @@ window.CREDIT_API = (function () {
     { id: 100038, p: 0.6987 }, { id: 456250, p: 0.7310 }, { id: 100107, p: 0.7932 }
   ];
 
+  /* Caractéristiques lisibles des mêmes dossiers, relevées dans le parquet servi
+     par l'API (data/processed/test_merged.parquet du dépôt credit-scoring-mlops).
+     Elles ne servent qu'à donner un visage au dossier : le modèle, lui, en lit
+     bien davantage. emp = null pour les retraités, dont DAYS_EMPLOYED vaut la
+     valeur sentinelle 365243 dans Home Credit et ne veut rien dire. */
+  var PROFILES = {
+    100057: { age: 45, emp: 7.1,  rev: 180000, pret: 499221, men: 22117, occ: 'salarié',      enf: 2 },
+    100117: { age: 62, emp: null, rev: 90000,  pret: 499221, men: 22117, occ: 'retraité',     enf: 0 },
+    100512: { age: 64, emp: null, rev: 92250,  pret: 130320, men: 13815, occ: 'retraité',     enf: 0 },
+    100150: { age: 28, emp: 7.6,  rev: 99000,  pret: 225000, men: 19242, occ: 'cadre',        enf: 0 },
+    100141: { age: 49, emp: 0.8,  rev: 175500, pret: 478498, men: 46741, occ: 'salarié',      enf: 0 },
+    100042: { age: 50, emp: 32.9, rev: 270000, pret: 959688, men: 34600, occ: 'fonctionnaire',enf: 0 },
+    100128: { age: 30, emp: 5.2,  rev: 225000, pret: 431280, men: 23526, occ: 'cadre',        enf: 1 },
+    100001: { age: 52, emp: 6.4,  rev: 135000, pret: 568800, men: 20560, occ: 'salarié',      enf: 0 },
+    100109: { age: 53, emp: 13.0, rev: 202500, pret: 407520, men: 26041, occ: 'salarié',      enf: 0 },
+    100106: { age: 33, emp: 5.0,  rev: 180000, pret: 157500, men: 7875,  occ: 'salarié',      enf: 0 },
+    100311: { age: 48, emp: 10.7, rev: 175500, pret: 247500, men: 12766, occ: 'salarié',      enf: 0 },
+    100005: { age: 49, emp: 12.2, rev: 99000,  pret: 222768, men: 17370, occ: 'salarié',      enf: 0 },
+    100038: { age: 35, emp: 6.0,  rev: 180000, pret: 625500, men: 32067, occ: 'salarié',      enf: 1 },
+    456250: { age: 38, emp: 1.7,  rev: 135000, pret: 312768, men: 24709, occ: 'salarié',      enf: 0 },
+    100107: { age: 37, emp: 2.8,  rev: 180000, pret: 296280, men: 21690, occ: 'salarié',      enf: 0 }
+  };
+
   var online = null;          // null = pas encore su, true/false ensuite
   var budget = 40;            // plafond d'appels par visite : l'API est sur un Space gratuit
 
@@ -2702,7 +2819,7 @@ window.CREDIT_API = (function () {
       .catch(function () { clearTimeout(to); online = false; return false; });
   }
 
-  return { BASE: BASE, THRESHOLD: THRESHOLD, CLIENTS: CLIENTS,
+  return { BASE: BASE, THRESHOLD: THRESHOLD, CLIENTS: CLIENTS, PROFILES: PROFILES,
            predict: predict, health: health, decisionFor: decisionFor,
            isOnline: function () { return online; } };
 })();
@@ -2806,27 +2923,104 @@ window.CREDIT_API = (function () {
   var gauge = document.getElementById('try-gauge'), decEl = document.getElementById('try-dec');
   var metaEl = document.getElementById('try-meta'), reqEl = document.getElementById('try-req');
   var jsonEl = document.getElementById('try-json');
-  var busy = false;
+  var thrRange = document.getElementById('thr-range');
+  var thrValEl = document.getElementById('thr-val');
+  var thrReset = document.getElementById('thr-reset');
+  var thrCount = document.getElementById('thr-count');
+  var idBox = document.getElementById('try-id');
+  var busy = false, last = null;
+
+  /* Probabilités des dossiers proposés : celles du repli au départ, remplacées
+     par la vraie réponse dès que l'API en renvoie une. Le décompte sous le
+     curseur porte donc sur des valeurs mesurées, pas sur des valeurs inventées. */
+  var probs = {};
+  API.CLIENTS.forEach(function (c) { probs[c.id] = c.p; });
 
   function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function fr(n, d) { return n.toFixed(d).replace('.', ','); }
+  function num(n) { return n.toLocaleString ? n.toLocaleString('fr-FR') : String(n); }
+  function put(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; }
+  function thr() { return thrRange ? parseInt(thrRange.value, 10) / 100 : API.THRESHOLD; }
 
-  function render(id, r) {
-    var d = r.data, p = d.probability, refuse = d.decision === 'REFUSE';
-    valEl.textContent = p.toFixed(4).replace('.', ',');
+  /* Le seuil n'appartient pas au modèle : c'est une décision de gestion posée
+     sur sa sortie. Le déplacer ne relance donc aucun appel, on reclasse des
+     probabilités déjà obtenues. */
+  function paint() {
+    var t = thr(), defaut = Math.abs(t - API.THRESHOLD) < 1e-9;
+    if (gauge) gauge.style.setProperty('--thr', Math.round(t * 100));
+    var mark = gauge && gauge.querySelector('.thr');
+    if (mark) mark.setAttribute('data-lbl', fr(t, 2));
+    if (thrValEl) thrValEl.textContent = fr(t, 2);
+    if (thrReset) thrReset.disabled = defaut;
+
+    var acc = 0, ref = 0, bascule = 0;
+    API.CLIENTS.forEach(function (c) {
+      var pp = probs[c.id];
+      if (pp < t) acc++; else ref++;
+      if ((pp < t) !== (pp < API.THRESHOLD)) bascule++;
+    });
+    if (thrCount) {
+      thrCount.innerHTML = 'Sur les ' + API.CLIENTS.length + ' dossiers proposés : <b>' + acc +
+        ' accordés</b>, <b>' + ref + ' refusés</b>.' +
+        (bascule ? ' <span class="off">' + bascule + (bascule > 1 ? ' basculent' : ' bascule') +
+                   ' par rapport à 0,47.</span>' : '');
+    }
+
+    if (!last) return;
+    var p = last.r.data.probability, refuse = p >= t;
+    valEl.textContent = fr(p, 4);
     fill.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
     gauge.classList.toggle('refuse', refuse);
-    decEl.textContent = d.decision;
+    decEl.textContent = refuse ? 'REFUSE' : 'ACCORDE';
     decEl.classList.toggle('refuse', refuse);
-    var ecart = Math.abs(p - d.threshold).toFixed(3).replace('.', ',');
-    metaEl.textContent = (r.live ? r.ms + ' ms - réponse de l’API' : 'réponse en cache, Space en veille')
-      + ' · à ' + ecart + ' du seuil';
+    var src = last.r.live ? last.r.ms + ' ms - réponse de l’API' : 'réponse en cache, Space en veille';
+    /* Au seuil du modèle, la décision affichée est celle de l'API. Ailleurs elle
+       est simulée, et on le dit : le bloc JSON à droite continue de montrer ce
+       que l'API a réellement répondu. */
+    metaEl.textContent = defaut
+      ? src + ' · à ' + fr(Math.abs(p - t), 3) + ' du seuil'
+      : src + ' · décision simulée à ' + fr(t, 2) + ', l’API a répondu ' + last.r.data.decision + ' à 0,47';
+  }
+
+  function renderProfile(id) {
+    if (!idBox) return;
+    var pr = API.PROFILES && API.PROFILES[id];
+    if (!pr) { idBox.hidden = true; return; }
+    idBox.hidden = false;
+    put('ti-num', id);
+    put('ti-age', pr.age + ' ans');
+    put('ti-occ', pr.occ);
+    put('ti-emp', pr.emp === null ? 'sans objet' : fr(pr.emp, 1) + ' ans');
+    put('ti-enf', pr.enf === 0 ? 'aucun' : pr.enf);
+    put('ti-rev', num(pr.rev));
+    put('ti-pret', num(pr.pret));
+    put('ti-men', num(pr.men));
+    put('ti-eff', Math.round(pr.men / pr.rev * 100) + ' % du revenu');
+  }
+
+  function render(id, r) {
+    last = { id: id, r: r };
+    var d = r.data;
+    if (typeof d.probability === 'number') probs[id] = d.probability;
     reqEl.textContent = 'POST ' + API.BASE.replace('https://', '') + '/predict?SK_ID_CURR=' + id;
     jsonEl.innerHTML =
       '{<br>&nbsp;&nbsp;<span class="k">"SK_ID_CURR"</span>: ' + esc(d.SK_ID_CURR) + ',<br>' +
       '&nbsp;&nbsp;<span class="k">"probability"</span>: ' + esc(d.probability) + ',<br>' +
       '&nbsp;&nbsp;<span class="k">"decision"</span>: "' + esc(d.decision) + '",<br>' +
       '&nbsp;&nbsp;<span class="k">"threshold"</span>: ' + esc(d.threshold) + '<br>}';
+    renderProfile(id);
+    paint();
   }
+
+  if (thrRange) {
+    thrRange.addEventListener('input', paint);
+    if (thrReset) thrReset.addEventListener('click', function () {
+      thrRange.value = Math.round(API.THRESHOLD * 100);
+      paint();
+      thrRange.focus();
+    });
+  }
+  paint();      // le décompte existe avant même le premier scoring
 
   function pick(btn, id) {
     if (busy) return;
