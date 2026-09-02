@@ -37,18 +37,21 @@
 if (location.pathname === '/portfolio') { location.replace('/portfolio/' + location.search + location.hash); }
 document.documentElement.classList.add('js');
 (function () {
-  var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
-  if (t !== 'light' && t !== 'dark') {
-    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-  }
-  document.documentElement.setAttribute('data-theme', t);
-})();
-(function () {
   var m = null; try { m = localStorage.getItem('fxMode'); } catch (e) {}
   // « perfection » = ancien nom du mode Game, encore stocké chez les visiteurs
   // d'avant le renommage. Sans choix enregistré, c'est Standard qui s'applique.
   var game = (m === 'game' || m === 'perfection');
   document.documentElement.classList.add(game ? 'fx-game' : 'fx-standard');
+
+  /* Le mode Game n'existe qu'en sombre : son univers tient aux braises, à la
+     torche et au grain, que le thème clair vide de leur sens. On force donc
+     l'attribut sans toucher à la préférence enregistrée, qui reste celle du
+     mode Standard et se retrouve intacte au retour. */
+  var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme', game ? 'dark' : t);
 
   /* Favicon accordé au mode : bleu et blanc en Standard, ambre sur fond sombre
      en Game. Posé ici, où le mode est deja connu, pour eviter que l'onglet
@@ -324,6 +327,23 @@ document.documentElement.classList.add('js');
     content: ""; position: absolute; top: 0; right: 0; width: var(--bevel); height: var(--bevel);
     background: linear-gradient(225deg, var(--border-2) 0 45%, transparent 46%);
   }
+
+  /* Une commande qui n'a pas cours dans le mode courant doit le dire plutôt
+     que de disparaître : on la désactive et on explique au survol. L'attribut
+     natif title ne s'affiche pas sur un bouton disabled, d'où aria-disabled
+     plus une infobulle dessinée, qui reste atteignable au clavier. */
+  .icon-btn[aria-disabled="true"] { opacity: .42; cursor: not-allowed; }
+  .tip { position: relative; }
+  .tip::after {
+    content: attr(data-tip); position: absolute; top: calc(100% + 10px); right: 0;
+    background: var(--surface-2); border: 1px solid var(--border-2); color: var(--ink-dim);
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .03em; line-height: 1.35;
+    padding: 7px 10px; white-space: nowrap; border-radius: 6px; box-shadow: 0 8px 22px rgba(0,0,0,.35);
+    opacity: 0; pointer-events: none; transition: opacity .18s ease; z-index: 80;
+  }
+  .tip:hover::after, .tip:focus-visible::after { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .tip::after { transition: none; } }
+  @media (hover: none) { .tip::after { display: none; } }
 
   .skip { position: absolute; left: -9999px; top: 0; background: var(--ember); color: var(--on-accent); padding: 10px 16px; z-index: 10000; font-weight: 700; }
   .skip:focus { left: 0; }
@@ -2096,7 +2116,15 @@ document.documentElement.classList.add('js');
   /* ---- Sons (WebAudio) : reload.mp3 aux clics + whoosh à la fermeture ---- */
   var sfx = (function () {
     var on = false, ctx = null, reloadBuf = null;
-    try { on = localStorage.getItem('soundOn') === '1'; } catch (e) {}
+    /* Le son fait partie de l'univers Game : allumé par défaut quand on y entre.
+       On ne décide qu'en l'absence de choix enregistré ; un visiteur qui l'a
+       coupé le retrouve coupé. */
+    try {
+      var pref = localStorage.getItem('soundOn');
+      on = (pref === null || pref === undefined)
+        ? document.documentElement.classList.contains('fx-game')
+        : pref === '1';
+    } catch (e) {}
     function actx() {
       if (!ctx) { var A = window.AudioContext || window.webkitAudioContext; if (A) { ctx = new A(); loadReload(); } }
       return ctx;
@@ -2132,18 +2160,53 @@ document.documentElement.classList.add('js');
     };
   })();
   var sndBtn = document.getElementById('snd-toggle');
+  /* Les effets sonores appartiennent au mode Game : ils accompagnent la roue et
+     ses transitions, qui n'existent pas en Standard. Le bouton y reste visible
+     mais inerte, et dit pourquoi au survol. */
   function syncSnd() {
-    if (!sndBtn) return; var on = sfx.isOn();
+    if (!sndBtn) return;
+    var game = curMode() === 'game';
+    sndBtn.classList.add('tip');
+    if (!game) {
+      sndBtn.classList.remove('on');
+      sndBtn.setAttribute('aria-disabled', 'true');
+      sndBtn.setAttribute('aria-pressed', 'false');
+      sndBtn.setAttribute('aria-label', 'Son : disponible en mode Game uniquement');
+      sndBtn.setAttribute('data-tip', 'Disponible en mode Game uniquement');
+      sndBtn.removeAttribute('title');
+      return;
+    }
+    var on = sfx.isOn();
+    sndBtn.removeAttribute('aria-disabled');
     sndBtn.classList.toggle('on', on);
     sndBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
     sndBtn.setAttribute('aria-label', on ? 'Couper le son' : 'Activer le son');
+    sndBtn.setAttribute('data-tip', on ? 'Couper le son' : 'Activer le son');
   }
-  if (sndBtn) { syncSnd(); sndBtn.addEventListener('click', function () { sfx.set(!sfx.isOn()); syncSnd(); if (sfx.isOn()) sfx.reload(); }); }
+  if (sndBtn) {
+    syncSnd();
+    sndBtn.addEventListener('click', function () {
+      if (curMode() !== 'game') return;
+      sfx.set(!sfx.isOn()); syncSnd(); if (sfx.isOn()) sfx.reload();
+    });
+  }
 
   /* Bascule thème clair / sombre (persistée) */
   var themeBtn = document.getElementById('theme-toggle');
+  function syncThemeBtn() {
+    if (!themeBtn) return;
+    var game = curMode() === 'game';
+    themeBtn.classList.add('tip');
+    themeBtn.setAttribute('data-tip', game ? 'Le mode Game est toujours sombre' : 'Thème clair / sombre');
+    themeBtn.setAttribute('aria-label', game ? 'Thème : le mode Game est toujours sombre' : 'Basculer thème clair ou sombre');
+    if (game) themeBtn.setAttribute('aria-disabled', 'true');
+    else themeBtn.removeAttribute('aria-disabled');
+    themeBtn.removeAttribute('title');
+  }
+  syncThemeBtn();
   if (themeBtn) {
     themeBtn.addEventListener('click', function () {
+      if (curMode() === 'game') return;   // le sombre n'est pas négociable en Game
       var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
       var next = cur === 'light' ? 'dark' : 'light';
       function swap() {
@@ -2374,9 +2437,9 @@ document.documentElement.classList.add('js');
         run: function () { window.open('https://github.com/clementRbl', '_blank', 'noopener'); } },
       { g: 'Affichage', label: 'Basculer le thème clair / sombre', hint: 'Thème', icon: IC.sun,
         run: function () { if (themeBtn) themeBtn.click(); } },
-      { g: 'Affichage', label: 'Activer ou couper le son', hint: 'Son', icon: IC.snd,
-        run: function () { sfx.set(!sfx.isOn()); syncSnd(); } },
-      { g: 'Affichage', label: 'Passer en mode Game', hint: 'Univers animé', icon: IC.game,
+      /* Pas d'entrée « son » ici : la palette n'est atteignable qu'en Standard,
+         où le son n'a pas cours. La proposer serait promettre un effet nul. */
+      { g: 'Affichage', label: 'Passer en mode Game', hint: 'Univers animé et sonore', icon: IC.game,
         run: function () { setMode('game'); } }
     ]);
   }
