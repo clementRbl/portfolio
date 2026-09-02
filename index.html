@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Politique de sécurité du contenu. Les en-têtes réels sont posés par la
+     fonction Edge Netlify sur clement-reboul.fr/portfolio/* ; cette balise
+     reprend la même politique pour que l'origine github.io, servie sans
+     en-têtes, soit protégée elle aussi. frame-ancestors est volontairement
+     absent : une balise meta ne peut pas le porter, seul l'en-tête le fait. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; connect-src 'self' https://cloud.umami.is https://gateway.umami.is https://clementrbl-credit-scoring-api.hf.space; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Clément Reboul - AI Engineer freelance ou CDI | Paris &amp; Hauts-de-France</title>
 <meta name="description" content="AI Engineer disponible en freelance ou en CDI, à Paris, en Île-de-France, dans l'Oise et les Hauts-de-France. Mise en production de modèles (MLOps), POC IA, audit RAG et renfort front Vue 3 / Quasar. Missions cadrées ou poste en CDI : périmètre, durée et livrables annoncés.">
 <meta name="keywords" content="AI Engineer freelance, AI Engineer CDI, ingénieur IA CDI, emploi AI Engineer, MLOps freelance, expert MLOps, consultant IA freelance, freelance intelligence artificielle Paris, développeur IA Île-de-France, freelance IA Oise, consultant IA Hauts-de-France, expert RAG, audit RAG, LLMOps, mise en production modèle machine learning, MLOps Paris, POC IA, développeur Vue 3 freelance, expert Quasar, migration Vue 2 Vue 3, FastAPI, Docker, LangChain, Python, Clément Reboul">
