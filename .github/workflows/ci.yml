@@ -35,9 +35,12 @@ jobs:
         with:
           chrome-version: stable
 
-      # Aucune dépendance à installer : les deux suites tiennent dans la
-      # bibliothèque standard, y compris le client WebSocket qui parle au
-      # navigateur.
+      # numpy sert à construire l'index vectoriel. Les tests de responsive
+      # n'ajoutent rien : ils parlent au navigateur avec la bibliothèque
+      # standard, client WebSocket compris.
+      - name: Installer les dépendances
+        run: pip install -r tools/requirements.txt
+
       - name: Recherche vectorielle
         run: python3 tools/test_search.py
 
@@ -56,6 +59,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Installer les dépendances
+        run: pip install -r tools/requirements.txt
 
       - name: Régénérer et comparer
         run: |

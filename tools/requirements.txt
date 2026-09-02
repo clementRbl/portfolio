@@ -1,0 +1,8 @@
+# Dépendances des outils du dépôt (construction de l'index, tests).
+#
+# Elles n'étaient déclarées nulle part : l'index se construisait sur une machine
+# où numpy se trouvait déjà installé, et rien ne disait qu'il était nécessaire.
+#
+# Les tests de responsive, eux, n'ont besoin que de Chrome : ils parlent au
+# navigateur avec la bibliothèque standard.
+numpy>=1.26
