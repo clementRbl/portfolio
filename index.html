@@ -29,7 +29,7 @@
 <meta name="twitter:title" content="Clément Reboul - AI Engineer freelance | MLOps, GenAI, Vue 3">
 <meta name="twitter:description" content="Du notebook à la production. Missions cadrées : mise en prod d'un modèle, POC IA, audit RAG, renfort Vue 3. Paris, Île-de-France, Oise, Hauts-de-France.">
 <meta name="twitter:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%230B0E0C'/><text x='50' y='72' font-size='58' font-family='Georgia,serif' font-weight='700' fill='%23E4A34B' text-anchor='middle'>CR</text></svg>">
+<link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3C/svg%3E">
 <script>
 // Canonicalisation : /portfolio (sans slash) -> /portfolio/ afin que les liens et
 // assets relatifs se résolvent sous /portfolio/ (sinon ils pointent vers la racine du
@@ -49,6 +49,22 @@ document.documentElement.classList.add('js');
   // d'avant le renommage. Sans choix enregistré, c'est Standard qui s'applique.
   var game = (m === 'game' || m === 'perfection');
   document.documentElement.classList.add(game ? 'fx-game' : 'fx-standard');
+
+  /* Favicon accordé au mode : bleu et blanc en Standard, ambre sur fond sombre
+     en Game. Posé ici, où le mode est deja connu, pour eviter que l'onglet
+     change d'icone sous les yeux du visiteur. */
+  window.setFavicon = function (isGame) {
+    var bg   = isGame ? '%230B0E0C' : '%232563EB';
+    var ink  = isGame ? '%23E4A34B' : '%23FFFFFF';
+    var font = isGame ? 'Georgia,serif' : 'Helvetica,Arial,sans-serif';
+    var svg = "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E"
+            + "%3Crect width='100' height='100' rx='18' fill='" + bg + "'/%3E"
+            + "%3Ctext x='50' y='69' font-size='48' font-family='" + font + "'"
+            + " font-weight='700' fill='" + ink + "' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E";
+    var el = document.getElementById('favicon');
+    if (el) el.setAttribute('href', 'data:image/svg+xml,' + svg);
+  };
+  try { window.setFavicon(game); } catch (e) {}
   window.FX = {
     mode: game ? 'game' : 'standard', _started: false, _fns: [],
     onStart: function (fn) { if (this._started) fn(this.mode); else this._fns.push(fn); },
@@ -57,7 +73,7 @@ document.documentElement.classList.add('js');
 })();
 </script>
 <style>
-  /* Police d'affichage : Anton (SIL Open Font License — usage commercial libre) */
+  /* Police d'affichage : Anton (SIL Open Font License - usage commercial libre) */
   @font-face {
     font-family: 'Anton';
     src: url('assets/fonts/anton-latin.woff2') format('woff2');
@@ -71,7 +87,7 @@ document.documentElement.classList.add('js');
     unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
 
-  /* Police de corps du mode Standard : Inter (SIL Open Font License — usage
+  /* Police de corps du mode Standard : Inter (SIL Open Font License - usage
      commercial libre). Auto-hébergée : la CSP servie sur /portfolio/* n'a pas
      de directive font-src et retombe sur default-src 'self', donc un appel à
      fonts.gstatic.com serait bloqué. Variable (400 à 700) : un seul fichier
@@ -105,13 +121,13 @@ document.documentElement.classList.add('js');
     --ink: #E7E3D4;
     --ink-dim: #B6B4A0;
     --muted: #7F856B;
-    --ember: #E4A34B;        /* ambre / lueur de lanterne — accent principal (aligné au rapport) */
+    --ember: #E4A34B;        /* ambre / lueur de lanterne - accent principal (aligné au rapport) */
     --ember-bright: #F2BB63;
-    --spore: #4FB39B;        /* teal froid — glint de la bordure animée */
+    --spore: #4FB39B;        /* teal froid - glint de la bordure animée */
     --spore-bright: #6FCBB4;
-    --moss: #7C8A56;         /* mousse — secondaire */
+    --moss: #7C8A56;         /* mousse - secondaire */
     --moss-dim: #55603C;
-    --blood: #9B3B2A;        /* sang séché — très rare */
+    --blood: #9B3B2A;        /* sang séché - très rare */
     --good: #8BA05A;
     --ember-glow: rgba(228,163,75,.30);
     --on-accent: #140b04;              /* texte posé SUR l'accent */
@@ -159,7 +175,7 @@ document.documentElement.classList.add('js');
      et sombre existent dans chaque mode : quatre combinaisons au total. */
   html.fx-standard {
     /* Inter partout : corps ET titres. Anton est une police d'affichage
-       condensée, de registre affiche — elle appartient à la DA du mode Game.
+       condensée, de registre affiche - elle appartient à la DA du mode Game.
        Un produit outil hiérarchise avec la graisse d'une seule grotesque, pas
        en changeant de famille. Le mono ne bouge pas. */
     --font-body: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -186,10 +202,10 @@ document.documentElement.classList.add('js');
     --accent-soft-2: rgba(96,165,250,.18);
     --spore: #22C55E;
     --spore-bright: #4ADE80;
-    --moss: #7288A0;                   /* ardoise — numéros de section */
+    --moss: #7288A0;                   /* ardoise - numéros de section */
     --moss-dim: #46596B;
-    --blood: #F87171;                  /* red-400 — décision « refusé » */
-    --good: #22C55E;                   /* green-500 — états « en production » */
+    --blood: #F87171;                  /* red-400 - décision « refusé » */
+    --good: #22C55E;                   /* green-500 - états « en production » */
     --grain: .02;
     --bevel: 0px;                      /* angles droits : plus de HUD biseauté */
   }
@@ -209,7 +225,7 @@ document.documentElement.classList.add('js');
     --ink-dim: #4B5563;                /* gray-600 */
     --muted: #5B6472;
     --ember: #1D4ED8;                  /* blue-700 */
-    --ember-bright: #2563EB;           /* blue-600 — celui du CV */
+    --ember-bright: #2563EB;           /* blue-600 - celui du CV */
     --ember-glow: rgba(29,78,216,.18);
     --on-accent: #FFFFFF;
     --accent-soft: rgba(29,78,216,.08);
@@ -763,7 +779,7 @@ document.documentElement.classList.add('js');
   html.fx-standard .badge.star { background: none; color: var(--ember); font-weight: 500; }
 
   /* Titres : Anton tient à 6,6rem parce qu'elle est condensée. Inter y serait
-     démesurée et casserait les retours à la ligne — on resserre. */
+     démesurée et casserait les retours à la ligne - on resserre. */
   html.fx-standard h1,
   html.fx-standard h2,
   html.fx-standard h3 { font-weight: 800; letter-spacing: -.022em; line-height: 1.04; }
@@ -1071,7 +1087,7 @@ document.documentElement.classList.add('js');
           </div>
           <div class="kpis tnum">
             <div><div class="n">0.78</div><div class="c">AUC</div></div>
-            <div><div class="n" id="kpi-lat">—</div><div class="c">Latence réelle</div></div>
+            <div><div class="n" id="kpi-lat">-</div><div class="c">Latence réelle</div></div>
             <div><div class="n">98%</div><div class="c">Tests</div></div>
           </div>
           <p class="api-note" id="api-note">Appels réels à l'API en production - <a href="https://clementrbl-credit-scoring-api.hf.space/docs" target="_blank" rel="noopener">vérifiez vous-même</a></p>
@@ -1111,7 +1127,7 @@ document.documentElement.classList.add('js');
         <div class="tl-col">
           <span class="hud-label">Expérience</span>
           <ol class="tl">
-            <li class="tl-item"><div class="tl-when">mai 2025 - oct. 2025</div><div class="tl-role">Développeur Full Stack</div><div class="tl-org">ComeOnLaw · CDI</div><div class="tl-tech">Django · Django REST</div></li>
+            <li class="tl-item"><div class="tl-when">mai 2025 - nov. 2025</div><div class="tl-role">Développeur Full Stack</div><div class="tl-org">ComeOnLaw · CDI</div><div class="tl-tech">Django · Django REST</div></li>
             <li class="tl-item"><div class="tl-when">oct. 2024 - mai 2025</div><div class="tl-role">Développeur front-end</div><div class="tl-org">Paris Fashion Shops · CDI</div><div class="tl-tech">Vue.js · TypeScript</div></li>
             <li class="tl-item"><div class="tl-when">juin 2024 - oct. 2024</div><div class="tl-role">Développeur front-end</div><div class="tl-org">Extracadabra · CDI</div><div class="tl-tech">Quasar · Vue.js</div></li>
             <li class="tl-item"><div class="tl-when">févr. 2022 - juin 2024</div><div class="tl-role">Développeur front-end</div><div class="tl-org">FAIRLY MADE</div><div class="tl-tech">NestJS · applications web</div></li>
@@ -1290,16 +1306,16 @@ document.documentElement.classList.add('js');
             <div>
               <div class="gauge-head">
                 <span>Probabilité de défaut</span>
-                <span class="val tnum" id="try-val">—</span>
+                <span class="val tnum" id="try-val">-</span>
               </div>
               <div class="gauge" id="try-gauge"><div class="fillp" id="try-fill"></div><div class="thr"></div></div>
               <div class="gauge-scale"><span>0,00</span><span>1,00</span></div>
               <div class="verdict">
-                <span class="tag-d" id="try-dec">—</span>
+                <span class="tag-d" id="try-dec">-</span>
                 <span class="meta" id="try-meta">Sélectionnez un dossier</span>
               </div>
             </div>
-            <div class="try-raw"><span class="rq" id="try-req">POST /predict</span><span id="try-json">—</span></div>
+            <div class="try-raw"><span class="rq" id="try-req">POST /predict</span><span id="try-json">-</span></div>
           </div>
         </div>
         <div class="pipe" role="img" aria-label="Pipeline MLOps : client vers API FastAPI Docker sur Hugging Face Spaces, logs JSONL, drift Evidently et dashboard Streamlit ; en parallèle CI/CD GitHub Actions test build deploy.">
@@ -1464,7 +1480,7 @@ document.documentElement.classList.add('js');
   <div class="wheel-stage">
     <div class="wheel-head">
       <p class="wheel-quote"><span class="q-txt" id="q-txt"></span><span class="q-caret" id="q-caret" aria-hidden="true">▍</span></p>
-      <span class="wheel-quote-attr" id="q-attr">— George E. P. Box</span>
+      <span class="wheel-quote-attr" id="q-attr">- George E. P. Box</span>
       <div class="wheel-modes" id="wheel-modes" role="group" aria-label="Choix du mode d'affichage">
         <p class="modes-title">Choisissez votre expérience</p>
         <div class="modes-row">
@@ -2123,7 +2139,7 @@ FX.onStart(function (mode) {
 </script>
 <script>
 /* ---------------------------------------------------------------------------
-   API DE SCORING EN PRODUCTION — appels réels, dans les deux modes.
+   API DE SCORING EN PRODUCTION - appels réels, dans les deux modes.
    Le panneau du hero interrogeait une simulation ; il interroge maintenant
    l'API déployée sur Hugging Face Spaces. La latence affichée est le
    temps d'aller-retour réellement mesuré dans le navigateur.
@@ -2226,7 +2242,7 @@ window.CREDIT_API = (function () {
     var warn = !live;
     if (pulse) pulse.classList.toggle('warn', warn);
     if (state) { state.classList.toggle('warn', warn); state.innerHTML = warn ? 'API&nbsp;EN&nbsp;VEILLE' : 'EN&nbsp;PRODUCTION'; }
-    if (hEl) { hEl.textContent = warn ? '—' : '200 OK'; hEl.classList.toggle('err', warn); }
+    if (hEl) { hEl.textContent = warn ? '-' : '200 OK'; hEl.classList.toggle('err', warn); }
     if (note) note.innerHTML = warn
       ? 'Space en veille : réponses en cache - <a href="' + API.BASE + '/docs" target="_blank" rel="noopener">réveiller l\'API</a>'
       : 'Appels réels à l\'API en production - <a href="' + API.BASE + '/docs" target="_blank" rel="noopener">vérifiez vous-même</a>';
@@ -2358,8 +2374,8 @@ window.CREDIT_API = (function () {
 </script>
 <script>
 /* Animations du mode Standard : registre instrument / outil de développeur.
-   Chaque mouvement représente une donnée réelle du projet — flux d'inférence,
-   latence, pipeline CI/CD — plutôt qu'un effet décoratif. */
+   Chaque mouvement représente une donnée réelle du projet - flux d'inférence,
+   latence, pipeline CI/CD - plutôt qu'un effet décoratif. */
 FX.onStart(function (mode) {
   "use strict";
   if (mode !== 'standard') return;
