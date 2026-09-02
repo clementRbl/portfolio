@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Politique de sécurité du contenu. Les en-têtes réels sont posés par la
+     fonction Edge Netlify sur clement-reboul.fr/portfolio/* ; cette balise
+     reprend la même politique pour que l'origine github.io, servie sans
+     en-têtes, soit protégée elle aussi. frame-ancestors est volontairement
+     absent : une balise meta ne peut pas le porter, seul l'en-tête le fait. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; connect-src 'self' https://cloud.umami.is https://gateway.umami.is; object-src 'none'; base-uri 'self'; form-action 'none'">
 <title>Rapport de conduite de projet - Clément Reboul</title>
 <meta name="description" content="Rapport de conduite de projet Data : industrialisation et mise en production d'un modèle de scoring crédit (MLOps).">
 <link rel="canonical" href="https://clement-reboul.fr/portfolio/rapport.html">
@@ -16,10 +22,32 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%232563EB'/%3E%3Ctext x='50' y='69' font-size='48' font-family='Helvetica,Arial,sans-serif' font-weight='700' fill='%23FFFFFF' text-anchor='middle'%3ECR%3C/text%3E%3C/svg%3E">
-<script>(function(){try{var s=localStorage.getItem('theme');var m=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',s||m);}catch(e){}})();</script>
+<!-- Le rapport suit le portfolio : même mode, même thème, mêmes couleurs.
+     Lu et appliqué avant le premier rendu, pour qu'aucune page ne s'affiche
+     dans une palette qu'on remplacerait aussitôt. -->
+<script>
+(function () {
+  var m = null; try { m = localStorage.getItem('fxMode'); } catch (e) {}
+  var game = (m === 'game' || m === 'perfection');
+  document.documentElement.classList.add(game ? 'fx-game' : 'fx-standard');
+  var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  }
+  /* Le mode Game n'existe qu'en sombre, ici comme sur le portfolio : on force
+     l'attribut sans toucher à la préférence enregistrée. */
+  document.documentElement.setAttribute('data-theme', game ? 'dark' : t);
+})();
+</script>
 <style>
-  :root{--bg:#10161B;--surface:#161E24;--surface-2:#1B252C;--border:#26333B;--border-strong:#33454F;--ink:#E9EEEC;--ink-soft:#C4CFD1;--muted:#8698A0;--accent:#E4A34B;--accent-ink:#1B120A;--accent-soft:rgba(228,163,75,.12);--good:#5FB185;--font-sans:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;--font-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;}
-  html[data-theme="light"]{--bg:#F4F6F3;--surface:#FFFFFF;--surface-2:#FBFCFA;--border:#E2E6DF;--border-strong:#CDD4CB;--ink:#19211E;--ink-soft:#31403A;--muted:#5F6E68;--accent:#B7791F;--accent-ink:#FFFFFF;--accent-soft:rgba(183,121,31,.09);--good:#2F855A;}
+  /* Les trois palettes sont celles du portfolio, aux mêmes valeurs : une page
+     qui s'ouvre depuis le site ne doit pas donner l'impression d'en sortir.
+     Mode Game, sombre - l'ambre de la lanterne. */
+  :root{color-scheme:dark;--bg:#0A0D0B;--surface:#12160F;--surface-2:#181D14;--border:#29311F;--border-strong:#3A4530;--ink:#E7E3D4;--ink-soft:#B6B4A0;--muted:#7F856B;--accent:#E4A34B;--accent-ink:#140B04;--accent-soft:rgba(228,163,75,.12);--good:#8BA05A;--font-sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--font-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;}
+  /* Mode Standard, sombre - le bleu de l'instrument. */
+  :root.fx-standard{color-scheme:dark;--bg:#0B0D10;--surface:#12161B;--surface-2:#171C22;--border:#232932;--border-strong:#333B46;--ink:#E7EAEF;--ink-soft:#B0B8C4;--muted:#7B8593;--accent:#60A5FA;--accent-ink:#06101F;--accent-soft:rgba(96,165,250,.10);--good:#22C55E;}
+  /* Mode Standard, clair - blue-700, seul à tenir 4,5:1 sur ce fond. */
+  :root[data-theme="light"].fx-standard{color-scheme:light;--bg:#EBEEF3;--surface:#FFFFFF;--surface-2:#F4F6FA;--border:#D3DAE4;--border-strong:#B3BECD;--ink:#1F2937;--ink-soft:#4B5563;--muted:#5B6472;--accent:#1D4ED8;--accent-ink:#FFFFFF;--accent-soft:rgba(29,78,216,.08);--good:#14713C;}
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:17px;line-height:1.72;-webkit-font-smoothing:antialiased;}
@@ -31,6 +59,14 @@
   .topbar .tt{margin-left:auto;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
   .icon-btn{background:var(--surface);border:1px solid var(--border);color:var(--ink);width:36px;height:36px;border-radius:6px;cursor:pointer;display:grid;place-items:center;}
   .theme-sun{display:none;} html[data-theme="light"] .theme-sun{display:block;} html[data-theme="light"] .theme-moon{display:none;}
+  /* En mode Game le thème est imposé : le bouton reste visible, mais inerte et
+     il dit pourquoi. Une infobulle native ne s'affiche pas sur un bouton
+     désactivé, d'où la bulle dessinée. */
+  .icon-btn[aria-disabled="true"]{opacity:.42;cursor:not-allowed;}
+  .tip{position:relative;}
+  .tip::after{content:attr(data-tip);position:absolute;top:calc(100% + 10px);right:0;background:var(--surface-2);border:1px solid var(--border-strong);color:var(--ink-soft);font-family:var(--font-mono);font-size:11px;letter-spacing:.03em;line-height:1.35;padding:7px 10px;white-space:nowrap;border-radius:6px;box-shadow:0 8px 22px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:80;}
+  .tip:hover::after,.tip:focus-visible::after{opacity:1;}
+  @media (hover:none){.tip::after{display:none;}}
   .icon-btn svg{width:17px;height:17px;}
   main{max-width:820px;margin-inline:auto;padding:56px 24px 100px;}
   h1{font-size:clamp(1.9rem,1.3rem+2.4vw,2.6rem);line-height:1.14;letter-spacing:-.02em;text-wrap:balance;margin:0 0 .2em;}
@@ -86,7 +122,7 @@ et mise en production d'un modèle de scoring crédit (MLOps)</h2>
 <tr class="even">
 <td><strong>Portfolio en ligne</strong></td>
 <td><a
-href="https://clementrbl.github.io/portfolio/">https://clementrbl.github.io/portfolio/</a></td>
+href="https://clement-reboul.fr/portfolio/">https://clement-reboul.fr/portfolio/</a></td>
 </tr>
 <tr class="odd">
 <td><strong>Projet technique</strong></td>
@@ -111,7 +147,7 @@ href="https://github.com/clementRbl/pret-a-depenser">https://github.com/clementR
 </tr>
 <tr class="odd">
 <td><strong>Date</strong></td>
-<td>Juillet 2026</td>
+<td>Juillet 2026, révisé en septembre 2026</td>
 </tr>
 </tbody>
 </table></div>
@@ -556,7 +592,22 @@ visuels</td>
 <tr class="even">
 <td><strong>Tests</strong></td>
 <td><strong>pytest + pytest-cov</strong></td>
-<td>7 tests, <strong>98 % de couverture</strong> sur l'API</td>
+<td>14 tests, <strong>96 % de couverture</strong> sur l'API</td>
+</tr>
+<tr class="odd">
+<td><strong>Limitation de débit</strong></td>
+<td><strong>slowapi</strong></td>
+<td>Le calcul est offert par Hugging Face : une boucle, même involontaire,
+le consomme pour tout le monde. 60 requêtes/minute par adresse, 30 sur
+<code>/clients</code>, 20 sur <code>/predict</code></td>
+</tr>
+<tr class="even">
+<td><strong>Exposition HTTP</strong></td>
+<td><strong>En-têtes de sécurité + CORS restreint</strong></td>
+<td>Origines connues seulement au lieu de <code>*</code>, en-têtes
+<code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>,
+<code>Referrer-Policy</code>, CSP et HSTS, en-tête <code>server</code>
+retiré, erreurs internes rendues génériques</td>
 </tr>
 <tr class="odd">
 <td><strong>Qualité de code</strong></td>
@@ -571,7 +622,15 @@ clés</h3>
 <li><strong>Chargement du modèle une seule fois au démarrage</strong>
 (et non à chaque requête) → latence maîtrisée.</li>
 <li><strong>Endpoints :</strong> <code>GET /health</code>,
-<code>POST /predict?SK_ID_CURR=…</code>, <code>GET /docs</code>.</li>
+<code>GET /clients</code>, <code>POST /predict?SK_ID_CURR=…</code>,
+<code>GET /docs</code>. Version servie : <strong>1.1.0</strong>.</li>
+<li><strong>Une documentation qui se suffit à elle-même :</strong>
+<code>/docs</code> partait du principe que le lecteur connaissait le projet.
+Il porte désormais un texte de cadrage, des étiquettes par domaine, un
+exemple d'identifiant accordé, un refusé et un inconnu, et la description
+de chaque code d'erreur. <code>GET /clients</code> a été ajouté pour cette
+raison : sans lui, personne ne pouvait deviner un <code>SK_ID_CURR</code>
+valide, et le premier appel renvoyait toujours 404.</li>
 <li><strong>Réponse type :</strong>
 <code>{ "SK_ID_CURR": 100001, "probability": 0.3718, "decision": "ACCORDE", "threshold": 0.47 }</code>.</li>
 <li><strong>Gestion d'erreurs :</strong> client inconnu →
@@ -582,6 +641,10 @@ clés</h3>
 <code>inference_time_ms</code>.</li>
 <li><strong>Latence mesurée :</strong> ≈ <strong>6 ms</strong> par
 inférence.</li>
+<li><strong>Surface d'attaque réduite :</strong> le service est public et
+sans authentification - c'est voulu, il n'expose aucune donnée personnelle -
+mais il est limité en débit, restreint dans ses origines, et ne renvoie
+jamais de trace interne au client.</li>
 </ul>
 <h3 id="34-décision-dingénierie--onnx-écarté-volontairement">3.4
 Décision d'ingénierie : ONNX écarté volontairement</h3>
@@ -759,7 +822,7 @@ contrôle</h3>
 <tr class="even">
 <td>4</td>
 <td>Tests automatisés</td>
-<td><code>tests/test_api.py</code> - 7 tests, <strong>98 %</strong></td>
+<td><code>tests/test_api.py</code> - 14 tests, <strong>96 %</strong></td>
 <td>✅</td>
 </tr>
 <tr class="odd">
@@ -784,6 +847,20 @@ contrôle</h3>
 <td>8</td>
 <td>Documentation README (lancement, monitoring)</td>
 <td><code>README.md</code></td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Durcissement de l'exposition publique</td>
+<td>Limitation de débit, CORS restreint, en-têtes de sécurité, erreurs
+génériques</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Documentation d'API lisible sans connaître le projet</td>
+<td><code>/docs</code> : cadrage, étiquettes, exemples, codes d'erreur,
+endpoint <code>/clients</code></td>
 <td>✅</td>
 </tr>
 </tbody>
@@ -827,7 +904,7 @@ contrôle</h3>
 </tr>
 <tr class="even">
 <td>Couverture de tests</td>
-<td>98 % (7 tests)</td>
+<td>96 % (14 tests)</td>
 </tr>
 <tr class="odd">
 <td>Jobs CI/CD</td>
@@ -893,8 +970,12 @@ en deux phases), chaque étape produisant un livrable vérifiable.</li>
 branches, linter Ruff, <strong>CI/CD bloquant</strong> (le déploiement
 échoue si un test échoue) → la qualité n'est pas un contrôle <em>a
 posteriori</em> mais un garde-fou automatisé.</li>
-<li><strong>Definition of Done respectée :</strong> l'intégralité des 8
-livrables attendus est produite et validée.</li>
+<li><strong>Definition of Done respectée :</strong> les 8
+livrables attendus sont produits et validés. Deux s'y sont ajoutés après
+coup - le durcissement de l'exposition publique et une documentation d'API
+utilisable sans connaître le projet - parce qu'un service ouvert sur
+Internet et une page <code>/docs</code> illisible sont deux dettes qu'un
+livrable coché ne rattrape pas.</li>
 </ul>
 <hr />
 <h2 id="bilan-limites-et-perspectives">Bilan, limites et
@@ -903,7 +984,7 @@ perspectives</h2>
 <ul>
 <li>Un modèle <strong>performant et explicable</strong>, aligné sur un
 <strong>coût métier</strong> réel.</li>
-<li>Une <strong>API fiable, testée (98 %), conteneurisée et
+<li>Une <strong>API fiable, testée (96 %), conteneurisée et
 déployée</strong> en continu.</li>
 <li>Un <strong>monitoring opérationnel</strong> : journalisation, drift,
 dashboard.</li>
@@ -1038,6 +1119,23 @@ au score</td>
 </table></div>
 
 </main>
-<script>document.getElementById('tg').addEventListener('click',function(){var c=document.documentElement.getAttribute('data-theme');var n=c==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('theme',n);}catch(e){}});</script>
+<script>
+(function () {
+  var btn = document.getElementById('tg');
+  if (!btn) return;
+  var game = document.documentElement.classList.contains('fx-game');
+  btn.classList.add('tip');
+  btn.setAttribute('data-tip', game ? 'Le mode Game est toujours sombre' : 'Thème clair / sombre');
+  btn.setAttribute('aria-label', game ? 'Thème : le mode Game est toujours sombre' : 'Basculer thème clair ou sombre');
+  if (game) btn.setAttribute('aria-disabled', 'true');
+  btn.addEventListener('click', function () {
+    if (game) return;
+    var n = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', n);
+    btn.setAttribute('aria-label', 'Basculer thème clair ou sombre');
+    try { localStorage.setItem('theme', n); } catch (e) {}
+  });
+})();
+</script>
 </body>
 </html>
