@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_index import load_index, search, query_tokens  # noqa: E402
+from build_index import load_index, search, query_tokens, section_of  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 PAGE = (ROOT / 'index.html').read_text(encoding='utf-8')
@@ -61,16 +61,35 @@ def test_suggestions_ont_une_reponse_redigee():
 
 
 def test_paraphrases_du_corpus():
-    """Les reformulations du corpus doivent placer leur section en tête."""
-    total = premier = 0
+    """Les reformulations doivent mener à la bonne section, et le plus souvent
+    au bon document.
+
+    Deux mesures, parce que deux choses différentes. Une reformulation qui vise
+    « rag » et tombe sur « projets » n'a rien cassé : le visiteur atterrit là
+    où se trouve la réponse. Une qui vise « prestations » et tombe sur
+    « parcours » l'a envoyé ailleurs. La section est donc l'exigence forte ; le
+    document exact mesure la finesse, et se dégrade naturellement quand le
+    corpus s'enrichit de documents voisins."""
+    total = exact = bonne_section = 0
+    egares = []
     for doc in CORPUS:
+        cible = doc.get('section', doc['id'])
         for q in doc.get('queries', []):
             total += 1
             hits = search(INDEX, q)
-            if hits and hits[0][1] == doc['id']:
-                premier += 1
+            if not hits:
+                egares.append('« %s » ne renvoie rien' % q)
+                continue
+            if hits[0][1] == doc['id']:
+                exact += 1
+            if section_of(INDEX, hits[0][1]) == cible:
+                bonne_section += 1
     assert total >= 90, 'corpus de reformulations trop maigre : %d' % total
-    assert premier / total >= 0.90, 'seulement %d/%d en première position' % (premier, total)
+    assert bonne_section / total >= 0.92, (
+        'seulement %d/%d reformulations mènent à la bonne section : %s'
+        % (bonne_section, total, ' ; '.join(egares[:4])))
+    assert exact / total >= 0.72, (
+        'seulement %d/%d reformulations trouvent leur propre document' % (exact, total))
 
 
 def test_vouvoiement_et_tutoiement_convergent():
@@ -100,14 +119,16 @@ def test_base_ne_capte_pas_base():
     a gagné « base vectorielle Milvus », « Vous êtes basé où ? » est parti sur
     les projets. Le corpus dit donc « index vectoriel » : ce test le retient."""
     hits = search(INDEX, 'Vous êtes basé où ?')
-    assert hits and hits[0][1] == 'profil', hits[:2]
+    assert hits and section_of(INDEX, hits[0][1]) == 'profil', hits[:2]
 
 
 def test_intentions_connues():
-    """Questions courantes et section attendue. Deux sections peuvent être
-    plausibles ; ces cas-là ont une seule bonne réponse et l'ont déjà perdue
-    une fois, quand une reformulation de « Parcours » s'est réduite à la même
-    racine que « vous travaillez où »."""
+    """Questions courantes et section attendue. Le corpus contient des documents
+    thématiques - « rag », « tarifs » - qui répondent pour une section ne portant
+    pas leur nom : c'est donc la section visée qu'on compare, pas l'identifiant
+    du document. Deux sections peuvent être plausibles ; ces cas-là ont une seule
+    bonne réponse et l'ont déjà perdue une fois, quand une reformulation de
+    « Parcours » s'est réduite à la même racine que « vous travaillez où »."""
     attendus = [
         ('Vous travaillez où ?', 'profil'),
         ('Vous êtes basé où ?', 'profil'),
@@ -125,10 +146,22 @@ def test_intentions_connues():
     ecarts = []
     for q, attendu in attendus:
         hits = search(INDEX, q)
-        obtenu = hits[0][1] if hits else 'RIEN'
+        obtenu = section_of(INDEX, hits[0][1]) if hits else 'RIEN'
         if obtenu != attendu:
             ecarts.append('« %s » -> %s au lieu de %s' % (q, obtenu, attendu))
     assert not ecarts, ' ; '.join(ecarts)
+
+
+def test_legende_dit_la_verite():
+    """La légende de la boîte annonce le rang et le nombre de documents. Elle
+    était écrite en dur : le corpus est passé de 11 à 25 documents sans qu'elle
+    bouge. Elle est désormais comparée à l'index à chaque exécution."""
+    m = re.search(r'TF-IDF \+ SVD, rang (\d+), (\d+) documents', PAGE)
+    assert m, 'la légende de la boîte « Interrogez le CV » est introuvable'
+    rang, n = int(m.group(1)), int(m.group(2))
+    assert rang == INDEX['k'], 'légende : rang %d, index : rang %d' % (rang, INDEX['k'])
+    assert n == len(INDEX['docs']), (
+        'légende : %d documents, index : %d' % (n, len(INDEX['docs'])))
 
 
 def test_hors_sujet_ne_renvoie_rien():

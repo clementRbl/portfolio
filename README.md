@@ -48,21 +48,37 @@ cas appellent réellement `POST /predict` sur le Space Hugging Face. La latence
 affichée est l'aller-retour mesuré dans le navigateur. Si le Space dort, l'état
 passe à « API en veille » et les réponses viennent d'un jeu relevé à l'avance - dit explicitement.
 
-**La recherche vectorielle de la palette.** `tools/build_index.py` construit
-hors ligne un espace latent (TF-IDF puis SVD tronquée, rang 10) sur le contenu
-du site ; le navigateur y projette la requête et classe les sections par
-similarité cosinus. Taper « comment tu surveilles un modèle en prod » remonte
-l'étude de cas sans qu'aucun de ses mots n'ait été saisi.
+**La recherche vectorielle.** `tools/build_index.py` construit hors ligne un
+espace latent (TF-IDF puis SVD tronquée, rang 14) sur le contenu du site ; le
+navigateur y projette la requête et classe les documents par similarité
+cosinus. Taper « comment tu surveilles un modèle en prod » remonte l'étude de
+cas sans qu'aucun de ses mots n'ait été saisi.
 
-Les mêmes vecteurs placent les points de la carte latente animée dans le hero :
-ce sont les sections du site à leurs vraies coordonnées, reliées par leurs
-similarités réelles.
+**Rien n'est généré.** Chaque document porte une réponse écrite à la main,
+servie telle quelle. La recherche est vectorielle, la réponse ne l'est pas :
+aucun modèle n'écrit de phrase, donc aucune phrase ne peut être inventée.
+
+Le corpus mêle deux sortes de documents. Onze correspondent aux sections du
+site. Les autres sont thématiques - « rag », « agents », « tarifs »,
+« formation » - et portent un champ `section` qui dit où envoyer le visiteur.
+Ils existent parce qu'une question précise mérite une réponse précise :
+« Vous faites du RAG ? » ne doit pas renvoyer le résumé des dix projets.
+Seuls les documents de section alimentent le rail sémantique et la carte
+latente du hero.
 
 Regénérer l'index après avoir modifié `tools/corpus.json` :
 
 ```bash
 python3 tools/build_index.py   # numpy requis
+python3 tools/test_search.py   # 9 tests de régression, sans rien installer
 ```
+
+Les tests vérifient deux choses différentes : qu'une reformulation mène à la
+bonne **section** (exigence forte, 92 % minimum) et qu'elle trouve le bon
+**document** (mesure de finesse, 72 % minimum). Ils lisent les questions
+proposées et la légende affichée directement dans `index.html` : ajouter une
+question sans réponse, ou laisser la légende annoncer un rang qui n'est plus
+le bon, casse un test.
 
 ## Les images et la vidéo
 
