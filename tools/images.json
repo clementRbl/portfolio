@@ -102,6 +102,21 @@
   "note": "Runs MLflow tries par cout metier, avec seuil et strategie de CV"
  },
  {
+  "out": "ffe-agent.webp",
+  "from": "file",
+  "src": "féderation-française-des-echecs/docs/captures/interface-sicilienne.png",
+  "crop": [
+   1600,
+   667,
+   "north"
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Interface de l'agent sur la defense sicilienne : echiquier, coups conseilles, evaluation Stockfish et parties de maitres Lichess"
+ },
+ {
   "out": "checkitai-dashboard.webp",
   "from": "file",
   "src": "CheckItAI/docs/captures/07_dashboard_qualite_rapidite.png",

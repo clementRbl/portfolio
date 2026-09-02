@@ -95,6 +95,14 @@ def test_pluriels_preserves():
         assert rs == rp, 'racines divergentes : %s -> %s, %s -> %s' % (singulier, rs, pluriel, rp)
 
 
+def test_base_ne_capte_pas_base():
+    """« base » et « basé » se réduisent à la même racine. Le jour où le corpus
+    a gagné « base vectorielle Milvus », « Vous êtes basé où ? » est parti sur
+    les projets. Le corpus dit donc « index vectoriel » : ce test le retient."""
+    hits = search(INDEX, 'Vous êtes basé où ?')
+    assert hits and hits[0][1] == 'profil', hits[:2]
+
+
 def test_intentions_connues():
     """Questions courantes et section attendue. Deux sections peuvent être
     plausibles ; ces cas-là ont une seule bonne réponse et l'ont déjà perdue
@@ -110,6 +118,9 @@ def test_intentions_connues():
         ('Vous connaissez Docker ?', 'competences'),
         ('Combien coûte un POC ?', 'prestations'),
         ('Vous faites du RAG ?', 'projets'),
+        ('Vous avez déjà construit un agent ?', 'projets'),
+        ('Du LangGraph ?', 'projets'),
+        ('Le projet sur les échecs ?', 'projets'),
     ]
     ecarts = []
     for q, attendu in attendus:

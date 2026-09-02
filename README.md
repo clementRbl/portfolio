@@ -71,6 +71,10 @@ d'interface, une sortie de pipeline. `tools/images.json` note, pour chacune, le
 projet et la figure d'origine, le cadrage et la taille produite ;
 `tools/build_images.py` applique la recette. Rien n'est dessiné pour le site.
 
+Une capture peut aussi venir d'une application qu'il faut faire tourner : celle
+de l'agent d'ouvertures FFE a été prise sur la pile lancée en local, puis
+déposée dans `docs/captures/` du projet, d'où le manifeste la reprend.
+
 Les vignettes de projet sont toutes produites en 1200x500, le rapport que la
 feuille de style impose aux couvertures : le cadrage est donc décidé à la
 fabrication, jamais laissé au navigateur, et reste le même à toutes les

@@ -607,7 +607,6 @@ document.documentElement.classList.add('js');
   .cta-note { margin-top: 14px; min-height: 1.2em; font-family: var(--font-mono); font-size: 12px;
     letter-spacing: .05em; color: var(--muted); text-align: center; }
   .cta-note.on { color: var(--ember); }
-  .cta-note a { color: var(--ember); border-bottom: 1px solid currentColor; margin-left: 8px; }
   /* La bascule passe par une classe : « hidden » est un attribut HTML, sans
      effet sur un élément SVG - ni en attribut, ni en propriété. */
   #cta-mail .ic-ok { display: none; }
@@ -1433,7 +1432,7 @@ document.documentElement.classList.add('js');
       "jobTitle": "AI Engineer",
       "description": "AI Engineer disponible en freelance ou en CDI, spécialisé en MLOps, GenAI/RAG et mise en production de modèles de machine learning. Cinq ans de développement web (Vue 3, Quasar, TypeScript) avant la reconversion.",
       "url": "https://clement-reboul.fr/portfolio/",
-      "email": "mailto:clement.rbl@gmail.com",
+      "email": "clement.rbl@gmail.com",
       "image": "https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png",
       "sameAs": [
         "https://github.com/clementRbl",
@@ -1534,7 +1533,7 @@ document.documentElement.classList.add('js');
         </div>
         <div class="hero-stats reveal tnum">
           <div><div class="k">5</div><div class="l">Ans dev web · lead</div></div>
-          <div><div class="k">09</div><div class="l">Projets IA</div></div>
+          <div><div class="k">10</div><div class="l">Projets IA</div></div>
           <div><div class="k">02</div><div class="l">API en prod</div></div>
         </div>
         <p class="wheel-hint reveal">Navigation : appuyez sur <b>M</b> ou cliquez sur <b>Menu</b> pour la roue de sélection</p>
@@ -1627,12 +1626,13 @@ document.documentElement.classList.add('js');
       </div>
       <div class="skills-grid reveal">
         <div><div class="skill-head"><span class="name">Machine Learning &amp; Modélisation</span></div><div class="skill-tags">scikit-learn · LightGBM · XGBoost · SHAP · coût métier</div></div>
-        <div><div class="skill-head"><span class="name">MLOps &amp; Mise en production</span></div><div class="skill-tags">FastAPI · Docker · CI/CD · MLflow · Evidently</div></div>
-        <div><div class="skill-head"><span class="name">GenAI &amp; LLM / RAG</span></div><div class="skill-tags">LangChain · Faiss · Mistral · Ragas · guardrails</div></div>
+        <div><div class="skill-head"><span class="name">MLOps &amp; Mise en production</span></div><div class="skill-tags">FastAPI · Docker · CI/CD · MLflow · Evidently · Prometheus</div></div>
+        <div><div class="skill-head"><span class="name">GenAI &amp; LLM / RAG</span></div><div class="skill-tags">LangChain · Faiss · Milvus · Mistral · Ragas · guardrails</div></div>
+        <div><div class="skill-head"><span class="name">Agents &amp; orchestration</span></div><div class="skill-tags">LangGraph · routage conditionnel · agrégation de sources · traçage MLflow</div></div>
         <div><div class="skill-head"><span class="name">Deep Learning &amp; Computer Vision</span></div><div class="skill-tags">PyTorch · ResNet-50 · transfer learning · semi-supervisé</div></div>
         <div><div class="skill-head"><span class="name">Data Engineering</span></div><div class="skill-tags">Airflow · PostgreSQL · ETL · pandas</div></div>
         <div><div class="skill-head"><span class="name">Reinforcement Learning</span></div><div class="skill-tags">Gymnasium · DQN · stable-baselines3</div></div>
-        <div><div class="skill-head"><span class="name">Langages &amp; outils</span></div><div class="skill-tags">Python · SQL · Git · Streamlit · pytest · Ruff</div></div>
+        <div><div class="skill-head"><span class="name">Langages &amp; outils</span></div><div class="skill-tags">Python · SQL · Git · Angular · Streamlit · pytest · Ruff</div></div>
         <div><div class="skill-head"><span class="name">Conduite de projet data</span></div><div class="skill-tags">cadrage besoins · audit · trade-offs · vulgarisation</div></div>
       </div>
       <div class="langs reveal"><span class="hud-label">Langues</span><span><b>Français</b> <span class="muted"> - natif</span></span><span><b>Anglais</b> <span class="muted"> - professionnel</span></span></div>
@@ -1642,7 +1642,7 @@ document.documentElement.classList.add('js');
   <!-- PROJETS -->
   <section id="projets">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 04</span><h2>Projets</h2><p>Neuf projets couvrant ML, MLOps, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 04</span><h2>Projets</h2><p>Dix projets couvrant ML, MLOps, agents IA, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
       <div class="proj-grid reveal">
 
         <article class="panel proj feat">
@@ -1661,6 +1661,15 @@ document.documentElement.classList.add('js');
             </div>
             <div class="shot"><img src="assets/mlops-dashboard.webp" width="1200" height="438" alt="Dashboard Streamlit de monitoring : distribution des scores, décisions, latence." loading="lazy" decoding="async"></div>
           </div>
+        </article>
+
+        <article class="panel proj">
+          <div class="badges"><span class="badge">Agent IA · LangGraph</span><span class="badge">Full-stack</span></div>
+          <h3>Ouvertures FFE</h3><p class="role">Agent d'apprentissage des échecs - Fédération Française des Échecs</p>
+          <p class="desc">Agent LangGraph qui, pour une position donnée, agrège la théorie (Lichess), l'évaluation du moteur (Stockfish), un RAG Wikichess sur Milvus et des vidéos YouTube. Quand la partie sort de la théorie, le graphe bifurque et s'en remet au moteur. Interface Angular, sept services orchestrés par Docker Compose, traces MLflow et métriques Prometheus.</p>
+          <div class="tags"><span class="tag">LangGraph</span><span class="tag">Milvus</span><span class="tag">FastAPI</span><span class="tag">Angular</span><span class="tag">MongoDB</span><span class="tag">Docker</span></div>
+          <div class="cover"><img src="assets/ffe-agent.webp" width="1200" height="500" alt="L'agent sur la défense sicilienne : coups conseillés tracés sur l'échiquier, évaluation Stockfish à +0,36 et parties de maîtres relevées par Lichess." loading="lazy" decoding="async"></div>
+          <div class="proj-links"><a href="https://github.com/clementRbl/ffe-chess-openings-agent" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
         <article class="panel proj">
@@ -1959,7 +1968,7 @@ document.documentElement.classList.add('js');
           <div><span class="cm-k">license</span><span class="cm-v">Mission cadrée, périmètre annoncé</span></div>
         </div>
         <div class="cm-metrics tnum">
-          <div><div class="n">09</div><div class="c">Projets IA</div></div>
+          <div><div class="n">10</div><div class="c">Projets IA</div></div>
           <div><div class="n">02</div><div class="c">API en production</div></div>
           <div><div class="n">96&nbsp;%</div><div class="c">Couverture de tests</div></div>
           <div><div class="n">0,78</div><div class="c">AUC du modèle servi</div></div>
@@ -2019,7 +2028,7 @@ document.documentElement.classList.add('js');
       <h2 class="reveal" style="margin-top:14px">Un besoin ? Parlons-en</h2>
       <p class="reveal"><b>AI Engineer</b> disponible en freelance ou en CDI, en MLOps, GenAI/RAG et front Vue&nbsp;3 - Paris, Île-de-France, Oise, Hauts-de-France et remote. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
       <div class="contact-cta reveal">
-        <a class="btn btn-primary" id="cta-mail" href="mailto:clement.rbl@gmail.com" data-mail="clement.rbl@gmail.com"><svg class="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg><svg class="ic-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span class="lbl">clement.rbl@gmail.com</span></a>
+        <button class="btn btn-primary" id="cta-mail" type="button"><svg class="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg><svg class="ic-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span class="lbl">clement.rbl@gmail.com</span></button>
         <a class="btn btn-ghost" id="cta-tel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg><span class="lbl">Appeler</span></a>
         <a class="btn btn-ghost" href="https://github.com/clementRbl" target="_blank" rel="noopener">GitHub</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr" target="_blank" rel="noopener">Blog</a>
@@ -2108,7 +2117,7 @@ document.documentElement.classList.add('js');
     { id: 'profil',       name: 'Profil',       desc: 'Qui je suis, mon objectif',         icon: 'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4 3.5-6 8-6s8 2 8 6' },
     { id: 'parcours',     name: 'Parcours',     desc: 'Expérience, formation, engagement',  icon: 'M7.7 4a1.7 1.7 0 1 0-3.4 0 1.7 1.7 0 1 0 3.4 0M6 5.7v4.3a4 4 0 0 0 4 4h4a4 4 0 0 1 4 4v.3M19.7 20a1.7 1.7 0 1 0-3.4 0 1.7 1.7 0 1 0 3.4 0' },
     { id: 'competences',  name: 'Hard skills',  desc: 'Stack technique : ML, MLOps, GenAI',  icon: 'M4 20V10M10 20V4M16 20v-7M22 20V8' },
-    { id: 'projets',      name: 'Projets',      desc: '6 projets liés aux dépôts publics', icon: 'M3 4h7v7H3zM14 4h7v7h-7zM3 15h7v5H3zM14 15h7v5h-7z' },
+    { id: 'projets',      name: 'Projets',      desc: '10 projets, dépôts publics et documentés', icon: 'M3 4h7v7H3zM14 4h7v7h-7zM3 15h7v5H3zM14 15h7v5h-7z' },
     { id: 'projet-phare', name: 'Projet phare', desc: 'Étude de cas Credit Scoring MLOps', icon: 'M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 100 8 4 4 0 000-8z' },
     { id: 'prestations',  name: 'Prestations',  desc: 'Missions cadrées : périmètre et durée', icon: 'M20 7H4a1 1 0 00-1 1v11a1 1 0 001 1h16a1 1 0 001-1V8a1 1 0 00-1-1zM9 7V5a1 1 0 011-1h4a1 1 0 011 1v2M3 12h18' },
     { id: 'soft-skills',  name: 'Soft skills',  desc: 'Analyse, vulgarisation, rigueur',   icon: 'M12 21C7 17 4 14 4 10a4 4 0 018-1 4 4 0 018 1c0 4-3 7-8 11z' },
@@ -2502,13 +2511,8 @@ document.documentElement.classList.add('js');
         run: function () { window.open('https://clement-reboul.fr/portfolio/carte-mentale.html', '_blank', 'noopener'); } },
       { g: 'Livrables', label: 'Tester l’API de scoring en production', hint: 'Swagger', icon: IC.ext,
         run: function () { window.open('https://clementrbl-credit-scoring-api.hf.space/docs', '_blank', 'noopener'); } },
-      { g: 'Contact', label: 'M’écrire un e-mail', hint: 'clement.rbl@gmail.com', icon: IC.mail,
-        /* Même règle que le bouton de contact : sur un poste fixe on copie
-           l'adresse, faute de quoi la commande semble ne rien faire. */
-        run: function () {
-          if (window.CONTACT && !window.CONTACT.tactile) { goTo('contact'); window.CONTACT.copierMail(); return; }
-          location.href = 'mailto:clement.rbl@gmail.com';
-        } },
+      { g: 'Contact', label: 'Copier mon adresse e-mail', hint: 'clement.rbl@gmail.com', icon: IC.mail,
+        run: function () { goTo('contact'); if (window.CONTACT) window.CONTACT.copierMail(); } },
       { g: 'Contact', label: 'GitHub', hint: 'clementRbl', icon: IC.ext,
         run: function () { window.open('https://github.com/clementRbl', '_blank', 'noopener'); } },
       { g: 'Affichage', label: 'Basculer le thème clair / sombre', hint: 'Thème', icon: IC.sun,
@@ -3333,11 +3337,11 @@ FX.onStart(function (mode) {
   }
 
   /* --- 3 ter. Contact : la bonne action selon l'appareil ---------------------
-     Sur un poste fixe, mailto: ne mène nulle part quand aucun client n'est
-     configuré : le clic n'a l'air de rien faire, ce qui était le défaut signalé.
-     On copie donc l'adresse et on le dit, en gardant un lien explicite pour qui
-     a bien un client mail. Sur un appareil tactile, l'appel a du sens : le
-     bouton compose le numéro.
+     Le site n'ouvre plus aucun mailto: : sans client configuré il ne mène nulle
+     part, et là où il en existe un, presque personne ne s'en sert. Le bouton
+     copie l'adresse et le dit ; l'adresse reste écrite en toutes lettres, donc
+     lisible et sélectionnable même sans JavaScript. Sur un appareil tactile,
+     l'appel a du sens : un second bouton compose le numéro.
 
      Le numéro est assemblé ici plutôt qu'écrit dans le HTML. Ce n'est pas un
      secret - il figure sur le CV - mais un numéro en clair dans la page se
@@ -3352,18 +3356,12 @@ FX.onStart(function (mode) {
     var tel = document.getElementById('cta-tel');
     var minuteur = null;
 
-    /* Le texte est posé par textContent et le lien construit nœud par nœud :
-       aucune chaîne n'est interprétée comme du balisage. */
-    function dire(txt, bon, avecLien) {
+    /* Texte posé par textContent : aucune chaîne n'est interprétée comme du
+       balisage. */
+    function dire(txt, bon) {
       if (!note) return;
       note.textContent = txt;
       note.classList.toggle('on', !!bon);
-      if (avecLien) {
-        var a = document.createElement('a');
-        a.href = 'mailto:' + MAIL;
-        a.textContent = 'Ouvrir le client mail';
-        note.appendChild(a);
-      }
       clearTimeout(minuteur);
       minuteur = setTimeout(function () { note.textContent = ''; note.classList.remove('on'); }, 8000);
     }
@@ -3394,14 +3392,12 @@ FX.onStart(function (mode) {
     }
 
     function copierMail() {
-      /* Le lien vers le client mail n'apparaît qu'ici : il ne sert qu'à celui
-         qui en a un, et seulement après avoir vu que la copie a fonctionné. */
-      function reussi() { marquer(true); dire('Adresse copiée dans le presse-papiers.', true, true); }
+      function reussi() { marquer(true); dire('Adresse copiée dans le presse-papiers.', true); }
       function echoue() {
-        /* Rien n'est avalé en silence : si la copie échoue, on le dit et on
-           bascule sur le client mail, qui reste la voie normale. */
-        dire('Copie impossible : ouverture du client mail.', false);
-        location.href = 'mailto:' + MAIL;
+        /* Rien n'est avalé en silence. La copie peut échouer - navigateur
+           ancien, presse-papiers refusé - alors on affiche l'adresse en clair,
+           à recopier à la main. */
+        dire('Copie impossible. L’adresse : ' + MAIL, false);
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(MAIL).then(reussi, function () {
@@ -3419,9 +3415,10 @@ FX.onStart(function (mode) {
       tel.hidden = false;
       tel.classList.replace('btn-ghost', 'btn-primary');
       if (btn) btn.classList.replace('btn-primary', 'btn-ghost');
-    } else if (btn) {
-      btn.addEventListener('click', function (e) { e.preventDefault(); copierMail(); });
     }
+    /* Le bouton e-mail copie partout : le geste est le même d'un appareil à
+       l'autre, et sur mobile on colle l'adresse dans l'application de son choix. */
+    if (btn) btn.addEventListener('click', function () { copierMail(); });
 
     return { tactile: tactile, mail: MAIL, copierMail: copierMail };
   })();
