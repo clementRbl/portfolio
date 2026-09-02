@@ -59,7 +59,7 @@
  {
   "id": "competences",
   "title": "Hard skills",
-  "text": "Stack technique. Machine learning, scikit-learn, LightGBM, XGBoost, SHAP, coût métier. MLOps, FastAPI, Docker, CI/CD, MLflow, Evidently. GenAI, LangChain, Faiss, Mistral, Ragas, guardrails. PyTorch, ResNet-50, transfer learning. Airflow, PostgreSQL, ETL, pandas. Gymnasium, DQN, stable-baselines3. Python, SQL, Git, Streamlit, pytest, Ruff.",
+  "text": "Stack technique. Machine learning, scikit-learn, LightGBM, XGBoost, SHAP, coût métier. MLOps, FastAPI, Docker, CI/CD, MLflow, Evidently. GenAI, LangChain, Faiss, Mistral, Ragas, guardrails. PyTorch, ResNet-50, transfer learning. Airflow, PostgreSQL, ETL, pandas. Gymnasium, DQN, stable-baselines3. Python, SQL, Git, Streamlit, pytest, Ruff. Agents LangGraph, index vectoriel Milvus, Angular, Prometheus.",
   "queries": [
    "quelles technologies tu maîtrises",
    "tu connais quoi",
@@ -80,7 +80,7 @@
  {
   "id": "projets",
   "title": "Projets",
-  "text": "Neuf projets couvrant machine learning, MLOps, GenAI, computer vision, régression et reinforcement learning. Dépôts publics et documentés. Credit scoring, BrainScanAI, RAG, Seattle Energy, segmentation client.",
+  "text": "Dix projets couvrant machine learning, MLOps, agents IA, GenAI, computer vision, régression et reinforcement learning. Dépôts publics et documentés. Credit scoring, agent LangGraph d'ouvertures d'échecs pour la Fédération Française des Échecs, avec un RAG Wikichess sur index vectoriel Milvus. Chatbot RAG Puls-Events. BrainScanAI, Seattle Energy, segmentation client.",
   "queries": [
    "montre-moi ton travail",
    "tes réalisations",
@@ -90,9 +90,13 @@
    "du code à voir",
    "vos projets",
    "vous avez fait quoi",
-   "montrez-moi vos réalisations"
+   "montrez-moi vos réalisations",
+   "un agent que tu as construit",
+   "vous avez déjà fait un agent",
+   "du langgraph",
+   "un projet avec une base vectorielle"
   ],
-  "answer": "Neuf projets : scoring crédit, énergie des bâtiments, attrition RH, RAG culturel, IRM cérébrales, ETL multimodal, agent RL. La plupart des dépôts sont publics et documentés."
+  "answer": "Dix projets : scoring crédit, agent d'ouvertures d'échecs pour la Fédération Française des Échecs, énergie des bâtiments, attrition RH, RAG culturel, IRM cérébrales, ETL multimodal, agent RL. La plupart des dépôts sont publics et documentés."
  },
  {
   "id": "projet-phare",
