@@ -71,6 +71,28 @@ document.documentElement.classList.add('js');
     unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
 
+  /* Police de corps du mode Standard : Inter (SIL Open Font License — usage
+     commercial libre). Auto-hébergée : la CSP servie sur /portfolio/* n'a pas
+     de directive font-src et retombe sur default-src 'self', donc un appel à
+     fonts.gstatic.com serait bloqué. Variable (400 à 700) : un seul fichier
+     couvre toutes les graisses. Seul le mode Standard la référence, donc le
+     mode Game ne la télécharge jamais. */
+  @font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/inter-latin.woff2') format('woff2');
+    font-weight: 400 700; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/inter-latin-ext.woff2') format('woff2');
+    font-weight: 400 700; font-style: normal; font-display: swap;
+    /* U+0152-0153 (œ) est retiré de la plage : Google le déclare à la fois ici
+       et dans le sous-ensemble latin, et ce seul caractère suffisait à faire
+       télécharger 85 Ko de latin-ext sur une page entièrement en français. */
+    unicode-range: U+0100-0151, U+0154-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+
   :root {
     color-scheme: dark;
     --bg: #0A0D0B;
@@ -136,6 +158,9 @@ document.documentElement.classList.add('js');
      garde la DA « survivant » (ambre, biseaux, grain). Les deux thèmes clair
      et sombre existent dans chaque mode : quatre combinaisons au total. */
   html.fx-standard {
+    /* Inter : registre outil de développement, cohérent avec la DA instrument.
+       Anton reste la police d'affichage (identité) et le mono ne bouge pas. */
+    --font-body: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --bg: #0B0D10;
     --bg-rgb: 11,13,16;
     --bg-2: #0F1216;
@@ -1028,7 +1053,7 @@ document.documentElement.classList.add('js');
       <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 01</span><h2>Profil</h2></div>
       <div class="about-grid reveal">
         <div>
-          <p class="lead"><b>5 ans développeur web</b>, puis reconversion via le parcours <b>AI Engineer</b> d'OpenClassrooms.</p>
+          <p class="lead"><b>5 ans développeur web</b>, puis reconversion via le parcours <b>AI Engineer</b> Master.</p>
           <p class="muted">De ces années de dev, je garde une culture d'ingénieur : du code testé, déployé, maintenu. C'est souvent ce qui manque entre un notebook et une vraie mise en production.</p>
           <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et systèmes GenAI (RAG, évaluation LLM).</p>
           <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Disponible pour des missions freelance en MLOps et LLMOps, les sujets les plus demandés de 2026.</p>
