@@ -10,7 +10,8 @@
    "présentation générale",
    "c'est quoi ce site"
   ],
-  "answer": "AI Engineer, disponible en freelance ou en CDI. Je viens du développement web, cinq ans, et j'industrialise aujourd'hui des modèles : API, CI/CD, monitoring. Deux API tournent en production, celle du haut de page répond en direct."
+  "answer": "AI Engineer, disponible en freelance comme en CDI. Je viens de cinq ans de développement web et j'industrialise aujourd'hui des modèles : je les expose en API, je les déploie en continu et je les surveille une fois en ligne. Deux API tournent en production, et celle du haut de cette page répond en direct.",
+  "section": "accueil"
  },
  {
   "id": "profil",
@@ -35,14 +36,14 @@
    "vous voulez être embauché",
    "un poste salarié"
   ],
-  "answer": "Disponible en freelance comme en CDI, sur des sujets MLOps et GenAI. Basé en Île-de-France et dans les Hauts-de-France, sur site ou à distance."
+  "answer": "Je suis disponible en freelance comme en CDI, sur des sujets MLOps, LLMOps et GenAI. Je vis entre l'Île-de-France et les Hauts-de-France, et je travaille sur site comme à distance.",
+  "section": "profil"
  },
  {
   "id": "parcours",
   "title": "Parcours",
   "text": "Expérience professionnelle et formation. Développeur front-end chez Paris Fashion Shops, Extracadabra, FAIRLY MADE, Snapkey. Vue.js, TypeScript, Quasar, NestJS. École O'clock, développeur web et web mobile. Lead dev. Sapeur-pompier volontaire.",
   "queries": [
-   "ton cv",
    "tes expériences passées",
    "où as-tu travaillé",
    "quelles entreprises",
@@ -54,7 +55,8 @@
    "vos expériences précédentes",
    "vos employeurs précédents"
   ],
-  "answer": "Cinq ans de développement web à Paris (Vue, TypeScript, NestJS, Django), puis le parcours AI Engineer d'OpenClassrooms de novembre 2025 à août 2026."
+  "answer": "J'ai passé cinq ans à développer des applications web à Paris, en Vue et TypeScript, en NestJS puis en Django, avant de suivre le parcours AI Engineer d'OpenClassrooms de novembre 2025 à août 2026.",
+  "section": "parcours"
  },
  {
   "id": "competences",
@@ -75,7 +77,8 @@
    "vous savez faire quoi",
    "votre stack"
   ],
-  "answer": "Python, FastAPI, Docker, CI/CD, MLflow et Evidently côté MLOps. scikit-learn, LightGBM et SHAP côté modèle. LangChain, Faiss, Mistral et Ragas côté GenAI."
+  "answer": "Côté mise en production, je travaille avec Python, FastAPI, Docker, GitHub Actions, MLflow et Evidently. Côté modélisation, scikit-learn, LightGBM et SHAP. Côté GenAI, LangChain et LangGraph, Faiss et Milvus, Mistral et Ragas. La carte mentale détaille chaque famille.",
+  "section": "competences"
  },
  {
   "id": "projets",
@@ -96,7 +99,8 @@
    "du langgraph",
    "un projet avec une base vectorielle"
   ],
-  "answer": "Dix projets : scoring crédit, agent d'ouvertures d'échecs pour la Fédération Française des Échecs, énergie des bâtiments, attrition RH, RAG culturel, IRM cérébrales, ETL multimodal, agent RL. La plupart des dépôts sont publics et documentés."
+  "answer": "Dix projets couvrent la chaîne complète, du scoring crédit mis en production à l'agent d'ouvertures d'échecs construit pour la Fédération Française des Échecs, en passant par un chatbot RAG, la détection de tumeurs sur IRM, un pipeline ETL et un agent d'apprentissage par renforcement. La plupart des dépôts sont publics et documentés.",
+  "section": "projets"
  },
  {
   "id": "projet-phare",
@@ -126,7 +130,8 @@
    "vous gérez le monitoring",
    "votre meilleur projet"
   ],
-  "answer": "Credit Scoring MLOps : un LightGBM servi par une API FastAPI conteneurisée, déployée en continu, journalisée et surveillée pour le drift. AUC 0,78, environ 6 ms d'inférence, 96 % de couverture de tests, sur 14 tests."
+  "answer": "Credit Scoring MLOps fait passer un LightGBM du notebook à la production : l'API FastAPI est conteneurisée, déployée à chaque push, chaque prédiction est journalisée et le drift est surveillé. Le modèle atteint 0,78 d'AUC, l'inférence prend environ 6 ms, et l'API est couverte à 96 % sur 14 tests.",
+  "section": "projet-phare"
  },
  {
   "id": "prestations",
@@ -157,7 +162,8 @@
    "vous acceptez quelles missions",
    "vos offres"
   ],
-  "answer": "Quatre missions cadrées : renfort front Vue 3 ou Quasar à la journée, mise en production d'un modèle en 10 jours, POC IA en 10 à 15 jours, audit d'un système RAG en 5 jours. En CDI, c'est le même périmètre sans la borne de durée."
+  "answer": "Je propose quatre missions cadrées : du renfort front Vue 3 ou Quasar à la journée, la mise en production d'un modèle en dix jours, un POC IA cadré en dix à quinze jours, et l'audit d'un système RAG en cinq jours. En CDI, c'est le même périmètre, sans la borne de durée.",
+  "section": "prestations"
  },
  {
   "id": "soft-skills",
@@ -173,7 +179,8 @@
    "vos qualités",
    "vos points forts"
   ],
-  "answer": "Analyse, curiosité, vulgarisation, conduite de projet, créativité et rigueur. Chacune est adossée à un fait précis plutôt qu'à une auto-évaluation."
+  "answer": "Six qualités sont mises en avant, mais chacune est adossée à un fait précis plutôt qu'à une auto-évaluation : une fuite de données repérée par audit MD5, un arbitrage documenté sur le retrait d'ONNX, ou une couverture de tests tenue par la CI.",
+  "section": "soft-skills"
  },
  {
   "id": "reflexivite",
@@ -191,26 +198,29 @@
    "vos axes de progrès",
    "vos convictions"
   ],
-  "answer": "Trois convictions : la fiabilité prime sur la micro-optimisation, l'évaluation et le monitoring sont le cœur du métier, la valeur naît du lien entre la technique et le métier."
+  "answer": "Trois convictions ressortent du parcours : la fiabilité prime sur la micro-optimisation, l'évaluation et le monitoring sont le cœur du métier plutôt qu'une finition, et la valeur naît du lien entre la technique et le métier plus que de la seule modélisation.",
+  "section": "reflexivite"
  },
  {
   "id": "cv",
   "title": "CV",
-  "text": "Parcours complet, compétences et projets au format PDF, téléchargeable.",
+  "text": "CV PDF une page téléchargeable, fiche model card, compétences et projets résumés, document à transmettre.",
   "queries": [
    "télécharger ton cv",
    "cv en pdf",
    "ton curriculum",
    "un document à envoyer aux rh",
    "votre cv",
-   "vous avez un cv"
+   "vous avez un cv",
+   "ton cv"
   ],
-  "answer": "Le CV tient en une page et se télécharge en PDF depuis cette section. Il est à jour."
+  "answer": "Le CV tient en une page et se télécharge en PDF depuis cette section. Juste au-dessus, le même parcours est présenté au format model card, celui que vos équipes lisent déjà pour documenter un modèle.",
+  "section": "cv"
  },
  {
   "id": "contact",
   "title": "Contact",
-  "text": "Me contacter par e-mail, discuter d'une mission, périmètre durée et prix. GitHub, blog, rapport de conduite de projet.",
+  "text": "Me contacter, m'écrire, prendre contact, e-mail adresse, discuter d'une mission, périmètre durée et prix, devis, échanger, répondre, GitHub et blog.",
   "queries": [
    "comment te joindre",
    "ton email",
@@ -223,6 +233,217 @@
    "votre adresse mail",
    "comment vous joindre"
   ],
-  "answer": "Écrivez à clement.rbl@gmail.com en décrivant votre besoin : je réponds sur le périmètre, la durée et le prix."
+  "answer": "Écrivez-moi à clement.rbl@gmail.com en décrivant votre besoin : je réponds sur le périmètre, la durée et le prix. Le bouton de la section copie l'adresse, et depuis un téléphone il propose aussi de m'appeler.",
+  "section": "contact"
+ },
+ {
+  "id": "rag",
+  "section": "projets",
+  "title": "GenAI et RAG",
+  "text": "RAG retrieval augmented generation LangChain LCEL chaîne Faiss Milvus index vectoriel embeddings Mistral Ragas évaluation hallucination garde-fous chunking chatbot documents",
+  "queries": [
+   "vous faites du rag",
+   "vous connaissez le rag",
+   "du retrieval augmented generation",
+   "vous avez déjà fait un chatbot",
+   "vous savez évaluer un llm",
+   "faiss ou milvus",
+   "comment vous évitez les hallucinations"
+  ],
+  "answer": "Oui, deux fois et de bout en bout. Puls-Events est un chatbot RAG sur seize mille événements culturels : ingestion, vectorisation Faiss, chaîne LangChain avec Mistral, garde-fous contre l'hallucination et évaluation Ragas. L'agent d'ouvertures d'échecs en refait un sur Milvus, avec un corpus d'articles. Je propose aussi l'audit d'un système RAG existant, en cinq jours."
+ },
+ {
+  "id": "agents",
+  "section": "projets",
+  "title": "Agents et orchestration",
+  "text": "agent agents LangGraph orchestration graphe nœuds routage conditionnel outils sources agrégation traçage MLflow bifurcation workflow",
+  "queries": [
+   "vous avez déjà construit un agent",
+   "du langgraph",
+   "vous savez orchestrer un agent",
+   "un agent ia",
+   "vous faites des agents"
+  ],
+  "answer": "Oui, avec LangGraph. L'agent d'ouvertures que j'ai construit pour la Fédération Française des Échecs interroge la théorie Lichess, le moteur Stockfish, un index vectoriel Milvus et YouTube, puis bifurque : dès que la position sort de la théorie, il laisse tomber le contexte et s'en remet au moteur. Chaque nœud du graphe est tracé dans MLflow."
+ },
+ {
+  "id": "mlops",
+  "section": "projet-phare",
+  "title": "MLOps et mise en production",
+  "text": "mise en production déployer déploiement industrialisation Docker conteneur CI CD GitHub Actions monitoring surveillance drift Evidently MLflow journalisation logs latence Hugging Face Spaces notebook",
+  "queries": [
+   "vous avez déjà déployé un modèle",
+   "vous savez mettre un modèle en production",
+   "du mlops",
+   "du ci cd",
+   "vous surveillez vos modèles",
+   "comment vous détectez le drift",
+   "vous conteneurisez"
+  ],
+  "answer": "C'est mon cœur de métier. Le projet Credit Scoring va du notebook à la production : API FastAPI conteneurisée, déploiement continu par GitHub Actions vers Hugging Face Spaces, journalisation de chaque prédiction, détection de drift avec Evidently et tableau de bord de suivi. L'API tourne : vous pouvez l'appeler depuis le haut de cette page."
+ },
+ {
+  "id": "vision",
+  "section": "projets",
+  "title": "Computer vision",
+  "text": "vision computer vision image images deep learning PyTorch ResNet transfer learning segmentation IRM tumeurs semi-supervisé clustering GMM labels faibles IoU",
+  "queries": [
+   "vous faites de la vision",
+   "du deep learning",
+   "de la segmentation dimages",
+   "du pytorch",
+   "de limagerie médicale",
+   "des réseaux de neurones"
+  ],
+  "answer": "Deux projets. BrainScanAI détecte des tumeurs sur IRM en apprentissage semi-supervisé, avec des features ResNet-50, un clustering GMM et un pré-entraînement sur labels faibles ; un audit de fuite par déduplication MD5 y a évité de fausses bonnes performances. Fashion-Insta est un POC de segmentation de vêtements évalué à l'IoU, doublé d'une estimation de coût pour trancher entre construire et acheter."
+ },
+ {
+  "id": "rl",
+  "section": "projets",
+  "title": "Apprentissage par renforcement",
+  "text": "reinforcement learning apprentissage renforcement DQN Gymnasium agent récompense LunarLander atterrisseur épisodes politique exploration",
+  "queries": [
+   "du reinforcement learning",
+   "de lapprentissage par renforcement",
+   "du rl",
+   "un agent qui apprend seul",
+   "vous connaissez gymnasium"
+  ],
+  "answer": "Astro Dynamics entraîne un agent DQN à poser un module lunaire dans Gymnasium. Quatre expériences ont été comparées et seule la dernière, à un million de pas, franchit l'objectif de deux cents points. L'atterrissage est filmé : la vidéo se joue directement sur la carte du projet."
+ },
+ {
+  "id": "data-eng",
+  "section": "projets",
+  "title": "Data engineering",
+  "text": "data engineering ETL extraction transformation chargement Airflow orchestration PostgreSQL entrepôt données pipeline ingestion qualité KPI multimodal",
+  "queries": [
+   "du data engineering",
+   "de letl",
+   "vous connaissez airflow",
+   "des pipelines de données",
+   "vous savez faire du sql",
+   "de lorchestration de données"
+  ],
+  "answer": "CheckItAI est un pipeline ETL reproductible pour un détecteur de fausses informations : extraction de texte et d'images, transformation, orchestration Airflow, chargement dans PostgreSQL, tableau de bord de qualité et plan de monitoring."
+ },
+ {
+  "id": "front",
+  "section": "competences",
+  "title": "Développement front-end",
+  "text": "front frontend développeur web Vue Quasar TypeScript JavaScript Angular NestJS Svelte composants migration Composition API Vitest interface",
+  "queries": [
+   "vous faites du front",
+   "vous connaissez vue",
+   "du typescript",
+   "de langular",
+   "du javascript",
+   "vous êtes développeur web",
+   "une migration vue 2 vers vue 3"
+  ],
+  "answer": "Cinq ans de front en production avant la reconversion : Vue 2 et Vue 3, Quasar, TypeScript, NestJS et Svelte. C'est aussi une prestation que je propose, en renfort d'équipe ou pour une migration Vue 2 vers Vue 3. L'interface de l'agent d'échecs, elle, est en Angular."
+ },
+ {
+  "id": "outils",
+  "section": "competences",
+  "title": "Python et outillage",
+  "text": "Python pytest tests couverture Ruff lint uv dépendances Git GitHub Actions Docker reproductibilité qualité pre-commit typage",
+  "queries": [
+   "vous codez en quoi",
+   "vous connaissez python",
+   "vous écrivez des tests",
+   "du pytest",
+   "quels outils vous utilisez",
+   "vous faites du lint"
+  ],
+  "answer": "Python d'abord, avec FastAPI côté service et pytest côté tests : l'API de scoring est couverte à 96 % sur quatorze tests, et la CI refuse de déployer si l'un d'eux tombe. Ruff pour le lint, uv pour les dépendances, Docker partout, parce qu'un modèle qui ne se relance pas à l'identique ne se maintient pas."
+ },
+ {
+  "id": "tarifs",
+  "section": "prestations",
+  "title": "Tarifs et devis",
+  "text": "tarif tarifs prix coût coûte budget devis TJM tarification facturation jour journée",
+  "queries": [
+   "combien ça coûte",
+   "quel est votre tjm",
+   "vos tarifs",
+   "votre prix",
+   "un devis",
+   "combien vous facturez"
+  ],
+  "answer": "Les tarifs ne sont pas affichés, mais le périmètre et la durée le sont : du renfort front à la journée, la mise en production d'un modèle en dix jours, un POC cadré en dix à quinze jours, un audit RAG en cinq. Décrivez votre besoin par mail et je réponds sur les trois à la fois — périmètre, durée et prix."
+ },
+ {
+  "id": "disponibilite",
+  "section": "profil",
+  "title": "Disponibilité",
+  "text": "disponible disponibilité libre commencer démarrer mission CDI freelance salarié contrat préavis embauche recrutement",
+  "queries": [
+   "vous êtes disponible",
+   "quand pouvez-vous commencer",
+   "vous cherchez un cdi",
+   "freelance ou salarié",
+   "vous acceptez un cdi",
+   "vous êtes libre"
+  ],
+  "answer": "Je suis disponible en freelance comme en CDI, sur des sujets MLOps, LLMOps et GenAI. Le périmètre est le même dans les deux cas ; en CDI, il n'y a simplement plus de borne de durée."
+ },
+ {
+  "id": "mobilite",
+  "section": "profil",
+  "title": "Lieu et mobilité",
+  "text": "lieu localisation région Paris Île-de-France Oise Hauts-de-France distance télétravail remote déplacement sur site mobilité habite",
+  "queries": [
+   "vous travaillez à distance",
+   "du télétravail",
+   "vous vous déplacez",
+   "quelle région",
+   "vous habitez où",
+   "vous venez sur site",
+   "vous habitez où",
+   "vous êtes situé dans quelle région"
+  ],
+  "answer": "Je vis entre l'Île-de-France et les Hauts-de-France, dans l'Oise. Je travaille sur site comme à distance, et je me déplace sur Paris."
+ },
+ {
+  "id": "formation",
+  "section": "parcours",
+  "title": "Formation et diplômes",
+  "text": "formation diplôme niveau bac école étude études OpenClassrooms Simplon O'clock Hacking Project concepteur développeur autodidacte certification",
+  "queries": [
+   "quel est votre diplôme",
+   "vous avez quel niveau",
+   "quelle école avez-vous faite",
+   "votre formation",
+   "vous êtes autodidacte",
+   "vous avez un bac plus 5"
+  ],
+  "answer": "Le parcours AI Engineer d'OpenClassrooms, de novembre 2025 à août 2026, au niveau Bac+5 : machine learning, MLOps, GenAI et RAG, apprentissage par renforcement, agents et fine-tuning. Avant cela, concepteur-développeur chez Simplon, développeur web et web mobile à l'École O'clock, et une première année chez The Hacking Project."
+ },
+ {
+  "id": "production",
+  "section": "projet-phare",
+  "title": "Ce qui tourne en production",
+  "text": "production en ligne déployé API Hugging Face Spaces Swagger endpoint latence appel réel démonstration vivant tourne",
+  "queries": [
+   "quest-ce qui tourne en production",
+   "vous avez du code en ligne",
+   "une api déployée",
+   "du hugging face",
+   "je peux tester quelque chose"
+  ],
+  "answer": "Deux API tournent sur Hugging Face Spaces. Celle du scoring crédit met environ 6 ms à répondre : le panneau du haut de page et la démonstration de l'étude de cas l'appellent vraiment, et les chiffres affichés sont ses propres réponses. La seconde sert les modèles d'énergie et d'émissions des bâtiments de Seattle."
+ },
+ {
+  "id": "engagement",
+  "section": "parcours",
+  "title": "Engagement",
+  "text": "engagement pompier sapeur volontaire caserne bénévole ville habitants service équipe sang-froid",
+  "queries": [
+   "vous faites quoi à côté",
+   "vos engagements",
+   "vous êtes pompier",
+   "du bénévolat"
+  ],
+  "answer": "Je suis sapeur-pompier volontaire dans ma ville. Le sang-froid, l'esprit d'équipe et le sens du service s'y apprennent autrement qu'au clavier, et ça ne s'arrête pas à la caserne."
  }
 ]

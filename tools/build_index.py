@@ -16,8 +16,11 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
-K = 12                      # composantes latentes (rang du corpus ~15)
-MAX_TERMS = 460             # vocabulaire retenu, par IDF décroissant
+K = 14                      # composantes latentes (rang du corpus ~25)
+MAX_TERMS = 950             # vocabulaire retenu, par IDF décroissant.
+                            # Saturé à 460, il perdait des racines aussi
+                            # courantes que « connaiss » : la question
+                            # « Vous connaissez Docker ? » ne pesait plus rien.
 
 # Suffixes français les plus courants : racinisation légère, sans dépendance.
 # Les terminaisons de conjugaison comptent autant que celles de dérivation : le
@@ -38,7 +41,8 @@ lui ma mais me meme mes moi mon ne nos notre nous on ou par pas pour qu que qui 
 son sur ta te tes toi ton tu un une vos votre vous c d j l m n s t y ete etee etees etes
 etant suis es est sommes etes sont sera seront etais etait avoir eu ai as avons avez ont
 plus tres tout tous toute toutes autre autres apres avant entre sans sous chez donc alors
-si comme quand aussi bien fait faire cela ceci celui ceux la les des aux""".split())
+si comme quand aussi bien fait faire cela ceci celui ceux la les des aux
+quel quels quelle quelles quell comment pourquoi""".split())
 
 
 def strip_accents(t):
@@ -73,7 +77,14 @@ def tokenize(text):
         w = w.strip('.-')
         if len(w) < 2 or w in STOP or w.isdigit():
             continue
-        out.append(stem(w))
+        # Le filtre s'applique aussi APRÈS la coupe du suffixe : « faites » n'est
+        # pas dans la liste, mais sa racine « fait » y est. Sans ce second
+        # passage, un mot vide entrait au vocabulaire par une de ses formes
+        # conjuguées et pesait dans le calcul comme un terme porteur.
+        r = stem(w)
+        if r in STOP:
+            continue
+        out.append(r)
     return out
 
 
@@ -177,8 +188,18 @@ def query_tokens(index, query):
         if len(w) < 2 or w in stop or w.isdigit():
             continue
         root = stem_q(w)
+        if root in stop:
+            continue
         out.append((root, root in vocab))
     return out
+
+
+def section_of(index, doc_id):
+    """Section visée par un document : la sienne, ou celle qu'il complète."""
+    for d in index['docs']:
+        if d['id'] == doc_id:
+            return d.get('s', d['id'])
+    return doc_id
 
 
 def search(index, query, min_score=0.0, limit=3):
@@ -212,6 +233,11 @@ if __name__ == '__main__':
                                             ' '.join(d.get('queries', []))]))
             for d in corpus]
     index = build(docs)
+    # Un document thématique - « rag », « tarifs » - répond pour une section qui
+    # ne porte pas son nom : le lien « Aller à la section » vise la section, et
+    # le graphe latent du hero ne trace que les documents de section.
+    for i, d in enumerate(corpus):
+        index['docs'][i]['s'] = d.get('section', d['id'])
     # Réponse rédigée à la main, servie telle quelle par la boîte « Interrogez
     # mon CV » : la recherche est vectorielle, la réponse ne l'est pas. Rien
     # n'est généré à la volée, donc rien ne peut être inventé.

@@ -2009,7 +2009,7 @@ document.documentElement.classList.add('js');
       <div class="panel ask reveal" id="ask">
         <div class="ask-head">
           <span class="hud-label">Interrogez le CV</span>
-          <span class="ask-eng">TF-IDF + SVD, rang 10, 11 documents · l'index tient dans la page, aucune requête ne part</span>
+          <span class="ask-eng">TF-IDF + SVD, rang 14, 25 documents · l'index tient dans la page, aucune requête ne part</span>
         </div>
         <form class="ask-form" id="ask-form" autocomplete="off">
           <input id="ask-q" type="text" aria-label="Posez une question sur le CV" placeholder="Vous connaissez Docker ? Vous êtes disponible ?">
@@ -2429,7 +2429,12 @@ document.documentElement.classList.add('js');
     for (var i = 0; i < m.length; i++) {
       var w = m[i].replace(/^[.\-]+|[.\-]+$/g, '');
       if (w.length < 2 || VEC.stopSet[w] || /^\d+$/.test(w)) continue;
-      out.push(vecStem(w));
+      /* Le filtre s'applique aussi à la racine : « faites » n'est pas un mot
+         vide, mais « fait » l'est. Même règle que build_index.py, sur la même
+         table exportée - sinon les deux se mettent à diverger. */
+      var r = vecStem(w);
+      if (VEC.stopSet[r]) continue;
+      out.push(r);
     }
     return out;
   }
@@ -2458,6 +2463,7 @@ document.documentElement.classList.add('js');
       var dv = VEC.docs[i].v, sc = 0;
       for (var c = 0; c < VEC.k; c++) sc += dv[c] * v[c];
       if (sc >= min) out.push({ id: VEC.docs[i].id, title: VEC.docs[i].title,
+                               sec: VEC.docs[i].s || VEC.docs[i].id,
                                score: sc, a: VEC.docs[i].a || '' });
     }
     out.sort(function (a, b) { return b.score - a.score; });
@@ -2545,13 +2551,17 @@ document.documentElement.classList.add('js');
       var hits = vecSearch(raw), extra = [];
       for (var h = 0; h < hits.length; h++) {
         var hit = hits[h];
-        var already = cmdkItems.some(function (c) { return c.sectionId === hit.id; });
-        if (already) continue;
-        var nav = NAV.filter(function (it) { return it.id === hit.id; })[0];
+        /* L'index contient des documents thématiques - « rag », « tarifs » -
+           qui répondent pour une section ne portant pas leur nom : c'est la
+           section qu'il faut proposer, et une seule fois. */
+        var sec = hit.sec || hit.id;
+        if (cmdkItems.some(function (c) { return c.sectionId === sec; })) continue;
+        if (extra.some(function (c) { return c.sectionId === sec; })) continue;
+        var nav = NAV.filter(function (it) { return it.id === sec; })[0];
         extra.push({ g: 'Sections proches de votre question', label: nav ? nav.name : hit.title,
                      hint: Math.round(hit.score * 100) + '%', icon: nav ? nav.icon : IC.ext,
-                     score: true, sectionId: hit.id,
-                     run: (function (id) { return function () { goTo(id); }; })(hit.id) });
+                     score: true, sectionId: sec,
+                     run: (function (id) { return function () { goTo(id); }; })(sec) });
       }
       cmdkItems = extra.concat(cmdkItems);
     }
@@ -3498,7 +3508,12 @@ FX.onStart(function (mode) {
       var RGBS = (/^#/.test(accent) ? hex2rgb(accent) : [122, 162, 255]).join(',');
 
       // Similarités cosinus entre sections : ce sont les arêtes du graphe.
-      var docs = ix.docs, N = docs.length, sim = [], a, b;
+      /* Le graphe ne trace que les documents de section : les documents
+         thématiques ajoutés pour affiner les réponses vivent dans le même
+         espace latent, mais les afficher encombrerait le hero sans rien dire
+         de plus - ils se superposent à la section dont ils parlent. */
+      var docs = ix.docs.filter(function (d) { return (d.s || d.id) === d.id; });
+      var N = docs.length, sim = [], a, b;
       for (a = 0; a < N; a++) {
         sim.push([]);
         for (b = 0; b < N; b++) {
@@ -3647,8 +3662,11 @@ FX.onStart(function (mode) {
   if (window.LSA && window.matchMedia('(min-width: 1440px)').matches) {
     window.LSA.load(function (ix) {
       if (!ix || !ix.docs || !ix.docs.length) return;
-      var ids = ix.docs.map(function (d) { return d.id; });
-      var labels = ix.docs.map(function (d) { return d.title.split(' - ')[0]; });
+      /* Une entrée de rail par section, donc pas pour les documents
+         thématiques : leur identifiant ne correspond à aucune ancre. */
+      var sdocs = ix.docs.filter(function (d) { return (d.s || d.id) === d.id; });
+      var ids = sdocs.map(function (d) { return d.id; });
+      var labels = sdocs.map(function (d) { return d.title.split(' - ')[0]; });
       var nav = document.createElement('nav');
       nav.className = 'rail';
       nav.setAttribute('aria-label', 'Sections du site');
@@ -3668,7 +3686,7 @@ FX.onStart(function (mode) {
       var cur = -1;
       function mark(i) {
         var near = [];
-        for (var j = 0; j < ids.length; j++) if (j !== i) near.push([j, dot(ix.docs[i].v, ix.docs[j].v)]);
+        for (var j = 0; j < ids.length; j++) if (j !== i) near.push([j, dot(sdocs[i].v, sdocs[j].v)]);
         near.sort(function (a, b) { return b[1] - a[1]; });
         var keep = {};
         near.slice(0, 2).forEach(function (n) { if (n[1] >= 0.30) keep[n[0]] = n[1]; });
@@ -3706,9 +3724,10 @@ FX.onStart(function (mode) {
     var askOut = document.getElementById('ask-out');
     var askChips = document.getElementById('ask-chips');
     var typer = null;
-    var SUGG = ['Vous connaissez Docker ?', 'Vous êtes disponible ?', 'Vous acceptez un CDI ?',
-                'Vous avez déjà déployé un modèle ?', 'Vous faites du RAG ?',
-                'Vous travaillez où ?', 'Combien coûte un POC ?'];
+    var SUGG = ['Vous connaissez Docker ?', 'Vous êtes disponible ?',
+                'Vous avez déjà construit un agent ?', 'Vous avez déjà déployé un modèle ?',
+                'Vous faites du RAG ?', 'Quels sont vos tarifs ?', 'Quel est votre diplôme ?',
+                'Vous travaillez où ?'];
     SUGG.forEach(function (q) {
       var b = document.createElement('button');
       b.type = 'button'; b.textContent = q;
@@ -3776,7 +3795,7 @@ FX.onStart(function (mode) {
       gauge.className = 'ask-bar';
       var fill = gauge.appendChild(document.createElement('i'));
       var go = document.createElement('a');
-      go.href = '#' + top.id; go.textContent = 'Aller à la section →';
+      go.href = '#' + (top.sec || top.id); go.textContent = 'Aller à la section →';
       src.appendChild(lbl); src.appendChild(gauge); src.appendChild(go);
       askOut.appendChild(src);
       requestAnimationFrame(function () { fill.style.width = Math.round(Math.min(1, top.score) * 100) + '%'; });
