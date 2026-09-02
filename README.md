@@ -1,4 +1,4 @@
-# Portfolio — Clément Reboul, AI Engineer freelance
+# Portfolio - Clément Reboul, AI Engineer freelance
 
 Portfolio personnel et professionnel : du notebook à la production (Machine Learning, MLOps, GenAI/RAG).
 Sert aussi de support commercial : la section **Prestations** liste des missions freelance cadrées (périmètre, durée).
@@ -21,7 +21,7 @@ Sert aussi de support commercial : la section **Prestations** liste des missions
 
 Le site est **statique, sans build ni dépendance**. Deux façons de le tester :
 
-### Option 1 — Serveur local (recommandé, reproduit GitHub Pages)
+### Option 1 - Serveur local (recommandé, reproduit GitHub Pages)
 
 Depuis le dossier du dépôt :
 
@@ -30,11 +30,11 @@ python3 -m http.server 8000
 ```
 
 Puis ouvrir **http://localhost:8000/** dans le navigateur.
-(Alternative Node : `npx serve` — ou l'extension **Live Server** de VS Code, clic droit sur `index.html` → *Open with Live Server*.)
+(Alternative Node : `npx serve` - ou l'extension **Live Server** de VS Code, clic droit sur `index.html` → *Open with Live Server*.)
 
 > Astuce : après une modif, recharge avec **Ctrl+Shift+R** (Cmd+Shift+R sur Mac) pour ignorer le cache.
 
-### Option 2 — Ouvrir directement le fichier
+### Option 2 - Ouvrir directement le fichier
 
 Double-cliquer sur `index.html` (ouverture en `file://`). Fonctionne pour l'essentiel ; le serveur local reste préférable pour reproduire fidèlement le comportement en ligne.
 
@@ -45,8 +45,7 @@ Deux éléments ne sont pas des maquettes :
 **L'API de scoring en production.** Le panneau du hero et la démo de l'étude de
 cas appellent réellement `POST /predict` sur le Space Hugging Face. La latence
 affichée est l'aller-retour mesuré dans le navigateur. Si le Space dort, l'état
-passe à « API en veille » et les réponses viennent d'un jeu relevé à l'avance —
-dit explicitement.
+passe à « API en veille » et les réponses viennent d'un jeu relevé à l'avance - dit explicitement.
 
 **La recherche vectorielle de la palette.** `tools/build_index.py` construit
 hors ligne un espace latent (TF-IDF puis SVD tronquée, rang 10) sur le contenu
@@ -70,7 +69,7 @@ Poussé sur la branche `main` → **GitHub Pages** publie automatiquement à cha
 
 ## Projet technique mis en avant
 
-**Credit Scoring MLOps** — mise en production d'un modèle de scoring crédit :
+**Credit Scoring MLOps** - mise en production d'un modèle de scoring crédit :
 API FastAPI conteneurisée, CI/CD (GitHub Actions → Hugging Face Spaces), monitoring de drift (Evidently) et dashboard.
 
 - Code : https://github.com/clementRbl/credit-scoring-mlops
@@ -84,7 +83,7 @@ Thème clair/sombre, responsive, accessible (navigation clavier, contenu visible
 ### Deux directions artistiques
 
 Le site se charge en mode **Standard** : palette froide, angles droits, surfaces
-propres — registre instrument de mesure. La navigation y passe par une **palette
+propres - registre instrument de mesure. La navigation y passe par une **palette
 de commandes** (`⌘K` / `Ctrl K`, ou `M`).
 
 Le mode Standard a ses propres animations, toutes adossées à une donnée réelle

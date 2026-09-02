@@ -70,7 +70,7 @@
  },
  {
   "id": "projet-phare",
-  "title": "Projet phare — Credit Scoring MLOps",
+  "title": "Projet phare - Credit Scoring MLOps",
   "text": "Mise en production d'un modèle de scoring crédit. API FastAPI conteneurisée, déploiement continu GitHub Actions vers Hugging Face Spaces, journalisation des prédictions, détection de data drift avec Evidently, dashboard de monitoring Streamlit. AUC 0,78, latence six millisecondes, couverture de tests 98 pour cent, seuil de décision 0,47. Arbitrage ONNX écarté. Essayez le modèle en direct.",
   "queries": [
    "comment tu surveilles un modèle en production",
