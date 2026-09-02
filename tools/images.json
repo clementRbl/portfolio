@@ -143,5 +143,23 @@
    500
   ],
   "note": "Image d'origine, masque de segmentation et superposition"
+ },
+ {
+  "out": "astro-atterrissage.mp4",
+  "from": "video",
+  "src": "astro-dynamics/logs/videos/eagle1-atterrissage-reussi.mp4",
+  "start": 2.5,
+  "filter": "crop=600:250:0:150",
+  "crf": 30,
+  "note": "Atterrissage reussi de l'agent DQN, sans son ; les 2,5 premieres secondes sont coupees, l'atterrisseur y est encore hors cadre"
+ },
+ {
+  "out": "astro-atterrissage.webp",
+  "from": "video-frame",
+  "src": "astro-dynamics/logs/videos/eagle1-atterrissage-reussi.mp4",
+  "at": 8,
+  "filter": "crop=600:250:0:150",
+  "quality": 80,
+  "note": "Affiche de la video : descente moteur allume, entre les deux fanions"
  }
 ]

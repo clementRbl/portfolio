@@ -15,7 +15,7 @@ Sert aussi de support commercial : la section **Prestations** liste des missions
 | `assets/` | Captures des projets, CV PDF, image de partage Open Graph |
 | `assets/search-index.json` | Index de recherche vectorielle de la palette (généré) |
 | `tools/build_index.py` | Génère l'index : TF-IDF + SVD tronquée sur `tools/corpus.json` |
-| `tools/build_images.py` | Fabrique les images d'`assets/` d'après `tools/images.json` |
+| `tools/build_images.py` | Fabrique les médias d'`assets/` d'après `tools/images.json` |
 | `sitemap.xml` | Plan de site (à déclarer dans Google Search Console) |
 
 ## Lancer en local
@@ -64,7 +64,7 @@ Regénérer l'index après avoir modifié `tools/corpus.json` :
 python3 tools/build_index.py   # numpy requis
 ```
 
-## Les images
+## Les images et la vidéo
 
 Chaque capture vient d'un livrable réel : une figure de notebook, une capture
 d'interface, une sortie de pipeline. `tools/images.json` note, pour chacune, le
@@ -76,8 +76,12 @@ feuille de style impose aux couvertures : le cadrage est donc décidé à la
 fabrication, jamais laissé au navigateur, et reste le même à toutes les
 largeurs d'écran.
 
+La carte Astro Dynamics porte deux vues : la courbe d'entraînement et
+l'atterrissage filmé. La vidéo dure 22 secondes, pèse 50 Ko, n'a pas de piste
+son et ne se télécharge qu'au moment où l'on demande à la voir.
+
 ```bash
-# ImageMagick requis ; Plotly seulement pour les figures encore en JSON
+# ImageMagick et ffmpeg requis ; Plotly seulement pour les figures en JSON
 uv run --with plotly --with kaleido python3 tools/build_images.py
 ```
 

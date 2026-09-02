@@ -398,6 +398,11 @@ document.documentElement.classList.add('js');
   @keyframes lbspin { to { --lb: 360deg; } }
   @media (prefers-reduced-motion: reduce) { .live-border::before { animation: none; } }
 
+  /* Un display posé par la feuille de style l'emporte sur le display:none que
+     le navigateur applique à [hidden] : le bouton restait affiché malgré
+     l'attribut. On rétablit la règle une fois pour toutes, pour toute la page. */
+  [hidden] { display: none !important; }
+
   /* Boutons */
   .btn {
     display: inline-flex; align-items: center; gap: 9px; cursor: pointer;
@@ -504,6 +509,23 @@ document.documentElement.classList.add('js');
   .tag { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-dim); background: var(--surface-2); border: 1px solid var(--border); padding: 4px 9px; }
   .cover { margin-top: 16px; border: 1px solid var(--border); overflow: hidden; filter: saturate(.8) contrast(1.02); }
   .cover img { display: block; width: 100%; height: auto; aspect-ratio: 12 / 5; object-fit: cover; }
+
+  /* Couverture à deux vues : la courbe d'entraînement et le film montrent le
+     même résultat, l'une mesurée, l'autre vécue. Les onglets sont posés hors
+     de .cover : la désaturation appliquée aux visuels ne doit pas éteindre une
+     commande. La vidéo ne se télécharge qu'au premier passage sur son onglet. */
+  .media { margin-top: 16px; }
+  .media .cover { margin-top: 0; }
+  .media video { display: block; width: 100%; height: auto; aspect-ratio: 12 / 5; object-fit: cover; background: #000; cursor: pointer; }
+  /* Les onglets sont posés au-dessus du cadre, pas dessus : superposés, ils
+     mangeaient le titre du graphique. */
+  .media-tabs { display: flex; gap: 2px; width: max-content; margin: 0 0 8px auto; padding: 2px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 5px; }
+  .media-tabs button { appearance: none; background: none; border: 0; cursor: pointer; padding: 4px 9px; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
+    transition: color .14s, background .14s; }
+  .media-tabs button:hover { color: var(--ink); }
+  .media-tabs button[aria-pressed="true"] { background: var(--accent-soft-2); color: var(--ember); }
   .proj-links { display: flex; gap: 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
   .proj-links a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-dim); }
   .proj-links a:hover { color: var(--ember); }
@@ -574,6 +596,17 @@ document.documentElement.classList.add('js');
   .contact h2 { font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem); text-transform: uppercase; color: var(--ink); }
   .contact p { color: var(--ink-dim); margin: 16px auto 32px; }
   .contact-cta { display: flex; gap: 13px; justify-content: center; flex-wrap: wrap; }
+  /* Retour du bouton de contact : une ligne discrète sous les boutons, tenue
+     par aria-live pour que la copie soit annoncée et pas seulement affichée. */
+  .cta-note { margin-top: 14px; min-height: 1.2em; font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: .05em; color: var(--muted); text-align: center; }
+  .cta-note.on { color: var(--ember); }
+  .cta-note a { color: var(--ember); border-bottom: 1px solid currentColor; margin-left: 8px; }
+  /* La bascule passe par une classe : « hidden » est un attribut HTML, sans
+     effet sur un élément SVG - ni en attribut, ni en propriété. */
+  #cta-mail .ic-ok { display: none; }
+  #cta-mail.copie .ic-mail { display: none; }
+  #cta-mail.copie .ic-ok { display: block; }
 
   footer { border-top: 1px solid var(--border); padding-block: 28px; }
   footer .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
@@ -1511,7 +1544,7 @@ document.documentElement.classList.add('js');
           <div class="kpis tnum">
             <div><div class="n">0.78</div><div class="c">AUC</div></div>
             <div><div class="n" id="kpi-lat">-</div><div class="c">Latence réelle</div></div>
-            <div><div class="n">98%</div><div class="c">Tests</div></div>
+            <div><div class="n">96%</div><div class="c">Tests</div></div>
           </div>
           <p class="api-note" id="api-note">Appels réels à l'API en production - <a href="https://clementrbl-credit-scoring-api.hf.space/docs" target="_blank" rel="noopener">vérifiez vous-même</a></p>
         </div>
@@ -1687,7 +1720,20 @@ document.documentElement.classList.add('js');
           <h3>Astro Dynamics</h3><p class="role">Agent RL - atterrisseur lunaire</p>
           <p class="desc">Entraînement d'un agent DQN sur LunarLander (Gymnasium), architecture client/serveur (API FastAPI + visualisation Streamlit) et enregistrement vidéo des atterrissages réussis.</p>
           <div class="tags"><span class="tag">Gymnasium</span><span class="tag">DQN</span><span class="tag">stable-baselines3</span></div>
-          <div class="cover"><img src="assets/astro-rewards.webp" width="1200" height="500" alt="Courbes de récompense des quatre expériences DQN : seule la quatrième, à un million de pas, franchit l'objectif de 200." loading="lazy" decoding="async"></div>
+          <div class="media" data-media>
+            <div class="media-tabs" role="group" aria-label="Vue du projet Astro Dynamics">
+              <button type="button" data-view="fig" aria-pressed="true">Entraînement</button>
+              <button type="button" data-view="vid" aria-pressed="false">Atterrissage · 22 s</button>
+            </div>
+            <div class="cover">
+              <img src="assets/astro-rewards.webp" width="1200" height="500" alt="Courbes de récompense des quatre expériences DQN : seule la quatrième, à un million de pas, franchit l'objectif de 200." loading="lazy" decoding="async">
+              <video width="600" height="250" preload="none" muted loop playsinline hidden
+                     poster="assets/astro-atterrissage.webp"
+                     aria-label="Vingt-deux secondes d'un atterrissage réussi de l'agent DQN sur LunarLander, sans son.">
+                <source src="assets/astro-atterrissage.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
           <div class="proj-links"><a href="https://github.com/clementRbl/astro-dynamics" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
@@ -1711,7 +1757,7 @@ document.documentElement.classList.add('js');
         <div class="kpi-row tnum">
           <div class="kpi"><div class="v">0,78</div><div class="c">AUC-OOF (LightGBM)</div></div>
           <div class="kpi"><div class="v">~6&nbsp;ms</div><div class="c">Latence d'inférence</div></div>
-          <div class="kpi"><div class="v">98&nbsp;%</div><div class="c">Couverture de tests</div></div>
+          <div class="kpi"><div class="v">96&nbsp;%</div><div class="c">Couverture de tests</div></div>
           <div class="kpi"><div class="v">3/20</div><div class="c">Features en drift</div></div>
           <div class="kpi"><div class="v">3&nbsp;jobs</div><div class="c">Pipeline CI/CD</div></div>
           <div class="kpi"><div class="v">0&nbsp;€</div><div class="c">Coût d'infra</div></div>
@@ -1783,7 +1829,7 @@ document.documentElement.classList.add('js');
         </div>
         <div class="pipe" role="img" aria-label="Pipeline MLOps : client vers API FastAPI Docker sur Hugging Face Spaces, logs JSONL, drift Evidently et dashboard Streamlit ; en parallèle CI/CD GitHub Actions test build deploy.">
           <div class="lane"><span class="lane-label">Serving</span><span class="node">Client</span><span class="arr">→</span><span class="node accent">FastAPI · Docker</span><span class="arr">→</span><span class="node ok">HF Spaces</span><span class="arr">→</span><span class="node">logs JSONL</span><span class="arr">→</span><span class="node">Evidently · Streamlit</span></div>
-          <div class="lane"><span class="lane-label">CI/CD</span><span class="node">push main</span><span class="arr">→</span><span class="node">pytest 98%</span><span class="arr">→</span><span class="node">docker build</span><span class="arr">→</span><span class="node ok">deploy</span></div>
+          <div class="lane"><span class="lane-label">CI/CD</span><span class="node">push main</span><span class="arr">→</span><span class="node">pytest 96%</span><span class="arr">→</span><span class="node">docker build</span><span class="arr">→</span><span class="node ok">deploy</span></div>
         </div>
       </div>
     </div>
@@ -1859,7 +1905,7 @@ document.documentElement.classList.add('js');
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><h3>Vulgarisation</h3><p>Traduire AUC, drift et coût métier en enjeux business ; READMEs, rapports et dashboards pédagogiques.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><h3>Gestion de projet</h3><p>Découpage itératif, Definition of Done, CI/CD comme garde-fou qualité automatisé.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/></svg></div><h3>Créativité</h3><p>Pagination par curseur de date (RAG) ; labels faibles générés par clustering en semi-supervisé.</p></div>
-        <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><h3>Rigueur</h3><p>Tests automatisés (98 %), reproductibilité Docker, documentation systématique des choix et limites.</p></div>
+        <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><h3>Rigueur</h3><p>Tests automatisés (96 % sur 14 tests), reproductibilité Docker, documentation systématique des choix et limites.</p></div>
       </div>
     </div>
   </section>
@@ -1909,7 +1955,7 @@ document.documentElement.classList.add('js');
         <div class="cm-metrics tnum">
           <div><div class="n">09</div><div class="c">Projets IA</div></div>
           <div><div class="n">02</div><div class="c">API en production</div></div>
-          <div><div class="n">98&nbsp;%</div><div class="c">Couverture de tests</div></div>
+          <div><div class="n">96&nbsp;%</div><div class="c">Couverture de tests</div></div>
           <div><div class="n">0,78</div><div class="c">AUC du modèle servi</div></div>
           <div><div class="n">~6&nbsp;ms</div><div class="c">Latence d'inférence</div></div>
         </div>
@@ -1967,11 +2013,13 @@ document.documentElement.classList.add('js');
       <h2 class="reveal" style="margin-top:14px">Un besoin ? Parlons-en</h2>
       <p class="reveal"><b>AI Engineer</b> disponible en freelance ou en CDI, en MLOps, GenAI/RAG et front Vue&nbsp;3 - Paris, Île-de-France, Oise, Hauts-de-France et remote. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
       <div class="contact-cta reveal">
-        <a class="btn btn-primary" href="mailto:clement.rbl@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg> clement.rbl@gmail.com</a>
+        <a class="btn btn-primary" id="cta-mail" href="mailto:clement.rbl@gmail.com" data-mail="clement.rbl@gmail.com"><svg class="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg><svg class="ic-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span class="lbl">clement.rbl@gmail.com</span></a>
+        <a class="btn btn-ghost" id="cta-tel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg><span class="lbl">Appeler</span></a>
         <a class="btn btn-ghost" href="https://github.com/clementRbl" target="_blank" rel="noopener">GitHub</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr" target="_blank" rel="noopener">Blog</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr/portfolio/rapport.html">Rapport</a>
       </div>
+      <p class="cta-note" id="cta-note" role="status" aria-live="polite"></p>
     </div>
   </section>
 
@@ -2449,7 +2497,12 @@ document.documentElement.classList.add('js');
       { g: 'Livrables', label: 'Tester l’API de scoring en production', hint: 'Swagger', icon: IC.ext,
         run: function () { window.open('https://clementrbl-credit-scoring-api.hf.space/docs', '_blank', 'noopener'); } },
       { g: 'Contact', label: 'M’écrire un e-mail', hint: 'clement.rbl@gmail.com', icon: IC.mail,
-        run: function () { location.href = 'mailto:clement.rbl@gmail.com'; } },
+        /* Même règle que le bouton de contact : sur un poste fixe on copie
+           l'adresse, faute de quoi la commande semble ne rien faire. */
+        run: function () {
+          if (window.CONTACT && !window.CONTACT.tactile) { goTo('contact'); window.CONTACT.copierMail(); return; }
+          location.href = 'mailto:clement.rbl@gmail.com';
+        } },
       { g: 'Contact', label: 'GitHub', hint: 'clementRbl', icon: IC.ext,
         run: function () { window.open('https://github.com/clementRbl', '_blank', 'noopener'); } },
       { g: 'Affichage', label: 'Basculer le thème clair / sombre', hint: 'Thème', icon: IC.sun,
@@ -3210,7 +3263,7 @@ FX.onStart(function (mode) {
   function countUp(el) {
     if (el.dataset.counted) return;
     var raw = el.textContent.trim();
-    // « 0,78 », « 98 % », « 09 » : on n'anime qu'un nombre simple, préfixe et
+    // « 0,78 », « 96 % », « 09 » : on n'anime qu'un nombre simple, préfixe et
     // suffixe conservés. « 3/20 » ou « 0 € » restent tels quels.
     var m = raw.match(/^(\D*?)(\d+(?:[.,]\d+)?)(\D*)$/);
     if (!m || /\//.test(raw)) { el.dataset.counted = '1'; return; }
@@ -3272,6 +3325,132 @@ FX.onStart(function (mode) {
     }, { threshold: 0.25 });
     pio.observe(lanes[0].parentNode);
   }
+
+  /* --- 3 ter. Contact : la bonne action selon l'appareil ---------------------
+     Sur un poste fixe, mailto: ne mène nulle part quand aucun client n'est
+     configuré : le clic n'a l'air de rien faire, ce qui était le défaut signalé.
+     On copie donc l'adresse et on le dit, en gardant un lien explicite pour qui
+     a bien un client mail. Sur un appareil tactile, l'appel a du sens : le
+     bouton compose le numéro.
+
+     Le numéro est assemblé ici plutôt qu'écrit dans le HTML. Ce n'est pas un
+     secret - il figure sur le CV - mais un numéro en clair dans la page se
+     ramasse en masse, et l'assembler écarte les moissonneurs qui ne lisent
+     pas le JavaScript. Sans JavaScript, le lien e-mail reste opérant. */
+  window.CONTACT = (function () {
+    var MAIL = 'clement.rbl@gmail.com';
+    var TEL = ['+33', '761', '060137'].join('');
+    var tactile = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    var note = document.getElementById('cta-note');
+    var btn = document.getElementById('cta-mail');
+    var tel = document.getElementById('cta-tel');
+    var minuteur = null;
+
+    /* Le texte est posé par textContent et le lien construit nœud par nœud :
+       aucune chaîne n'est interprétée comme du balisage. */
+    function dire(txt, bon, avecLien) {
+      if (!note) return;
+      note.textContent = txt;
+      note.classList.toggle('on', !!bon);
+      if (avecLien) {
+        var a = document.createElement('a');
+        a.href = 'mailto:' + MAIL;
+        a.textContent = 'Ouvrir le client mail';
+        note.appendChild(a);
+      }
+      clearTimeout(minuteur);
+      minuteur = setTimeout(function () { note.textContent = ''; note.classList.remove('on'); }, 8000);
+    }
+
+    function marquer(ok) {
+      if (!btn) return;
+      var lbl = btn.querySelector('.lbl');
+      if (!lbl) return;
+      lbl.textContent = ok ? 'Adresse copiée' : MAIL;
+      btn.classList.toggle('copie', ok);
+      clearTimeout(marquer.t);
+      if (ok) marquer.t = setTimeout(function () { marquer(false); }, 2600);
+    }
+
+    /* Repli pour les navigateurs sans presse-papiers asynchrone : une zone de
+       texte hors écran, sélectionnée puis copiée par la commande héritée. */
+    function copierHerite(txt) {
+      var z = document.createElement('textarea');
+      z.value = txt;
+      z.setAttribute('readonly', '');
+      z.style.cssText = 'position:fixed;left:-9999px;opacity:0';
+      document.body.appendChild(z);
+      z.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(z);
+      return ok;
+    }
+
+    function copierMail() {
+      /* Le lien vers le client mail n'apparaît qu'ici : il ne sert qu'à celui
+         qui en a un, et seulement après avoir vu que la copie a fonctionné. */
+      function reussi() { marquer(true); dire('Adresse copiée dans le presse-papiers.', true, true); }
+      function echoue() {
+        /* Rien n'est avalé en silence : si la copie échoue, on le dit et on
+           bascule sur le client mail, qui reste la voie normale. */
+        dire('Copie impossible : ouverture du client mail.', false);
+        location.href = 'mailto:' + MAIL;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(MAIL).then(reussi, function () {
+          if (copierHerite(MAIL)) reussi(); else echoue();
+        });
+        return;
+      }
+      if (copierHerite(MAIL)) reussi(); else echoue();
+    }
+
+    if (tactile && tel) {
+      /* Tactile : l'appel passe devant, l'e-mail reste à un doigt. */
+      tel.href = 'tel:' + TEL;
+      tel.querySelector('.lbl').textContent = 'Appeler ' + TEL.replace(/^\+33/, '0').replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+      tel.hidden = false;
+      tel.classList.replace('btn-ghost', 'btn-primary');
+      if (btn) btn.classList.replace('btn-primary', 'btn-ghost');
+    } else if (btn) {
+      btn.addEventListener('click', function (e) { e.preventDefault(); copierMail(); });
+    }
+
+    return { tactile: tactile, mail: MAIL, copierMail: copierMail };
+  })();
+
+  /* --- 3 bis. Couverture à deux vues : figure mesurée ou résultat filmé --- */
+  (function () {
+    var m = document.querySelector('[data-media]');
+    if (!m) return;
+    var fig = m.querySelector('img'), film = m.querySelector('video');
+    var onglets = [].slice.call(m.querySelectorAll('.media-tabs button'));
+    if (!fig || !film) return;
+
+    function montrer(vue) {
+      var joue = vue === 'vid';
+      onglets.forEach(function (b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-view') === vue ? 'true' : 'false');
+      });
+      fig.hidden = joue;
+      film.hidden = !joue;
+      if (!joue) { film.pause(); return; }
+      /* Mouvement réduit : on affiche l'affiche et on rend la main, avec les
+         commandes natives. Personne ne se voit imposer une image qui bouge. */
+      if (reduce) { film.controls = true; return; }
+      var p = film.play();
+      if (p && p.catch) p.catch(function () { film.controls = true; });
+    }
+
+    onglets.forEach(function (b) {
+      b.addEventListener('click', function () { montrer(b.getAttribute('data-view')); });
+    });
+    film.addEventListener('click', function () {
+      if (film.paused) { var p = film.play(); if (p && p.catch) p.catch(function () { film.controls = true; }); }
+      else film.pause();
+    });
+  })();
 
   /* --- 4. Grilles : apparition échelonnée des cartes --- */
   var grids = [].slice.call(document.querySelectorAll('.proj-grid, .presta-grid, .soft-grid, .skills-grid'));
