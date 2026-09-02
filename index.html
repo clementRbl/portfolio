@@ -633,6 +633,12 @@ document.documentElement.classList.add('js');
   :root[data-theme="light"] #theme-toggle .sun-ic { display: none; }
   :root[data-theme="light"] #theme-toggle .moon-ic { display: block; }
 
+  /* Bascule de mode : l'icone annonce la destination, pas l'etat courant. */
+  #mode-toggle .game-on { display: none; }
+  html.fx-game #mode-toggle .game-off { display: none; }
+  html.fx-game #mode-toggle .game-on { display: block; }
+  html.fx-game #mode-toggle { color: var(--ember); border-color: var(--border-2); }
+
   /* ---------- HUD vivant : battement + valeurs ---------- */
   .status .hb { width: 42px; height: 14px; margin-left: 10px; }
   .status .hb polyline {
@@ -796,6 +802,44 @@ document.documentElement.classList.add('js');
     html.fx-standard .hero h1 { font-size: clamp(2.1rem, 1rem + 8vw, 2.9rem); }
     html.fx-standard .sec-head h2 { font-size: clamp(1.7rem, 1.1rem + 4vw, 2.2rem); }
   }
+
+
+  /* ---------- INVITATION AU MODE GAME ----------
+     Bande ancree en bas, jamais une modale : elle ne bloque pas la lecture,
+     ne recouvre pas le contenu et se referme d'un clic. Declenchee par
+     l'atteinte du pied de page, pas par un minuteur : un visiteur qui a lu
+     jusqu'au bout a montre son interet, un visiteur qui reste 30 s sur le
+     hero n'a rien montre du tout. */
+  .invite {
+    position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 160%);
+    z-index: 75; max-width: min(560px, calc(100vw - 32px));
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 14px 16px; background: var(--surface); border: 1px solid var(--border-2);
+    box-shadow: 0 16px 44px rgba(0,0,0,.42);
+    transition: transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s ease;
+    opacity: 0; pointer-events: none;
+  }
+  :root[data-theme="light"] .invite { box-shadow: 0 16px 44px rgba(30,40,60,.16); }
+  .invite.in { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+  /* La bande est en position fixed : allonger le pied de page ne deplace pas
+     son texte. On pousse le contenu vers le haut a la place. */
+  html.invite-open footer { padding-top: 132px; }
+  @media (prefers-reduced-motion: reduce) { .invite { transition: opacity .2s ease; transform: translate(-50%, 0); } }
+  .invite .txt { flex: 1 1 220px; font-size: 14.2px; color: var(--ink-dim); line-height: 1.45; }
+  .invite .txt b { color: var(--ink); }
+  .invite .go {
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase;
+    padding: 9px 14px; cursor: pointer; border: 1px solid var(--ember);
+    background: var(--ember); color: var(--on-accent); white-space: nowrap;
+  }
+  .invite .go:hover { background: var(--ember-bright); border-color: var(--ember-bright); }
+  .invite .no {
+    background: none; border: 0; cursor: pointer; color: var(--muted);
+    font-family: var(--font-mono); font-size: 15px; line-height: 1; padding: 6px 4px;
+  }
+  .invite .no:hover { color: var(--ink); }
+  @media (max-width: 520px) { .invite { left: 16px; right: 16px; transform: translateY(130%); max-width: none; }
+    .invite.in { transform: translateY(0); } }
 
   /* ---------- ANIMATIONS DU MODE STANDARD ----------
      Registre instrument : flux d'inférence, métriques qui vivent, pipeline qui
@@ -1039,6 +1083,10 @@ document.documentElement.classList.add('js');
   <button class="icon-btn" id="snd-toggle" aria-pressed="false" aria-label="Activer le son" title="Son (effets de la roue)">
     <svg class="off-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
     <svg class="on-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+  </button>
+  <button class="icon-btn" id="mode-toggle" aria-pressed="false" aria-label="Activer le mode Game" title="Mode Game : univers animé">
+    <svg class="game-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/><rect x="2" y="7" width="20" height="10" rx="5"/></svg>
+    <svg class="game-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h13"/></svg>
   </button>
   <button class="icon-btn" id="theme-toggle" aria-label="Basculer thème clair ou sombre" title="Thème clair / sombre">
     <svg class="sun-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M19.1 4.9l-1.5 1.5M6.4 17.6l-1.5 1.5"/></svg>
@@ -1453,6 +1501,12 @@ document.documentElement.classList.add('js');
 </main>
 
 <footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL - AI ENGINEER FREELANCE · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit à la main · sans dépendance</span></div></footer>
+
+<div class="invite" id="invite" role="region" aria-label="Proposition de changer de mode" hidden>
+  <p class="txt"><b>Ce site a un second visage.</b> Le mode Game rallume l'univers animé : braises, curseur torche, roue de sélection.</p>
+  <button class="go" id="invite-go" type="button">Essayer</button>
+  <button class="no" id="invite-no" type="button" aria-label="Non merci, ne plus proposer">✕</button>
+</div>
 
 <!-- PALETTE DE COMMANDES (mode Standard) -->
 <div class="cmdk-overlay" id="cmdk" role="dialog" aria-modal="true" aria-label="Palette de commandes">
@@ -2036,6 +2090,61 @@ document.documentElement.classList.add('js');
   document.getElementById('wheel-close').addEventListener('click', function () { closeWheel(); });
   var exitBtn = document.getElementById('wheel-to-standard');
   if (exitBtn) exitBtn.addEventListener('click', function () { setMode('standard'); });
+
+  /* Invitation au mode Game. Ne s'adresse qu'aux visiteurs en Standard qui ont
+     atteint le pied de page : c'est le signal qu'ils ont lu, la ou un minuteur
+     ne mesure que la duree d'un onglet laisse ouvert. Un refus est definitif
+     (localStorage), et l'invitation ne reparait jamais une fois le mode essaye. */
+  (function () {
+    var box = document.getElementById('invite');
+    if (!box || curMode() === 'game') return;
+    var refused = false;
+    try { refused = localStorage.getItem('inviteOff') === '1'; } catch (e) {}
+    if (refused || !('IntersectionObserver' in window)) return;
+
+    function close(permanent) {
+      box.classList.remove('in');
+      document.documentElement.classList.remove('invite-open');
+      setTimeout(function () { box.hidden = true; }, 450);
+      if (permanent) { try { localStorage.setItem('inviteOff', '1'); } catch (e) {} }
+    }
+    document.getElementById('invite-go').addEventListener('click', function () {
+      try { localStorage.setItem('inviteOff', '1'); } catch (e) {}
+      setMode('game');
+    });
+    document.getElementById('invite-no').addEventListener('click', function () { close(true); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && box.classList.contains('in')) close(true);
+    });
+
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        box.hidden = false;
+        document.documentElement.classList.add('invite-open');
+        requestAnimationFrame(function () { box.classList.add('in'); });
+      });
+    }, { threshold: 0.5 });
+    var foot = document.querySelector('footer');
+    if (foot) io.observe(foot);
+  })();
+
+  /* Bascule de mode dans l'en-tete. C'etait le seul reglage d'affichage sans
+     commande permanente : en mode Game, la seule sortie etait enfermee dans la
+     roue, donc invisible pour qui ne pense pas a l'ouvrir. */
+  var modeBtn = document.getElementById('mode-toggle');
+  function syncModeBtn() {
+    if (!modeBtn) return;
+    var game = curMode() === 'game';
+    modeBtn.setAttribute('aria-pressed', game ? 'true' : 'false');
+    modeBtn.setAttribute('aria-label', game ? 'Revenir au mode Standard' : 'Activer le mode Game');
+    modeBtn.setAttribute('title', game ? 'Revenir au mode Standard (sobre)' : 'Mode Game : univers anime');
+  }
+  syncModeBtn();
+  if (modeBtn) modeBtn.addEventListener('click', function () {
+    setMode(curMode() === 'game' ? 'standard' : 'game');
+  });
 
   document.addEventListener('keydown', function (e) {
     var typing = /input|textarea/i.test((e.target.tagName || ''));
