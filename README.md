@@ -89,6 +89,33 @@ Les sources vivent dans les dépôts des projets, hors de celui-ci : le script n
 tourne donc que sur une machine qui les héberge, et signale celles qu'il ne
 trouve pas au lieu de s'arrêter.
 
+## Les trois pages ne font qu'un site
+
+Le rapport et la carte mentale lisent le mode et le thème choisis sur le
+portfolio (`fxMode`, `theme`) et appliquent les mêmes palettes, aux mêmes
+valeurs : Game sombre, Standard sombre, Standard clair. Comme sur le
+portfolio, le mode Game n'existe qu'en sombre - le bouton de thème y reste
+visible mais inerte, et dit pourquoi. La préférence enregistrée n'est pas
+touchée : elle se retrouve intacte au retour en mode Standard.
+
+## Sécurité
+
+Les en-têtes réels sont posés par une fonction Edge Netlify sur
+`clement-reboul.fr/portfolio/*` : `frame-ancestors`, `X-Frame-Options`,
+`Referrer-Policy`, `Permissions-Policy`. Chaque page porte en plus une balise
+`Content-Security-Policy` reprenant la même politique, parce que l'origine
+`clementrbl.github.io` est servie sans aucun en-tête. Seul `frame-ancestors`
+manque à la balise : une meta ne peut pas le porter.
+
+La carte mentale charge d3 et markmap depuis jsDeliver. Les quatre ressources
+sont épinglées par empreinte SHA-384 (`integrity` + `crossorigin`) : une
+réponse modifiée en chemin est refusée par le navigateur au lieu d'être
+exécutée sur le domaine.
+
+Rien n'est injecté : les seules écritures de balisage portent sur des chaînes
+écrites en dur, et tout ce qui vient d'ailleurs - la question posée au CV, la
+réponse de l'API - passe par `textContent` ou est échappé.
+
 ## Déploiement
 
 Poussé sur la branche `main` → **GitHub Pages** publie automatiquement à chaque push (le fichier `.nojekyll` désactive le traitement Jekyll et sert les fichiers tels quels).
