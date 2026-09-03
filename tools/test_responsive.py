@@ -132,6 +132,42 @@ PROBE = """
 """
 
 
+class BrowserError(Exception):
+    """Le navigateur n'a pas pu être piloté.
+
+    À distinguer d'une assertion sur la page : ici rien n'a été mesuré, donc
+    rien ne peut être conclu sur la mise en page. Confondre les deux ferait
+    passer une panne d'infrastructure pour une régression du responsive.
+    """
+
+
+def _wait_for_target(port, timeout=30):
+    """Attend que Chrome expose un onglet pilotable.
+
+    Le premier écrit de cette boucle ne dormait que dans la branche « except » :
+    quand le point d'entrée répondait déjà mais que l'onglet n'existait pas
+    encore, les quatre-vingts tentatives s'épuisaient en quelques millisecondes
+    sans jamais attendre. « Quatre-vingts essais » voulait en fait dire « quatre-
+    vingts essais, à condition que la connexion soit refusée ». D'où une échéance
+    en temps réel, et une pause à chaque tour infructueux, quelle qu'en soit la
+    raison.
+    """
+    deadline = time.monotonic() + timeout
+    last = 'aucune réponse du point d\'entrée de débogage'
+    while time.monotonic() < deadline:
+        try:
+            tabs = json.loads(urlopen(f'http://127.0.0.1:{port}/json/list',
+                                      timeout=2).read())
+            target = next((t for t in tabs if t['type'] == 'page'), None)
+            if target:
+                return target
+            last = f'{len(tabs)} cible(s) exposée(s), aucune de type « page »'
+        except Exception as e:
+            last = type(e).__name__
+        time.sleep(0.2)
+    raise BrowserError(f"Chrome n'a pas exposé d'onglet en {timeout} s ({last})")
+
+
 def _cdp_measure(page, width):
     """Mesure via le protocole de débogage : la seule voie qui rend une valeur."""
     binary = chrome()
@@ -140,26 +176,29 @@ def _cdp_measure(page, width):
     # « ignore_cleanup_errors » évite que ce dernier soupir fasse échouer un
     # test qui, lui, a déjà rendu son verdict.
     with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as profile:
+        # La sortie d'erreur est conservée : quand Chrome refuse de démarrer, il
+        # dit pourquoi, et l'avaler ne laissait qu'un « pas d'onglet » opaque.
+        log = tempfile.TemporaryFile()
         proc = subprocess.Popen(
             [binary, '--headless=new', '--disable-gpu', '--no-sandbox',
+             '--disable-dev-shm-usage',   # /dev/shm est minuscule sur un runner
              f'--user-data-dir={profile}', f'--remote-debugging-port={port}',
              f'--window-size={width},900', '--force-device-scale-factor=1',
              'about:blank'],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            stdout=subprocess.DEVNULL, stderr=log)
         try:
-            target = None
-            for _ in range(80):
-                try:
-                    tabs = json.loads(urlopen(f'http://127.0.0.1:{port}/json/list',
-                                              timeout=2).read())
-                    target = next((t for t in tabs if t['type'] == 'page'), None)
-                    if target:
-                        break
-                except Exception:
-                    time.sleep(0.25)
-            assert target, "Chrome n'a pas ouvert d'onglet de débogage"
+            try:
+                target = _wait_for_target(port)
+            except BrowserError as e:
+                if proc.poll() is not None:
+                    log.seek(0)
+                    err = log.read().decode('utf-8', 'replace').strip()[-400:]
+                    raise BrowserError(
+                        f'Chrome s\'est arrêté (code {proc.returncode}) : {err}') from e
+                raise
             return _drive(target['webSocketDebuggerUrl'], page, width)
         finally:
+            log.close()
             proc.terminate()
             try:
                 proc.wait(timeout=10)
@@ -268,7 +307,22 @@ def _drive(ws_url, page, width):
              {'width': width, 'height': 900, 'deviceScaleFactor': 1, 'mobile': True})
         call('Emulation.setTouchEmulationEnabled', {'enabled': True, 'maxTouchPoints': 5})
         call('Page.navigate', {'url': f'{_server()}/{page}'})
-        time.sleep(4)
+
+        # Attendre quatre secondes en aveugle, c'est parier sur la vitesse de la
+        # machine : trop court sur un runner chargé, trop long partout ailleurs.
+        # On attend l'état réel, puis un court répit pour la mise en page des
+        # polices et le script d'entrée.
+        deadline = time.monotonic() + 30
+        while time.monotonic() < deadline:
+            r = call('Runtime.evaluate',
+                     {'expression': 'document.readyState', 'returnByValue': True})
+            if r.get('result', {}).get('result', {}).get('value') == 'complete':
+                break
+            time.sleep(0.2)
+        else:
+            raise BrowserError(f'{page} n\'a pas fini de charger en 30 s')
+        time.sleep(1.2)
+
         res = call('Runtime.evaluate',
                    {'expression': PROBE % {'min_touch': MIN_TOUCH},
                     'returnByValue': True})
@@ -279,7 +333,23 @@ def _drive(ws_url, page, width):
 
 @lru_cache(maxsize=None)
 def layout(page, width):
-    return _cdp_measure(page, width)
+    """Mesure une page, en réessayant les pannes de navigateur.
+
+    Lancer un navigateur reste une opération faillible - port pris, machine
+    chargée, démarrage lent. Une CI bloquante qui rougit pour cette raison finit
+    par être relancée sans être lue, ce qui lui retire toute valeur. Seules les
+    pannes sont réessayées : un débordement mesuré reste un échec du premier
+    coup.
+    """
+    last = None
+    for attempt in range(3):
+        try:
+            return _cdp_measure(page, width)
+        except BrowserError as e:
+            last = e
+            if attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+    raise BrowserError(f'{last} (3 tentatives)')
 
 
 class Skipped(Exception):
