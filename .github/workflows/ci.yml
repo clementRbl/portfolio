@@ -1,0 +1,75 @@
+# Ce dépôt n'avait aucune vérification automatique. Les deux bugs qui ont motivé
+# ce workflow — une recherche qui ne répondait pas, un en-tête qui débordait sur
+# téléphone — ont tous deux été trouvés à l'œil, une fois en ligne. Les tests
+# existaient pourtant pour le premier : rien ne les exécutait.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Une nouvelle poussée sur une branche annule la vérification en cours : seul
+# le dernier état compte.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Les tests de responsive pilotent un vrai navigateur : ils mesurent la
+      # page telle qu'elle s'affiche, seule façon de voir qu'une règle CSS est
+      # écrasée par une autre plus spécifique.
+      - name: Installer Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      # numpy sert à construire l'index vectoriel. Les tests de responsive
+      # n'ajoutent rien : ils parlent au navigateur avec la bibliothèque
+      # standard, client WebSocket compris.
+      - name: Installer les dépendances
+        run: pip install -r tools/requirements.txt
+
+      - name: Recherche vectorielle
+        run: python3 tools/test_search.py
+
+      - name: Responsive
+        run: python3 tools/test_responsive.py
+
+  # L'index de recherche est un fichier généré, commité dans le dépôt. S'il
+  # cesse de correspondre au corpus, le site sert des réponses qui ne sont plus
+  # celles du dépôt, sans que rien ne le signale.
+  index:
+    name: Index à jour
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installer les dépendances
+        run: pip install -r tools/requirements.txt
+
+      - name: Régénérer et comparer
+        run: |
+          python3 tools/build_index.py
+          if ! git diff --quiet -- assets/search-index.json; then
+            echo "::error::L'index committé ne correspond plus au corpus." \
+                 "Lancez « python3 tools/build_index.py » et committez le résultat."
+            git diff --stat -- assets/search-index.json
+            exit 1
+          fi
+          echo "L'index correspond au corpus."
