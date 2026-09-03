@@ -7,13 +7,17 @@ name: CI
 on:
   push:
     branches: [main]
+  # Aucun filtre de base : une PR posée sur une autre branche que main doit être
+  # vérifiée elle aussi. Avec « branches: [main] », la PR #23 - empilée sur la
+  # branche de la #22 le temps que celle-ci soit relue - n'a déclenché aucune
+  # vérification, et rien ne le signalait : une PR sans CI ressemble à s'y
+  # méprendre à une PR dont la CI n'a pas encore démarré.
   pull_request:
-    branches: [main]
 
 # Une nouvelle poussée sur une branche annule la vérification en cours : seul
 # le dernier état compte.
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
