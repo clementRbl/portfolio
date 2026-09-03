@@ -318,6 +318,15 @@ document.documentElement.classList.add('js');
     text-transform: uppercase; color: var(--ember); display: inline-flex; align-items: center; gap: 9px;
   }
   .hud-label::before { content: ""; width: 22px; height: 1px; background: var(--ember); opacity: .8; }
+  /* Un relecteur a signale ne pas voir le nom au premier ecran : il n'existait
+     qu'en petit dans la barre fixe, et le titre porte une accroche, pas une
+     identite. Le nom ouvre donc le surtitre, detache du reste de la liste par
+     la couleur la plus franche du theme plutot que par une taille de plus. */
+  /* Le libelle est un inline-flex, a cause du trait qui l'ouvre : sans ce span,
+     le nom deviendrait un element flex a lui seul et se rangerait dans sa
+     propre colonne, a cote du reste du texte au lieu de le preceder. */
+  .hud-label > span { min-width: 0; }
+  .hud-label .hl-name { color: var(--ink); font-weight: 700; letter-spacing: .16em; }
   .muted { color: var(--muted); }
   .mono { font-family: var(--font-mono); }
   .sl { font-style: normal; }   /* le « // » des numéros de section, retiré en mode Standard */
@@ -1419,8 +1428,8 @@ document.documentElement.classList.add('js');
     .contact-cta { flex-direction: column; align-items: stretch; gap: 10px; }
     .contact-cta .btn { justify-content: center; width: 100%; }
 
-    /* Titres de la frise : Anton en 1.5rem ne laisse pas passer
-       « Developpeur Full Stack · Cofondateur » sans mordre la marge. */
+    /* Titres de la frise : Anton en 1.5rem fait mordre la marge des le titre
+       le plus long, « Concepteur-developpeur · Bac+4 ». */
     .tl-role { font-size: 1.22rem; }
     .tl-item::before { left: -18px; }
 
@@ -1579,7 +1588,7 @@ document.documentElement.classList.add('js');
     <div class="embers" aria-hidden="true"><i style="left:10%;animation-duration:9s;animation-delay:0s"></i><i style="left:24%;animation-duration:12s;animation-delay:3s"></i><i style="left:38%;animation-duration:10s;animation-delay:1.5s"></i><i style="left:55%;animation-duration:13s;animation-delay:4.5s"></i><i style="left:68%;animation-duration:9.5s;animation-delay:2.2s"></i><i style="left:82%;animation-duration:11.5s;animation-delay:6s"></i><i style="left:92%;animation-duration:10.5s;animation-delay:3.8s"></i></div>
     <div class="wrap hero-grid">
       <div>
-        <p class="hud-label reveal">AI Engineer · freelance ou CDI · MLOps · GenAI · Paris &amp; Hauts-de-France</p>
+        <p class="hud-label reveal"><span><b class="hl-name">Clément Reboul</b> · AI Engineer · freelance ou CDI · MLOps · GenAI · Paris &amp; Hauts-de-France</span></p>
         <h1 class="reveal">Du notebook <span class="ember">à la production.</span></h1>
         <p class="lede reveal"><b>AI Engineer</b> - Développeur pendant 5 ans et à présent ingénieur IA. Je conçois des modèles que je rends <b>fiables, déployés et monitorés</b> là où naît la valeur. Disponible en freelance ou en CDI, en Île-de-France, dans les Hauts-de-France ou à distance.</p>
         <div class="hero-cta reveal">
@@ -1654,7 +1663,7 @@ document.documentElement.classList.add('js');
             <li class="tl-item"><div class="tl-when">juin 2024 - oct. 2024</div><div class="tl-role">Développeur front-end</div><div class="tl-org">Extracadabra · CDI</div><div class="tl-tech">Quasar · Vue.js</div></li>
             <li class="tl-item"><div class="tl-when">févr. 2022 - juin 2024</div><div class="tl-role">Développeur front-end</div><div class="tl-org">FAIRLY MADE</div><div class="tl-tech">NestJS · applications web</div></li>
             <li class="tl-item"><div class="tl-when">janv. 2021 - janv. 2022</div><div class="tl-role">Développeur Full Stack</div><div class="tl-org">Snapkey</div><div class="tl-tech">JavaScript · Git</div></li>
-            <li class="tl-item"><div class="tl-when">mai 2020 - oct. 2020</div><div class="tl-role">Développeur Full Stack · Cofondateur</div><div class="tl-org">Octave</div><div class="tl-tech">Svelte · NestJS · Node.js</div></li>
+            <li class="tl-item"><div class="tl-when">mai 2020 - oct. 2020</div><div class="tl-role">Développeur Full Stack</div><div class="tl-org">Octave</div><div class="tl-tech">Svelte · NestJS · Node.js</div></li>
           </ol>
         </div>
         <div class="tl-col">
@@ -3808,6 +3817,79 @@ FX.onStart(function (mode) {
     });
   }
 
+});
+</script>
+<script>
+/* Curseur torche + HUD vivant + parallaxe (mode Game uniquement) */
+FX.onStart(function (mode) {
+  "use strict";
+  if (mode === 'standard') return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- Torche : halo lumineux qui suit la souris (souris uniquement) --- */
+  if (window.matchMedia('(pointer: fine)').matches) {
+    var torch = document.createElement('div');
+    torch.className = 'torch'; torch.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(torch);
+    var hideT, torchOff = false;
+    try { torchOff = localStorage.getItem('torchOff') === '1'; } catch (e) {}
+    if (torchOff) torch.style.display = 'none';
+    window.addEventListener('mousemove', function (e) {
+      if (torchOff) return;
+      torch.style.setProperty('--mx', e.clientX + 'px');
+      torch.style.setProperty('--my', e.clientY + 'px');
+      torch.style.opacity = '1';
+      clearTimeout(hideT);
+      hideT = setTimeout(function () { torch.style.opacity = '0'; }, 3200);
+    }, { passive: true });
+    document.addEventListener('mouseleave', function () { torch.style.opacity = '0'; });
+    /* Clic gauche sur une zone NON cliquable → bascule la torche on/off (mémorisé) */
+    document.addEventListener('click', function (e) {
+      var wheel = document.getElementById('wheel');
+      if (wheel && wheel.classList.contains('open')) return;
+      if (e.target.closest('a, button, input, select, textarea, label, kbd, summary, [role="button"], [onclick], .sector, .mode-btn')) return;
+      torchOff = !torchOff;
+      torch.style.display = torchOff ? 'none' : '';
+      try { localStorage.setItem('torchOff', torchOff ? '1' : '0'); } catch (e2) {}
+    });
+  }
+
+  /* --- Parallaxe de profondeur sur le hero (souris uniquement) --- */
+  if (!reduce && window.matchMedia('(pointer: fine)').matches) {
+    var hbg = document.querySelector('.hero-bg'), hpanel = document.querySelector('.status');
+    var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
+    function applyPar() {
+      raf = null; cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
+      if (hbg) hbg.style.transform = 'translate(' + (cx * 14).toFixed(1) + 'px,' + (cy * 12).toFixed(1) + 'px)';
+      if (hpanel) hpanel.style.transform = 'translate(' + (cx * -8).toFixed(1) + 'px,' + (cy * -7).toFixed(1) + 'px)';
+      if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) raf = requestAnimationFrame(applyPar);
+    }
+    window.addEventListener('mousemove', function (e) {
+      tx = (e.clientX / window.innerWidth - 0.5) * 2;
+      ty = (e.clientY / window.innerHeight - 0.5) * 2;
+      if (!raf) raf = requestAnimationFrame(applyPar);
+    }, { passive: true });
+  }
+});
+</script>
+<script>
+/* « Interrogez le CV » : indépendant du mode.
+
+   Ce bloc vivait dans le callback des animations du mode Standard, qui
+   commence par « if (mode !== 'standard') return; ». En mode Game la boîte
+   n'était donc jamais câblée : aucune question suggérée, aucun gestionnaire
+   sur le formulaire. Et comme le formulaire restait affiché, « Demander »
+   déclenchait une soumission HTML native - la page se rechargeait, la question
+   était perdue, et le rechargement relançait l'écran-titre. La démonstration
+   la plus intéressante du site était invisible dans le mode qu'on essaie par
+   curiosité.
+
+   Elle ne dépend pourtant d'aucune animation : même index, même réponses, dans
+   les deux modes. Elle a donc son propre bloc, exécuté sans condition. */
+(function () {
+  "use strict";
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   /* --- 10. Interrogez le CV ---
      Même index que la palette. La recherche est vectorielle ; la réponse, elle,
      est une phrase écrite à la main et rangée dans l'index à côté de chaque
@@ -3912,60 +3994,7 @@ FX.onStart(function (mode) {
       }, 18);
     }
   }
-});
-</script>
-<script>
-/* Curseur torche + HUD vivant + parallaxe (mode Game uniquement) */
-FX.onStart(function (mode) {
-  "use strict";
-  if (mode === 'standard') return;
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* --- Torche : halo lumineux qui suit la souris (souris uniquement) --- */
-  if (window.matchMedia('(pointer: fine)').matches) {
-    var torch = document.createElement('div');
-    torch.className = 'torch'; torch.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(torch);
-    var hideT, torchOff = false;
-    try { torchOff = localStorage.getItem('torchOff') === '1'; } catch (e) {}
-    if (torchOff) torch.style.display = 'none';
-    window.addEventListener('mousemove', function (e) {
-      if (torchOff) return;
-      torch.style.setProperty('--mx', e.clientX + 'px');
-      torch.style.setProperty('--my', e.clientY + 'px');
-      torch.style.opacity = '1';
-      clearTimeout(hideT);
-      hideT = setTimeout(function () { torch.style.opacity = '0'; }, 3200);
-    }, { passive: true });
-    document.addEventListener('mouseleave', function () { torch.style.opacity = '0'; });
-    /* Clic gauche sur une zone NON cliquable → bascule la torche on/off (mémorisé) */
-    document.addEventListener('click', function (e) {
-      var wheel = document.getElementById('wheel');
-      if (wheel && wheel.classList.contains('open')) return;
-      if (e.target.closest('a, button, input, select, textarea, label, kbd, summary, [role="button"], [onclick], .sector, .mode-btn')) return;
-      torchOff = !torchOff;
-      torch.style.display = torchOff ? 'none' : '';
-      try { localStorage.setItem('torchOff', torchOff ? '1' : '0'); } catch (e2) {}
-    });
-  }
-
-  /* --- Parallaxe de profondeur sur le hero (souris uniquement) --- */
-  if (!reduce && window.matchMedia('(pointer: fine)').matches) {
-    var hbg = document.querySelector('.hero-bg'), hpanel = document.querySelector('.status');
-    var tx = 0, ty = 0, cx = 0, cy = 0, raf = null;
-    function applyPar() {
-      raf = null; cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
-      if (hbg) hbg.style.transform = 'translate(' + (cx * 14).toFixed(1) + 'px,' + (cy * 12).toFixed(1) + 'px)';
-      if (hpanel) hpanel.style.transform = 'translate(' + (cx * -8).toFixed(1) + 'px,' + (cy * -7).toFixed(1) + 'px)';
-      if (Math.abs(tx - cx) > 0.002 || Math.abs(ty - cy) > 0.002) raf = requestAnimationFrame(applyPar);
-    }
-    window.addEventListener('mousemove', function (e) {
-      tx = (e.clientX / window.innerWidth - 0.5) * 2;
-      ty = (e.clientY / window.innerHeight - 0.5) * 2;
-      if (!raf) raf = requestAnimationFrame(applyPar);
-    }, { passive: true });
-  }
-});
+})();
 </script>
 </body>
 </html>

@@ -162,7 +162,7 @@
    "vous acceptez quelles missions",
    "vos offres"
   ],
-  "answer": "Je propose quatre missions cadrées : du renfort front Vue 3 ou Quasar à la journée, la mise en production d'un modèle en dix jours, un POC IA cadré en dix à quinze jours, et l'audit d'un système RAG en cinq jours. En CDI, c'est le même périmètre, sans la borne de durée.",
+  "answer": "Je propose quatre missions cadrées : du renfort front Vue 3 ou Quasar à la journée, la mise en production d'un modèle en dix jours, un POC IA cadré en dix à quinze jours, et l'audit d'un système RAG en cinq jours. En CDI, je travaille sur les mêmes sujets, sans ce découpage en missions.",
   "section": "prestations"
  },
  {
@@ -385,7 +385,7 @@
    "vous acceptez un cdi",
    "vous êtes libre"
   ],
-  "answer": "Je suis disponible en freelance comme en CDI, sur des sujets MLOps, LLMOps et GenAI. Le périmètre est le même dans les deux cas ; en CDI, il n'y a simplement plus de borne de durée."
+  "answer": "Je suis disponible en freelance comme en CDI, sur des sujets MLOps, LLMOps et GenAI. En freelance, j'interviens sur des missions cadrées, avec un périmètre et une durée annoncés d'avance. En CDI, ce sont les mêmes sujets, mais dans la durée, au sein d'une équipe. Je travaille en Île-de-France, dans les Hauts-de-France ou à distance."
  },
  {
   "id": "mobilite",
