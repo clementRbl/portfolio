@@ -441,7 +441,7 @@
 
   {"id": "gradient", "terme": "Descente de gradient", "famille": "ml",
    "alias": ["gradient", "taux d'apprentissage", "learning rate"],
-   "simple": "La méthode d'apprentissage de presque tous les modèles modernes : mesurer l'erreur, regarder dans quelle direction elle diminue, faire un petit pas, recommencer. Le taux d'apprentissage est la taille du pas.",
+   "simple": "La méthode d'apprentissage de presque tous les modèles modernes : mesurer l'erreur, regarder dans quelle direction elle diminue, faire un petit pas, recommencer. Le taux d'apprentissage est la taille du pas. C'est ce que dessine le fond de la page d'accueil : les courbes sont les lignes de niveau d'une surface d'erreur, et le point cherche le creux.",
    "detail": "Trop grand, l'optimisation oscille sans converger ; trop petit, elle traîne et se fige dans un minimum local. En boosting, un taux faible compensé par davantage d'arbres donne en général le meilleur compromis.",
    "voir": ["regularisation", "lightgbm"]},
 
@@ -616,7 +616,7 @@
   {"id": "svd", "terme": "SVD", "famille": "data",
    "alias": ["décomposition en valeurs singulières", "réduction de dimension", "acp"],
    "simple": "Une opération d'algèbre qui décompose un grand tableau en quelques directions principales, celles qui portent l'essentiel de l'information. Elle sert à comprimer, à visualiser, et ici à faire fonctionner la recherche du site.",
-   "detail": "Tronquée à un rang faible, elle donne l'approximation optimale au sens des moindres carrés. C'est le moteur de la LSA, et de la projection en deux dimensions du graphe latent affiché en page d'accueil.",
+   "detail": "Tronquée à un rang faible, elle donne l'approximation optimale au sens des moindres carrés. C'est le moteur de la LSA qui fait fonctionner la recherche de ce site, entièrement hors ligne.",
    "voir": ["lsa", "similarite-cosinus"], "ou": "accueil"},
 
   {"id": "acid", "terme": "ACID", "famille": "data",

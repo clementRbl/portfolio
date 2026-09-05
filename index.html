@@ -445,7 +445,10 @@ document.documentElement.classList.add('js');
   .sec-head p { color: var(--ink-dim); margin-top: 16px; font-size: 16.5px; }
 
   /* ---------- HERO ---------- */
-  .hero { min-height: 100svh; display: flex; align-items: center; padding-top: 80px; overflow: hidden; }
+  /* Colonne, et non plus rangee centree : le bloc de message garde le milieu
+     grace a ses marges automatiques, et la bande factuelle se cale au bas du
+     premier ecran - la ou 142 px restaient vides. */
+  .hero { min-height: 100svh; display: flex; flex-direction: column; padding: 80px 0 0; overflow: hidden; }
   .hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background:
       radial-gradient(80% 60% at 78% 30%, rgba(228,163,75,.10), transparent 60%),
@@ -458,7 +461,7 @@ document.documentElement.classList.add('js');
     -webkit-mask-image: radial-gradient(120% 90% at 75% 40%, #000 20%, transparent 72%);
             mask-image: radial-gradient(120% 90% at 75% 40%, #000 20%, transparent 72%);
   }
-  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.25fr .75fr; gap: 50px; align-items: center; width: 100%; }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.25fr .75fr; gap: 50px; align-items: center; width: 100%; margin-block: auto; }
   .hero h1 { font-size: clamp(3.1rem, 1.4rem + 7vw, 6.6rem); color: var(--ink); margin: 20px 0 0; text-transform: uppercase; }
   .hero h1 .ember { color: var(--ember); text-shadow: 0 0 40px var(--ember-glow); }
   .hero .lede { font-size: clamp(1.05rem, 1rem + .5vw, 1.3rem); color: var(--ink-dim); margin-top: 26px; max-width: 42ch; }
@@ -467,6 +470,27 @@ document.documentElement.classList.add('js');
   .hero-stats { display: flex; gap: 30px; margin-top: 40px; flex-wrap: wrap; }
   .hero-stats .k { font-family: var(--font-mono); font-weight: 700; font-size: 2rem; color: var(--ember); line-height: 1; letter-spacing: -.02em; }
   .hero-stats .l { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+
+  /* Bande factuelle du bas de hero. Le premier ecran annoncait trois fois la
+     meme chose : la barre fixe, le surtitre et le chapeau disaient tous
+     « AI Engineer » et « freelance ou CDI », et le surtitre debordait en prime
+     sur deux lignes en laissant « DE-FRANCE » orphelin. Les faits descendent
+     donc ici : le message garde le centre, le dossier tient le bas. */
+  .hero-meta {
+    position: relative; z-index: 1; flex: none;
+    display: flex; flex-wrap: wrap; gap: 22px 44px;
+    align-items: flex-end; justify-content: space-between;
+    padding-top: 20px; padding-bottom: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .hm-faits { list-style: none; display: grid; gap: 7px; margin: 0; padding: 0; }
+  .hm-faits li { display: flex; align-items: flex-start; gap: 10px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--muted); line-height: 1.5; }
+  .hm-faits .hm-g { color: var(--ember); font-size: 8px; line-height: 1; flex: none; margin-top: 4px; }
+  .hm-faits a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; }
+  .hm-faits a:hover, .hm-faits a:focus-visible { color: var(--ink); border-bottom-color: var(--ember); }
+  .hero-meta .hero-stats { margin-top: 0; gap: 34px; }
 
   /* Panneau statut HUD (survie / prod) */
   .status { padding: 0; font-family: var(--font-mono); font-size: 13px; }
@@ -630,6 +654,15 @@ document.documentElement.classList.add('js');
   .contact h2 { font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem); text-transform: uppercase; color: var(--ink); }
   .contact p { color: var(--ink-dim); margin: 16px auto 32px; }
   .contact-cta { display: flex; gap: 13px; justify-content: center; flex-wrap: wrap; }
+  /* Cinq boutons demandent 691 px pour 648 disponibles : le dernier tombait
+     seul à la ligne, ce qui donnait l'impression d'un oubli. Les actions
+     principales - écrire, appeler - occupent leur propre rangée ; les liens
+     secondaires tiennent ensemble en dessous, et la hiérarchie se lit au lieu
+     de se subir. Deux rangées déclarées valent mieux qu'un « flex-basis » à
+     100 % : bornée par max-width, la base est ramenée avant le calcul du
+     retour à la ligne, et le saut n'a jamais lieu. */
+  .contact-actions, .contact-liens { display: flex; gap: 13px; justify-content: center; flex-wrap: wrap; }
+  .contact-cta { flex-direction: column; align-items: center; gap: 14px; }
   /* « Me contacter » vise la section qui le suit immédiatement : quand on voit
      le bouton, la zone de contact est déjà à l'écran, le défilement ne bouge
      presque rien et le clic paraît sans effet. Un halo bref sur les actions
@@ -1448,7 +1481,12 @@ document.documentElement.classList.add('js');
        un peu long faisait deborder toute la colonne hors de la marge. */
     .hero-grid, .about-grid, .skills-grid, .proj-grid, .proj.feat .layout, .flag-body, .refl-grid, .presta-grid { grid-template-columns: minmax(0, 1fr); }
     .soft-grid { grid-template-columns: 1fr 1fr; }
-    .hero { min-height: auto; padding-top: 104px; padding-bottom: 46px; }
+    .hero { min-height: auto; padding-top: 104px; padding-bottom: 0; }
+    .hero-meta { padding-bottom: 46px; gap: 24px; align-items: stretch; }
+    .hm-faits li { font-size: 10px; letter-spacing: .1em; }
+    .hero-meta .hero-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; width: 100%; }
+    .hero-meta .hero-stats .k { font-size: 1.55rem; }
+    .hero-meta .hero-stats .l { font-size: 9.5px; letter-spacing: .1em; }
     section { padding-block: 62px; }
     .kpi-row { margin: 22px; }
     .flag-body, .pipe { padding-inline: 22px; }
@@ -1634,18 +1672,13 @@ document.documentElement.classList.add('js');
     <div class="embers" aria-hidden="true"><i style="left:10%;animation-duration:9s;animation-delay:0s"></i><i style="left:24%;animation-duration:12s;animation-delay:3s"></i><i style="left:38%;animation-duration:10s;animation-delay:1.5s"></i><i style="left:55%;animation-duration:13s;animation-delay:4.5s"></i><i style="left:68%;animation-duration:9.5s;animation-delay:2.2s"></i><i style="left:82%;animation-duration:11.5s;animation-delay:6s"></i><i style="left:92%;animation-duration:10.5s;animation-delay:3.8s"></i></div>
     <div class="wrap hero-grid">
       <div>
-        <p class="hud-label reveal"><span><b class="hl-name">Clément Reboul</b> · AI Engineer · freelance ou CDI · MLOps · GenAI · Paris &amp; Hauts-de-France</span></p>
+        <p class="hud-label reveal"><span><b class="hl-name">Clément Reboul</b> · AI Engineer</span></p>
         <h1 class="reveal">Du notebook <span class="ember">à la production.</span></h1>
-        <p class="lede reveal"><b>AI Engineer</b> - Développeur pendant 5 ans et à présent ingénieur IA. Je conçois des modèles que je rends <b>fiables, déployés et monitorés</b> là où naît la valeur. Disponible en freelance ou en CDI, en Île-de-France, dans les Hauts-de-France ou à distance.</p>
+        <p class="lede reveal">Développeur pendant 5 ans, à présent ingénieur IA. Je conçois des modèles que je rends <b>fiables, déployés et monitorés</b> là où naît la valeur.</p>
         <div class="hero-cta reveal">
           <a href="#projets" class="btn btn-primary">Explorer<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a href="https://clement-reboul.fr/portfolio/rapport.html" class="btn btn-ghost">Conduite de projet</a>
           <button class="btn btn-ghost live-border" id="wheel-open-2">Menu radial</button>
-        </div>
-        <div class="hero-stats reveal tnum">
-          <div><div class="k">5</div><div class="l">Ans dev web · lead</div></div>
-          <div><div class="k">10</div><div class="l">Projets IA</div></div>
-          <div><div class="k">02</div><div class="l">API en prod</div></div>
         </div>
         <p class="wheel-hint reveal">Navigation : appuyez sur <b>M</b> ou cliquez sur <b>Menu</b> pour la roue de sélection</p>
       </div>
@@ -1664,6 +1697,18 @@ document.documentElement.classList.add('js');
           </div>
           <p class="api-note" id="api-note">Appels réels à l'API en production - <a href="https://clementrbl-credit-scoring-api.hf.space/docs" target="_blank" rel="noopener">vérifiez vous-même</a></p>
         </div>
+      </div>
+    </div>
+    <div class="wrap hero-meta reveal">
+      <ul class="hm-faits">
+        <li><span class="hm-g" aria-hidden="true">◆</span>Île-de-France · Hauts-de-France · à distance</li>
+        <li><span class="hm-g" aria-hidden="true">◆</span>Freelance ou CDI · MLOps · GenAI · LLMOps</li>
+        <li><span class="hm-g" aria-hidden="true">◆</span><a href="#parcours">Sapeur-pompier volontaire</a></li>
+      </ul>
+      <div class="hero-stats tnum">
+        <div><div class="k">5</div><div class="l">Ans dev web · lead</div></div>
+        <div><div class="k">10</div><div class="l">Projets IA</div></div>
+        <div><div class="k">02</div><div class="l">API en prod</div></div>
       </div>
     </div>
   </section>
@@ -2148,12 +2193,16 @@ document.documentElement.classList.add('js');
       <h2 class="reveal" style="margin-top:14px">Un besoin ? Parlons-en</h2>
       <p class="reveal"><b>AI Engineer</b> disponible en freelance ou en CDI, en MLOps, GenAI/RAG et front Vue&nbsp;3 - Paris, Île-de-France, Oise, Hauts-de-France. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
       <div class="contact-cta reveal">
+        <div class="contact-actions">
         <button class="btn btn-primary" id="cta-mail" type="button"><svg class="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg><svg class="ic-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span class="lbl">clement.rbl@gmail.com</span></button>
         <a class="btn btn-ghost" id="cta-tel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg><span class="lbl">Appeler</span></a>
+        </div>
+        <div class="contact-liens">
         <a class="btn btn-ghost" href="https://github.com/clementRbl" target="_blank" rel="noopener">GitHub</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr" target="_blank" rel="noopener">Blog</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr/portfolio/rapport.html">Conduite de projet</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr/portfolio/glossaire.html">Glossaire</a>
+        </div>
       </div>
       <p class="cta-note" id="cta-note" role="status" aria-live="polite"></p>
     </div>
@@ -3730,107 +3779,248 @@ FX.onStart(function (mode) {
     setTimeout(function () { grids.forEach(function (g) { g.classList.add('stg-in'); }); }, 6000);
   }
 
-  /* --- 5. Carte latente : les sections du site à leurs vraies coordonnées ---
-     Les positions ne sont pas décoratives : ce sont les sections du portfolio
-     projetées en 2D depuis l'espace latent construit par tools/build_index.py,
-     le même qui répond aux questions dans la palette. Les arêtes sont les
-     similarités cosinus réelles. Au chargement, les points convergent depuis
-     des positions aléatoires vers leur coordonnée : la projection se résout. */
-  var hero = document.querySelector('.hero');
-  if (hero && !reduce && window.matchMedia('(min-width: 700px)').matches && window.fetch) {
-    fetch('assets/search-index.json').then(function (r) { return r.ok ? r.json() : null; }).then(function (ix) {
-      if (!ix || !ix.docs) return;
-      var cvs = document.createElement('canvas');
-      cvs.setAttribute('aria-hidden', 'true');
-      cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none';
-      hero.insertBefore(cvs, hero.firstChild);
-      var ctx = cvs.getContext('2d'), W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-      var accent = (getComputedStyle(document.documentElement).getPropertyValue('--ember') || '#7AA2FF').trim();
-      function hex2rgb(h) {
-        h = h.replace('#', '');
-        if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
-        var n = parseInt(h, 16);
-        return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-      }
-      var RGBS = (/^#/.test(accent) ? hex2rgb(accent) : [122, 162, 255]).join(',');
+  /* --- 5. Surface de perte : le paysage qu'un modèle descend ---
+     Le fond montrait auparavant les sections du site à leurs coordonnées
+     sémantiques. L'idée était juste mais illisible : sans étiquettes, on n'y
+     voyait que des traits reliant des points au hasard, et la mise en page ne
+     laissait de place pour nommer qu'un point sur onze.
 
-      // Similarités cosinus entre sections : ce sont les arêtes du graphe.
-      /* Le graphe ne trace que les documents de section : les documents
-         thématiques ajoutés pour affiner les réponses vivent dans le même
-         espace latent, mais les afficher encombrerait le hero sans rien dire
-         de plus - ils se superposent à la section dont ils parlent. */
-      var docs = ix.docs.filter(function (d) { return (d.s || d.id) === d.id; });
-      var N = docs.length, sim = [], a, b;
-      for (a = 0; a < N; a++) {
-        sim.push([]);
-        for (b = 0; b < N; b++) {
-          var sc = 0;
-          for (var c = 0; c < ix.k; c++) sc += docs[a].v[c] * docs[b].v[c];
-          sim[a].push(sc);
+     Ce relief-ci n'a rien à expliquer pour être compris. Les courbes sont les
+     lignes de niveau d'une surface d'erreur - la même figure que dans tout
+     manuel d'apprentissage - et le point qui les dévale cherche le creux, comme
+     le fait un modèle pendant son entraînement. Parfois il tombe dans une
+     cuvette secondaire et s'y arrête : c'est exactement ce qu'on redoute d'une
+     descente de gradient, et c'est visible à l'œil.
+
+     Le relief est dessiné une fois hors écran puis recopié à chaque image :
+     seul le point et sa trace sont recalculés, ce qui laisse l'animation
+     imperceptible pour le processeur. */
+  var hero = document.querySelector('.hero');
+  if (hero && window.matchMedia('(min-width: 700px)').matches) {
+    var cvs = document.createElement('canvas');
+    cvs.setAttribute('aria-hidden', 'true');
+    cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none';
+    hero.insertBefore(cvs, hero.firstChild);
+    var ctx = cvs.getContext('2d');
+    var relief = document.createElement('canvas'), rctx = relief.getContext('2d');
+    var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    /* Cuvettes de la surface. Fixées à la main plutôt que tirées au sort : on
+       veut un minimum global net, deux pièges secondaires, et un relief qui
+       tienne dans le cadre quelle que soit la largeur. */
+    var CUVETTES = [
+      { x: -0.55, y: -0.15, a: 1.00, s: 0.42 },   // minimum global
+      { x:  0.62, y:  0.38, a: 0.62, s: 0.34 },   // piège
+      { x:  0.10, y: -0.62, a: 0.48, s: 0.30 },   // piège
+      { x: -0.05, y:  0.55, a: 0.35, s: 0.38 }
+    ];
+    function perte(x, y) {
+      var v = 0.42 * (x * x + y * y), i, c, dx, dy;
+      for (i = 0; i < CUVETTES.length; i++) {
+        c = CUVETTES[i]; dx = x - c.x; dy = y - c.y;
+        v -= c.a * Math.exp(-(dx * dx + dy * dy) / (2 * c.s * c.s));
+      }
+      return v;
+    }
+    /* Gradient analytique : dérivé à la main de la fonction ci-dessus. Le
+       calculer par différences finies coûterait quatre évaluations par pas
+       pour une précision moindre. */
+    function pente(x, y, out) {
+      var gx = 0.84 * x, gy = 0.84 * y, i, c, dx, dy, e;
+      for (i = 0; i < CUVETTES.length; i++) {
+        c = CUVETTES[i]; dx = x - c.x; dy = y - c.y;
+        e = c.a * Math.exp(-(dx * dx + dy * dy) / (2 * c.s * c.s)) / (c.s * c.s);
+        gx += dx * e; gy += dy * e;
+      }
+      out[0] = gx; out[1] = gy;
+    }
+
+    var COLS = 112, ROWS = 72, NIV = 24;
+    var grille = new Float32Array((COLS + 1) * (ROWS + 1));
+    var vmin = 0, vmax = 0;
+    function accent() {
+      var v = getComputedStyle(document.documentElement).getPropertyValue('--ember').trim();
+      var h = v.replace('#', '');
+      if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      var n = parseInt(h, 16);
+      return isNaN(n) ? '122,162,255' : [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(',');
+    }
+    var RGBS = accent();
+
+    // Domaine mathématique couvert par le canevas, élargi en x pour suivre le
+    // format du hero sans étirer les cuvettes.
+    function bornes() {
+      var ax = Math.max(1, (W / Math.max(H, 1)) * 0.62);
+      return { x0: -ax, x1: ax, y0: -1.15, y1: 1.15 };
+    }
+    function px(bx, i) { return (i / COLS) * W; }
+    function py(by, j) { return (j / ROWS) * H; }
+
+    function calcule() {
+      var b = bornes(), i, j, v, k = 0;
+      vmin = Infinity; vmax = -Infinity;
+      for (j = 0; j <= ROWS; j++) {
+        for (i = 0; i <= COLS; i++) {
+          v = perte(b.x0 + (b.x1 - b.x0) * (i / COLS), b.y0 + (b.y1 - b.y0) * (j / ROWS));
+          grille[k++] = v;
+          if (v < vmin) vmin = v;
+          if (v > vmax) vmax = v;
         }
       }
-      var deg = docs.map(function (_, i) {
-        var t = 0;
-        for (var j = 0; j < N; j++) if (j !== i) t += Math.max(0, sim[i][j]);
-        return t;
-      });
-      var degMax = Math.max.apply(null, deg) || 1;
+    }
 
-      var pts = docs.map(function (d, i) {
-        return { ax: 0, ay: 0, x: 0, y: 0, sx: Math.random(), sy: Math.random(),
-                 ph: Math.random() * Math.PI * 2, sp: 0.25 + Math.random() * 0.4,
-                 r: 1.6 + (deg[i] / degMax) * 2.6 };
-      });
-      function size() {
-        W = hero.clientWidth; H = hero.clientHeight;
-        cvs.width = Math.round(W * dpr); cvs.height = Math.round(H * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        var padX = W * 0.12, padY = H * 0.16;
-        pts.forEach(function (p, i) {
-          p.ax = padX + ((docs[i].xy[0] + 1) / 2) * (W - 2 * padX);
-          p.ay = padY + ((docs[i].xy[1] + 1) / 2) * (H - 2 * padY);
-        });
+    /* Marching squares : pour chaque cellule, on regarde lesquels de ses quatre
+       coins passent au-dessus du niveau, et on relie les points d'intersection
+       interpolés sur les arêtes. Seize cas possibles, dont deux ambigus qu'on
+       tranche toujours du même côté - l'ambiguïté ne se voit pas à cette
+       densité de courbes. */
+    function courbe(niv) {
+      var b = bornes(), i, j, a, bb, c, d, m, e = [];
+      function itp(v1, v2, x1, y1, x2, y2) {
+        var t = (niv - v1) / (v2 - v1 || 1e-6);
+        return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t];
       }
-      size();
-      window.addEventListener('resize', size, { passive: true });
-
-      var t0 = null, CONV = 1700, raf2 = null;
-      function draw(ts) {
-        raf2 = requestAnimationFrame(draw);
-        if (document.hidden) return;
-        if (t0 === null) t0 = ts;
-        var el = ts - t0;
-        var k = Math.min(1, el / CONV);
-        k = 1 - Math.pow(1 - k, 4);                 // convergence
-        var drift = el / 1000;
-        ctx.clearRect(0, 0, W, H);
-        pts.forEach(function (p) {
-          var rx = p.sx * W, ry = p.sy * H;         // position initiale, dispersée
-          var ox = Math.cos(drift * p.sp + p.ph) * 9;
-          var oy = Math.sin(drift * p.sp * 0.85 + p.ph) * 7;
-          p.x = rx + (p.ax + ox - rx) * k;
-          p.y = ry + (p.ay + oy - ry) * k;
-        });
-        ctx.lineWidth = 1;
-        for (a = 0; a < N; a++) {
-          for (b = a + 1; b < N; b++) {
-            var w = sim[a][b];
-            if (w < 0.08) continue;
-            ctx.strokeStyle = 'rgba(' + RGBS + ',' + (Math.min(0.30, w * 0.42) * k).toFixed(3) + ')';
-            ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[b].x, pts[b].y); ctx.stroke();
+      for (j = 0; j < ROWS; j++) {
+        for (i = 0; i < COLS; i++) {
+          a = grille[j * (COLS + 1) + i];         // haut gauche
+          bb = grille[j * (COLS + 1) + i + 1];    // haut droite
+          c = grille[(j + 1) * (COLS + 1) + i + 1]; // bas droite
+          d = grille[(j + 1) * (COLS + 1) + i];   // bas gauche
+          m = (a > niv ? 8 : 0) | (bb > niv ? 4 : 0) | (c > niv ? 2 : 0) | (d > niv ? 1 : 0);
+          if (m === 0 || m === 15) continue;
+          var x0 = px(b, i), x1 = px(b, i + 1), y0 = py(b, j), y1 = py(b, j + 1);
+          var haut = itp(a, bb, x0, y0, x1, y0), droite = itp(bb, c, x1, y0, x1, y1),
+              bas = itp(d, c, x0, y1, x1, y1), gauche = itp(a, d, x0, y0, x0, y1);
+          switch (m) {
+            case 1: case 14: e.push([gauche, bas]); break;
+            case 2: case 13: e.push([bas, droite]); break;
+            case 3: case 12: e.push([gauche, droite]); break;
+            case 4: case 11: e.push([haut, droite]); break;
+            case 6: case 9:  e.push([haut, bas]); break;
+            case 7: case 8:  e.push([gauche, haut]); break;
+            case 5: e.push([gauche, haut], [bas, droite]); break;
+            case 10: e.push([haut, droite], [gauche, bas]); break;
           }
         }
-        pts.forEach(function (p) {
-          ctx.fillStyle = 'rgba(' + RGBS + ',' + (0.5 * k).toFixed(3) + ')';
-          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
-        });
       }
-      raf2 = requestAnimationFrame(draw);
+      return e;
+    }
+
+    function dessineRelief() {
+      relief.width = Math.round(W * dpr); relief.height = Math.round(H * dpr);
+      rctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      rctx.clearRect(0, 0, W, H);
+      rctx.lineCap = 'round';
+      for (var n = 1; n < NIV; n++) {
+        var t = n / NIV;
+        var niv = vmin + (vmax - vmin) * Math.pow(t, 1.35);   // resserré près des creux
+        var seg = courbe(niv);
+        rctx.strokeStyle = 'rgba(' + RGBS + ',' + (0.10 + (1 - t) * 0.24).toFixed(3) + ')';
+        rctx.lineWidth = n % 4 === 0 ? 1.4 : 0.85;            // une courbe maîtresse sur quatre
+        rctx.beginPath();
+        for (var s = 0; s < seg.length; s++) {
+          rctx.moveTo(seg[s][0][0], seg[s][0][1]);
+          rctx.lineTo(seg[s][1][0], seg[s][1][1]);
+        }
+        rctx.stroke();
+      }
+      /* Le relief s'efface là où se lit le texte : à gauche il ne doit rester
+         qu'une trame, sans quoi les courbes passent derrière le titre. */
+      var g = rctx.createLinearGradient(0, 0, W, 0);
+      g.addColorStop(0, 'rgba(0,0,0,0.72)');
+      g.addColorStop(0.34, 'rgba(0,0,0,0.34)');
+      g.addColorStop(0.60, 'rgba(0,0,0,0)');
+      rctx.globalCompositeOperation = 'destination-out';
+      rctx.fillStyle = g; rctx.fillRect(0, 0, W, H);
+      rctx.globalCompositeOperation = 'source-over';
+    }
+
+    // --- le marcheur ---
+    var pos = [0, 0], vit = [0, 0], trace = [], pas = 0, fondu = 1, g2 = [0, 0];
+    function relance() {
+      var b = bornes();
+      pos = [b.x0 * 0.82 + Math.random() * (b.x1 - b.x0) * 0.82, -0.95 + Math.random() * 1.9];
+      vit = [0, 0]; trace = []; pas = 0; fondu = 0;
+    }
+    function avance() {
+      pente(pos[0], pos[1], g2);
+      // inertie : une descente sans élan s'arrête au premier replat
+      vit[0] = vit[0] * 0.86 - g2[0] * 0.012;
+      vit[1] = vit[1] * 0.86 - g2[1] * 0.012;
+      pos[0] += vit[0]; pos[1] += vit[1];
+      trace.push([pos[0], pos[1]]);
+      if (trace.length > 190) trace.shift();
+      pas++;
+      var immobile = Math.abs(vit[0]) + Math.abs(vit[1]) < 0.0016;
+      if ((immobile && pas > 90) || pas > 900) relance();
+    }
+    function versEcran(p, b) {
+      return [((p[0] - b.x0) / (b.x1 - b.x0)) * W, ((p[1] - b.y0) / (b.y1 - b.y0)) * H];
+    }
+
+    function taille() {
+      W = hero.clientWidth; H = hero.clientHeight;
+      if (!W || !H) return;
+      cvs.width = Math.round(W * dpr); cvs.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      calcule(); dessineRelief();
+    }
+    taille();
+    relance();
+    window.addEventListener('resize', taille, { passive: true });
+
+    var raf2 = null;
+    function image() {
+      raf2 = requestAnimationFrame(image);
+      if (document.hidden || !W) return;
+      ctx.clearRect(0, 0, W, H);
+      ctx.drawImage(relief, 0, 0, W, H);
+      if (fondu < 1) fondu = Math.min(1, fondu + 0.02);
+
+      avance();
+      var b = bornes(), i, p, q;
+      // la trace s'estompe vers son origine : on lit le sens de la descente
+      ctx.lineWidth = 1.9; ctx.lineCap = 'round';
+      for (i = 1; i < trace.length; i++) {
+        p = versEcran(trace[i - 1], b); q = versEcran(trace[i], b);
+        var att = (i / trace.length) * fondu;
+        ctx.strokeStyle = 'rgba(' + RGBS + ',' + (att * 0.85).toFixed(3) + ')';
+        ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke();
+      }
+      p = versEcran(pos, b);
+      ctx.fillStyle = 'rgba(' + RGBS + ',' + (0.30 * fondu).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(p[0], p[1], 10, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(' + RGBS + ',' + (0.9 * fondu).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(p[0], p[1], 3.2, 0, Math.PI * 2); ctx.fill();
+    }
+
+    if (reduce) {
+      /* Mouvement réduit : le relief seul, avec une descente déjà accomplie.
+         La figure garde son sens, sans rien qui bouge. */
+      ctx.drawImage(relief, 0, 0, W, H);
+      relance(); fondu = 1;
+      for (var z = 0; z < 320; z++) avance();
+      var bb2 = bornes();
+      ctx.lineWidth = 1.5;
+      for (var t2 = 1; t2 < trace.length; t2++) {
+        var a2 = versEcran(trace[t2 - 1], bb2), b3 = versEcran(trace[t2], bb2);
+        ctx.strokeStyle = 'rgba(' + RGBS + ',' + ((t2 / trace.length) * 0.45).toFixed(3) + ')';
+        ctx.beginPath(); ctx.moveTo(a2[0], a2[1]); ctx.lineTo(b3[0], b3[1]); ctx.stroke();
+      }
+    } else {
+      raf2 = requestAnimationFrame(image);
       document.addEventListener('visibilitychange', function () {
         if (document.hidden) { cancelAnimationFrame(raf2); raf2 = null; }
-        else if (!raf2) raf2 = requestAnimationFrame(draw);
+        else if (!raf2) raf2 = requestAnimationFrame(image);
       });
-    }).catch(function () {});
+    }
+
+    /* Le thème change la couleur d'accent : le relief est redessiné, sinon il
+       garde celle du thème quitté. */
+    new MutationObserver(function () {
+      var n = accent();
+      if (n !== RGBS) { RGBS = n; dessineRelief(); }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
   }
 
   /* --- 6. En-tête : un filet n'apparaît qu'une fois la page quittée --- */

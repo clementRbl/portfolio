@@ -113,11 +113,11 @@ def construit_page(g):
         if not termes:
             continue
         termes.sort(key=lambda t: t['terme'].lower())
-        puces.append(f'<a href="#f-{e(f["id"])}">{e(f["nom"])} '
+        puces.append(f'<a href="#f-{e(f["id"])}" data-fam="{e(f["id"])}">{e(f["nom"])} '
                      f'<span class="n">{len(termes)}</span></a>')
         corps = '\n'.join(entree(t, par_id) for t in termes)
         sections.append(
-            f'<section class="famille" id="f-{e(f["id"])}">\n'
+            f'<section class="famille" id="f-{e(f["id"])}" data-fam="{e(f["id"])}">\n'
             f'  <h2>{e(f["nom"])}</h2>\n'
             f'  <p class="fam-intro">{e(f["intro"])}</p>\n'
             f'{corps}\n</section>')
@@ -190,6 +190,26 @@ def construit_page(g):
   }}
   .puces a:hover{{border-color:var(--accent);color:var(--accent);}}
   .puces .n{{font-size:11px;color:var(--muted);}}
+  /* La famille affichée se distingue nettement : sans marque d'état, on ne sait
+     plus quelle page on lit ni pourquoi les autres termes ont disparu. */
+  .puces a[aria-current="page"]{{
+    background:var(--accent);border-color:var(--accent);color:var(--accent-ink);
+  }}
+  .puces a[aria-current="page"] .n{{color:var(--accent-ink);opacity:.75;}}
+
+  .puces.inerte a{{opacity:.45;}}
+  .pagination{{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    margin:34px 0 0;padding-top:20px;border-top:1px solid var(--border);
+  }}
+  .pg{{
+    background:var(--surface);border:1px solid var(--border);color:var(--ink);
+    border-radius:9px;padding:10px 16px;cursor:pointer;font-family:var(--font-sans);
+    font-size:14.5px;font-weight:600;
+  }}
+  .pg:hover:not(:disabled){{border-color:var(--accent);color:var(--accent);}}
+  .pg:disabled{{opacity:.4;cursor:not-allowed;}}
+  .pg-etat{{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);text-align:center;}}
 
   .famille{{margin:0 0 12px;scroll-margin-top:74px;}}
   .famille h2{{font-size:1.4rem;margin:38px 0 4px;letter-spacing:-.01em;}}
@@ -232,8 +252,11 @@ def construit_page(g):
     h1{{font-size:1.75rem;}}
     .entree{{padding:15px 16px;}}
     .entree h3{{font-size:1.05rem;}}
+    .pg{{padding:12px 14px;font-size:13.5px;}}
+    .pg-etat{{font-size:11px;}}
   }}
-  @media print{{.topbar,.filtre,.puces{{display:none;}}main{{max-width:none;padding:0;}}
+  @media print{{.topbar,.filtre,.puces,.pagination{{display:none;}}
+    .famille[hidden]{{display:block !important;}}main{{max-width:none;padding:0;}}
     .entree{{break-inside:avoid;}} .detail[open] summary{{display:none;}} body{{font-size:11pt;}}}}
 </style>
 <!-- Analytics Umami (cookieless, sans bannière) -->
@@ -262,12 +285,19 @@ connaissance préalable n'est supposée par le premier niveau.</p>
 </div>
 
 <nav class="puces" aria-label="Familles de termes">
+  <a href="#" id="puce-toutes" aria-current="page">Toutes <span class="n">{n}</span></a>
 {chr(10).join('  ' + p for p in puces)}
 </nav>
 
 {chr(10).join(sections)}
 
 <p class="vide" id="vide">Aucun terme ne correspond. Essayez un mot plus court, ou parcourez les familles ci-dessus.</p>
+
+<nav class="pagination" id="pagination" hidden aria-label="Navigation entre les familles">
+  <button type="button" id="prec" class="pg">← Précédent</button>
+  <span class="pg-etat" id="pg-etat" role="status" aria-live="polite"></span>
+  <button type="button" id="suiv" class="pg">Suivant →</button>
+</nav>
 </main>
 
 <script>
@@ -289,59 +319,164 @@ connaissance préalable n'est supposée par le premier niveau.</p>
     }}
   }}
 
-  /* Filtre. Le champ n'apparaît qu'ici : sans script il ne servirait à rien,
-     et toutes les entrées sont de toute façon déjà lisibles. */
+  /* Cent vingt-sept entrées d'un seul tenant, c'était une page qu'on fait
+     défiler sans fin pour trouver un mot. Deux réglages indépendants s'en
+     chargent : les pastilles filtrent par famille, et la liste obtenue est
+     découpée en pages de taille fixe. Découper par famille seule ne suffisait
+     pas - la plus fournie en compte vingt et une, soit six écrans.
+
+     La barre de recherche, elle, balaie toujours les cent vingt-sept termes,
+     quelle que soit la page affichée : chercher dans la page courante n'aurait
+     aucun sens.
+
+     Sans script, tout reste affiché : la pagination est un confort de lecture,
+     pas une condition d'accès. */
+  var PAR_PAGE = 10;
+
   var boite = document.getElementById('filtre');
   var champ = document.getElementById('q');
   var compte = document.getElementById('compte');
   var vide = document.getElementById('vide');
+  var pagination = document.getElementById('pagination');
+  var etat = document.getElementById('pg-etat');
+  var btnPrec = document.getElementById('prec');
+  var btnSuiv = document.getElementById('suiv');
   var entrees = [].slice.call(document.querySelectorAll('.entree'));
   var familles = [].slice.call(document.querySelectorAll('.famille'));
-  var puces = document.querySelector('.puces');
-  if (!champ) return;
+  var puces = [].slice.call(document.querySelectorAll('.puces a[data-fam]'));
+  var puceToutes = document.getElementById('puce-toutes');
+  if (!champ || !familles.length) return;
   boite.hidden = false;
+  pagination.hidden = false;
+
+  var famille = null;   // null = toutes
+  var page = 0;
 
   function sansAccent(s) {{
-    return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');
+    return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   }}
 
-  function filtrer() {{
+  /* Les termes retenus par les deux réglages, dans l'ordre de la page. */
+  function retenus() {{
     var q = sansAccent(champ.value.trim());
-    var n = 0;
-    entrees.forEach(function (el) {{
-      var cle = sansAccent(el.getAttribute('data-cle') + ' ' + el.textContent);
-      var ok = !q || cle.indexOf(q) !== -1;
-      el.hidden = !ok;
-      if (ok) n++;
+    /* Une recherche porte sur la totalité du glossaire, jamais sur la seule
+       famille affichée : on cherche un mot parce qu'on ignore où il se range.
+       Le filtre par famille est donc levé dès qu'une requête est saisie. */
+    return entrees.filter(function (el) {{
+      if (!q && famille && el.closest('.famille').getAttribute('data-fam') !== famille) return false;
+      if (!q) return true;
+      return sansAccent(el.getAttribute('data-cle') + ' ' + el.textContent).indexOf(q) !== -1;
     }});
-    /* Une famille dont toutes les entrées sont masquées disparaît avec son
-       titre : sinon la page se lit comme une suite de rubriques vides. */
-    familles.forEach(function (f) {{
-      f.hidden = !f.querySelector('.entree:not([hidden])');
-    }});
-    if (puces) puces.hidden = !!q;
-    vide.classList.toggle('on', n === 0);
-    compte.textContent = q ? (n + (n > 1 ? ' termes' : ' terme')) : '{n} termes';
   }}
 
-  champ.addEventListener('input', filtrer);
-  champ.addEventListener('keydown', function (e) {{
-    if (e.key === 'Escape' && champ.value) {{ champ.value = ''; filtrer(); }}
-  }});
-  filtrer();
+  function rendre() {{
+    var liste = retenus();
+    var pages = Math.max(1, Math.ceil(liste.length / PAR_PAGE));
+    if (page >= pages) page = pages - 1;
+    var debut = page * PAR_PAGE;
+    var visibles = liste.slice(debut, debut + PAR_PAGE);
 
-  /* Arriver par une ancre depuis le rapport : on déplie le détail, puisque
-     c'est en général la précision technique qu'on venait chercher. */
-  function ouvrirCible() {{
+    entrees.forEach(function (el) {{ el.hidden = visibles.indexOf(el) === -1; }});
+    /* Un titre de famille sans terme dessous n'a rien à dire : il ne reste que
+       si la page en cours contient au moins une de ses entrées. */
+    familles.forEach(function (f) {{ f.hidden = !f.querySelector('.entree:not([hidden])'); }});
+
+    var enRecherche = !!champ.value.trim();
+    puces.forEach(function (a) {{
+      if (!enRecherche && a.getAttribute('data-fam') === famille) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    }});
+    if (puceToutes) {{
+      if (!enRecherche && famille === null) puceToutes.setAttribute('aria-current', 'page');
+      else puceToutes.removeAttribute('aria-current');
+    }}
+    /* Pendant une recherche, les pastilles ne filtrent plus rien : les griser
+       évite de laisser croire à un filtre actif qui ne s'applique pas. */
+    var nav = document.querySelector('.puces');
+    if (nav) nav.classList.toggle('inerte', enRecherche);
+
+    vide.classList.toggle('on', liste.length === 0);
+    pagination.hidden = liste.length === 0;
+
+    var q = champ.value.trim();
+    if (q) {{
+      compte.textContent = liste.length === 0 ? 'aucun résultat'
+        : liste.length + (liste.length > 1 ? ' résultats' : ' résultat') + ' sur {n}';
+    }} else {{
+      compte.textContent = liste.length + (liste.length > 1 ? ' termes' : ' terme')
+        + (famille ? ' dans cette famille' : ' au total');
+    }}
+    etat.textContent = 'Page ' + (page + 1) + ' sur ' + pages;
+    btnPrec.disabled = page === 0;
+    btnSuiv.disabled = page >= pages - 1;
+  }}
+
+  function remonter() {{
+    var haut = document.querySelector('.puces');
+    if (haut) haut.scrollIntoView({{ block: 'start' }});
+  }}
+
+  puces.forEach(function (a) {{
+    a.addEventListener('click', function (ev) {{
+      ev.preventDefault();
+      var f = a.getAttribute('data-fam');
+      // Choisir une famille pendant une recherche efface celle-ci : les deux
+      // réglages se contrediraient, et le clic semblerait sans effet.
+      if (champ.value) champ.value = '';
+      famille = (famille === f) ? null : f;   // recliquer la famille active la désélectionne
+      page = 0;
+      rendre();
+      remonter();
+    }});
+  }});
+  if (puceToutes) {{
+    puceToutes.addEventListener('click', function (ev) {{
+      ev.preventDefault(); champ.value = ''; famille = null; page = 0; rendre(); remonter();
+    }});
+  }}
+  btnPrec.addEventListener('click', function () {{ page--; rendre(); remonter(); }});
+  btnSuiv.addEventListener('click', function () {{ page++; rendre(); remonter(); }});
+
+  /* Une recherche repart de la première page : rester en page 4 d'un résultat
+     qui en compte deux donnerait une page vide sans raison apparente. */
+  champ.addEventListener('input', function () {{ page = 0; rendre(); }});
+  champ.addEventListener('keydown', function (e) {{
+    if (e.key === 'Escape' && champ.value) {{ champ.value = ''; page = 0; rendre(); }}
+  }});
+
+  /* Les liens du rapport visent un terme précis, que le filtre ou la pagination
+     placent peut-être hors de la page affichée. On lève donc tous les réglages
+     et on ouvre la page qui contient la cible - sans quoi soixante-huit liens
+     aboutiraient à une page où le terme est introuvable. */
+  function suivreAncre(defiler) {{
     var id = location.hash.slice(1);
     if (!id) return;
-    var el = document.getElementById(id);
-    if (!el || !el.classList.contains('entree')) return;
-    var d = el.querySelector('details');
+    var cible = document.getElementById(id);
+    if (!cible) return;
+
+    if (cible.classList.contains('famille')) {{
+      famille = cible.getAttribute('data-fam');
+      champ.value = ''; page = 0; rendre();
+      if (defiler) cible.scrollIntoView({{ block: 'start' }});
+      return;
+    }}
+    if (!cible.classList.contains('entree')) return;
+
+    champ.value = '';
+    famille = null;
+    var rang = entrees.indexOf(cible);
+    page = Math.floor(rang / PAR_PAGE);
+    rendre();
+    // Venir d'un lien du rapport, c'est chercher la précision technique.
+    var d = cible.querySelector('details');
     if (d) d.open = true;
+    if (defiler) cible.scrollIntoView({{ block: 'start' }});
   }}
-  window.addEventListener('hashchange', ouvrirCible);
-  ouvrirCible();
+
+  window.addEventListener('hashchange', function () {{ suivreAncre(true); }});
+
+  rendre();
+  suivreAncre(true);
 }})();
 </script>
 </body>
