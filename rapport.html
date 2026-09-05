@@ -241,7 +241,7 @@ de machine learning entraîné en environnement de recherche à un
 <strong>service prédictif fiable, déployé et monitoré en
 production</strong>.</p>
 <p>Le cas métier est le <strong>scoring crédit</strong> de la société
-<em>Prêt à Dépenser</em> : prédire la probabilité de défaut de paiement
+<em>Prêt à Dépenser</em> : <a class="g-lien" href="glossaire.html#inference" title="Définition dans le glossaire">prédire</a> la probabilité de défaut de paiement
 d'un client afin d'automatiser la décision d'octroi de crédit. La
 modélisation (comparaison de 5 algorithmes, optimisation d'un
 <strong><a class="g-lien" href="glossaire.html#cout-metier" title="Définition dans le glossaire">coût métier asymétrique</a></strong>, <a class="g-lien" href="glossaire.html#shap" title="Définition dans le glossaire">interprétabilité</a> SHAP,
@@ -250,7 +250,7 @@ modélisation (comparaison de 5 algorithmes, optimisation d'un
 <p>La phase d'<strong>industrialisation</strong> - objet principal de ce
 rapport - expose ce modèle via une <strong>API <a class="g-lien" href="glossaire.html#fastapi" title="Définition dans le glossaire">FastAPI</a> conteneurisée
 (<a class="g-lien" href="glossaire.html#docker" title="Définition dans le glossaire">Docker</a>)</strong>, déployée automatiquement sur <strong>Hugging Face
-Spaces</strong> via un <strong>pipeline CI/CD <a class="g-lien" href="glossaire.html#ci-cd" title="Définition dans le glossaire">GitHub Actions</a></strong>
+Spaces</strong> via un <strong><a class="g-lien" href="glossaire.html#pipeline-sklearn" title="Définition dans le glossaire">pipeline</a> CI/CD <a class="g-lien" href="glossaire.html#ci-cd" title="Définition dans le glossaire">GitHub Actions</a></strong>
 (test → build → deploy). La production est <strong>monitorée</strong> :
 journalisation structurée des prédictions (<a class="g-lien" href="glossaire.html#jsonl" title="Définition dans le glossaire">JSONL</a>), analyse de
 <strong><a class="g-lien" href="glossaire.html#data-drift" title="Définition dans le glossaire">data drift</a></strong> (<a class="g-lien" href="glossaire.html#evidently" title="Définition dans le glossaire">Evidently AI</a>) et <strong><a class="g-lien" href="glossaire.html#streamlit" title="Définition dans le glossaire">dashboard</a></strong>
@@ -258,15 +258,15 @@ de suivi (Streamlit).</p>
 <p>Le rapport est structuré autour des <strong>5 axes /
 compétences</strong> évalués :</p>
 <ol type="1">
-<li><strong>Collecte des besoins métiers</strong> et analyse du contexte
+<li><strong>Collecte des besoins métiers</strong> et analyse du <a class="g-lien" href="glossaire.html#fenetre-contexte" title="Définition dans le glossaire">contexte</a>
 de l'organisation ;</li>
-<li><strong>Audit de la solution data</strong> et de son adéquation aux
+<li><strong><a class="g-lien" href="glossaire.html#audit" title="Définition dans le glossaire">Audit</a> de la solution data</strong> et de son adéquation aux
 besoins ;</li>
 <li><strong>Identification de la solution technique</strong> ;</li>
 <li><strong>Appui stratégique et méthodologique</strong> à la prise de
 décision ;</li>
 <li><strong>Contrôle et analyse du projet</strong> (délais, coûts,
-livrables, performance).</li>
+<a class="g-lien" href="glossaire.html#livrable" title="Définition dans le glossaire">livrables</a>, performance).</li>
 </ol>
 <hr />
 <h2 id="0-contexte-et-cadrage-du-projet">0. Contexte et cadrage du
@@ -321,7 +321,7 @@ d'octroi de crédit</strong>. Chaque demande doit être classée en
 d'une <strong>probabilité de défaut</strong> calculée
 automatiquement.</p>
 <p>Deux risques métier s'opposent, avec un <strong>coût
-asymétrique</strong> - c'est le point de cadrage le plus structurant du
+asymétrique</strong> - c'est le point de <a class="g-lien" href="glossaire.html#cadrage" title="Définition dans le glossaire">cadrage</a> le plus structurant du
 projet :</p>
 <div class="tablewrap"><table>
 <thead>
@@ -370,7 +370,7 @@ négligés en phase de recherche :</p>
 <tr class="odd">
 <td>Fonctionnel</td>
 <td>Prédire à la demande pour un client donné</td>
-<td>API REST temps réel</td>
+<td><a class="g-lien" href="glossaire.html#rest" title="Définition dans le glossaire">API REST</a> <a class="g-lien" href="glossaire.html#batch-temps-reel" title="Définition dans le glossaire">temps réel</a></td>
 </tr>
 <tr class="even">
 <td>Fonctionnel</td>
@@ -384,7 +384,7 @@ négligés en phase de recherche :</p>
 </tr>
 <tr class="even">
 <td>Non-fonctionnel</td>
-<td><strong>Disponibilité &amp; <a class="g-lien" href="glossaire.html#latence" title="Définition dans le glossaire">latence</a></strong></td>
+<td><strong><a class="g-lien" href="glossaire.html#sla" title="Définition dans le glossaire">Disponibilité</a> &amp; <a class="g-lien" href="glossaire.html#latence" title="Définition dans le glossaire">latence</a></strong></td>
 <td>Service conteneurisé, inférence &lt; 10 ms</td>
 </tr>
 <tr class="odd">
@@ -399,7 +399,7 @@ négligés en phase de recherche :</p>
 </tr>
 <tr class="odd">
 <td>Non-fonctionnel</td>
-<td><strong>Conformité (RGPD)</strong></td>
+<td><strong><a class="g-lien" href="glossaire.html#rgpd" title="Définition dans le glossaire">Conformité</a> (RGPD)</strong></td>
 <td>Logs maîtrisés, décision explicable pour le client</td>
 </tr>
 </tbody>
@@ -425,17 +425,17 @@ client</td>
 <tr class="even">
 <td><strong>Équipe Data</strong> (<em>data owners</em>)</td>
 <td>Fournir les données ; mais les schémas peuvent évoluer</td>
-<td>Besoin d'un <strong>contrat de données</strong> et de validation en
+<td>Besoin d'un <strong><a class="g-lien" href="glossaire.html#contrat-donnees" title="Définition dans le glossaire">contrat de données</a></strong> et de validation en
 entrée</td>
 </tr>
 <tr class="odd">
 <td><strong>Direction / risque</strong></td>
-<td>Piloter l'arbitrage risque / volume d'octroi</td>
+<td>Piloter l'<a class="g-lien" href="glossaire.html#arbitrage" title="Définition dans le glossaire">arbitrage</a> risque / volume d'octroi</td>
 <td>Seuil de décision = levier stratégique ajustable</td>
 </tr>
 <tr class="even">
-<td><strong>Conformité / DPO</strong></td>
-<td>Respect RGPD, non-discrimination</td>
+<td><strong>Conformité / <a class="g-lien" href="glossaire.html#dpo" title="Définition dans le glossaire">DPO</a></strong></td>
+<td>Respect RGPD, <a class="g-lien" href="glossaire.html#biais-algorithmique" title="Définition dans le glossaire">non-discrimination</a></td>
 <td>Explicabilité, journalisation maîtrisée</td>
 </tr>
 </tbody>
@@ -480,14 +480,14 @@ numériques + 16 catégorielles)</td>
 </tr>
 <tr class="even">
 <td><strong>Qualité</strong></td>
-<td>Valeurs manquantes nombreuses (imputées et documentées), doublons
+<td><a class="g-lien" href="glossaire.html#valeurs-manquantes" title="Définition dans le glossaire">Valeurs manquantes</a> nombreuses (imputées et documentées), doublons
 contrôlés, visualisation <code>missingno</code></td>
 </tr>
 <tr class="odd">
 <td><strong>Déséquilibre</strong></td>
 <td>Bons clients ≫ défauts → traité par
 <code>class_weight='balanced'</code> (LR, RF, LGBM) et
-<code>scale_pos_weight</code> (XGBoost)</td>
+<code>scale_pos_weight</code> (<a class="g-lien" href="glossaire.html#xgboost" title="Définition dans le glossaire">XGBoost</a>)</td>
 </tr>
 <tr class="even">
 <td><strong><a class="g-lien" href="glossaire.html#fuite-donnees" title="Définition dans le glossaire">Fuite de données</a></strong></td>
@@ -531,13 +531,13 @@ métier</strong> :</p>
 <td>Correct, moins performant</td>
 </tr>
 <tr class="even">
-<td>MLP</td>
+<td><a class="g-lien" href="glossaire.html#mlp" title="Définition dans le glossaire">MLP</a></td>
 <td>≈ 0,77</td>
 <td>≈ 159 000</td>
-<td>Sensible au scaling, peu explicable</td>
+<td>Sensible au <a class="g-lien" href="glossaire.html#normalisation" title="Définition dans le glossaire">scaling</a>, peu explicable</td>
 </tr>
 <tr class="odd">
-<td>Régression logistique</td>
+<td><a class="g-lien" href="glossaire.html#classification-regression" title="Définition dans le glossaire">Régression logistique</a></td>
 <td>≈ 0,74</td>
 <td>≈ 169 000</td>
 <td><a class="g-lien" href="glossaire.html#baseline" title="Définition dans le glossaire">Baseline</a> interprétable</td>
@@ -641,13 +641,13 @@ l'industrie ML, asynchrone</td>
 <tr class="even">
 <td><strong>Conteneurisation</strong></td>
 <td><strong>Docker</strong> (<code>python:3.12-slim</code>)</td>
-<td>Reproductibilité, utilisateur non-root (sécurité), ne copie que le
+<td><a class="g-lien" href="glossaire.html#reproductibilite" title="Définition dans le glossaire">Reproductibilité</a>, utilisateur non-root (sécurité), ne copie que le
 nécessaire</td>
 </tr>
 <tr class="odd">
 <td><strong>Déploiement</strong></td>
 <td><strong>Hugging Face Spaces</strong> (SDK Docker)</td>
-<td>Gratuit, URL publique, intégration Git, port 7860</td>
+<td>Gratuit, URL publique, intégration <a class="g-lien" href="glossaire.html#git" title="Définition dans le glossaire">Git</a>, port 7860</td>
 </tr>
 <tr class="even">
 <td><strong>CI/CD</strong></td>
@@ -657,7 +657,7 @@ nécessaire</td>
 <tr class="odd">
 <td><strong>Journalisation</strong></td>
 <td><strong>JSONL structuré</strong></td>
-<td>Simple, lisible avec pandas, une ligne = un objet JSON (robuste aux
+<td>Simple, lisible avec <a class="g-lien" href="glossaire.html#pandas" title="Définition dans le glossaire">pandas</a>, une ligne = un objet JSON (robuste aux
 crashs)</td>
 </tr>
 <tr class="even">
@@ -677,7 +677,7 @@ visuels</td>
 <td>14 tests, <strong>96 % de couverture</strong> sur l'API</td>
 </tr>
 <tr class="odd">
-<td><strong>Limitation de débit</strong></td>
+<td><strong><a class="g-lien" href="glossaire.html#limitation-debit" title="Définition dans le glossaire">Limitation de débit</a></strong></td>
 <td><strong>slowapi</strong></td>
 <td>Le calcul est offert par Hugging Face : une boucle, même involontaire,
 le consomme pour tout le monde. 60 requêtes/minute par adresse, 30 sur
@@ -685,15 +685,15 @@ le consomme pour tout le monde. 60 requêtes/minute par adresse, 30 sur
 </tr>
 <tr class="even">
 <td><strong>Exposition HTTP</strong></td>
-<td><strong>En-têtes de sécurité + CORS restreint</strong></td>
+<td><strong>En-têtes de sécurité + <a class="g-lien" href="glossaire.html#cors" title="Définition dans le glossaire">CORS</a> restreint</strong></td>
 <td>Origines connues seulement au lieu de <code>*</code>, en-têtes
 <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>,
-<code>Referrer-Policy</code>, CSP et HSTS, en-tête <code>server</code>
+<code>Referrer-Policy</code>, <a class="g-lien" href="glossaire.html#csp" title="Définition dans le glossaire">CSP</a> et <a class="g-lien" href="glossaire.html#hsts" title="Définition dans le glossaire">HSTS</a>, en-tête <code>server</code>
 retiré, erreurs internes rendues génériques</td>
 </tr>
 <tr class="odd">
 <td><strong>Qualité de code</strong></td>
-<td><strong>Ruff</strong></td>
+<td><strong><a class="g-lien" href="glossaire.html#linter" title="Définition dans le glossaire">Ruff</a></strong></td>
 <td>Linter rapide, intégré en pre-commit et CI</td>
 </tr>
 </tbody>
@@ -723,14 +723,14 @@ valide, et le premier appel renvoyait toujours 404.</li>
 <code>inference_time_ms</code>.</li>
 <li><strong>Latence mesurée :</strong> ≈ <strong>6 ms</strong> par
 inférence.</li>
-<li><strong>Surface d'attaque réduite :</strong> le service est public et
+<li><strong><a class="g-lien" href="glossaire.html#durcissement" title="Définition dans le glossaire">Surface d'attaque</a> réduite :</strong> le service est public et
 sans authentification - c'est voulu, il n'expose aucune donnée personnelle -
 mais il est limité en débit, restreint dans ses origines, et ne renvoie
 jamais de trace interne au client.</li>
 </ul>
 <h3 id="34-décision-dingénierie--onnx-écarté-volontairement">3.4
 Décision d'ingénierie : ONNX écarté volontairement</h3>
-<p>Une conversion <strong>ONNX</strong> du classifieur a été testée :
+<p>Une conversion <strong><a class="g-lien" href="glossaire.html#onnx" title="Définition dans le glossaire">ONNX</a></strong> du classifieur a été testée :
 <strong>-39 % de taille</strong> et <strong>+6 % de vitesse</strong>.
 Elle a néanmoins été <strong>retirée</strong>, après échange avec le
 mentor, pour trois raisons :</p>
@@ -775,7 +775,7 @@ décision</strong> à plusieurs niveaux.</p>
 </tr>
 <tr class="even">
 <td><strong>Tactique</strong> (pilotage)</td>
-<td>Dashboard : taux de refus, latence, distribution des scores</td>
+<td>Dashboard : taux de refus, latence, <a class="g-lien" href="glossaire.html#distribution" title="Définition dans le glossaire">distribution</a> des scores</td>
 <td>Détecter une dérive, déclencher un réentraînement</td>
 </tr>
 <tr class="odd">
@@ -816,7 +816,7 @@ modèle.</li>
 détecter les catégories inconnues
 (<code>ignore_encoding_error=False</code>).</li>
 <li><strong>Stratégie de réaction au drift</strong> : selon l'importance
-de la variable - la retirer, la transformer, pondérer les observations
+de la variable - la retirer, la <a class="g-lien" href="glossaire.html#transformeur" title="Définition dans le glossaire">transformer</a>, pondérer les observations
 récentes (<code>sample_weight</code>) ou <strong>réentraîner</strong>
 (solution de référence).</li>
 <li><strong>Séparation <code>train</code> /
@@ -846,12 +846,12 @@ Trade-offs présentés pour éclairer la décision</h3>
 <td>Stockage des logs</td>
 <td>JSONL fichier</td>
 <td>Base de données</td>
-<td><strong>Simplicité</strong> (<a class="g-lien" href="glossaire.html#poc" title="Définition dans le glossaire">POC</a>) vs scalabilité</td>
+<td><strong>Simplicité</strong> (<a class="g-lien" href="glossaire.html#poc" title="Définition dans le glossaire">POC</a>) vs <a class="g-lien" href="glossaire.html#scalabilite" title="Définition dans le glossaire">scalabilité</a></td>
 </tr>
 <tr class="odd">
 <td>Hébergement</td>
 <td>HF Spaces (gratuit)</td>
-<td>Cloud managé (AWS/GCP)</td>
+<td><a class="g-lien" href="glossaire.html#cloud-manage" title="Définition dans le glossaire">Cloud</a> managé (AWS/GCP)</td>
 <td><strong>Coût nul</strong> vs SLA/robustesse</td>
 </tr>
 <tr class="even">
@@ -1030,7 +1030,7 @@ pertinent</strong>, sans réentraînement immédiat requis.</p>
 <td>Outillage</td>
 <td><strong>0 €</strong> (open-source : FastAPI, Docker, Evidently,
 Streamlit)</td>
-<td>Licences/observabilité (Grafana, WhyLabs…)</td>
+<td>Licences/observabilité (<a class="g-lien" href="glossaire.html#grafana" title="Définition dans le glossaire">Grafana</a>, WhyLabs…)</td>
 </tr>
 <tr class="even">
 <td>Stockage logs</td>
@@ -1086,12 +1086,12 @@ dashboard.</li>
 <tr class="odd">
 <td>Logs en <strong>fichier local</strong> au conteneur</td>
 <td>Non persistant, non scalable</td>
-<td>Base de données / stockage objet</td>
+<td>Base de données / <a class="g-lien" href="glossaire.html#stockage-objet" title="Définition dans le glossaire">stockage objet</a></td>
 </tr>
 <tr class="even">
 <td>Pas de <strong>réentraînement automatisé</strong></td>
 <td>Drift potentiellement accumulé</td>
-<td>Pipeline planifié (Airflow)</td>
+<td>Pipeline planifié (<a class="g-lien" href="glossaire.html#airflow" title="Définition dans le glossaire">Airflow</a>)</td>
 </tr>
 <tr class="odd">
 <td>Pas de <strong>validation des données en entrée</strong></td>
@@ -1113,7 +1113,7 @@ dashboard.</li>
 <h3 id="perspectives-dévolution">Perspectives d'évolution</h3>
 <p>Feature store, réentraînement continu déclenché sur drift, A/B
 testing de modèles, alerting automatisé, et - dans une logique 2026 - extension des mêmes principes MLOps aux <strong>systèmes
-GenAI/<a class="g-lien" href="glossaire.html#llm" title="Définition dans le glossaire">LLM</a></strong> (observabilité, évaluation en ligne, suivi
+<a class="g-lien" href="glossaire.html#genai" title="Définition dans le glossaire">GenAI</a>/<a class="g-lien" href="glossaire.html#llm" title="Définition dans le glossaire">LLM</a></strong> (observabilité, évaluation en ligne, suivi
 coût/tokens), déjà explorés dans mon projet <a class="g-lien" href="glossaire.html#rag" title="Définition dans le glossaire">RAG</a>
 <em>Puls-Events</em>.</p>
 <h3 id="apports-personnels-réflexivité">Apports personnels

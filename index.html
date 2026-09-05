@@ -2551,9 +2551,15 @@ document.documentElement.classList.add('js');
       .catch(function () { gloState = 'failed'; });
   }
 
-  /* La requête peut être le terme (« drift ») ou le contenir (« c'est quoi le
-     data drift ? ») : on teste les deux sens d'inclusion. Une requête d'une
-     seule lettre ne filtre rien d'utile et remplirait la liste. */
+  /* La requête peut être le début du terme (« drif » → « data drift ») ou le
+     contenir (« c'est quoi le data drift ? »). Les deux sens sont donc testés,
+     mais le second sur le mot entier : une simple inclusion de caractères
+     faisait remonter « RAG » pour « cadrage » et « arbitrage », où les trois
+     lettres se trouvent par hasard au milieu d'un mot. */
+  function motEntier(aiguille, botte) {
+    return (' ' + botte.replace(/[^a-z0-9]+/g, ' ') + ' ')
+      .indexOf(' ' + aiguille.replace(/[^a-z0-9]+/g, ' ') + ' ') !== -1;
+  }
   function gloMatch(q) {
     if (!GLO || q.length < 2) return [];
     var out = [];
@@ -2562,7 +2568,7 @@ document.documentElement.classList.add('js');
       var cles = [e.t].concat(e.a || []);
       for (var j = 0; j < cles.length; j++) {
         var c = norm(cles[j]);
-        if (c.indexOf(q) !== -1 || (c.length >= 3 && q.indexOf(c) !== -1)) { out.push(e); break; }
+        if (c.indexOf(q) !== -1 || (c.length >= 3 && motEntier(c, q))) { out.push(e); break; }
       }
     }
     return out;

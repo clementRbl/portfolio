@@ -15,6 +15,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 ROOT = Path(__file__).resolve().parent.parent
 SRC = json.loads((ROOT / 'tools' / 'glossaire.json').read_text(encoding='utf-8'))
 PAGE = (ROOT / 'glossaire.html').read_text(encoding='utf-8')
@@ -121,18 +123,84 @@ def test_glossaire_atteignable_depuis_le_site():
     assert 'glossaire.html' in RAPPORT, 'aucun lien vers le glossaire dans rapport.html'
 
 
+def test_palette_ne_confond_pas_les_mots():
+    """La palette cherche des mots entiers, pas des suites de lettres.
+
+    Régression vécue : « RAG » remontait pour « cadrage » et « arbitrage », où
+    les trois lettres se trouvent par hasard au milieu du mot. Une recherche de
+    vocabulaire qui propose un terme sans rapport perd la confiance du lecteur
+    plus sûrement qu'une recherche qui ne trouve rien.
+    """
+    try:
+        from test_responsive import chrome, evalue, BrowserError
+    except ImportError:
+        return _skip("tools/test_responsive.py est introuvable")
+    if not chrome():
+        return _skip("Chrome est absent de cette machine")
+
+    expression = """
+    (async () => {
+      const attendus = {'cadrage': 'Cadrage', 'arbitrage': 'Arbitrage',
+                        'SHAP': 'SHAP', 'drift': 'Data drift'};
+      const sortie = {};
+      const champ = document.getElementById('cmdk-input');
+      document.getElementById('wheel-open').click();
+      await new Promise(r => setTimeout(r, 1200));
+      for (const q of Object.keys(attendus)) {
+        champ.value = q;
+        champ.dispatchEvent(new Event('input'));
+        await new Promise(r => setTimeout(r, 120));
+        const groupes = [...document.querySelectorAll('.cmdk-group')].map(e => e.textContent);
+        const i = groupes.indexOf('Glossaire');
+        const items = [...document.querySelectorAll('.cmdk-item')];
+        const glo = i === 0 ? items.slice(0, 6) : [];
+        sortie[q] = glo.map(e => e.querySelector('.lb').firstChild.textContent);
+      }
+      return JSON.stringify(sortie);
+    })()
+    """
+    try:
+        res = evalue('index.html', expression)
+    except BrowserError as e:
+        return _skip(str(e))
+
+    assert 'RAG' not in res['cadrage'], f"« cadrage » remonte encore RAG : {res['cadrage']}"
+    assert 'RAG' not in res['arbitrage'], f"« arbitrage » remonte encore RAG : {res['arbitrage']}"
+    assert res['cadrage'] and res['cadrage'][0] == 'Cadrage', res['cadrage']
+    assert res['SHAP'] and res['SHAP'][0] == 'SHAP', res['SHAP']
+    assert 'Data drift' in res['drift'], res['drift']
+
+
+class Ignore(Exception):
+    """Le test n'a pas pu s'exécuter : à ne pas compter comme un succès."""
+
+
+def _skip(raison):
+    try:
+        import pytest
+        pytest.skip(raison)
+    except ImportError:
+        raise Ignore(raison)
+
+
 def main():
     tests = [v for k, v in sorted(globals().items()) if k.startswith('test_')]
-    echecs = 0
+    echecs = ignores = 0
     for t in tests:
         nom = t.__name__[5:].replace('_', ' ')
         try:
             t()
             print(f'  ok      {nom}')
+        except Ignore as e:
+            ignores += 1
+            print(f'  ignoré  {nom} : {e}')
         except AssertionError as e:
             echecs += 1
             print(f'  ÉCHEC   {nom}\n          {e}')
-    print(f'\n{len(tests) - echecs}/{len(tests)} tests passés')
+    bilan = f'{len(tests) - echecs - ignores}/{len(tests)} tests passés'
+    if ignores:
+        bilan += f', {ignores} ignoré(s) faute de navigateur'
+    print(f'\n{bilan}')
     return 1 if echecs else 0
 
 

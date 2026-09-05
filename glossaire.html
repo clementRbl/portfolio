@@ -8,14 +8,14 @@
      correction. Le texte des définitions vit dans le JSON. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; connect-src 'self' https://cloud.umami.is https://gateway.umami.is; object-src 'none'; base-uri 'self'; form-action 'none'">
 <title>Glossaire - Clément Reboul</title>
-<meta name="description" content="Glossaire du portfolio : 61 termes de machine learning, MLOps, GenAI et RAG expliqués en clair, avec le détail technique pour qui veut aller plus loin.">
+<meta name="description" content="Glossaire du portfolio : 127 termes de machine learning, MLOps, GenAI et RAG expliqués en clair, avec le détail technique pour qui veut aller plus loin.">
 <link rel="canonical" href="https://clement-reboul.fr/portfolio/glossaire.html">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://clement-reboul.fr/portfolio/glossaire.html">
 <meta property="og:title" content="Glossaire - le vocabulaire du portfolio expliqué">
-<meta property="og:description" content="61 termes de machine learning, MLOps et GenAI expliqués en clair, avec le détail technique pour qui veut aller plus loin.">
+<meta property="og:description" content="127 termes de machine learning, MLOps et GenAI expliqués en clair, avec le détail technique pour qui veut aller plus loin.">
 <meta property="og:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
@@ -141,7 +141,7 @@
 </div></div>
 <main>
 <h1>Glossaire</h1>
-<p class="chapo">Le vocabulaire employé sur ce portfolio et dans le rapport, 61 termes,
+<p class="chapo">Le vocabulaire employé sur ce portfolio et dans le rapport, 127 termes,
 expliqués d'abord en clair puis en détail pour qui veut aller plus loin. Aucune
 connaissance préalable n'est supposée par le premier niveau.</p>
 <p class="chapo">Un mot vous manque en lisant une page&nbsp;? Il est probablement ici.</p>
@@ -153,13 +153,15 @@ connaissance préalable n'est supposée par le premier niveau.</p>
 </div>
 
 <nav class="puces" aria-label="Familles de termes">
-  <a href="#f-metier">Métier &amp; évaluation <span class="n">9</span></a>
-  <a href="#f-ml">Modélisation <span class="n">10</span></a>
-  <a href="#f-mlops">MLOps &amp; mise en production <span class="n">12</span></a>
-  <a href="#f-genai">GenAI, LLM &amp; RAG <span class="n">12</span></a>
-  <a href="#f-vision">Vision &amp; renforcement <span class="n">8</span></a>
-  <a href="#f-data">Données &amp; ingénierie <span class="n">5</span></a>
-  <a href="#f-outils">Outils &amp; web <span class="n">5</span></a>
+  <a href="#f-metier">Métier &amp; évaluation <span class="n">12</span></a>
+  <a href="#f-ml">Modélisation <span class="n">21</span></a>
+  <a href="#f-mlops">MLOps &amp; mise en production <span class="n">26</span></a>
+  <a href="#f-genai">GenAI, LLM &amp; RAG <span class="n">22</span></a>
+  <a href="#f-vision">Vision &amp; renforcement <span class="n">12</span></a>
+  <a href="#f-data">Données &amp; ingénierie <span class="n">9</span></a>
+  <a href="#f-securite">Sécurité &amp; conformité <span class="n">9</span></a>
+  <a href="#f-conduite">Conduite de projet <span class="n">8</span></a>
+  <a href="#f-outils">Outils &amp; web <span class="n">8</span></a>
 </nav>
 
 <section class="famille" id="f-metier">
@@ -179,12 +181,26 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Aire sous la courbe (taux de vrais positifs, taux de faux positifs) obtenue en faisant varier le seuil. Elle s&#x27;interprète comme la probabilité qu&#x27;un positif tiré au hasard reçoive un score supérieur à celui d&#x27;un négatif. Insensible au déséquilibre des classes, ce qui explique son usage ici.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#oof">AUC-OOF (out-of-fold)</a> · <a href="#seuil-decision">Seuil de décision</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="centiles" data-cle="centiles (p95, p99) percentile p95 p99 centile">
+  <h3>Centiles (p95, p99)<a class="lien-ancre" href="#centiles" aria-label="Lien vers la définition de Centiles (p95, p99)">#</a></h3>
+  <p class="alias">aussi&nbsp;: percentile, p95, p99, centile</p>
+  <p class="simple">La moyenne cache les mauvais moments. Dire que 95 % des réponses arrivent en moins de tant, c&#x27;est décrire ce que vivent vraiment les utilisateurs, y compris les malchanceux.</p>
+  <details class="detail"><summary>En détail</summary><p>Sur des temps de réponse, la distribution est asymétrique à droite : la moyenne reste basse pendant que la queue s&#x27;allonge. Un engagement de service se rédige toujours en centiles, jamais en moyenne.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#latence">Latence d&#x27;inférence</a> · <a href="#sla">SLA</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="classification-regression" data-cle="classification &amp; régression classification régression régression logistique">
+  <h3>Classification &amp; régression<a class="lien-ancre" href="#classification-regression" aria-label="Lien vers la définition de Classification &amp; régression">#</a></h3>
+  <p class="alias">aussi&nbsp;: classification, régression, régression logistique</p>
+  <p class="simple">Deux familles de problèmes. Classifier, c&#x27;est ranger dans des catégories : ce client fera défaut, ou non. Régresser, c&#x27;est prédire un nombre : cette maison consommera tant de kilowattheures.</p>
+  <details class="detail"><summary>En détail</summary><p>Le scoring crédit est une classification binaire dont on exploite la probabilité ; Seattle Energy est une régression multi-cibles. La régression logistique, malgré son nom, classe : elle modélise le logarithme de la cote et sert de référence interprétable.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#scoring-credit">Scoring crédit</a> · <a href="#baseline">Baseline</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="cout-metier" data-cle="coût métier asymétrique coût métier coût asymétrique fonction de coût">
   <h3>Coût métier asymétrique<a class="lien-ancre" href="#cout-metier" aria-label="Lien vers la définition de Coût métier asymétrique">#</a></h3>
   <p class="alias">aussi&nbsp;: coût métier, coût asymétrique, fonction de coût</p>
   <p class="simple">Toutes les erreurs ne coûtent pas pareil. Prêter à quelqu&#x27;un qui ne remboursera pas fait perdre le capital ; refuser un bon client ne fait perdre qu&#x27;une marge. Le modèle est donc jugé sur une facture, pas sur un pourcentage de bonnes réponses.</p>
   <details class="detail"><summary>En détail</summary><p>Ici la pénalité est fixée à 10 × faux négatifs + 1 × faux positifs. On n&#x27;optimise plus l&#x27;exactitude mais cette somme, ce qui déplace mécaniquement le seuil optimal vers le bas et assume davantage de refus à tort.</p></details>
-  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#faux-positif-negatif">Faux positif / faux négatif</a> · <a href="#seuil-decision">Seuil de décision</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#faux-positif-negatif">Vrais et faux positifs</a> · <a href="#seuil-decision">Seuil de décision</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="desequilibre" data-cle="déséquilibre des classes classes déséquilibrées imbalanced class_weight">
   <h3>Déséquilibre des classes<a class="lien-ancre" href="#desequilibre" aria-label="Lien vers la définition de Déséquilibre des classes">#</a></h3>
@@ -193,19 +209,19 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Traité par pondération des classes (class_weight=&#x27;balanced&#x27;) plutôt que par ré-échantillonnage, afin de ne pas fausser les probabilités prédites, dont le seuil dépend directement.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#precision-rappel">Précision &amp; rappel</a> · <a href="#seuil-decision">Seuil de décision</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
-<article class="entree" id="faux-positif-negatif" data-cle="faux positif / faux négatif fp fn faux positifs faux négatifs">
-  <h3>Faux positif / faux négatif<a class="lien-ancre" href="#faux-positif-negatif" aria-label="Lien vers la définition de Faux positif / faux négatif">#</a></h3>
-  <p class="alias">aussi&nbsp;: fp, fn, faux positifs, faux négatifs</p>
-  <p class="simple">Les deux façons de se tromper. Faux négatif : on accorde un prêt à quelqu&#x27;un qui ne remboursera pas. Faux positif : on refuse un client qui aurait payé. Le premier coûte un capital, le second une marge.</p>
-  <details class="detail"><summary>En détail</summary><p>Les deux cases hors diagonale de la matrice de confusion. Leur rapport de coût — 10 contre 1 dans ce projet — est ce qui rend la métrique asymétrique et déplace le seuil.</p></details>
-  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#matrice-confusion">Matrice de confusion</a> · <a href="#cout-metier">Coût métier asymétrique</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+<article class="entree" id="kpi" data-cle="kpi indicateur clé indicateurs">
+  <h3>KPI<a class="lien-ancre" href="#kpi" aria-label="Lien vers la définition de KPI">#</a></h3>
+  <p class="alias">aussi&nbsp;: indicateur clé, indicateurs</p>
+  <p class="simple">Le petit nombre de mesures qu&#x27;on suit vraiment, parce qu&#x27;elles disent si les choses vont bien. Le reste est du bruit qu&#x27;on peut regarder quand on a le temps.</p>
+  <details class="detail"><summary>En détail</summary><p>Sur un service de scoring : AUC hors échantillon, coût métier, latence, taux de refus observé. Ce dernier est le plus parlant en production — il dérive avant que la performance mesurée ne bouge.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#monitoring">Monitoring</a> · <a href="#cout-metier">Coût métier asymétrique</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="matrice-confusion" data-cle="matrice de confusion confusion matrix">
   <h3>Matrice de confusion<a class="lien-ancre" href="#matrice-confusion" aria-label="Lien vers la définition de Matrice de confusion">#</a></h3>
   <p class="alias">aussi&nbsp;: confusion matrix</p>
   <p class="simple">Un tableau à quatre cases qui croise ce que le modèle a prédit avec ce qui s&#x27;est réellement passé. On y voit d&#x27;un coup d&#x27;œil quel type d&#x27;erreur domine.</p>
   <details class="detail"><summary>En détail</summary><p>Vrais positifs, faux positifs, vrais négatifs, faux négatifs. Toutes les métriques de classification en dérivent : précision, rappel, spécificité, et le coût métier pondéré.</p></details>
-  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#faux-positif-negatif">Faux positif / faux négatif</a> · <a href="#precision-rappel">Précision &amp; rappel</a></span></p>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#faux-positif-negatif">Vrais et faux positifs</a> · <a href="#precision-rappel">Précision &amp; rappel</a></span></p>
 </article>
 <article class="entree" id="precision-rappel" data-cle="précision &amp; rappel precision recall rappel">
   <h3>Précision &amp; rappel<a class="lien-ancre" href="#precision-rappel" aria-label="Lien vers la définition de Précision &amp; rappel">#</a></h3>
@@ -228,6 +244,13 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Le seuil est choisi en balayant l&#x27;intervalle [0,1] et en retenant la valeur qui minimise le coût métier sur les prédictions out-of-fold. C&#x27;est un levier stratégique ajustable sans réentraîner : le durcir rend la banque frileuse, l&#x27;abaisser la rend imprudente.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#cout-metier">Coût métier asymétrique</a> · <a href="#oof">AUC-OOF (out-of-fold)</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="faux-positif-negatif" data-cle="vrais et faux positifs fp fn vp vn faux positifs faux négatifs vrais positifs vrai positif">
+  <h3>Vrais et faux positifs<a class="lien-ancre" href="#faux-positif-negatif" aria-label="Lien vers la définition de Vrais et faux positifs">#</a></h3>
+  <p class="alias">aussi&nbsp;: fp, fn, vp, vn, faux positifs, faux négatifs, vrais positifs, vrai positif</p>
+  <p class="simple">Les quatre cas possibles, notés VP, VN, FP et FN. Les deux façons de se tromper sont les plus parlantes : faux négatif, on accorde un prêt à quelqu&#x27;un qui ne remboursera pas ; faux positif, on refuse un client qui aurait payé. Le premier coûte un capital, le second une marge.</p>
+  <details class="detail"><summary>En détail</summary><p>Les deux cases hors diagonale de la matrice de confusion. Leur rapport de coût — 10 contre 1 dans ce projet — est ce qui rend la métrique asymétrique et déplace le seuil.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#matrice-confusion">Matrice de confusion</a> · <a href="#cout-metier">Coût métier asymétrique</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
 </section>
 <section class="famille" id="f-ml">
   <h2>Modélisation</h2>
@@ -238,6 +261,34 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <p class="simple">Le modèle simple qu&#x27;on construit d&#x27;abord, exprès, pour avoir un point de comparaison. Sans lui, impossible de dire si le modèle compliqué qui suit sert à quelque chose.</p>
   <details class="detail"><summary>En détail</summary><p>Régression logistique ou forêt aléatoire aux réglages par défaut. Toute complexité ajoutée ensuite doit démontrer un gain sur la métrique métier, pas seulement sur l&#x27;AUC.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#random-forest">Random Forest</a> · <a href="#cout-metier">Coût métier asymétrique</a></span></p>
+</article>
+<article class="entree" id="correlation" data-cle="corrélation corrélé colinéarité">
+  <h3>Corrélation<a class="lien-ancre" href="#correlation" aria-label="Lien vers la définition de Corrélation">#</a></h3>
+  <p class="alias">aussi&nbsp;: corrélé, colinéarité</p>
+  <p class="simple">Deux variables qui évoluent ensemble. Cela ne dit rien de la cause : le nombre de pompiers présents monte avec les dégâts d&#x27;un incendie, sans que les pompiers y soient pour quelque chose.</p>
+  <details class="detail"><summary>En détail</summary><p>Deux variables trop corrélées dégradent l&#x27;interprétation — leur importance se répartit arbitrairement entre elles — sans nécessairement nuire à la prédiction. SHAP hérite partiellement de ce défaut.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#shap">SHAP</a> · <a href="#feature-engineering">Feature engineering</a></span></p>
+</article>
+<article class="entree" id="gradient" data-cle="descente de gradient gradient taux d&#x27;apprentissage learning rate">
+  <h3>Descente de gradient<a class="lien-ancre" href="#gradient" aria-label="Lien vers la définition de Descente de gradient">#</a></h3>
+  <p class="alias">aussi&nbsp;: gradient, taux d&#x27;apprentissage, learning rate</p>
+  <p class="simple">La méthode d&#x27;apprentissage de presque tous les modèles modernes : mesurer l&#x27;erreur, regarder dans quelle direction elle diminue, faire un petit pas, recommencer. Le taux d&#x27;apprentissage est la taille du pas.</p>
+  <details class="detail"><summary>En détail</summary><p>Trop grand, l&#x27;optimisation oscille sans converger ; trop petit, elle traîne et se fige dans un minimum local. En boosting, un taux faible compensé par davantage d&#x27;arbres donne en général le meilleur compromis.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#regularisation">Régularisation</a> · <a href="#lightgbm">LightGBM</a></span></p>
+</article>
+<article class="entree" id="distribution" data-cle="distribution loi de distribution asymétrie queue de distribution">
+  <h3>Distribution<a class="lien-ancre" href="#distribution" aria-label="Lien vers la définition de Distribution">#</a></h3>
+  <p class="alias">aussi&nbsp;: loi de distribution, asymétrie, queue de distribution</p>
+  <p class="simple">La façon dont les valeurs d&#x27;une variable se répartissent : où elles se concentrent, jusqu&#x27;où elles s&#x27;étendent. C&#x27;est la comparaison de deux distributions qui révèle qu&#x27;un modèle vieillit.</p>
+  <details class="detail"><summary>En détail</summary><p>Rarement gaussienne sur des données réelles : revenus et montants de crédit sont fortement asymétriques à droite. D&#x27;où la préférence pour la médiane et les centiles plutôt que la moyenne.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#data-drift">Data drift</a> · <a href="#centiles">Centiles (p95, p99)</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="entrainement" data-cle="entraînement &amp; jeux de données apprentissage jeu d&#x27;entraînement jeu de validation jeu de test train test split">
+  <h3>Entraînement &amp; jeux de données<a class="lien-ancre" href="#entrainement" aria-label="Lien vers la définition de Entraînement &amp; jeux de données">#</a></h3>
+  <p class="alias">aussi&nbsp;: apprentissage, jeu d&#x27;entraînement, jeu de validation, jeu de test, train test split</p>
+  <p class="simple">On sépare les données en trois : de quoi apprendre, de quoi régler, et de quoi juger. Le troisième lot ne sert qu&#x27;une fois, à la toute fin — s&#x27;en servir pour choisir revient à se noter soi-même.</p>
+  <details class="detail"><summary>En détail</summary><p>Entraînement pour ajuster les paramètres, validation pour les hyperparamètres et le seuil, test pour l&#x27;estimation finale. La validation croisée fusionne les deux premiers ; le test reste à part, intouché.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#validation-croisee">Validation croisée</a> · <a href="#fuite-donnees">Fuite de données</a> · <a href="#inference">Inférence</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="feature-engineering" data-cle="feature engineering ingénierie des variables features variables">
   <h3>Feature engineering<a class="lien-ancre" href="#feature-engineering" aria-label="Lien vers la définition de Feature engineering">#</a></h3>
@@ -267,12 +318,47 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Implémentation du gradient boosting par Microsoft, à croissance en profondeur (leaf-wise) et binning des variables continues. Gère nativement les valeurs manquantes et les variables catégorielles, d&#x27;où son avantage sur un jeu bancaire creux.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#random-forest">Random Forest</a> · <a href="#shap">SHAP</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="mlp" data-cle="mlp perceptron multicouche réseau dense">
+  <h3>MLP<a class="lien-ancre" href="#mlp" aria-label="Lien vers la définition de MLP">#</a></h3>
+  <p class="alias">aussi&nbsp;: perceptron multicouche, réseau dense</p>
+  <p class="simple">Un réseau de neurones simple, couches empilées les unes sur les autres. Sur des données en tableau, il se fait généralement battre par les arbres, et il explique bien moins ses décisions.</p>
+  <details class="detail"><summary>En détail</summary><p>Sensible à la mise à l&#x27;échelle des variables et aux valeurs manquantes, deux points que les arbres encaissent seuls. Testé en comparaison sur le scoring, écarté pour cette raison autant que pour l&#x27;explicabilité.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#normalisation">Normalisation &amp; encodage</a> · <a href="#lightgbm">LightGBM</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="normalisation" data-cle="normalisation &amp; encodage scaling mise à l&#x27;échelle encodage one-hot">
+  <h3>Normalisation &amp; encodage<a class="lien-ancre" href="#normalisation" aria-label="Lien vers la définition de Normalisation &amp; encodage">#</a></h3>
+  <p class="alias">aussi&nbsp;: scaling, mise à l&#x27;échelle, encodage, one-hot</p>
+  <p class="simple">Mettre les variables dans une forme que le modèle sait lire : ramener les échelles à un ordre comparable, et transformer les catégories — un métier, une ville — en nombres.</p>
+  <details class="detail"><summary>En détail</summary><p>Le scaling est indispensable aux modèles à distance ou à gradient, inutile aux arbres. L&#x27;encodage one-hot fait exploser la dimension sur les variables à forte cardinalité, d&#x27;où l&#x27;intérêt des modèles qui gèrent le catégoriel nativement.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#pipeline-sklearn">Pipeline de prétraitement</a> · <a href="#fuite-donnees">Fuite de données</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="pandas" data-cle="pandas dataframe polars duckdb">
+  <h3>pandas<a class="lien-ancre" href="#pandas" aria-label="Lien vers la définition de pandas">#</a></h3>
+  <p class="alias">aussi&nbsp;: dataframe, polars, duckdb</p>
+  <p class="simple">La bibliothèque Python qui manipule les données en tableaux : filtrer, joindre, regrouper, agréger. C&#x27;est l&#x27;outil dans lequel se passe l&#x27;essentiel du travail avant que le modèle n&#x27;entre en scène.</p>
+  <details class="detail"><summary>En détail</summary><p>Le piège classique est la copie implicite sur tranche, qui produit des avertissements et des résultats silencieusement faux. Au-delà de quelques millions de lignes, Polars ou DuckDB deviennent préférables.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#feature-engineering">Feature engineering</a> · <a href="#etl">ETL</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="pipeline-sklearn" data-cle="pipeline de prétraitement pipeline sklearn columntransformer pipeline">
+  <h3>Pipeline de prétraitement<a class="lien-ancre" href="#pipeline-sklearn" aria-label="Lien vers la définition de Pipeline de prétraitement">#</a></h3>
+  <p class="alias">aussi&nbsp;: pipeline sklearn, columntransformer, pipeline</p>
+  <p class="simple">Enfermer les transformations et le modèle dans un seul objet, pour que l&#x27;entraînement et la production appliquent exactement les mêmes traitements. Sans cela, les deux finissent toujours par diverger.</p>
+  <details class="detail"><summary>En détail</summary><p>Pipeline et ColumnTransformer de scikit-learn. C&#x27;est aussi la garantie que le prétraitement s&#x27;ajuste à l&#x27;intérieur de chaque pli de validation, ce qui prévient la forme la plus courante de fuite.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#fuite-donnees">Fuite de données</a> · <a href="#scikit-learn">scikit-learn</a> · <a href="#onnx">ONNX</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="random-forest" data-cle="random forest forêt aléatoire random forest">
   <h3>Random Forest<a class="lien-ancre" href="#random-forest" aria-label="Lien vers la définition de Random Forest">#</a></h3>
   <p class="alias">aussi&nbsp;: forêt aléatoire</p>
   <p class="simple">Beaucoup d&#x27;arbres de décision entraînés chacun sur un échantillon différent, dont on moyenne les avis. Robuste et difficile à mal régler : c&#x27;est le point de comparaison qu&#x27;on garde pour vérifier qu&#x27;un modèle plus savant apporte vraiment quelque chose.</p>
   <details class="detail"><summary>En détail</summary><p>Bagging d&#x27;arbres décorrélés par tirage aléatoire des observations et des variables à chaque nœud. Sert de baseline interprétable ; le boosting le dépasse en général sur données tabulaires, mais pas toujours assez pour justifier sa complexité.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#lightgbm">LightGBM</a> · <a href="#baseline">Baseline</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="regularisation" data-cle="régularisation pénalisation arrêt précoce early stopping">
+  <h3>Régularisation<a class="lien-ancre" href="#regularisation" aria-label="Lien vers la définition de Régularisation">#</a></h3>
+  <p class="alias">aussi&nbsp;: pénalisation, arrêt précoce, early stopping</p>
+  <p class="simple">Brider volontairement le modèle pour l&#x27;empêcher d&#x27;apprendre par cœur : limiter sa complexité, ou arrêter l&#x27;entraînement dès que la performance cesse de progresser sur des données mises de côté.</p>
+  <details class="detail"><summary>En détail</summary><p>Pénalités L1 et L2 sur les poids, profondeur et nombre de feuilles bornés côté arbres, arrêt précoce sur un jeu de validation. Le réglage se fait avec les autres hyperparamètres, jamais isolément.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#surapprentissage">Surapprentissage</a> · <a href="#hyperparametres">Hyperparamètres</a></span></p>
 </article>
 <article class="entree" id="scikit-learn" data-cle="scikit-learn sklearn">
   <h3>scikit-learn<a class="lien-ancre" href="#scikit-learn" aria-label="Lien vers la définition de scikit-learn">#</a></h3>
@@ -295,6 +381,13 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Se lit à l&#x27;écart entre performance d&#x27;entraînement et de validation. Contenu par régularisation, arrêt précoce et limitation de la profondeur des arbres.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#validation-croisee">Validation croisée</a> · <a href="#baseline">Baseline</a></span></p>
 </article>
+<article class="entree" id="valeurs-manquantes" data-cle="valeurs manquantes imputation données manquantes missingno">
+  <h3>Valeurs manquantes<a class="lien-ancre" href="#valeurs-manquantes" aria-label="Lien vers la définition de Valeurs manquantes">#</a></h3>
+  <p class="alias">aussi&nbsp;: imputation, données manquantes, missingno</p>
+  <p class="simple">Des cases vides dans les données. Les remplir par une moyenne est commode mais invente de l&#x27;information ; parfois l&#x27;absence elle-même est un signal qu&#x27;il vaut mieux conserver.</p>
+  <details class="detail"><summary>En détail</summary><p>LightGBM apprend une direction par défaut pour les manquants, ce qui évite d&#x27;imputer. Quand l&#x27;imputation s&#x27;impose, elle s&#x27;ajuste dans les plis de validation, jamais sur l&#x27;ensemble des données.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#fuite-donnees">Fuite de données</a> · <a href="#lightgbm">LightGBM</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="validation-croisee" data-cle="validation croisée cross-validation k-fold validation croisée stratifiée">
   <h3>Validation croisée<a class="lien-ancre" href="#validation-croisee" aria-label="Lien vers la définition de Validation croisée">#</a></h3>
   <p class="alias">aussi&nbsp;: cross-validation, k-fold, validation croisée stratifiée</p>
@@ -302,16 +395,58 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Stratifiée ici, pour conserver le taux de défaut dans chaque pli malgré le déséquilibre. Fournit à la fois l&#x27;écart-type de la performance et les prédictions out-of-fold utilisées pour calibrer le seuil.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#oof">AUC-OOF (out-of-fold)</a> · <a href="#desequilibre">Déséquilibre des classes</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="xgboost" data-cle="xgboost xgb">
+  <h3>XGBoost<a class="lien-ancre" href="#xgboost" aria-label="Lien vers la définition de XGBoost">#</a></h3>
+  <p class="alias">aussi&nbsp;: xgb</p>
+  <p class="simple">Un autre modèle de boosting d&#x27;arbres, cousin de LightGBM et longtemps la référence des compétitions. Ici il fait jeu égal en précision, mais coûte plus cher à servir.</p>
+  <details class="detail"><summary>En détail</summary><p>Croissance en largeur (level-wise) plutôt qu&#x27;en profondeur, ce qui le rend plus régulier mais plus lourd. Écarté au profit de LightGBM sur le critère de la mise en production, pas sur celui de la performance.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#lightgbm">LightGBM</a> · <a href="#baseline">Baseline</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
 </section>
 <section class="famille" id="f-mlops">
   <h2>MLOps &amp; mise en production</h2>
   <p class="fam-intro">Ce qui sépare un modèle qui marche d&#x27;un modèle qui sert.</p>
+<article class="entree" id="airflow" data-cle="airflow orchestrateur dag ordonnanceur">
+  <h3>Airflow<a class="lien-ancre" href="#airflow" aria-label="Lien vers la définition de Airflow">#</a></h3>
+  <p class="alias">aussi&nbsp;: orchestrateur, dag, ordonnanceur</p>
+  <p class="simple">L&#x27;outil qui déclenche les traitements dans le bon ordre, à heure dite, et reprend là où ça s&#x27;est arrêté en cas d&#x27;échec. Le chef d&#x27;orchestre des chaînes de données.</p>
+  <details class="detail"><summary>En détail</summary><p>Les traitements sont décrits comme un graphe orienté sans cycle, avec dépendances, reprises et fenêtres d&#x27;exécution. La difficulté n&#x27;est pas l&#x27;outil mais l&#x27;idempotence des tâches qu&#x27;on lui confie.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#etl">ETL</a> · <a href="#idempotence">Idempotence</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="rest" data-cle="api rest rest endpoint point d&#x27;entrée openapi swagger">
+  <h3>API REST<a class="lien-ancre" href="#rest" aria-label="Lien vers la définition de API REST">#</a></h3>
+  <p class="alias">aussi&nbsp;: rest, endpoint, point d&#x27;entrée, openapi, swagger</p>
+  <p class="simple">La façon standard de faire dialoguer deux programmes sur le web : une adresse par ressource, des verbes convenus pour lire ou écrire, et des codes de retour qui disent ce qui s&#x27;est passé.</p>
+  <details class="detail"><summary>En détail</summary><p>Ici GET /health pour la sonde de vie, POST /predict pour le score. Les codes comptent autant que les données : 422 signale une entrée invalide, à distinguer d&#x27;un 500, qui signale un défaut du service.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#fastapi">FastAPI</a> · <a href="#latence">Latence d&#x27;inférence</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="artefact" data-cle="artefact de modèle sérialisation pickle modèle sérialisé">
+  <h3>Artefact de modèle<a class="lien-ancre" href="#artefact" aria-label="Lien vers la définition de Artefact de modèle">#</a></h3>
+  <p class="alias">aussi&nbsp;: sérialisation, pickle, modèle sérialisé</p>
+  <p class="simple">Le fichier produit par l&#x27;entraînement, qui contient le modèle appris. C&#x27;est lui qu&#x27;on versionne et qu&#x27;on déploie — pas le code qui l&#x27;a créé.</p>
+  <details class="detail"><summary>En détail</summary><p>Sérialisé par joblib ou pickle, formats liés aux versions de bibliothèques : recharger avec une version différente peut échouer, ou pire, réussir en modifiant le comportement. D&#x27;où l&#x27;épinglage des versions dans l&#x27;image.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#mlflow">MLflow</a> · <a href="#docker">Docker</a> · <a href="#reproductibilite">Reproductibilité</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="ci-cd" data-cle="ci/cd intégration continue déploiement continu github actions pipeline ci">
   <h3>CI/CD<a class="lien-ancre" href="#ci-cd" aria-label="Lien vers la définition de CI/CD">#</a></h3>
   <p class="alias">aussi&nbsp;: intégration continue, déploiement continu, github actions, pipeline ci</p>
   <p class="simple">Une chaîne automatique déclenchée à chaque modification du code : elle lance les tests, construit l&#x27;image, et ne déploie que si tout est vert. Personne ne met en ligne à la main.</p>
   <details class="detail"><summary>En détail</summary><p>Ici GitHub Actions : push sur main → pytest avec seuil de couverture → build Docker → déploiement sur Hugging Face Spaces. Un test rouge arrête la chaîne avant le déploiement.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#docker">Docker</a> · <a href="#tests-automatises">Tests automatisés</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="cloud-manage" data-cle="cloud managé (aws, gcp) aws gcp cloud">
+  <h3>Cloud managé (AWS, GCP)<a class="lien-ancre" href="#cloud-manage" aria-label="Lien vers la définition de Cloud managé (AWS, GCP)">#</a></h3>
+  <p class="alias">aussi&nbsp;: aws, gcp, cloud</p>
+  <p class="simple">Louer chez un grand fournisseur des services déjà administrés — machines, bases, files d&#x27;attente — plutôt que de les installer soi-même. On y gagne du temps et de la robustesse, on y perd en maîtrise du coût.</p>
+  <details class="detail"><summary>En détail</summary><p>Une limite que j&#x27;assume : mes déploiements tournent sur Docker et Hugging Face, et ma pratique d&#x27;AWS et GCP est en montée. Les concepts d&#x27;industrialisation s&#x27;y transposent, l&#x27;outillage propre à chaque fournisseur s&#x27;apprend.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#docker">Docker</a> · <a href="#sla">SLA</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#reflexivite">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="contrat-donnees" data-cle="contrat de données validation des données great expectations qualité des données">
+  <h3>Contrat de données<a class="lien-ancre" href="#contrat-donnees" aria-label="Lien vers la définition de Contrat de données">#</a></h3>
+  <p class="alias">aussi&nbsp;: validation des données, great expectations, qualité des données</p>
+  <p class="simple">Écrire noir sur blanc ce qu&#x27;on attend des données entrantes — colonnes présentes, bornes, taux de vide acceptable — et refuser ce qui s&#x27;en écarte, au lieu de le découvrir par un modèle qui déraille.</p>
+  <details class="detail"><summary>En détail</summary><p>Great Expectations ou Pandera posent ces attentes en tests exécutables, en amont de la chaîne. C&#x27;est la limite identifiée sur ce projet : la validation d&#x27;entrée n&#x27;y est que partielle.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#data-drift">Data drift</a> · <a href="#etl">ETL</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="data-drift" data-cle="data drift drift dérive des données dérive">
   <h3>Data drift<a class="lien-ancre" href="#data-drift" aria-label="Lien vers la définition de Data drift">#</a></h3>
@@ -341,12 +476,33 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Validation des entrées par Pydantic — une requête malformée est rejetée en 422 avant d&#x27;atteindre le modèle — exécution asynchrone, et schéma OpenAPI publié sur /docs.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#docker">Docker</a> · <a href="#latence">Latence d&#x27;inférence</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="grafana" data-cle="grafana tableau de bord d&#x27;observabilité whylabs">
+  <h3>Grafana<a class="lien-ancre" href="#grafana" aria-label="Lien vers la définition de Grafana">#</a></h3>
+  <p class="alias">aussi&nbsp;: tableau de bord d&#x27;observabilité, whylabs</p>
+  <p class="simple">L&#x27;outil qui affiche les courbes de ce qui se passe en production, et déclenche une alerte quand une valeur sort des clous. On y regarde la santé du service comme on regarde un tableau de bord de voiture.</p>
+  <details class="detail"><summary>En détail</summary><p>S&#x27;alimente de séries temporelles collectées par Prometheus. La partie délicate n&#x27;est pas l&#x27;affichage mais le seuil d&#x27;alerte : trop sensible, il finit ignoré ; trop lâche, il ne sert à rien.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#monitoring">Monitoring</a> · <a href="#kpi">KPI</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="hugging-face" data-cle="hugging face spaces hugging face hf spaces spaces">
   <h3>Hugging Face Spaces<a class="lien-ancre" href="#hugging-face" aria-label="Lien vers la définition de Hugging Face Spaces">#</a></h3>
   <p class="alias">aussi&nbsp;: hugging face, hf spaces, spaces</p>
   <p class="simple">Un hébergeur spécialisé dans les applications d&#x27;IA, où tournent les deux API en production de ce portfolio. Il accepte directement une image Docker.</p>
   <details class="detail"><summary>En détail</summary><p>Déploiement par push sur le dépôt du Space depuis GitHub Actions. Le plan gratuit met l&#x27;instance en veille après inactivité, d&#x27;où une première requête plus lente — contrainte assumée pour une démonstration publique.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#docker">Docker</a> · <a href="#ci-cd">CI/CD</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="idempotence" data-cle="idempotence idempotent rejouable">
+  <h3>Idempotence<a class="lien-ancre" href="#idempotence" aria-label="Lien vers la définition de Idempotence">#</a></h3>
+  <p class="alias">aussi&nbsp;: idempotent, rejouable</p>
+  <p class="simple">La propriété d&#x27;une opération qu&#x27;on peut relancer sans dégât : la jouer deux fois donne le même résultat qu&#x27;une fois. Sans elle, une reprise après incident duplique les données.</p>
+  <details class="detail"><summary>En détail</summary><p>Centrale en orchestration : une tâche interrompue sera rejouée, et elle doit écrire par remplacement plutôt que par ajout. C&#x27;est ce qui sépare une chaîne qu&#x27;on peut relancer sereinement d&#x27;une chaîne qu&#x27;on redoute de toucher.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#etl">ETL</a> · <a href="#airflow">Airflow</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="inference" data-cle="inférence prédire prédiction servir un modèle">
+  <h3>Inférence<a class="lien-ancre" href="#inference" aria-label="Lien vers la définition de Inférence">#</a></h3>
+  <p class="alias">aussi&nbsp;: prédire, prédiction, servir un modèle</p>
+  <p class="simple">Le moment où le modèle, une fois entraîné, répond à une vraie question. L&#x27;entraînement se fait une fois et coûte cher ; l&#x27;inférence se répète à chaque appel et doit être rapide.</p>
+  <details class="detail"><summary>En détail</summary><p>Les contraintes y sont opposées à celles de l&#x27;entraînement : mémoire réduite, exécution déterministe, prétraitement rigoureusement identique. La plupart des incidents de production naissent d&#x27;un écart entre les deux.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#latence">Latence d&#x27;inférence</a> · <a href="#pipeline-sklearn">Pipeline de prétraitement</a> · <a href="#entrainement">Entraînement &amp; jeux de données</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="jsonl" data-cle="jsonl json lines logs jsonl journal">
   <h3>JSONL<a class="lien-ancre" href="#jsonl" aria-label="Lien vers la définition de JSONL">#</a></h3>
@@ -362,9 +518,16 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Mesurée côté serveur, hors réseau, et journalisée à chaque appel. On regarde les centiles hauts (p95, p99) autant que la moyenne : c&#x27;est la queue de distribution qui se voit à l&#x27;usage.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#fastapi">FastAPI</a> · <a href="#monitoring">Monitoring</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
 </article>
-<article class="entree" id="mlflow" data-cle="mlflow tracking suivi d&#x27;expériences registry">
+<article class="entree" id="linter" data-cle="linter ruff formateur pre-commit lint">
+  <h3>Linter<a class="lien-ancre" href="#linter" aria-label="Lien vers la définition de Linter">#</a></h3>
+  <p class="alias">aussi&nbsp;: ruff, formateur, pre-commit, lint</p>
+  <p class="simple">Un outil qui relit le code automatiquement et signale les erreurs de style, les imports inutiles, les pièges classiques. Il tranche les débats de forme pour que la relecture porte sur le fond.</p>
+  <details class="detail"><summary>En détail</summary><p>Ruff côté Python, très rapide, exécuté en pre-commit et en intégration continue. Le formatage automatique supprime une catégorie entière de commentaires de revue.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#ci-cd">CI/CD</a> · <a href="#tests-automatises">Tests automatisés</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="mlflow" data-cle="mlflow tracking suivi d&#x27;expériences registry registre de modèles">
   <h3>MLflow<a class="lien-ancre" href="#mlflow" aria-label="Lien vers la définition de MLflow">#</a></h3>
-  <p class="alias">aussi&nbsp;: tracking, suivi d&#x27;expériences, registry</p>
+  <p class="alias">aussi&nbsp;: tracking, suivi d&#x27;expériences, registry, registre de modèles</p>
   <p class="simple">Un carnet de bord des entraînements : chaque essai y laisse ses réglages, ses scores et le modèle produit. Sans lui, on ne sait plus au bout de trente essais lequel était le bon.</p>
   <details class="detail"><summary>En détail</summary><p>Tracking des paramètres et métriques, stockage des artefacts, et registre de modèles avec étapes de promotion. C&#x27;est ce qui rend un résultat reproductible et un déploiement traçable.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#mlops">MLOps</a> · <a href="#hyperparametres">Hyperparamètres</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
@@ -382,6 +545,41 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <p class="simple">Regarder en continu ce que fait le modèle une fois en ligne : combien de requêtes, à quelle vitesse, avec quelles réponses. Un modèle qu&#x27;on ne surveille pas est un modèle dont on ignore qu&#x27;il a cessé de fonctionner.</p>
   <details class="detail"><summary>En détail</summary><p>Journalisation structurée des prédictions, métriques techniques (latence, taux d&#x27;erreur) et métriques métier (distribution des scores). Prometheus côté collecte sur le projet d&#x27;agent d&#x27;ouvertures.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#data-drift">Data drift</a> · <a href="#jsonl">JSONL</a> · <a href="#latence">Latence d&#x27;inférence</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="onnx" data-cle="onnx open neural network exchange">
+  <h3>ONNX<a class="lien-ancre" href="#onnx" aria-label="Lien vers la définition de ONNX">#</a></h3>
+  <p class="alias">aussi&nbsp;: open neural network exchange</p>
+  <p class="simple">Un format d&#x27;échange qui permet d&#x27;entraîner un modèle avec un outil et de le servir avec un autre, souvent plus rapide. Testé sur ce projet — 39 % de taille en moins — puis écarté : le gain ne valait pas le risque.</p>
+  <details class="detail"><summary>En détail</summary><p>La conversion doit être vérifiée prédiction par prédiction : un écart numérique minime sur une probabilité peut faire basculer une décision autour du seuil. Un arbitrage assumé en faveur de la fiabilité.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#pipeline-sklearn">Pipeline de prétraitement</a> · <a href="#latence">Latence d&#x27;inférence</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="reproductibilite" data-cle="reproductibilité reproductible graine aléatoire seed">
+  <h3>Reproductibilité<a class="lien-ancre" href="#reproductibilite" aria-label="Lien vers la définition de Reproductibilité">#</a></h3>
+  <p class="alias">aussi&nbsp;: reproductible, graine aléatoire, seed</p>
+  <p class="simple">Pouvoir relancer un entraînement dans six mois et retrouver le même résultat. Sans cela, impossible de dire si un écart vient d&#x27;une amélioration ou du hasard.</p>
+  <details class="detail"><summary>En détail</summary><p>Suppose de figer trois choses : la graine aléatoire, les versions de dépendances et la version des données. Les deux premières sont faciles, la troisième est celle qu&#x27;on néglige et qui coûte le plus cher.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#mlflow">MLflow</a> · <a href="#artefact">Artefact de modèle</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="rollback" data-cle="rollback retour arrière revenir en arrière">
+  <h3>Rollback<a class="lien-ancre" href="#rollback" aria-label="Lien vers la définition de Rollback">#</a></h3>
+  <p class="alias">aussi&nbsp;: retour arrière, revenir en arrière</p>
+  <p class="simple">Pouvoir revenir à la version précédente en quelques minutes quand la nouvelle se comporte mal. C&#x27;est ce qui rend un déploiement acceptable : non pas l&#x27;absence de panne, mais la capacité à en sortir vite.</p>
+  <details class="detail"><summary>En détail</summary><p>Suppose des images versionnées et immuables, et un modèle rechargeable indépendamment du code. Le temps de retour arrière est une métrique d&#x27;exploitation à part entière.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#docker">Docker</a> · <a href="#ci-cd">CI/CD</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="scalabilite" data-cle="scalabilité passage à l&#x27;échelle scalable montée en charge">
+  <h3>Scalabilité<a class="lien-ancre" href="#scalabilite" aria-label="Lien vers la définition de Scalabilité">#</a></h3>
+  <p class="alias">aussi&nbsp;: passage à l&#x27;échelle, scalable, montée en charge</p>
+  <p class="simple">La capacité à encaisser dix ou cent fois plus de trafic sans tout réécrire. Le journal en fichier de ce projet, par exemple, ne passe pas à l&#x27;échelle : c&#x27;est une limite connue et assumée.</p>
+  <details class="detail"><summary>En détail</summary><p>Se gagne par la réplication horizontale d&#x27;un service sans état, ce qui suppose de sortir l&#x27;état — journaux, modèle — du conteneur. Un fichier local rend justement l&#x27;instance non réplicable.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#jsonl">JSONL</a> · <a href="#docker">Docker</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="sla" data-cle="sla engagement de service service level agreement disponibilité">
+  <h3>SLA<a class="lien-ancre" href="#sla" aria-label="Lien vers la définition de SLA">#</a></h3>
+  <p class="alias">aussi&nbsp;: engagement de service, service level agreement, disponibilité</p>
+  <p class="simple">L&#x27;engagement chiffré sur la qualité d&#x27;un service : tant de disponibilité, telle vitesse de réponse. L&#x27;hébergement gratuit de ce portfolio n&#x27;en offre aucun — d&#x27;où la première requête parfois lente.</p>
+  <details class="detail"><summary>En détail</summary><p>Se rédige en centiles et sur une fenêtre d&#x27;observation, avec une contrepartie en cas de manquement. Passer d&#x27;un hébergement gratuit à un service avec engagement est le premier poste de coût d&#x27;une mise en production réelle.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#centiles">Centiles (p95, p99)</a> · <a href="#cloud-manage">Cloud managé (AWS, GCP)</a> · <a href="#hugging-face">Hugging Face Spaces</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#prestations">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="tests-automatises" data-cle="tests automatisés pytest couverture tests unitaires vitest">
   <h3>Tests automatisés<a class="lien-ancre" href="#tests-automatises" aria-label="Lien vers la définition de Tests automatisés">#</a></h3>
@@ -401,12 +599,26 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Découpage par nombre de tokens avec recouvrement, en respectant les frontières naturelles du document. Le couple taille/recouvrement se règle empiriquement, en mesurant le rappel sur des questions de référence.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rag">RAG</a> · <a href="#reranking">Reranking</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="cross-encoder" data-cle="cross-encoder bi-encoder encodeur croisé">
+  <h3>Cross-encoder<a class="lien-ancre" href="#cross-encoder" aria-label="Lien vers la définition de Cross-encoder">#</a></h3>
+  <p class="alias">aussi&nbsp;: bi-encoder, encodeur croisé</p>
+  <p class="simple">Un modèle qui lit la question et le passage ensemble pour juger s&#x27;ils vont de pair. Plus juste qu&#x27;un encodage séparé, mais bien plus lent — d&#x27;où son usage sur une poignée de candidats seulement.</p>
+  <details class="detail"><summary>En détail</summary><p>Le bi-encoder vectorise indépendamment, ce qui permet d&#x27;indexer à l&#x27;avance ; le cross-encoder exige un passage du modèle par paire, donc pas d&#x27;index possible. Les deux se combinent : recherche large, puis reclassement fin.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#reranking">Reranking</a> · <a href="#embedding">Embedding</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="embedding" data-cle="embedding vectorisation plongement vecteur">
   <h3>Embedding<a class="lien-ancre" href="#embedding" aria-label="Lien vers la définition de Embedding">#</a></h3>
   <p class="alias">aussi&nbsp;: vectorisation, plongement, vecteur</p>
   <p class="simple">Transformer un texte en une liste de nombres qui capture son sens, de sorte que deux phrases proches par le sens donnent deux listes proches. C&#x27;est ce qui permet de chercher par idée et non par mot exact.</p>
   <details class="detail"><summary>En détail</summary><p>Vecteur dense de quelques centaines de dimensions produit par un modèle dédié. La proximité se mesure par similarité cosinus. La recherche de ce portfolio repose sur une variante légère et hors ligne, la LSA.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#index-vectoriel">Index vectoriel</a> · <a href="#similarite-cosinus">Similarité cosinus</a> · <a href="#lsa">LSA</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="fenetre-contexte" data-cle="fenêtre de contexte contexte context window">
+  <h3>Fenêtre de contexte<a class="lien-ancre" href="#fenetre-contexte" aria-label="Lien vers la définition de Fenêtre de contexte">#</a></h3>
+  <p class="alias">aussi&nbsp;: contexte, context window</p>
+  <p class="simple">La quantité de texte que le modèle peut avoir sous les yeux d&#x27;un coup. Au-delà, il faut choisir ce qu&#x27;on lui montre — c&#x27;est précisément le travail du RAG.</p>
+  <details class="detail"><summary>En détail</summary><p>Se compte en tokens et englobe la consigne, les passages injectés et la réponse à produire. L&#x27;agrandir ne résout pas tout : la précision se dégrade au milieu des contextes très longs, et le coût croît à chaque requête.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#tokens">Tokens &amp; coût</a> · <a href="#rag">RAG</a> · <a href="#chunking">Chunking</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="fine-tuning" data-cle="fine-tuning affinage spécialisation">
   <h3>Fine-tuning<a class="lien-ancre" href="#fine-tuning" aria-label="Lien vers la définition de Fine-tuning">#</a></h3>
@@ -415,6 +627,13 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Souvent en paramètres réduits (LoRA) pour limiter la mémoire et l&#x27;espace disque. À comparer honnêtement au RAG : quand le besoin est d&#x27;accéder à des connaissances à jour, le RAG répond mieux et plus simplement.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rag">RAG</a> · <a href="#transfer-learning">Transfer learning</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="genai" data-cle="genai ia générative intelligence artificielle générative">
+  <h3>GenAI<a class="lien-ancre" href="#genai" aria-label="Lien vers la définition de GenAI">#</a></h3>
+  <p class="alias">aussi&nbsp;: ia générative, intelligence artificielle générative</p>
+  <p class="simple">Les modèles qui produisent du contenu — texte, image, code — plutôt que de classer ou de prédire un nombre. C&#x27;est la famille dont relèvent les modèles de langage.</p>
+  <details class="detail"><summary>En détail</summary><p>La difficulté d&#x27;ingénierie s&#x27;y déplace : la sortie n&#x27;est plus vérifiable par une métrique unique, et il faut construire l&#x27;évaluation autant que le système lui-même.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#llm">LLM</a> · <a href="#rag">RAG</a> · <a href="#llmops">LLMOps</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="hallucination" data-cle="hallucination hallucinations garde-fous guardrails">
   <h3>Hallucination<a class="lien-ancre" href="#hallucination" aria-label="Lien vers la définition de Hallucination">#</a></h3>
   <p class="alias">aussi&nbsp;: hallucinations, garde-fous, guardrails</p>
@@ -422,9 +641,9 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Contenue en ancrant la réponse sur les passages retrouvés, en exigeant les citations, et en autorisant explicitement le « je ne sais pas ». La boîte de questions de ce portfolio va plus loin : ses réponses sont écrites à la main, donc rien ne peut être inventé.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rag">RAG</a> · <a href="#ragas">Ragas</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
-<article class="entree" id="index-vectoriel" data-cle="index vectoriel faiss milvus base vectorielle">
+<article class="entree" id="index-vectoriel" data-cle="index vectoriel faiss milvus base vectorielle hnsw ivf recherche approchée">
   <h3>Index vectoriel<a class="lien-ancre" href="#index-vectoriel" aria-label="Lien vers la définition de Index vectoriel">#</a></h3>
-  <p class="alias">aussi&nbsp;: faiss, milvus, base vectorielle</p>
+  <p class="alias">aussi&nbsp;: faiss, milvus, base vectorielle, hnsw, ivf, recherche approchée</p>
   <p class="simple">Une structure qui retrouve, parmi des millions de textes vectorisés, les plus proches d&#x27;une question — en quelques millisecondes plutôt qu&#x27;en les comparant tous.</p>
   <details class="detail"><summary>En détail</summary><p>Faiss (bibliothèque, en mémoire) et Milvus (base distribuée) sont utilisés selon l&#x27;échelle. Reposent sur une recherche approchée type HNSW ou IVF, qui échange un peu de rappel contre beaucoup de vitesse.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#embedding">Embedding</a> · <a href="#rag">RAG</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
@@ -443,12 +662,40 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Machine à états sur graphe avec état partagé entre nœuds, branchements conditionnels et reprises. Rend explicites et traçables des enchaînements qu&#x27;une chaîne linéaire ne saurait pas exprimer.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#langchain">LangChain</a> · <a href="#rag">RAG</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="lcel" data-cle="lcel langchain expression language">
+  <h3>LCEL<a class="lien-ancre" href="#lcel" aria-label="Lien vers la définition de LCEL">#</a></h3>
+  <p class="alias">aussi&nbsp;: langchain expression language</p>
+  <p class="simple">La façon d&#x27;écrire une chaîne LangChain en enchaînant les étapes comme des maillons, plutôt qu&#x27;en empilant des objets. Le code se lit dans l&#x27;ordre où les données circulent.</p>
+  <details class="detail"><summary>En détail</summary><p>Apporte gratuitement le parallélisme, la diffusion en continu et le traitement par lots sur la chaîne composée. Utile tant que la chaîne reste simple ; au-delà, un graphe explicite se relit mieux.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#langchain">LangChain</a> · <a href="#langgraph">LangGraph</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="llm" data-cle="llm grand modèle de langage modèle de langage mistral">
   <h3>LLM<a class="lien-ancre" href="#llm" aria-label="Lien vers la définition de LLM">#</a></h3>
   <p class="alias">aussi&nbsp;: grand modèle de langage, modèle de langage, mistral</p>
   <p class="simple">Un modèle entraîné à prédire le mot suivant sur d&#x27;immenses quantités de texte, ce qui suffit à lui faire rédiger, résumer ou répondre. Il ne connaît rien après sa date d&#x27;entraînement et n&#x27;a aucune notion de vérité.</p>
   <details class="detail"><summary>En détail</summary><p>Architecture transformeur. Mistral est utilisé ici via API. Les paramètres d&#x27;échantillonnage — température surtout — arbitrent entre déterminisme et variété, et une température basse est préférable en RAG.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rag">RAG</a> · <a href="#hallucination">Hallucination</a> · <a href="#tokens">Tokens &amp; coût</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="llmops" data-cle="llmops ops llm">
+  <h3>LLMOps<a class="lien-ancre" href="#llmops" aria-label="Lien vers la définition de LLMOps">#</a></h3>
+  <p class="alias">aussi&nbsp;: ops llm</p>
+  <p class="simple">Le MLOps appliqué aux modèles de langage, avec ses problèmes propres : suivre le coût par requête, tracer les prompts, mesurer une qualité qui n&#x27;a pas de bonne réponse unique.</p>
+  <details class="detail"><summary>En détail</summary><p>Aux préoccupations habituelles s&#x27;ajoutent le versionnement des prompts, la journalisation des échanges à des fins d&#x27;audit, la gestion des quotas et la dérive du modèle fournisseur — qui change sans prévenir.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#mlops">MLOps</a> · <a href="#tokens">Tokens &amp; coût</a> · <a href="#ragas">Ragas</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="lora" data-cle="lora low-rank adaptation peft affinage léger">
+  <h3>LoRA<a class="lien-ancre" href="#lora" aria-label="Lien vers la définition de LoRA">#</a></h3>
+  <p class="alias">aussi&nbsp;: low-rank adaptation, peft, affinage léger</p>
+  <p class="simple">Une façon économique d&#x27;affiner un grand modèle : au lieu de modifier ses milliards de paramètres, on lui greffe de petites matrices qui, elles seules, apprennent. Quelques mégaoctets au lieu de plusieurs dizaines de gigaoctets.</p>
+  <details class="detail"><summary>En détail</summary><p>Décomposition de faible rang des mises à jour de poids, gelant le modèle d&#x27;origine. Plusieurs adaptateurs peuvent coexister sur un même modèle de base et se charger à la demande.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#fine-tuning">Fine-tuning</a> · <a href="#llm">LLM</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="prompt" data-cle="prompt invite prompt engineering gabarit de prompt">
+  <h3>Prompt<a class="lien-ancre" href="#prompt" aria-label="Lien vers la définition de Prompt">#</a></h3>
+  <p class="alias">aussi&nbsp;: invite, prompt engineering, gabarit de prompt</p>
+  <p class="simple">Le texte qu&#x27;on envoie au modèle : la consigne, le contexte, la question. Le formuler avec soin change radicalement la réponse, et c&#x27;est devenu une part du travail d&#x27;ingénierie.</p>
+  <details class="detail"><summary>En détail</summary><p>Un prompt de production se versionne comme du code, se teste sur des cas de référence, et sépare la consigne système du contenu utilisateur — mélanger les deux ouvre la porte à l&#x27;injection.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#llm">LLM</a> · <a href="#temperature">Température</a> · <a href="#injection-prompt">Injection de prompt</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="rag" data-cle="rag retrieval augmented generation génération augmentée">
   <h3>RAG<a class="lien-ancre" href="#rag" aria-label="Lien vers la définition de RAG">#</a></h3>
@@ -471,12 +718,33 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Modèle cross-encoder qui lit conjointement question et passage, là où l&#x27;embedding les encode séparément. Appliqué au petit ensemble candidat, son coût reste acceptable.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rag">RAG</a> · <a href="#chunking">Chunking</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="temperature" data-cle="température échantillonnage top-k top-p">
+  <h3>Température<a class="lien-ancre" href="#temperature" aria-label="Lien vers la définition de Température">#</a></h3>
+  <p class="alias">aussi&nbsp;: échantillonnage, top-k, top-p</p>
+  <p class="simple">Le réglage qui décide si le modèle joue la sécurité ou l&#x27;originalité. Basse, il répond de façon stable et prévisible ; haute, il varie et invente davantage.</p>
+  <details class="detail"><summary>En détail</summary><p>Elle aplatit ou accentue la distribution avant tirage du token suivant. En RAG on la garde basse : on veut restituer fidèlement des sources, pas produire des variations.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#llm">LLM</a> · <a href="#hallucination">Hallucination</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="tokens" data-cle="tokens &amp; coût token coût / tokens coût tokens">
   <h3>Tokens &amp; coût<a class="lien-ancre" href="#tokens" aria-label="Lien vers la définition de Tokens &amp; coût">#</a></h3>
   <p class="alias">aussi&nbsp;: token, coût / tokens, coût tokens</p>
   <p class="simple">Les modèles de langage découpent le texte en fragments — les tokens — et se facturent à la quantité lue et écrite. Surveiller cette consommation, c&#x27;est surveiller la facture.</p>
   <details class="detail"><summary>En détail</summary><p>Environ 0,75 mot par token en français. En RAG, le contexte injecté domine largement le coût : allonger les passages retrouvés se paie à chaque requête.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#llm">LLM</a> · <a href="#rag">RAG</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#prestations">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="transformeur" data-cle="transformeur transformer attention">
+  <h3>Transformeur<a class="lien-ancre" href="#transformeur" aria-label="Lien vers la définition de Transformeur">#</a></h3>
+  <p class="alias">aussi&nbsp;: transformer, attention</p>
+  <p class="simple">L&#x27;architecture de réseau qui a rendu possibles les modèles de langage actuels. Sa force : peser l&#x27;importance de chaque mot par rapport à tous les autres, plutôt que de lire strictement de gauche à droite.</p>
+  <details class="detail"><summary>En détail</summary><p>Mécanisme d&#x27;attention dont le coût croît avec le carré de la longueur de séquence — d&#x27;où le prix des contextes longs. Décliné en vision par découpage de l&#x27;image en imagettes.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#llm">LLM</a> · <a href="#computer-vision">Computer Vision</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="zero-shot" data-cle="zero-shot &amp; few-shot few-shot zero-shot exemples dans le prompt">
+  <h3>Zero-shot &amp; few-shot<a class="lien-ancre" href="#zero-shot" aria-label="Lien vers la définition de Zero-shot &amp; few-shot">#</a></h3>
+  <p class="alias">aussi&nbsp;: few-shot, zero-shot, exemples dans le prompt</p>
+  <p class="simple">Demander une tâche au modèle sans lui montrer d&#x27;exemple, ou en lui en glissant deux ou trois dans la consigne. Souvent, trois exemples bien choisis valent mieux qu&#x27;un long paragraphe d&#x27;explication.</p>
+  <details class="detail"><summary>En détail</summary><p>À essayer avant tout affinage : le gain est immédiat et sans coût d&#x27;entraînement. Les exemples consomment en revanche du contexte à chaque appel, donc du budget.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#prompt">Prompt</a> · <a href="#fine-tuning">Fine-tuning</a> · <a href="#tokens">Tokens &amp; coût</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
 </article>
 </section>
 <section class="famille" id="f-vision">
@@ -510,6 +778,13 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Réseaux convolutifs et transformeurs de vision. Les tâches se distinguent par leur granularité : classification pour l&#x27;image entière, détection pour des boîtes, segmentation pour chaque pixel.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#resnet">ResNet-50</a> · <a href="#segmentation">Segmentation d&#x27;images</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="convolution" data-cle="convolution cnn réseau convolutif pooling">
+  <h3>Convolution<a class="lien-ancre" href="#convolution" aria-label="Lien vers la définition de Convolution">#</a></h3>
+  <p class="alias">aussi&nbsp;: cnn, réseau convolutif, pooling</p>
+  <p class="simple">L&#x27;opération qui promène un petit filtre sur toute l&#x27;image pour y repérer un motif — un contour, une texture — où qu&#x27;il se trouve. C&#x27;est le mécanisme de base de la vision par ordinateur.</p>
+  <details class="detail"><summary>En détail</summary><p>Les poids sont partagés sur toute l&#x27;image, ce qui réduit massivement le nombre de paramètres et apporte l&#x27;invariance par translation. Les couches de pooling réduisent la résolution en gardant le signal dominant.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#resnet">ResNet-50</a> · <a href="#computer-vision">Computer Vision</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="dqn" data-cle="dqn deep q-network q-learning">
   <h3>DQN<a class="lien-ancre" href="#dqn" aria-label="Lien vers la définition de DQN">#</a></h3>
   <p class="alias">aussi&nbsp;: deep q-network, q-learning</p>
@@ -517,12 +792,26 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Q-learning dont la table est remplacée par un réseau de neurones, stabilisé par mémoire de rejeu et réseau cible. Adapté aux actions discrètes ; d&#x27;autres familles conviennent mieux au contrôle continu.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rl">Apprentissage par renforcement</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="iou" data-cle="iou intersection sur union intersection over union">
+  <h3>IoU<a class="lien-ancre" href="#iou" aria-label="Lien vers la définition de IoU">#</a></h3>
+  <p class="alias">aussi&nbsp;: intersection sur union, intersection over union</p>
+  <p class="simple">La mesure qui dit si une zone détectée tombe juste : on divise ce que le modèle et la vérité ont en commun par tout ce qu&#x27;ils couvrent ensemble. 1 signifie une superposition parfaite.</p>
+  <details class="detail"><summary>En détail</summary><p>Calculée par classe puis moyennée. Sévère par construction sur les petits objets, où quelques pixels d&#x27;écart font chuter le score — d&#x27;où la lecture par classe plutôt qu&#x27;en agrégat unique.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#segmentation">Segmentation d&#x27;images</a> · <a href="#computer-vision">Computer Vision</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="resnet" data-cle="resnet-50 resnet réseau résiduel">
   <h3>ResNet-50<a class="lien-ancre" href="#resnet" aria-label="Lien vers la définition de ResNet-50">#</a></h3>
   <p class="alias">aussi&nbsp;: resnet, réseau résiduel</p>
   <p class="simple">Un réseau de neurones à cinquante couches, éprouvé et pré-entraîné sur des millions d&#x27;images. On le réutilise comme extracteur de caractéristiques plutôt que de l&#x27;entraîner depuis rien.</p>
   <details class="detail"><summary>En détail</summary><p>Ses connexions résiduelles laissent passer le gradient et rendent l&#x27;entraînement profond stable. Employé ici en extracteur figé, ses représentations alimentant un clustering.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#transfer-learning">Transfer learning</a> · <a href="#clustering">Clustering</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="recompense" data-cle="récompense &amp; politique reward politique policy lunarlander">
+  <h3>Récompense &amp; politique<a class="lien-ancre" href="#recompense" aria-label="Lien vers la définition de Récompense &amp; politique">#</a></h3>
+  <p class="alias">aussi&nbsp;: reward, politique, policy, lunarlander</p>
+  <p class="simple">En renforcement, la récompense est le signal qui dit à l&#x27;agent s&#x27;il a bien fait ; la politique est sa stratégie, c&#x27;est-à-dire ce qu&#x27;il choisit de faire dans chaque situation.</p>
+  <details class="detail"><summary>En détail</summary><p>Mal concevoir la récompense, c&#x27;est obtenir un agent qui optimise la lettre et non l&#x27;intention — il apprendra à survoler la zone d&#x27;atterrissage plutôt qu&#x27;à s&#x27;y poser si seule la survie est récompensée.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rl">Apprentissage par renforcement</a> · <a href="#dqn">DQN</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="segmentation" data-cle="segmentation d&#x27;images segmentation masque iou">
   <h3>Segmentation d&#x27;images<a class="lien-ancre" href="#segmentation" aria-label="Lien vers la définition de Segmentation d&#x27;images">#</a></h3>
@@ -538,10 +827,31 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Les premières couches captent des motifs génériques — contours, textures — transférables d&#x27;un domaine à l&#x27;autre. On gèle ces couches et on ne réentraîne que la tête, ou l&#x27;ensemble à faible taux d&#x27;apprentissage.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#resnet">ResNet-50</a> · <a href="#ssl">Apprentissage semi-supervisé (SSL)</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="epoque" data-cle="époque &amp; taille de lot epoch batch size lot">
+  <h3>Époque &amp; taille de lot<a class="lien-ancre" href="#epoque" aria-label="Lien vers la définition de Époque &amp; taille de lot">#</a></h3>
+  <p class="alias">aussi&nbsp;: epoch, batch size, lot</p>
+  <p class="simple">Une époque, c&#x27;est un passage complet sur les données d&#x27;entraînement. La taille de lot, c&#x27;est le nombre d&#x27;exemples traités avant chaque ajustement du modèle.</p>
+  <details class="detail"><summary>En détail</summary><p>Un grand lot stabilise le gradient et exploite mieux le GPU, mais généralise parfois moins bien. Les deux se règlent avec le taux d&#x27;apprentissage, dont ils ne se séparent pas.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#gradient">Descente de gradient</a> · <a href="#regularisation">Régularisation</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projets">Où ça sert sur le site →</a></p>
+</article>
 </section>
 <section class="famille" id="f-data">
   <h2>Données &amp; ingénierie</h2>
   <p class="fam-intro">Amener la donnée là où le modèle peut la lire.</p>
+<article class="entree" id="acid" data-cle="acid transaction transactions">
+  <h3>ACID<a class="lien-ancre" href="#acid" aria-label="Lien vers la définition de ACID">#</a></h3>
+  <p class="alias">aussi&nbsp;: transaction, transactions</p>
+  <p class="simple">Les quatre garanties d&#x27;une base relationnelle sérieuse : une opération passe entièrement ou pas du tout, ne laisse jamais la base incohérente, ne se mélange pas aux autres, et survit à une coupure de courant.</p>
+  <details class="detail"><summary>En détail</summary><p>Atomicité, cohérence, isolation, durabilité. C&#x27;est ce qui rend PostgreSQL préférable dès qu&#x27;un écart de données coûte de l&#x27;argent — un virement à moitié effectué n&#x27;est pas une option.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#postgresql">PostgreSQL</a> · <a href="#mongodb">MongoDB</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="batch-temps-reel" data-cle="batch &amp; temps réel batch traitement par lots temps réel streaming">
+  <h3>Batch &amp; temps réel<a class="lien-ancre" href="#batch-temps-reel" aria-label="Lien vers la définition de Batch &amp; temps réel">#</a></h3>
+  <p class="alias">aussi&nbsp;: batch, traitement par lots, temps réel, streaming</p>
+  <p class="simple">Deux façons de servir un modèle. En lots : calculer tous les scores chaque nuit. En temps réel : répondre à la demande, en quelques millisecondes. Ce projet fait le second, parce qu&#x27;un conseiller attend au téléphone.</p>
+  <details class="detail"><summary>En détail</summary><p>Le batch coûte moins cher et se supervise plus simplement, mais sert des scores périmés. Le choix se fait sur la fraîcheur exigée par l&#x27;usage, pas sur l&#x27;élégance technique.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rest">API REST</a> · <a href="#latence">Latence d&#x27;inférence</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="etl" data-cle="etl extract transform load pipeline de données airflow">
   <h3>ETL<a class="lien-ancre" href="#etl" aria-label="Lien vers la définition de ETL">#</a></h3>
   <p class="alias">aussi&nbsp;: extract transform load, pipeline de données, airflow</p>
@@ -563,9 +873,9 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Sans schéma imposé, ce qui accélère le prototypage et déplace la contrainte de cohérence vers l&#x27;application. Convient aux données hétérogènes ; les données transactionnelles restent mieux en relationnel.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#postgresql">PostgreSQL</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
 </article>
-<article class="entree" id="postgresql" data-cle="postgresql postgres base relationnelle sql">
+<article class="entree" id="postgresql" data-cle="postgresql postgres base relationnelle sql sqlite jsonb">
   <h3>PostgreSQL<a class="lien-ancre" href="#postgresql" aria-label="Lien vers la définition de PostgreSQL">#</a></h3>
-  <p class="alias">aussi&nbsp;: postgres, base relationnelle, sql</p>
+  <p class="alias">aussi&nbsp;: postgres, base relationnelle, sql, sqlite, jsonb</p>
   <p class="simple">La base de données relationnelle de référence : les données y sont rangées en tables reliées entre elles, avec des garanties strictes sur la cohérence de ce qu&#x27;on écrit.</p>
   <details class="detail"><summary>En détail</summary><p>Transactions ACID, types riches, JSONB pour le semi-structuré et extension vectorielle. Le choix par défaut ici, SQLite prenant le relais en local pour les cas légers.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#etl">ETL</a> · <a href="#mongodb">MongoDB</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
@@ -577,10 +887,158 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>Produit scalaire de deux vecteurs normalisés, entre -1 et 1. Sur des vecteurs positifs, elle vaut 0 pour des sujets sans rapport. C&#x27;est le score affiché en pourcentage par la recherche de ce site.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#lsa">LSA</a> · <a href="#embedding">Embedding</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#accueil">Où ça sert sur le site →</a></p>
 </article>
+<article class="entree" id="stockage-objet" data-cle="stockage objet s3 bucket stockage persistant">
+  <h3>Stockage objet<a class="lien-ancre" href="#stockage-objet" aria-label="Lien vers la définition de Stockage objet">#</a></h3>
+  <p class="alias">aussi&nbsp;: s3, bucket, stockage persistant</p>
+  <p class="simple">Un espace de stockage de fichiers accessible par le réseau, sans limite pratique de taille, où l&#x27;on dépose modèles, journaux et jeux de données. La réponse à la limite du fichier local de ce projet.</p>
+  <details class="detail"><summary>En détail</summary><p>Durable, répliqué, facturé à l&#x27;usage, mais avec une latence de plusieurs millisecondes et sans écriture au milieu d&#x27;un fichier. C&#x27;est ce qui rend un service réplicable, puisque l&#x27;état sort du conteneur.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#scalabilite">Scalabilité</a> · <a href="#jsonl">JSONL</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="svd" data-cle="svd décomposition en valeurs singulières réduction de dimension acp">
+  <h3>SVD<a class="lien-ancre" href="#svd" aria-label="Lien vers la définition de SVD">#</a></h3>
+  <p class="alias">aussi&nbsp;: décomposition en valeurs singulières, réduction de dimension, acp</p>
+  <p class="simple">Une opération d&#x27;algèbre qui décompose un grand tableau en quelques directions principales, celles qui portent l&#x27;essentiel de l&#x27;information. Elle sert à comprimer, à visualiser, et ici à faire fonctionner la recherche du site.</p>
+  <details class="detail"><summary>En détail</summary><p>Tronquée à un rang faible, elle donne l&#x27;approximation optimale au sens des moindres carrés. C&#x27;est le moteur de la LSA, et de la projection en deux dimensions du graphe latent affiché en page d&#x27;accueil.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#lsa">LSA</a> · <a href="#similarite-cosinus">Similarité cosinus</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#accueil">Où ça sert sur le site →</a></p>
+</article>
+</section>
+<section class="famille" id="f-securite">
+  <h2>Sécurité &amp; conformité</h2>
+  <p class="fam-intro">Ce qu&#x27;impose un modèle qui décide du crédit de quelqu&#x27;un.</p>
+<article class="entree" id="biais-algorithmique" data-cle="biais algorithmique non-discrimination équité discrimination">
+  <h3>Biais algorithmique<a class="lien-ancre" href="#biais-algorithmique" aria-label="Lien vers la définition de Biais algorithmique">#</a></h3>
+  <p class="alias">aussi&nbsp;: non-discrimination, équité, discrimination</p>
+  <p class="simple">Un modèle entraîné sur le passé reproduit les inégalités du passé. En crédit, il peut refuser plus souvent certains profils sans que personne ne l&#x27;ait voulu — et sans que ça se voie dans la performance globale.</p>
+  <details class="detail"><summary>En détail</summary><p>Se traque en mesurant les taux d&#x27;erreur par sous-population, pas seulement en moyenne. Retirer la variable sensible ne suffit pas : d&#x27;autres la reconstituent par corrélation, à commencer par le code postal.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rgpd">RGPD</a> · <a href="#correlation">Corrélation</a> · <a href="#shap">SHAP</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="cors" data-cle="cors cross-origin resource sharing origines croisées">
+  <h3>CORS<a class="lien-ancre" href="#cors" aria-label="Lien vers la définition de CORS">#</a></h3>
+  <p class="alias">aussi&nbsp;: cross-origin resource sharing, origines croisées</p>
+  <p class="simple">La règle qui décide quels sites ont le droit d&#x27;appeler votre API depuis un navigateur. Ouverte à tous, n&#x27;importe quelle page peut consommer votre service ; restreinte, elle limite les usages non prévus.</p>
+  <details class="detail"><summary>En détail</summary><p>Contrôle appliqué par le navigateur, pas par le serveur : un appel direct hors navigateur n&#x27;en tient aucun compte. Ce n&#x27;est donc pas un mécanisme d&#x27;authentification, et le confondre avec tel est une erreur classique.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#csp">CSP</a> · <a href="#rest">API REST</a> · <a href="#durcissement">Durcissement</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="csp" data-cle="csp content security policy politique de sécurité du contenu">
+  <h3>CSP<a class="lien-ancre" href="#csp" aria-label="Lien vers la définition de CSP">#</a></h3>
+  <p class="alias">aussi&nbsp;: content security policy, politique de sécurité du contenu</p>
+  <p class="simple">Une consigne envoyée au navigateur qui liste précisément d&#x27;où la page a le droit de charger du code, des images ou des polices. Tout le reste est bloqué, ce qui coupe court à l&#x27;injection de scripts.</p>
+  <details class="detail"><summary>En détail</summary><p>Posée en en-tête par la fonction Edge sur le domaine principal, et en balise meta pour l&#x27;origine servie sans en-têtes. La directive frame-ancestors fait exception : seul l&#x27;en-tête peut la porter.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#hsts">HSTS</a> · <a href="#cors">CORS</a> · <a href="#durcissement">Durcissement</a></span></p>
+</article>
+<article class="entree" id="dpo" data-cle="dpo délégué à la protection des données">
+  <h3>DPO<a class="lien-ancre" href="#dpo" aria-label="Lien vers la définition de DPO">#</a></h3>
+  <p class="alias">aussi&nbsp;: délégué à la protection des données</p>
+  <p class="simple">La personne chargée, dans l&#x27;organisation, de veiller au respect du règlement sur les données personnelles. C&#x27;est elle qu&#x27;on consulte avant de mettre un modèle de décision en production, pas après.</p>
+  <details class="detail"><summary>En détail</summary><p>À ne pas confondre avec l&#x27;autre DPO de l&#x27;IA, Direct Preference Optimization, qui désigne une méthode d&#x27;alignement de modèles de langage. Ici c&#x27;est bien le rôle de conformité.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#rgpd">RGPD</a> · <a href="#biais-algorithmique">Biais algorithmique</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="durcissement" data-cle="durcissement hardening surface d&#x27;attaque">
+  <h3>Durcissement<a class="lien-ancre" href="#durcissement" aria-label="Lien vers la définition de Durcissement">#</a></h3>
+  <p class="alias">aussi&nbsp;: hardening, surface d&#x27;attaque</p>
+  <p class="simple">Réduire tout ce qui est exposé au strict nécessaire : fermer les accès inutiles, taire les détails techniques dans les réponses, limiter le rythme des appels. Une démonstration publique reste une porte ouverte.</p>
+  <details class="detail"><summary>En détail</summary><p>Sur ce projet : en-têtes de sécurité, CORS restreint, effacement de l&#x27;en-tête serveur, validation stricte des entrées. Le principe constant est celui du moindre privilège, appliqué au réseau comme au conteneur.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#csp">CSP</a> · <a href="#cors">CORS</a> · <a href="#hsts">HSTS</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="hsts" data-cle="hsts http strict transport security">
+  <h3>HSTS<a class="lien-ancre" href="#hsts" aria-label="Lien vers la définition de HSTS">#</a></h3>
+  <p class="alias">aussi&nbsp;: http strict transport security</p>
+  <p class="simple">Une consigne qui interdit au navigateur de revenir en clair sur le site, même si quelqu&#x27;un l&#x27;y pousse. Une fois reçue, toutes les visites passent obligatoirement par une connexion chiffrée.</p>
+  <details class="detail"><summary>En détail</summary><p>Ferme la fenêtre d&#x27;attaque du tout premier appel non chiffré, celui qui précède la redirection. La durée annoncée est un engagement : une erreur de configuration rend le domaine inaccessible jusqu&#x27;à son expiration.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#csp">CSP</a> · <a href="#durcissement">Durcissement</a></span></p>
+</article>
+<article class="entree" id="injection-prompt" data-cle="injection de prompt prompt injection">
+  <h3>Injection de prompt<a class="lien-ancre" href="#injection-prompt" aria-label="Lien vers la définition de Injection de prompt">#</a></h3>
+  <p class="alias">aussi&nbsp;: prompt injection</p>
+  <p class="simple">Un texte glissé dans un document ou une question qui détourne le modèle de sa consigne : « ignore les instructions précédentes ». En RAG, le contenu récupéré doit être traité comme suspect.</p>
+  <details class="detail"><summary>En détail</summary><p>Aucune parade complète à ce jour. On limite les dégâts en séparant consigne et données, en restreignant les actions accessibles au modèle, et en validant les sorties avant tout effet de bord.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#prompt">Prompt</a> · <a href="#hallucination">Hallucination</a> · <a href="#rag">RAG</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="limitation-debit" data-cle="limitation de débit rate limiting quota throttling">
+  <h3>Limitation de débit<a class="lien-ancre" href="#limitation-debit" aria-label="Lien vers la définition de Limitation de débit">#</a></h3>
+  <p class="alias">aussi&nbsp;: rate limiting, quota, throttling</p>
+  <p class="simple">Plafonner le nombre d&#x27;appels qu&#x27;un même client peut passer par minute. Sans cela, une API publique se fait saturer par accident autant que par malveillance.</p>
+  <details class="detail"><summary>En détail</summary><p>Appliquée par adresse ou par jeton, avec un code 429 explicite et un délai d&#x27;attente annoncé. Sur un service d&#x27;inférence, c&#x27;est aussi une protection budgétaire quand le calcul se paie à la requête.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#durcissement">Durcissement</a> · <a href="#rest">API REST</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="rgpd" data-cle="rgpd gdpr conformité données personnelles">
+  <h3>RGPD<a class="lien-ancre" href="#rgpd" aria-label="Lien vers la définition de RGPD">#</a></h3>
+  <p class="alias">aussi&nbsp;: gdpr, conformité, données personnelles</p>
+  <p class="simple">Le règlement européen sur les données personnelles. Pour un modèle de crédit, il impose de savoir quelles données on utilise, pourquoi, combien de temps on les garde, et de pouvoir expliquer une décision automatisée.</p>
+  <details class="detail"><summary>En détail</summary><p>L&#x27;article 22 encadre la décision entièrement automatisée et ouvre un droit à l&#x27;intervention humaine et à l&#x27;explication : ce n&#x27;est pas un raffinement de confort, c&#x27;est ce qui rend l&#x27;explicabilité obligatoire ici.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#shap">SHAP</a> · <a href="#biais-algorithmique">Biais algorithmique</a> · <a href="#dpo">DPO</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+</section>
+<section class="famille" id="f-conduite">
+  <h2>Conduite de projet</h2>
+  <p class="fam-intro">Le vocabulaire du rapport : cadrer, arbitrer, livrer, rendre compte.</p>
+<article class="entree" id="arbitrage" data-cle="arbitrage trade-off compromis arbitrages">
+  <h3>Arbitrage<a class="lien-ancre" href="#arbitrage" aria-label="Lien vers la définition de Arbitrage">#</a></h3>
+  <p class="alias">aussi&nbsp;: trade-off, compromis, arbitrages</p>
+  <p class="simple">Choisir entre deux options qui ont chacune leur prix, et assumer ce qu&#x27;on abandonne. ONNX allégeait le modèle de 39 % : écarté quand même, parce que la fiabilité passait devant.</p>
+  <details class="detail"><summary>En détail</summary><p>Un arbitrage se documente avec ce qu&#x27;on a écarté et pourquoi, sinon il se rejoue tous les six mois. C&#x27;est ce que porte le tableau des choix techniques du rapport.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#onnx">ONNX</a> · <a href="#dette-technique">Dette technique</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#reflexivite">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="audit" data-cle="audit auditer état des lieux diagnostic">
+  <h3>Audit<a class="lien-ancre" href="#audit" aria-label="Lien vers la définition de Audit">#</a></h3>
+  <p class="alias">aussi&nbsp;: auditer, état des lieux, diagnostic</p>
+  <p class="simple">Regarder l&#x27;existant avant de proposer quoi que ce soit : la qualité des données, ce que vaut le modèle en place, ce qui manque pour le mettre en production. On y trouve souvent que le problème n&#x27;est pas celui qu&#x27;on croyait.</p>
+  <details class="detail"><summary>En détail</summary><p>Se conclut par des correctifs classés par impact et par effort, pas par une liste de reproches. C&#x27;est le format de la prestation d&#x27;audit annoncée sur ce portfolio.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#contrat-donnees">Contrat de données</a> · <a href="#dette-technique">Dette technique</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#prestations">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="cadrage" data-cle="cadrage cadrer expression de besoin besoin métier">
+  <h3>Cadrage<a class="lien-ancre" href="#cadrage" aria-label="Lien vers la définition de Cadrage">#</a></h3>
+  <p class="alias">aussi&nbsp;: cadrer, expression de besoin, besoin métier</p>
+  <p class="simple">La phase où l&#x27;on établit ce qu&#x27;il faut construire et pourquoi, avant d&#x27;écrire la moindre ligne. Mal cadrer, c&#x27;est livrer proprement quelque chose dont personne n&#x27;avait besoin.</p>
+  <details class="detail"><summary>En détail</summary><p>Produit le besoin métier central, les besoins fonctionnels et non fonctionnels, et surtout les critères qui diront si c&#x27;est réussi. Le rapport de ce portfolio s&#x27;ouvre là-dessus, avant toute question technique.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#perimetre">Périmètre</a> · <a href="#livrable">Livrable</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#prestations">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="dette-technique" data-cle="dette technique dette raccourci technique">
+  <h3>Dette technique<a class="lien-ancre" href="#dette-technique" aria-label="Lien vers la définition de Dette technique">#</a></h3>
+  <p class="alias">aussi&nbsp;: dette, raccourci technique</p>
+  <p class="simple">Les raccourcis pris pour aller vite, qui se paient plus tard avec intérêts. Le journal en fichier de ce projet en est un : assumé, documenté, chiffré — c&#x27;est ce qui sépare une dette d&#x27;un oubli.</p>
+  <details class="detail"><summary>En détail</summary><p>Devient dangereuse quand elle n&#x27;est plus recensée : personne ne sait plus ce qui est délibéré et ce qui est accidentel. Les limites assumées du rapport tiennent ce registre.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#scalabilite">Scalabilité</a> · <a href="#poc">POC</a> · <a href="#arbitrage">Arbitrage</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#reflexivite">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="livrable" data-cle="livrable livrables critère d&#x27;acceptation">
+  <h3>Livrable<a class="lien-ancre" href="#livrable" aria-label="Lien vers la définition de Livrable">#</a></h3>
+  <p class="alias">aussi&nbsp;: livrables, critère d&#x27;acceptation</p>
+  <p class="simple">Ce qui est effectivement remis à la fin : un dépôt, une API en ligne, un rapport, un tableau de bord. Une chose qu&#x27;on peut ouvrir et vérifier, pas une intention.</p>
+  <details class="detail"><summary>En détail</summary><p>Chacun gagne à porter son critère d&#x27;acceptation, écrit d&#x27;avance : sans lui, la recette se négocie à la livraison, au moment où les deux parties ont le plus à perdre.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#cadrage">Cadrage</a> · <a href="#perimetre">Périmètre</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#prestations">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="perimetre" data-cle="périmètre scope hors périmètre dérive du périmètre">
+  <h3>Périmètre<a class="lien-ancre" href="#perimetre" aria-label="Lien vers la définition de Périmètre">#</a></h3>
+  <p class="alias">aussi&nbsp;: scope, hors périmètre, dérive du périmètre</p>
+  <p class="simple">Ce qui est dans la mission et ce qui n&#x27;y est pas, écrit à l&#x27;avance. La liste de ce qu&#x27;on ne fera pas est aussi utile que l&#x27;autre, et bien plus rarement rédigée.</p>
+  <details class="detail"><summary>En détail</summary><p>Son élargissement progressif, une demande à la fois, est le mode d&#x27;échec le plus banal d&#x27;un projet. La parade n&#x27;est pas le refus mais la renégociation explicite du délai qui va avec.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#cadrage">Cadrage</a> · <a href="#livrable">Livrable</a> · <a href="#tjm">TJM</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#prestations">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="revue-code" data-cle="revue de code code review relecture pull request">
+  <h3>Revue de code<a class="lien-ancre" href="#revue-code" aria-label="Lien vers la définition de Revue de code">#</a></h3>
+  <p class="alias">aussi&nbsp;: code review, relecture, pull request</p>
+  <p class="simple">Faire relire ses modifications par quelqu&#x27;un d&#x27;autre avant de les intégrer. On y attrape des erreurs, mais surtout on y répand la connaissance du code au-delà de celui qui l&#x27;a écrit.</p>
+  <details class="detail"><summary>En détail</summary><p>Rendue plus utile par des changements courts et par l&#x27;automatisation de tout ce qui est mécanique — style, format, tests — pour que la discussion porte sur les décisions.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#git">Git</a> · <a href="#linter">Linter</a> · <a href="#ci-cd">CI/CD</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="vulgarisation" data-cle="vulgarisation vulgariser pédagogie restitution">
+  <h3>Vulgarisation<a class="lien-ancre" href="#vulgarisation" aria-label="Lien vers la définition de Vulgarisation">#</a></h3>
+  <p class="alias">aussi&nbsp;: vulgariser, pédagogie, restitution</p>
+  <p class="simple">Expliquer un résultat technique à qui décide sans être technicien : traduire une AUC en risque accepté, un drift en alerte à traiter. Un modèle que personne ne comprend ne sera pas utilisé.</p>
+  <details class="detail"><summary>En détail</summary><p>Ce n&#x27;est pas simplifier jusqu&#x27;à l&#x27;approximation : c&#x27;est choisir le niveau de détail qui permet de décider juste. Ce glossaire relève du même exercice.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#shap">SHAP</a> · <a href="#kpi">KPI</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#soft-skills">Où ça sert sur le site →</a></p>
+</article>
 </section>
 <section class="famille" id="f-outils">
   <h2>Outils &amp; web</h2>
   <p class="fam-intro">L&#x27;outillage quotidien, côté code comme côté interface.</p>
+<article class="entree" id="git" data-cle="git versionnement pull request branche">
+  <h3>Git<a class="lien-ancre" href="#git" aria-label="Lien vers la définition de Git">#</a></h3>
+  <p class="alias">aussi&nbsp;: versionnement, pull request, branche</p>
+  <p class="simple">Le système qui garde l&#x27;historique complet du code et permet à plusieurs personnes d&#x27;y travailler sans s&#x27;écraser. Chaque modification est datée, attribuée et réversible.</p>
+  <details class="detail"><summary>En détail</summary><p>La discipline compte plus que l&#x27;outil : des commits qui expliquent le pourquoi, des branches courtes, et une intégration continue qui bloque avant la fusion. Tout ce portfolio est développé ainsi.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#ci-cd">CI/CD</a> · <a href="#rollback">Rollback</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
 <article class="entree" id="poc" data-cle="poc proof of concept preuve de concept prototype">
   <h3>POC<a class="lien-ancre" href="#poc" aria-label="Lien vers la définition de POC">#</a></h3>
   <p class="alias">aussi&nbsp;: proof of concept, preuve de concept, prototype</p>
@@ -588,9 +1046,16 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <details class="detail"><summary>En détail</summary><p>La discipline consiste à écrire d&#x27;avance le critère qui tranchera, et à s&#x27;y tenir. Un POC qu&#x27;on garde faute d&#x27;avoir décidé devient une dette qu&#x27;on paie longtemps.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#baseline">Baseline</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#prestations">Où ça sert sur le site →</a></p>
 </article>
-<article class="entree" id="pytorch" data-cle="pytorch torch">
+<article class="entree" id="python" data-cle="python python 3">
+  <h3>Python<a class="lien-ancre" href="#python" aria-label="Lien vers la définition de Python">#</a></h3>
+  <p class="alias">aussi&nbsp;: python 3</p>
+  <p class="simple">Le langage dans lequel se fait l&#x27;essentiel du travail de données et d&#x27;IA : lisible, outillé, et porté par presque toutes les bibliothèques du domaine.</p>
+  <details class="detail"><summary>En détail</summary><p>Typé statiquement ici malgré son dynamisme natif, avec annotations et vérificateur : sur du code de production, l&#x27;erreur détectée à l&#x27;écriture coûte infiniment moins que la même en ligne.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#pandas">pandas</a> · <a href="#linter">Linter</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="pytorch" data-cle="pytorch torch torchscript">
   <h3>PyTorch<a class="lien-ancre" href="#pytorch" aria-label="Lien vers la définition de PyTorch">#</a></h3>
-  <p class="alias">aussi&nbsp;: torch</p>
+  <p class="alias">aussi&nbsp;: torch, torchscript</p>
   <p class="simple">La bibliothèque qui sert à construire et entraîner les réseaux de neurones, utilisée pour les projets de vision de ce portfolio.</p>
   <details class="detail"><summary>En détail</summary><p>Graphe de calcul dynamique et différentiation automatique, ce qui rend le débogage naturel. Écosystème dominant en recherche, et solide en production via TorchScript ou l&#x27;export ONNX.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#resnet">ResNet-50</a> · <a href="#computer-vision">Computer Vision</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#competences">Où ça sert sur le site →</a></p>
@@ -601,6 +1066,13 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <p class="simple">Un moyen de transformer un script Python en interface web en quelques lignes. Idéal pour donner à voir un tableau de bord de suivi sans écrire de front-end.</p>
   <details class="detail"><summary>En détail</summary><p>Réexécute le script à chaque interaction, ce qui rend le modèle mental simple mais impose de mettre en cache les traitements lourds. Sert ici à exposer les rapports de dérive.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#evidently">Evidently</a> · <a href="#monitoring">Monitoring</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#projet-phare">Où ça sert sur le site →</a></p>
+</article>
+<article class="entree" id="tjm" data-cle="tjm tarif journalier moyen tarif">
+  <h3>TJM<a class="lien-ancre" href="#tjm" aria-label="Lien vers la définition de TJM">#</a></h3>
+  <p class="alias">aussi&nbsp;: tarif journalier moyen, tarif</p>
+  <p class="simple">Le tarif d&#x27;une journée de prestation en freelance. Multiplié par le nombre de jours estimés, il donne le coût d&#x27;une mission — avec un périmètre annoncé à l&#x27;avance plutôt qu&#x27;une facture qui s&#x27;allonge.</p>
+  <details class="detail"><summary>En détail</summary><p>S&#x27;apprécie au regard du livrable, pas de l&#x27;heure passée : une mission cadrée, avec critère d&#x27;acceptation et durée annoncée, protège autant le client que le prestataire.</p></details>
+  <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#poc">POC</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#prestations">Où ça sert sur le site →</a></p>
 </article>
 <article class="entree" id="typescript" data-cle="typescript ts typage">
   <h3>TypeScript<a class="lien-ancre" href="#typescript" aria-label="Lien vers la définition de TypeScript">#</a></h3>
@@ -672,7 +1144,7 @@ connaissance préalable n'est supposée par le premier niveau.</p>
     });
     if (puces) puces.hidden = !!q;
     vide.classList.toggle('on', n === 0);
-    compte.textContent = q ? (n + (n > 1 ? ' termes' : ' terme')) : '61 termes';
+    compte.textContent = q ? (n + (n > 1 ? ' termes' : ' terme')) : '127 termes';
   }
 
   champ.addEventListener('input', filtrer);
