@@ -36,7 +36,7 @@ from urllib.request import urlopen
 ROOT = Path(__file__).resolve().parent.parent
 
 # Les pages livrées, celles qu'un visiteur peut ouvrir depuis un téléphone.
-PAGES = ('index.html', 'rapport.html', 'carte-mentale.html')
+PAGES = ('index.html', 'rapport.html', 'carte-mentale.html', 'glossaire.html')
 
 # iPhone SE, Android courant, iPhone récent, Pixel. En dessous de 320 px il n'y
 # a plus de téléphone à servir.
@@ -168,8 +168,8 @@ def _wait_for_target(port, timeout=30):
     raise BrowserError(f"Chrome n'a pas exposé d'onglet en {timeout} s ({last})")
 
 
-def _cdp_measure(page, width):
-    """Mesure via le protocole de débogage : la seule voie qui rend une valeur."""
+def _cdp_measure(page, width, expression=None):
+    """Pilote un navigateur et rend le résultat de l'expression évaluée."""
     binary = chrome()
     port = _free_port()
     # Chrome continue d'écrire dans son profil un instant après l'arrêt :
@@ -196,7 +196,7 @@ def _cdp_measure(page, width):
                     raise BrowserError(
                         f'Chrome s\'est arrêté (code {proc.returncode}) : {err}') from e
                 raise
-            return _drive(target['webSocketDebuggerUrl'], page, width)
+            return _drive(target['webSocketDebuggerUrl'], page, width, expression)
         finally:
             log.close()
             proc.terminate()
@@ -285,8 +285,8 @@ def _ws_recv(sock, rest):
     return b''.join(frames).decode(), rest
 
 
-def _drive(ws_url, page, width):
-    """Pilote l'onglet : émule le téléphone, charge la page, relève les mesures."""
+def _drive(ws_url, page, width, expression=None):
+    """Pilote l'onglet : émule l'appareil, charge la page, évalue l'expression."""
     sock, rest = _ws_connect(ws_url)
     seq = [0]
 
@@ -324,11 +324,39 @@ def _drive(ws_url, page, width):
         time.sleep(1.2)
 
         res = call('Runtime.evaluate',
-                   {'expression': PROBE % {'min_touch': MIN_TOUCH},
-                    'returnByValue': True})
-        return json.loads(res['result']['result']['value'])
+                   {'expression': expression or (PROBE % {'min_touch': MIN_TOUCH}),
+                    'returnByValue': True, 'awaitPromise': True})
+        valeur = res.get('result', {}).get('result', {}).get('value')
+        if valeur is None:
+            details = res.get('result', {}).get('exceptionDetails', {})
+            raise BrowserError(f"l'expression n'a rien rendu sur {page} : "
+                               f"{details.get('text', 'valeur nulle')}")
+        return json.loads(valeur)
     finally:
         sock.close()
+
+
+@lru_cache(maxsize=None)
+def evalue(page, expression, width=1440):
+    """Évalue une expression JavaScript dans la page servie, et rend son résultat.
+
+    Exposée pour que d'autres suites - le glossaire - vérifient un comportement
+    de la page sans réécrire le pilote de navigateur. L'expression doit rendre
+    une chaîne JSON.
+    """
+    return _reessaie(page, width, expression)
+
+
+def _reessaie(page, width, expression=None):
+    last = None
+    for attempt in range(3):
+        try:
+            return _cdp_measure(page, width, expression)
+        except BrowserError as e:
+            last = e
+            if attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+    raise BrowserError(f'{last} (3 tentatives)')
 
 
 @lru_cache(maxsize=None)
@@ -341,15 +369,7 @@ def layout(page, width):
     pannes sont réessayées : un débordement mesuré reste un échec du premier
     coup.
     """
-    last = None
-    for attempt in range(3):
-        try:
-            return _cdp_measure(page, width)
-        except BrowserError as e:
-            last = e
-            if attempt < 2:
-                time.sleep(1.5 * (attempt + 1))
-    raise BrowserError(f'{last} (3 tentatives)')
+    return _reessaie(page, width)
 
 
 class Skipped(Exception):

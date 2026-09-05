@@ -48,6 +48,9 @@ jobs:
       - name: Recherche vectorielle
         run: python3 tools/test_search.py
 
+      - name: Glossaire
+        run: python3 tools/test_glossaire.py
+
       - name: Responsive
         run: python3 tools/test_responsive.py
 
@@ -70,10 +73,15 @@ jobs:
       - name: Régénérer et comparer
         run: |
           python3 tools/build_index.py
-          if ! git diff --quiet -- assets/search-index.json; then
-            echo "::error::L'index committé ne correspond plus au corpus." \
-                 "Lancez « python3 tools/build_index.py » et committez le résultat."
-            git diff --stat -- assets/search-index.json
+          python3 tools/build_glossaire.py
+          if ! git diff --quiet -- assets/search-index.json glossaire.html assets/glossaire.json; then
+            echo "::error::Un fichier généré ne correspond plus à sa source." \
+                 "Lancez « python3 tools/build_index.py » et « python3 tools/build_glossaire.py »," \
+                 "puis committez le résultat."
+            git diff --stat -- assets/search-index.json glossaire.html assets/glossaire.json
             exit 1
           fi
-          echo "L'index correspond au corpus."
+          # Les liens du rapport vers le glossaire se posent par script : ils
+          # doivent être à jour dans le dépôt, pas seulement reproductibles.
+          python3 tools/link_glossaire.py --verifie
+          echo "Index, glossaire et liens correspondent à leurs sources."
