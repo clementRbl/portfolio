@@ -9,7 +9,7 @@ garde 12 composantes. Sortie : assets/search-index.json, lu par index.html.
 
 Le fichier contient le vocabulaire, l'IDF, la projection des termes dans
 l'espace latent et la position de chaque document. Les mêmes vecteurs servent
-à placer les projets dans le graphe latent du hero.
+à situer les projets les uns par rapport aux autres.
 """
 import json, math, re, sys, unicodedata
 from pathlib import Path
@@ -126,13 +126,10 @@ def build(docs):
         n = np.linalg.norm(M, axis=1, keepdims=True)
         return M / np.where(n == 0, 1, n)
 
-    # Projection 2D des documents, pour le graphe latent du hero : ACP sur les
-    # vecteurs latents, en écartant la 1re composante (direction moyenne, non
-    # discriminante) au profit des suivantes, qui portent la structure.
-    Z = doc_vecs - doc_vecs.mean(axis=0)
-    _, _, Vz = np.linalg.svd(Z, full_matrices=False)
-    xy = Z @ Vz[:2].T
-    xy /= np.abs(xy).max(axis=0)
+    # L'index exportait aussi une projection 2D des documents, qui plaçait les
+    # sections dans le fond du hero. Ce fond montre désormais une surface de
+    # perte, et plus personne ne lisait ces coordonnées : les garder aurait été
+    # entretenir une donnée morte dans un fichier servi à chaque visite.
 
     return {
         'k': int(k),
@@ -145,7 +142,6 @@ def build(docs):
         'idf': [round(idf[w], 4) for w in vocab],
         'terms': [[round(float(v), 4) for v in row] for row in term_vecs],
         'docs': [{'id': docs[i][0], 'title': docs[i][1],
-                  'xy': [round(float(xy[i][0]), 4), round(float(xy[i][1]), 4)],
                   'v': [round(float(v), 4) for v in row]}
                  for i, row in enumerate(unit(doc_vecs))],
     }
@@ -235,7 +231,7 @@ if __name__ == '__main__':
     index = build(docs)
     # Un document thématique - « rag », « tarifs » - répond pour une section qui
     # ne porte pas son nom : le lien « Aller à la section » vise la section, et
-    # le graphe latent du hero ne trace que les documents de section.
+    # les documents thématiques répondent pour une section qui ne porte pas leur nom.
     for i, d in enumerate(corpus):
         index['docs'][i]['s'] = d.get('section', d['id'])
     # Réponse rédigée à la main, servie telle quelle par la boîte « Interrogez

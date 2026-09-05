@@ -296,7 +296,7 @@ connaissance préalable n'est supposée par le premier niveau.</p>
 <article class="entree" id="gradient" data-cle="descente de gradient gradient taux d&#x27;apprentissage learning rate">
   <h3>Descente de gradient<a class="lien-ancre" href="#gradient" aria-label="Lien vers la définition de Descente de gradient">#</a></h3>
   <p class="alias">aussi&nbsp;: gradient, taux d&#x27;apprentissage, learning rate</p>
-  <p class="simple">La méthode d&#x27;apprentissage de presque tous les modèles modernes : mesurer l&#x27;erreur, regarder dans quelle direction elle diminue, faire un petit pas, recommencer. Le taux d&#x27;apprentissage est la taille du pas.</p>
+  <p class="simple">La méthode d&#x27;apprentissage de presque tous les modèles modernes : mesurer l&#x27;erreur, regarder dans quelle direction elle diminue, faire un petit pas, recommencer. Le taux d&#x27;apprentissage est la taille du pas. C&#x27;est ce que dessine le fond de la page d&#x27;accueil : les courbes sont les lignes de niveau d&#x27;une surface d&#x27;erreur, et le point cherche le creux.</p>
   <details class="detail"><summary>En détail</summary><p>Trop grand, l&#x27;optimisation oscille sans converger ; trop petit, elle traîne et se fige dans un minimum local. En boosting, un taux faible compensé par davantage d&#x27;arbres donne en général le meilleur compromis.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#regularisation">Régularisation</a> · <a href="#lightgbm">LightGBM</a></span></p>
 </article>
@@ -922,7 +922,7 @@ connaissance préalable n'est supposée par le premier niveau.</p>
   <h3>SVD<a class="lien-ancre" href="#svd" aria-label="Lien vers la définition de SVD">#</a></h3>
   <p class="alias">aussi&nbsp;: décomposition en valeurs singulières, réduction de dimension, acp</p>
   <p class="simple">Une opération d&#x27;algèbre qui décompose un grand tableau en quelques directions principales, celles qui portent l&#x27;essentiel de l&#x27;information. Elle sert à comprimer, à visualiser, et ici à faire fonctionner la recherche du site.</p>
-  <details class="detail"><summary>En détail</summary><p>Tronquée à un rang faible, elle donne l&#x27;approximation optimale au sens des moindres carrés. C&#x27;est le moteur de la LSA, et de la projection en deux dimensions du graphe latent affiché en page d&#x27;accueil.</p></details>
+  <details class="detail"><summary>En détail</summary><p>Tronquée à un rang faible, elle donne l&#x27;approximation optimale au sens des moindres carrés. C&#x27;est le moteur de la LSA qui fait fonctionner la recherche de ce site, entièrement hors ligne.</p></details>
   <p class="renvois"><span class="voir">Voir aussi&nbsp;: <a href="#lsa">LSA</a> · <a href="#similarite-cosinus">Similarité cosinus</a></span> <a class="ou" href="https://clement-reboul.fr/portfolio/#accueil">Où ça sert sur le site →</a></p>
 </article>
 </section>
