@@ -511,7 +511,12 @@ document.documentElement.classList.add('js');
   .langs b { color: var(--ink); }
 
   /* ---------- PROJETS ---------- */
-  .proj-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 22px; align-items: start; }
+  /* « stretch » et non « start » : deux cartes côte à côte dont les résumés ne
+     font pas la même longueur se retrouvaient de hauteurs différentes, et le
+     décalage se voyait d'autant plus que les cadres sont dessinés. Les cartes
+     d'une même rangée prennent la hauteur de la plus haute - c'est déjà ce que
+     font les prestations. */
+  .proj-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 22px; align-items: stretch; }
   .proj { padding: 26px; display: flex; flex-direction: column; transition: transform .16s, border-color .16s; }
   .proj:hover { transform: translateY(-3px); border-color: var(--border-2); }
   @media (prefers-reduced-motion: reduce) { .proj:hover { transform: none; } }
@@ -546,7 +551,16 @@ document.documentElement.classList.add('js');
     transition: color .14s, background .14s; }
   .media-tabs button:hover { color: var(--ink); }
   .media-tabs button[aria-pressed="true"] { background: var(--accent-soft-2); color: var(--ember); }
-  .proj-links { display: flex; gap: 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+  /* Le pied de carte est poussé en bas : à hauteur égale, les traits de
+     séparation et les liens s'alignent d'une carte à l'autre. Sans cela,
+     l'égalisation ne ferait que déplacer le décalage vers le bas de la carte. */
+  .proj-links { display: flex; gap: 16px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
+  /* L'air qu'assurait l'ancienne marge du pied, rendu au seul élément qui le
+     précède : l'appliquer à toutes les images et étiquettes doublait l'espace
+     entre elles (18 + 16 px) alors qu'il n'en fallait qu'entre la dernière et
+     le trait de séparation. Le pied étant toujours le dernier enfant, c'est
+     l'avant-dernier qu'on vise. */
+  .proj > :nth-last-child(2) { margin-bottom: 18px; }
   .proj-links a { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-dim); }
   .proj-links a:hover { color: var(--ember); }
   .proj-links svg { width: 14px; height: 14px; }
@@ -616,6 +630,17 @@ document.documentElement.classList.add('js');
   .contact h2 { font-size: clamp(2.4rem, 1.6rem + 3vw, 4rem); text-transform: uppercase; color: var(--ink); }
   .contact p { color: var(--ink-dim); margin: 16px auto 32px; }
   .contact-cta { display: flex; gap: 13px; justify-content: center; flex-wrap: wrap; }
+  /* « Me contacter » vise la section qui le suit immédiatement : quand on voit
+     le bouton, la zone de contact est déjà à l'écran, le défilement ne bouge
+     presque rien et le clic paraît sans effet. Un halo bref sur les actions
+     donne la réponse visuelle qui manquait. */
+  @keyframes ctaHalo {
+    0%   { box-shadow: 0 0 0 0 var(--ember-glow); }
+    35%  { box-shadow: 0 0 0 7px rgba(228,163,75,.22); }
+    100% { box-shadow: 0 0 0 0 rgba(228,163,75,0); }
+  }
+  .contact-cta.flash .btn { animation: ctaHalo 1.5s ease-out 2; }
+  @media (prefers-reduced-motion: reduce) { .contact-cta.flash .btn { animation: none; } }
   /* Retour du bouton de contact : une ligne discrète sous les boutons, tenue
      par aria-live pour que la copie soit annoncée et pas seulement affichée. */
   .cta-note { margin-top: 14px; min-height: 1.2em; font-family: var(--font-mono); font-size: 12px;
@@ -1039,6 +1064,8 @@ document.documentElement.classList.add('js');
   html.fx-standard .try-raw,
   html.fx-standard .cmdk-item,
   html.fx-standard .engagement { border-radius: 8px; }
+  html.fx-standard .eng-ico { border-radius: 8px; }
+  html.fx-standard .eng-txt h3 { text-transform: none; font-weight: 700; letter-spacing: -.01em; }
   html.fx-standard .cmdk,
   html.fx-standard .invite { border-radius: 14px; }
   /* Une capture à angles vifs dans une carte arrondie trahit le montage. */
@@ -1335,9 +1362,22 @@ document.documentElement.classList.add('js');
   .tl-role { font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase; letter-spacing: .015em; margin-top: 4px; color: var(--ink); line-height: 1.05; }
   .tl-org { font-size: 15px; color: var(--ink-dim); margin-top: 4px; }
   .tl-tech { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); margin-top: 7px; }
-  .engagement { margin-top: 40px; padding: 22px 26px; }
-  .engagement p { margin-top: 10px; color: var(--ink-dim); font-size: 15.5px; line-height: 1.6; }
-  .engagement b { color: var(--ink); }
+  /* Un engagement de sapeur-pompier ne se lit pas comme une ligne de CV : il dit
+     quelque chose que le code ne dit pas. Il passait en note de bas de section,
+     en petit et sans relief. Il garde sa place - après le parcours, pas avant -
+     mais avec le poids d'un vrai bloc : filet d'accent, pictogramme, et les
+     qualités nommées plutôt que noyées dans la phrase. */
+  .engagement { margin-top: 40px; padding: 22px 26px; border-left: 2px solid var(--ember); }
+  .eng-body { display: flex; gap: 20px; align-items: flex-start; margin-top: 14px; }
+  .eng-ico {
+    flex: none; width: 46px; height: 46px; display: grid; place-items: center;
+    color: var(--ember); background: var(--accent-soft); border: 1px solid var(--border-2);
+  }
+  .eng-ico svg { width: 25px; height: 25px; }
+  .eng-txt h3 { font-size: 1.15rem; color: var(--ink); text-transform: uppercase; letter-spacing: .01em; }
+  .engagement p { margin-top: 9px; color: var(--ink-dim); font-size: 15.5px; line-height: 1.6; }
+  .eng-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+  @media (max-width: 560px) { .eng-body { gap: 14px; } .eng-ico { width: 40px; height: 40px; } }
   @media (max-width: 760px) { .timeline-grid { grid-template-columns: 1fr; gap: 34px; } }
 
   /* ---------- PALETTE DE COMMANDES (mode Standard) ----------
@@ -1593,7 +1633,7 @@ document.documentElement.classList.add('js');
         <p class="lede reveal"><b>AI Engineer</b> - Développeur pendant 5 ans et à présent ingénieur IA. Je conçois des modèles que je rends <b>fiables, déployés et monitorés</b> là où naît la valeur. Disponible en freelance ou en CDI, en Île-de-France, dans les Hauts-de-France ou à distance.</p>
         <div class="hero-cta reveal">
           <a href="#projets" class="btn btn-primary">Explorer<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          <a href="https://clement-reboul.fr/portfolio/rapport.html" class="btn btn-ghost">Rapport</a>
+          <a href="https://clement-reboul.fr/portfolio/rapport.html" class="btn btn-ghost">Conduite de projet</a>
           <button class="btn btn-ghost live-border" id="wheel-open-2">Menu radial</button>
         </div>
         <div class="hero-stats reveal tnum">
@@ -1678,7 +1718,16 @@ document.documentElement.classList.add('js');
       </div>
       <div class="engagement panel reveal">
         <span class="hud-label">Engagement</span>
-        <p><b>Sapeur-pompier volontaire</b> - dévoué à ma ville et à ses habitants. Sang-froid, esprit d'équipe et sens du service : des réflexes qui dépassent le code et que je porte au quotidien.</p>
+        <div class="eng-body">
+          <span class="eng-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          </span>
+          <div class="eng-txt">
+            <h3>Sapeur-pompier volontaire</h3>
+            <p>Engagé auprès de ma ville et de ses habitants, en plus de mon activité professionnelle. On y apprend à décider vite avec des informations incomplètes, à tenir un rôle précis dans une équipe et à rendre compte de ce qu'on a fait - des réflexes qui servent autant en intervention qu'en production.</p>
+            <div class="eng-tags"><span class="tag">Sang-froid</span><span class="tag">Esprit d'équipe</span><span class="tag">Sens du service</span><span class="tag">Astreintes</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2028,7 +2077,7 @@ document.documentElement.classList.add('js');
           <div><span class="cm-k">base_model</span><span class="cm-v">Développeur web, 5 ans en production</span></div>
           <div><span class="cm-k">fine_tuned_on</span><span class="cm-v">AI Engineer Bac+5, OpenClassrooms</span></div>
           <div><span class="cm-k">languages</span><span class="cm-v">FR natif et anglais professionnel</span></div>
-          <div><span class="cm-k">deployment</span><span class="cm-v">Île-de-France, Hauts-de-France, remote</span></div>
+          <div><span class="cm-k">deployment</span><span class="cm-v">Île-de-France, Hauts-de-France</span></div>
           <div><span class="cm-k">status</span><span class="cm-v ok">Disponible en freelance &amp; CDI</span></div>
           <div><span class="cm-k">license</span><span class="cm-v">Mission cadrée, périmètre annoncé</span></div>
         </div>
@@ -2067,7 +2116,7 @@ document.documentElement.classList.add('js');
         </div>
         <div class="cm-cta">
           <a class="btn btn-primary" href="https://clement-reboul.fr/portfolio/assets/CV_Reboul_Clement.pdf" target="_blank" rel="noopener" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> Télécharger le CV (PDF)</a>
-          <a class="btn btn-ghost" href="#contact">Me contacter</a>
+          <a class="btn btn-ghost" href="#contact" id="cm-contact">Me contacter</a>
         </div>
       </article>
 
@@ -2091,13 +2140,13 @@ document.documentElement.classList.add('js');
     <div class="wrap">
       <span class="hud-label reveal" style="justify-content:center"><i class="sl">//</i> 10 - Contact</span>
       <h2 class="reveal" style="margin-top:14px">Un besoin ? Parlons-en</h2>
-      <p class="reveal"><b>AI Engineer</b> disponible en freelance ou en CDI, en MLOps, GenAI/RAG et front Vue&nbsp;3 - Paris, Île-de-France, Oise, Hauts-de-France et remote. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
+      <p class="reveal"><b>AI Engineer</b> disponible en freelance ou en CDI, en MLOps, GenAI/RAG et front Vue&nbsp;3 - Paris, Île-de-France, Oise, Hauts-de-France. Décrivez-moi votre besoin : je vous réponds sur le périmètre, la durée et le prix.</p>
       <div class="contact-cta reveal">
         <button class="btn btn-primary" id="cta-mail" type="button"><svg class="ic-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg><svg class="ic-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span class="lbl">clement.rbl@gmail.com</span></button>
         <a class="btn btn-ghost" id="cta-tel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.2a2 2 0 012.1-.5c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></svg><span class="lbl">Appeler</span></a>
         <a class="btn btn-ghost" href="https://github.com/clementRbl" target="_blank" rel="noopener">GitHub</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr" target="_blank" rel="noopener">Blog</a>
-        <a class="btn btn-ghost" href="https://clement-reboul.fr/portfolio/rapport.html">Rapport</a>
+        <a class="btn btn-ghost" href="https://clement-reboul.fr/portfolio/rapport.html">Conduite de projet</a>
       </div>
       <p class="cta-note" id="cta-note" role="status" aria-live="polite"></p>
     </div>
@@ -2761,6 +2810,22 @@ document.documentElement.classList.add('js');
         : 'Navigation : <b>' + combo + '</b> pour la palette de commandes';
     }
   }
+
+  /* « Me contacter » pointe vers la section qui le suit : le défilement se voit
+     à peine, et le clic passait pour inopérant. Le lien reste une ancre - il
+     fonctionne sans JavaScript - et le script n'ajoute que la confirmation
+     visuelle : un halo sur les actions de contact, une fois arrivé. */
+  (function () {
+    var lien = document.getElementById('cm-contact');
+    var cta = document.querySelector('.contact-cta');
+    if (!lien || !cta) return;
+    lien.addEventListener('click', function () {
+      cta.classList.remove('flash');
+      void cta.offsetWidth;              // redémarre l'animation d'un second clic
+      cta.classList.add('flash');
+      setTimeout(function () { cta.classList.remove('flash'); }, 3200);
+    });
+  })();
 
   /* ---- Balayage scanline lors d'une navigation via la roue ---- */
   var scanEl = null;

@@ -97,6 +97,16 @@
      Le rapport n'avait aucun palier : sur un telephone la barre du haut passait
      sur deux lignes, les URL en pleine longueur debordaient de leur cellule et
      les tableaux se lisaient dans un couloir de defilement etroit. */
+  .chapeau{
+    margin:1.8em 0 2.4em; padding:20px 22px; background:var(--surface);
+    border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:10px;
+  }
+  .chapeau p{margin:0 0 11px; font-size:16px; line-height:1.66; color:var(--ink-soft);}
+  .chapeau p:last-child{margin-bottom:0;}
+  .chapeau b{color:var(--ink);}
+  .chapeau-liens{display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:14px !important;
+    font-family:var(--font-mono); font-size:13px;}
+
   @media (max-width: 620px){
     body{font-size:16px;}
     main{padding:34px 16px 72px;}
@@ -127,6 +137,9 @@
     h3{font-size:1.12rem;}
     pre{padding:13px;font-size:13px;}
     img,svg{max-width:100%;height:auto;}
+    .chapeau{padding:16px 15px; margin:1.4em 0 2em;}
+    .chapeau p{font-size:15px;}
+    .chapeau-liens{gap:8px 14px; font-size:12.5px;}
   }
 
   @media print{.topbar{display:none;}main{max-width:none;padding:0;}h2{break-after:avoid;}table,.tablewrap,pre,blockquote{break-inside:avoid;}body{font-size:11pt;}}
@@ -146,6 +159,27 @@
 <main>
 <h1 id="rapport-de-conduite-de-projet-data">Rapport de conduite de
 projet Data</h1>
+
+<!-- La page s'ouvrait sur son titre et un tableau d'identité : un lecteur
+     arrivé depuis le portfolio ne savait ni ce qu'il lisait, ni pourquoi. Ce
+     chapeau répond aux trois questions qu'on se pose en arrivant - de quoi
+     parle ce document, combien de temps il prend, où aller si on veut le code. -->
+<div class="chapeau">
+  <p><b>De quoi il s'agit.</b> Ce document raconte comment j'ai mené un projet
+  de bout en bout, du besoin métier jusqu'à la mise en production : le cadrage,
+  les choix techniques et ce qu'ils ont coûté, les risques, les tests, le suivi
+  du modèle une fois en ligne. Il porte sur <i>Credit Scoring MLOps</i>, le
+  projet détaillé sur le portfolio.</p>
+  <p><b>Pourquoi le lire.</b> Le code montre ce que je sais faire ; ce rapport
+  montre comment je décide, ce que j'écarte et pourquoi. Comptez une vingtaine
+  de minutes pour l'ensemble, ou parcourez les tableaux, qui portent l'essentiel
+  des arbitrages.</p>
+  <p class="chapeau-liens">
+    <a href="https://clement-reboul.fr/portfolio/">← Le portfolio</a>
+    <a href="https://github.com/clementRbl/credit-scoring-mlops">Le code du projet</a>
+    <a href="https://clementrbl-credit-scoring-api.hf.space/docs">L'API en production</a>
+  </p>
+</div>
 <h2
 id="industrialisation-et-mise-en-production-dun-modèle-de-scoring-crédit-mlops">Industrialisation
 et mise en production d'un modèle de scoring crédit (MLOps)</h2>
