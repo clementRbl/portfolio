@@ -36,7 +36,7 @@ from urllib.request import urlopen
 ROOT = Path(__file__).resolve().parent.parent
 
 # Les pages livrées, celles qu'un visiteur peut ouvrir depuis un téléphone.
-PAGES = ('index.html', 'rapport.html', 'carte-mentale.html')
+PAGES = ('index.html', 'rapport.html', 'carte-mentale.html', 'glossaire.html')
 
 # iPhone SE, Android courant, iPhone récent, Pixel. En dessous de 320 px il n'y
 # a plus de téléphone à servir.

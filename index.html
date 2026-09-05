@@ -1414,6 +1414,12 @@ document.documentElement.classList.add('js');
   }
   .cmdk-item svg { width: 16px; height: 16px; color: var(--muted); flex: none; }
   .cmdk-item .lb { flex: 1; font-size: 14.6px; color: var(--ink); min-width: 0; }
+  /* Définition en second niveau : deux lignes au plus, pour qu'une entrée de
+     glossaire n'occupe pas la place de trois commandes. */
+  .cmdk-def {
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    font-size: 12.8px; color: var(--muted); line-height: 1.45; margin-top: 2px;
+  }
   .cmdk-item .ht { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); text-align: right; }
   .cmdk-item.sel { background: var(--accent-soft); border-left-color: var(--ember); }
   .cmdk-item.sel svg, .cmdk-item.sel .ht { color: var(--ember); }
@@ -2147,6 +2153,7 @@ document.documentElement.classList.add('js');
         <a class="btn btn-ghost" href="https://github.com/clementRbl" target="_blank" rel="noopener">GitHub</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr" target="_blank" rel="noopener">Blog</a>
         <a class="btn btn-ghost" href="https://clement-reboul.fr/portfolio/rapport.html">Conduite de projet</a>
+        <a class="btn btn-ghost" href="https://clement-reboul.fr/portfolio/glossaire.html">Glossaire</a>
       </div>
       <p class="cta-note" id="cta-note" role="status" aria-live="polite"></p>
     </div>
@@ -2485,6 +2492,7 @@ document.documentElement.classList.add('js');
   /* ---- PALETTE DE COMMANDES (mode Standard) ----
      Même navigation au clavier que la roue, registre outil de développeur. */
   var IC = {
+    book: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z',
     ext:  'M14 3h7v7M21 3l-9 9M19 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6',
     dl:   'M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3',
     mail: 'M3 6l9 6 9-6M3 6h18v12H3z',
@@ -2524,6 +2532,42 @@ document.documentElement.classList.add('js');
       })
       .catch(function () { vecState = 'failed'; });
   }
+  /* Glossaire. Chargé à la première ouverture de la palette, comme l'index
+     vectoriel. Il n'alimente pas la recherche vectorielle mais une
+     correspondance lexicale : chercher un mot de vocabulaire, c'est chercher un
+     mot précis, pas un voisin sémantique. Verser soixante définitions dans un
+     index LSA réglé sur vingt-cinq documents l'aurait de surcroît déformé. */
+  var GLO = null, gloState = 'idle';
+  function loadGlossaire() {
+    if (gloState !== 'idle') return;
+    gloState = 'loading';
+    fetch('assets/glossaire.json')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (g) {
+        if (!g) { gloState = 'failed'; return; }
+        GLO = g; gloState = 'ready';
+        if (cmdkOpen && cmdkInput.value.trim()) renderCmdk();
+      })
+      .catch(function () { gloState = 'failed'; });
+  }
+
+  /* La requête peut être le terme (« drift ») ou le contenir (« c'est quoi le
+     data drift ? ») : on teste les deux sens d'inclusion. Une requête d'une
+     seule lettre ne filtre rien d'utile et remplirait la liste. */
+  function gloMatch(q) {
+    if (!GLO || q.length < 2) return [];
+    var out = [];
+    for (var i = 0; i < GLO.length && out.length < 6; i++) {
+      var e = GLO[i];
+      var cles = [e.t].concat(e.a || []);
+      for (var j = 0; j < cles.length; j++) {
+        var c = norm(cles[j]);
+        if (c.indexOf(q) !== -1 || (c.length >= 3 && q.indexOf(c) !== -1)) { out.push(e); break; }
+      }
+    }
+    return out;
+  }
+
   function vecStem(w) {
     for (var i = 0; i < VEC.suffixes.length; i++) {
       var suf = VEC.suffixes[i];
@@ -2629,6 +2673,8 @@ document.documentElement.classList.add('js');
         run: function () { window.open('https://clement-reboul.fr/portfolio/assets/CV_Reboul_Clement.pdf', '_blank', 'noopener'); } },
       { g: 'Livrables', label: 'Rapport de conduite de projet', hint: 'Page', icon: IC.ext,
         run: function () { location.href = 'https://clement-reboul.fr/portfolio/rapport.html'; } },
+      { g: 'Livrables', label: 'Glossaire des termes techniques', hint: 'Page', icon: IC.ext,
+        run: function () { location.href = 'https://clement-reboul.fr/portfolio/glossaire.html'; } },
       { g: 'Livrables', label: 'Carte mentale des compétences', hint: 'Page', icon: IC.ext,
         run: function () { window.open('https://clement-reboul.fr/portfolio/carte-mentale.html', '_blank', 'noopener'); } },
       { g: 'Livrables', label: 'Tester l’API de scoring en production', hint: 'Swagger', icon: IC.ext,
@@ -2681,6 +2727,22 @@ document.documentElement.classList.add('js');
       }
       cmdkItems = extra.concat(cmdkItems);
     }
+
+    /* Le vocabulaire passe devant tout le reste, y compris les sections
+       proposées par le vectoriel : à « c'est quoi le data drift ? », c'est la
+       définition qu'on attend, pas la rubrique qui contient le mot. Cette
+       injection vient donc en dernier, pour se retrouver en tête. */
+    var gloHits = gloMatch(q);
+    if (gloHits.length) {
+      cmdkItems = gloHits.map(function (e) {
+        return { g: 'Glossaire', label: e.t, hint: e.f, icon: IC.book, sous: e.s,
+                 run: (function (id) {
+                   return function () {
+                     location.href = 'https://clement-reboul.fr/portfolio/glossaire.html#' + id;
+                   };
+                 })(e.id) };
+      }).concat(cmdkItems);
+    }
     cmdkList.innerHTML = '';
     if (!cmdkItems.length) {
       var em = document.createElement('li');
@@ -2707,6 +2769,14 @@ document.documentElement.classList.add('js');
         c.icon + '"/></svg><span class="lb"></span><span class="ht"></span>';
       li.querySelector('.lb').textContent = c.label;
       li.querySelector('.ht').textContent = c.hint;
+      /* Une entrée de glossaire porte sa définition : la lire dans la palette
+         évite d'ouvrir une page pour un mot dont on n'avait qu'un doute. */
+      if (c.sous) {
+        var d = document.createElement('span');
+        d.className = 'cmdk-def';
+        d.textContent = c.sous;
+        li.querySelector('.lb').appendChild(d);
+      }
       if (c.score) li.querySelector('.ht').classList.add('sc');
       li.addEventListener('click', function () { runCmdk(i); });
       li.addEventListener('mousemove', function () { if (cmdkSel !== i) { cmdkSel = i; markCmdk(); } });
@@ -2746,6 +2816,7 @@ document.documentElement.classList.add('js');
     cmdkEl.classList.add('open');
     document.body.style.overflow = 'hidden';
     loadVectors();
+    loadGlossaire();
     cmdkInput.value = ''; cmdkSel = 0; renderCmdk();
     /* Sur un ecran tactile, donner le focus au champ leve le clavier virtuel :
        il masque la moitie de la liste alors que le visiteur veut d'abord voir
