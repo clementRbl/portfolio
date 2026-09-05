@@ -171,6 +171,122 @@ def test_palette_ne_confond_pas_les_mots():
     assert 'Data drift' in res['drift'], res['drift']
 
 
+def _navigateur():
+    """Le pilote partagé, ou une raison de sauter le test."""
+    try:
+        from test_responsive import chrome, evalue, BrowserError
+    except ImportError:
+        _skip("tools/test_responsive.py est introuvable")
+    if not chrome():
+        _skip("Chrome est absent de cette machine")
+    return evalue, BrowserError
+
+
+def test_pagination_limite_la_page():
+    """La page n'affiche qu'une tranche, pas les cent vingt-sept termes.
+
+    Sans découpage, la page faisait une trentaine d'écrans : on la faisait
+    défiler sans fin pour trouver un mot.
+    """
+    evalue, BrowserError = _navigateur()
+    expression = """
+    (async () => {
+      await new Promise(r => setTimeout(r, 300));
+      const affichés = () => [...document.querySelectorAll('.entree')].filter(e => !e.hidden).length;
+      const sortie = {total: document.querySelectorAll('.entree').length,
+                      page1: affichés(),
+                      etat: document.getElementById('pg-etat').textContent,
+                      hauteur: document.body.scrollHeight};
+      document.getElementById('suiv').click();
+      await new Promise(r => setTimeout(r, 120));
+      sortie.page2 = affichés();
+      sortie.etat2 = document.getElementById('pg-etat').textContent;
+      return JSON.stringify(sortie);
+    })()
+    """
+    try:
+        r = evalue('glossaire.html', expression)
+    except BrowserError as e:
+        _skip(str(e))
+    assert r['total'] > 100, r['total']
+    assert r['page1'] <= 12, f"{r['page1']} entrées sur la première page, c'est trop"
+    assert r['page2'] <= 12 and r['page2'] > 0, r['page2']
+    assert r['etat'] != r['etat2'], "« Suivant » n'a pas changé de page"
+    assert r['hauteur'] < 6000, f"page encore haute de {r['hauteur']} px"
+
+
+def test_recherche_couvre_tout_le_glossaire():
+    """La recherche ignore le filtre de famille et la page affichée.
+
+    Exigence explicite : on cherche un mot précisément parce qu'on ignore dans
+    quelle famille il se range. Une recherche cantonnée à la famille affichée
+    renverrait un résultat partiel sans prévenir - le pire des deux mondes.
+    """
+    evalue, BrowserError = _navigateur()
+    expression = """
+    (async () => {
+      const champ = document.getElementById('q');
+      const cherche = async (q) => {
+        champ.value = q;
+        champ.dispatchEvent(new Event('input'));
+        await new Promise(r => setTimeout(r, 120));
+        return [...document.querySelectorAll('.entree')].filter(e => !e.hidden)
+                 .map(e => e.querySelector('h3').textContent.replace('#',''));
+      };
+      const sortie = {};
+      sortie.sansFiltre = await cherche('drift');
+      // on sélectionne une famille qui ne contient aucun de ces résultats
+      champ.value = '';
+      champ.dispatchEvent(new Event('input'));
+      const puce = [...document.querySelectorAll('.puces a[data-fam]')]
+                     .find(a => /Sécurité/.test(a.textContent));
+      puce.click();
+      await new Promise(r => setTimeout(r, 120));
+      sortie.familleSeule = [...document.querySelectorAll('.entree')].filter(e => !e.hidden).length;
+      sortie.avecFiltre = await cherche('drift');
+      return JSON.stringify(sortie);
+    })()
+    """
+    try:
+        r = evalue('glossaire.html', expression)
+    except BrowserError as e:
+        _skip(str(e))
+    assert len(r['sansFiltre']) >= 5, r['sansFiltre']
+    assert r['familleSeule'] > 0, 'le filtre par famille n\'affiche rien'
+    assert r['avecFiltre'] == r['sansFiltre'], (
+        'la recherche est restée cantonnée à la famille sélectionnée : '
+        f"{r['avecFiltre']} au lieu de {r['sansFiltre']}")
+
+
+def test_lien_du_rapport_atteint_sa_cible():
+    """Un terme visé depuis le rapport doit être affiché, pas masqué par la page.
+
+    C'est le risque propre à la pagination : soixante-huit liens du rapport
+    visent une ancre que le découpage place ailleurs. Sans levée des réglages,
+    ils aboutiraient tous à une page où le terme est introuvable.
+    """
+    evalue, BrowserError = _navigateur()
+    expression = """
+    (async () => {
+      await new Promise(r => setTimeout(r, 300));
+      const cible = document.querySelector(':target');
+      return JSON.stringify({
+        trouvée: !!cible,
+        visible: cible ? (!cible.hidden && !cible.closest('.famille').hidden) : null,
+        déplié: cible ? !!cible.querySelector('details[open]') : null
+      });
+    })()
+    """
+    for ancre in ('injection-prompt', 'tjm', 'scoring-credit'):
+        try:
+            r = evalue(f'glossaire.html#{ancre}', expression)
+        except BrowserError as e:
+            _skip(str(e))
+        assert r['trouvée'], f'#{ancre} : ancre absente'
+        assert r['visible'], f'#{ancre} : la cible est masquée par la pagination'
+        assert r['déplié'], f'#{ancre} : le détail technique n\'est pas déplié'
+
+
 class Ignore(Exception):
     """Le test n'a pas pu s'exécuter : à ne pas compter comme un succès."""
 
