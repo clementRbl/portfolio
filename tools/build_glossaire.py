@@ -238,6 +238,10 @@ $palettes
     font-family:var(--font-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
     padding:0;margin:0 0 20px;}
 
+  /* Le navigateur défile de lui-même vers l'ancre au chargement, après notre
+     remise en haut de page : sans marge réservée, le titre de la fiche passait
+     sous la barre fixe. Mesuré à 74 px de défilement pour une barre de 59. */
+  .entree,.fam-fiche,.accueil{scroll-margin-top:76px;}
   .fil{font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
     color:var(--accent);margin:0 0 12px;}
   .entree h2,.fam-fiche h2{font-size:2rem;line-height:1.14;letter-spacing:-.022em;margin:0;
@@ -443,6 +447,19 @@ $panneaux
     return debut.concat(dedans, corps);
   }
 
+  function amene(l, centre) {
+    var zone = l.closest ? l.closest('.liste-zone') : null;
+    if (!zone || zone.scrollHeight <= zone.clientHeight + 1) {
+      /* Sous 940 px le rail n'a pas son propre défilement : c'est la page. */
+      if (centre) l.scrollIntoView({ block: 'center' });
+      return;
+    }
+    var lr = l.getBoundingClientRect(), zr = zone.getBoundingClientRect();
+    if (centre) zone.scrollTop += (lr.top - zr.top) - (zr.height - lr.height) / 2;
+    else if (lr.top < zr.top) zone.scrollTop += lr.top - zr.top;
+    else if (lr.bottom > zr.bottom) zone.scrollTop += lr.bottom - zr.bottom;
+  }
+
   function surligne(a, q) {
     var el = a.querySelector('.lt');
     var t = LABEL[a.getAttribute('data-id')];
@@ -552,7 +569,7 @@ $panneaux
     rendreIndex();
     ouvre(id);
     var l = lignes.filter(function (x) { return x.getAttribute('data-id') === id; })[0];
-    if (l) l.scrollIntoView({ block: 'nearest' });
+    if (l) amene(l, false);
   });
 
   puces.forEach(function (b) {
@@ -562,7 +579,7 @@ $panneaux
       champ.value = '';
       rendreIndex();
       montre(famille ? 'ff-' + famille : '');
-      liste.scrollIntoView({ block: 'nearest' });
+      amene(lignes[0], false);
     });
   });
 
@@ -604,7 +621,7 @@ $panneaux
     if (i < 0) i = 0;
     if (i > r.length - 1) i = r.length - 1;
     ouvre(r[i].getAttribute('data-id'));
-    r[i].scrollIntoView({ block: 'nearest' });
+    amene(r[i], false);
   });
 
   /* Les liens du rapport visent un terme précis : on lève tous les réglages
@@ -618,7 +635,7 @@ $panneaux
     rendreIndex();
     montre(id);
     var l = lignes.filter(function (x) { return x.getAttribute('data-id') === id; })[0];
-    if (l) l.scrollIntoView({ block: 'center' });
+    if (l) amene(l, true);
   }
 
   window.addEventListener('hashchange', suivreAncre);
@@ -705,11 +722,21 @@ def construit_page(g):
     )
 
 
+def amorce_def(texte):
+    """La première phrase de l'explication simple.
+
+    La palette n'affiche que deux lignes : lui envoyer une définition entière
+    alourdirait l'index téléchargé sans rien montrer de plus.
+    """
+    coupe = re.search(r'(?<=[.!?])\s', texte)
+    return texte[:coupe.start()].strip() if coupe else texte.strip()
+
+
 def construit_index(g):
     """Forme compacte pour la palette : de quoi filtrer et afficher, rien de plus."""
     fam = {f['id']: f['nom'] for f in g['familles']}
     return [{'id': t['id'], 't': t['terme'], 'f': fam[t['famille']],
-             'a': t.get('alias', []), 's': t['simple']}
+             'a': t.get('alias', []), 's': amorce_def(t['simple'])}
             for t in sorted(g['termes'], key=lambda x: x['terme'].lower())]
 
 
