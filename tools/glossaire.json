@@ -616,7 +616,7 @@
   {"id": "svd", "terme": "SVD", "famille": "data",
    "alias": ["décomposition en valeurs singulières", "réduction de dimension", "acp"],
    "simple": "Une opération d'algèbre qui décompose un grand tableau en quelques directions principales, celles qui portent l'essentiel de l'information. Elle sert à comprimer, à visualiser, et ici à faire fonctionner la recherche du site.",
-   "detail": "Tronquée à un rang faible, elle donne l'approximation optimale au sens des moindres carrés. C'est le moteur de la LSA, et de la projection en deux dimensions du graphe latent affiché en page d'accueil.",
+   "detail": "Tronquée à un rang faible, elle donne l'approximation optimale au sens des moindres carrés. C'est le moteur de la LSA qui fait fonctionner la recherche de ce site, entièrement hors ligne.",
    "voir": ["lsa", "similarite-cosinus"], "ou": "accueil"},
 
   {"id": "acid", "terme": "ACID", "famille": "data",
