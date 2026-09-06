@@ -213,18 +213,22 @@ $palettes
     color:var(--muted);margin:18px 0 2px;}
 
   .liste{list-style:none;margin:0;padding:0;}
-  .liste .lettre{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;color:var(--muted);
-    padding:15px 9px 5px;border-bottom:1px solid var(--border);margin-bottom:4px;}
-  .liste a{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--ink-soft);
-    font-size:14.5px;line-height:1.4;padding:5px 9px;border-radius:6px;}
+  .liste .lettre{font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.2em;
+    color:var(--accent);padding:20px 9px 6px;border-bottom:1px solid var(--border);margin-bottom:5px;}
+  .liste .lettre:first-child{padding-top:6px;}
+  .liste a{position:relative;display:flex;align-items:baseline;gap:10px;text-decoration:none;
+    color:var(--ink-soft);font-size:14.5px;line-height:1.4;padding:5px 9px;border-radius:6px;}
   .liste a:hover{background:var(--surface);color:var(--ink);}
   .liste .lt{min-width:0;overflow-wrap:anywhere;}
-  .liste .lf{margin-left:auto;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--muted);opacity:0;flex:none;}
-  .liste a:hover .lf{opacity:.7;}
+  .liste .lf{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;white-space:nowrap;
+    text-transform:uppercase;color:var(--muted);opacity:0;pointer-events:none;
+    padding-left:20px;background:linear-gradient(90deg,transparent,var(--surface) 60%);}
+  .liste a:hover .lf{opacity:.85;}
   .liste a[aria-current="true"]{background:color-mix(in srgb,var(--accent) 15%,transparent);
     color:var(--ink);box-shadow:inset 2px 0 0 var(--accent);}
-  .liste a[aria-current="true"] .lf{opacity:.7;}
+  .liste a[aria-current="true"] .lf{opacity:.85;
+    background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--accent) 15%,var(--bg)) 60%);}
   .liste mark{background:none;color:var(--accent);font-weight:700;}
   .vide{color:var(--muted);font-size:14.5px;padding:22px 0;}
 
@@ -234,6 +238,10 @@ $palettes
     font-family:var(--font-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
     padding:0;margin:0 0 20px;}
 
+  /* Le navigateur défile de lui-même vers l'ancre au chargement, après notre
+     remise en haut de page : sans marge réservée, le titre de la fiche passait
+     sous la barre fixe. Mesuré à 74 px de défilement pour une barre de 59. */
+  .entree,.fam-fiche,.accueil{scroll-margin-top:76px;}
   .fil{font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
     color:var(--accent);margin:0 0 12px;}
   .entree h2,.fam-fiche h2{font-size:2rem;line-height:1.14;letter-spacing:-.022em;margin:0;
@@ -278,7 +286,9 @@ $palettes
     html.gl-js .gl-index{order:2;position:static;height:auto;overflow:visible;
       border-right:0;padding:4px 0 40px;display:block;}
     html.gl-js .liste-zone{overflow:visible;padding-bottom:0;}
-    html.gl-js .gl-cherche{position:sticky;top:64px;z-index:5;}
+    html.gl-js .gl-tete{display:contents;}
+    html.gl-js .gl-cherche{position:sticky;top:66px;z-index:6;
+      box-shadow:0 0 0 8px var(--bg);}
     html.gl-js:not(.fiche) .fam-grille,
     html.gl-js:not(.fiche) .aide{display:none;}
     html.gl-js.fiche .gl-index{display:none;}
@@ -293,11 +303,12 @@ $palettes
     .back svg{width:20px;height:20px;}
     .topbar .tt{font-size:10.5px;letter-spacing:.02em;}
     .icon-btn{width:40px;height:40px;flex:none;}
-    html.gl-js .gl-cherche{top:58px;}
+    html.gl-js .gl-cherche{top:60px;}
     .accueil h1{font-size:1.9rem;}
     .entree h2,.fam-fiche h2{font-size:1.5rem;}
     .simple{font-size:17px;}
     .liste a{padding:8px 9px;}
+    .liste .lettre{font-size:15px;padding:24px 9px 7px;}
     .fam-grille{grid-template-columns:1fr;gap:0;}
   }
   @media print{
@@ -436,6 +447,19 @@ $panneaux
     return debut.concat(dedans, corps);
   }
 
+  function amene(l, centre) {
+    var zone = l.closest ? l.closest('.liste-zone') : null;
+    if (!zone || zone.scrollHeight <= zone.clientHeight + 1) {
+      /* Sous 940 px le rail n'a pas son propre défilement : c'est la page. */
+      if (centre) l.scrollIntoView({ block: 'center' });
+      return;
+    }
+    var lr = l.getBoundingClientRect(), zr = zone.getBoundingClientRect();
+    if (centre) zone.scrollTop += (lr.top - zr.top) - (zr.height - lr.height) / 2;
+    else if (lr.top < zr.top) zone.scrollTop += lr.top - zr.top;
+    else if (lr.bottom > zr.bottom) zone.scrollTop += lr.bottom - zr.bottom;
+  }
+
   function surligne(a, q) {
     var el = a.querySelector('.lt');
     var t = LABEL[a.getAttribute('data-id')];
@@ -545,7 +569,7 @@ $panneaux
     rendreIndex();
     ouvre(id);
     var l = lignes.filter(function (x) { return x.getAttribute('data-id') === id; })[0];
-    if (l) l.scrollIntoView({ block: 'nearest' });
+    if (l) amene(l, false);
   });
 
   puces.forEach(function (b) {
@@ -555,7 +579,7 @@ $panneaux
       champ.value = '';
       rendreIndex();
       montre(famille ? 'ff-' + famille : '');
-      liste.scrollIntoView({ block: 'nearest' });
+      amene(lignes[0], false);
     });
   });
 
@@ -597,7 +621,7 @@ $panneaux
     if (i < 0) i = 0;
     if (i > r.length - 1) i = r.length - 1;
     ouvre(r[i].getAttribute('data-id'));
-    r[i].scrollIntoView({ block: 'nearest' });
+    amene(r[i], false);
   });
 
   /* Les liens du rapport visent un terme précis : on lève tous les réglages
@@ -611,7 +635,7 @@ $panneaux
     rendreIndex();
     montre(id);
     var l = lignes.filter(function (x) { return x.getAttribute('data-id') === id; })[0];
-    if (l) l.scrollIntoView({ block: 'center' });
+    if (l) amene(l, true);
   }
 
   window.addEventListener('hashchange', suivreAncre);
@@ -698,11 +722,21 @@ def construit_page(g):
     )
 
 
+def amorce_def(texte):
+    """La première phrase de l'explication simple.
+
+    La palette n'affiche que deux lignes : lui envoyer une définition entière
+    alourdirait l'index téléchargé sans rien montrer de plus.
+    """
+    coupe = re.search(r'(?<=[.!?])\s', texte)
+    return texte[:coupe.start()].strip() if coupe else texte.strip()
+
+
 def construit_index(g):
     """Forme compacte pour la palette : de quoi filtrer et afficher, rien de plus."""
     fam = {f['id']: f['nom'] for f in g['familles']}
     return [{'id': t['id'], 't': t['terme'], 'f': fam[t['famille']],
-             'a': t.get('alias', []), 's': t['simple']}
+             'a': t.get('alias', []), 's': amorce_def(t['simple'])}
             for t in sorted(g['termes'], key=lambda x: x['terme'].lower())]
 
 
