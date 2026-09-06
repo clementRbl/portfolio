@@ -22,7 +22,9 @@ même palette finissent toujours par diverger.
 import html
 import json
 import re
+import string
 import sys
+import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -78,55 +80,48 @@ def e(txt):
     return html.escape(txt, quote=True)
 
 
-def entree(t, par_id):
-    """Une entrée : le terme, ses synonymes, les deux niveaux, les renvois."""
+def court(nom):
+    """Nom de famille abrégé : « MLOps & mise en production » tient mal dans un
+    rail de 290 px, et neuf pastilles pleines en occupaient la moitié."""
+    return re.split(r'\s*[&,]\s*', nom)[0]
+
+
+def sans_accent(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s.lower())
+                   if unicodedata.category(c) != 'Mn')
+
+
+def entree(t, par_id, fam_nom):
+    """Une fiche : le terme, ses synonymes, les deux niveaux, les renvois.
+
+    Plus de cadre ni de bordure colorée : la fiche occupe seule son volet, la
+    typographie suffit à la structurer. L'ancien accordéon « en détail » est
+    déplié d'office - il masquait la moitié de ce que le lecteur venait
+    chercher derrière un clic, alors que la place ne manque plus.
+    """
     alias = [a for a in t.get('alias', []) if a.lower() != t['terme'].lower()]
-    bloc = [f'<article class="entree" id="{e(t["id"])}" '
-            f'data-cle="{e(" ".join([t["terme"]] + t.get("alias", [])).lower())}">']
-    bloc.append(f'  <h3>{e(t["terme"])}'
-                f'<a class="lien-ancre" href="#{e(t["id"])}" '
-                f'aria-label="Lien vers la définition de {e(t["terme"])}">#</a></h3>')
+    b = ['<article class="entree" id="%s" data-fam="%s">' % (e(t['id']), e(t['famille']))]
+    b.append('  <p class="fil">%s</p>' % e(fam_nom))
+    b.append('  <h2>%s<a class="lien-ancre" href="#%s" aria-label="Lien direct vers %s">#</a></h2>'
+             % (e(t['terme']), e(t['id']), e(t['terme'])))
     if alias:
-        bloc.append(f'  <p class="alias">aussi&nbsp;: {e(", ".join(alias))}</p>')
-    bloc.append(f'  <p class="simple">{e(t["simple"])}</p>')
-    bloc.append('  <details class="detail"><summary>En détail</summary>'
-                f'<p>{e(t["detail"])}</p></details>')
+        b.append('  <p class="alias">%s</p>' % e(' · '.join(alias)))
+    b.append('  <p class="simple">%s</p>' % e(t['simple']))
+    b.append('  <p class="etq">En détail</p>')
+    b.append('  <div class="niveau2"><p>%s</p></div>' % e(t['detail']))
 
-    renvois = []
-    for v in t.get('voir', []):
-        renvois.append(f'<a href="#{e(v)}">{e(par_id[v]["terme"])}</a>')
-    pieds = []
-    if renvois:
-        pieds.append('<span class="voir">Voir aussi&nbsp;: ' + ' · '.join(renvois) + '</span>')
+    if t.get('voir'):
+        liens = ''.join('<a href="#%s">%s</a>' % (e(v), e(par_id[v]['terme'])) for v in t['voir'])
+        b.append('  <p class="etq">Voir aussi</p>')
+        b.append('  <p class="renvois">%s</p>' % liens)
     if t.get('ou'):
-        pieds.append(f'<a class="ou" href="{SITE}#{e(t["ou"])}">Où ça sert sur le site →</a>')
-    if pieds:
-        bloc.append('  <p class="renvois">' + ' '.join(pieds) + '</p>')
-    bloc.append('</article>')
-    return '\n'.join(bloc)
+        b.append('  <p class="ou"><a href="%s#%s">Où ça sert sur le site →</a></p>'
+                 % (SITE, e(t['ou'])))
+    b.append('</article>')
+    return '\n'.join(b)
 
 
-def construit_page(g):
-    csp, palettes, amorce = chrome()
-    par_id = {t['id']: t for t in g['termes']}
-    n = len(g['termes'])
-
-    puces, sections = [], []
-    for f in g['familles']:
-        termes = [t for t in g['termes'] if t['famille'] == f['id']]
-        if not termes:
-            continue
-        termes.sort(key=lambda t: t['terme'].lower())
-        puces.append(f'<a href="#f-{e(f["id"])}" data-fam="{e(f["id"])}">{e(f["nom"])} '
-                     f'<span class="n">{len(termes)}</span></a>')
-        corps = '\n'.join(entree(t, par_id) for t in termes)
-        sections.append(
-            f'<section class="famille" id="f-{e(f["id"])}" data-fam="{e(f["id"])}">\n'
-            f'  <h2>{e(f["nom"])}</h2>\n'
-            f'  <p class="fam-intro">{e(f["intro"])}</p>\n'
-            f'{corps}\n</section>')
-
-    return f"""<!DOCTYPE html>
+GABARIT = string.Template("""<!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -134,358 +129,573 @@ def construit_page(g):
 <!-- Page générée par tools/build_glossaire.py depuis tools/glossaire.json.
      Ne pas éditer à la main : la prochaine construction écraserait la
      correction. Le texte des définitions vit dans le JSON. -->
-{csp}
+$csp
 <title>Glossaire - Clément Reboul</title>
-<meta name="description" content="Glossaire du portfolio : {n} termes de machine learning, MLOps, GenAI et RAG expliqués en clair, avec le détail technique pour qui veut aller plus loin.">
-<link rel="canonical" href="{URL}glossaire.html">
+<meta name="description" content="Glossaire du portfolio : $n termes de machine learning, MLOps, GenAI et RAG expliqués en clair, avec le détail technique pour qui veut aller plus loin.">
+<link rel="canonical" href="${url}glossaire.html">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:url" content="{URL}glossaire.html">
+<meta property="og:url" content="${url}glossaire.html">
 <meta property="og:title" content="Glossaire - le vocabulaire du portfolio expliqué">
-<meta property="og:description" content="{n} termes de machine learning, MLOps et GenAI expliqués en clair, avec le détail technique pour qui veut aller plus loin.">
-<meta property="og:image" content="{URL}assets/og-clement-reboul.png">
+<meta property="og:description" content="$n termes de machine learning, MLOps et GenAI expliqués en clair, avec le détail technique pour qui veut aller plus loin.">
+<meta property="og:image" content="${url}assets/og-clement-reboul.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="{URL}assets/og-clement-reboul.png">
+<meta name="twitter:image" content="${url}assets/og-clement-reboul.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A0D0B'/%3E%3Ctext y='72' x='50' font-size='68' text-anchor='middle' fill='%23E4A34B' font-family='Georgia,serif'%3EG%3C/text%3E%3C/svg%3E">
-{amorce}
+$amorce
 <style>
   /* Palettes reprises de rapport.html à la construction : une seule définition
      pour tout le site, aucune copie à tenir à jour. */
-{palettes}
-  *{{box-sizing:border-box;}}
-  html{{scroll-behavior:smooth;}}
-  body{{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;}}
-  @media (prefers-reduced-motion: reduce){{html{{scroll-behavior:auto;}}}}
+$palettes
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto;}}
+  a{color:var(--accent);}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
 
-  .topbar{{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}}
-  .topbar-in{{max-width:900px;margin-inline:auto;padding:0 24px;height:58px;display:flex;align-items:center;gap:16px;}}
-  .back{{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink-soft);font-weight:600;font-size:14.5px;}}
-  .back:hover{{color:var(--accent);}}
-  .back svg{{width:16px;height:16px;}}
-  .topbar .tt{{margin-left:auto;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}}
-  .icon-btn{{background:var(--surface);border:1px solid var(--border);color:var(--ink);width:36px;height:36px;border-radius:6px;cursor:pointer;display:grid;place-items:center;}}
-  .icon-btn svg{{width:17px;height:17px;}}
-  .theme-sun{{display:none;}} html[data-theme="light"] .theme-sun{{display:block;}} html[data-theme="light"] .theme-moon{{display:none;}}
-  a{{color:var(--accent);}}
-  :focus-visible{{outline:2px solid var(--accent);outline-offset:2px;}}
+  .topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+  .topbar-in{max-width:1260px;margin-inline:auto;padding:0 24px;height:58px;display:flex;align-items:center;gap:16px;}
+  .back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink-soft);font-weight:600;font-size:14.5px;}
+  .back:hover{color:var(--accent);}
+  .back svg{width:16px;height:16px;}
+  .topbar .tt{margin-left:auto;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;}
+  .icon-btn{background:var(--surface);border:1px solid var(--border);color:var(--ink);width:36px;height:36px;border-radius:6px;cursor:pointer;display:grid;place-items:center;}
+  .icon-btn svg{width:17px;height:17px;}
+  .theme-sun{display:none;} html[data-theme="light"] .theme-sun{display:block;} html[data-theme="light"] .theme-moon{display:none;}
 
-  main{{max-width:900px;margin-inline:auto;padding:52px 24px 100px;}}
-  h1{{font-size:2.3rem;line-height:1.15;margin:0 0 14px;letter-spacing:-.02em;}}
-  .chapo{{color:var(--ink-soft);font-size:17.5px;margin:0 0 8px;max-width:62ch;}}
+  /* ---------- DEUX VOLETS ----------
+     Cent vingt-sept définitions empilées en pleine largeur, c'était trente
+     écrans à faire défiler pour trouver un mot, et un cadre autour de chacune
+     pour compenser l'absence de structure. L'index tient maintenant tout à
+     gauche, une ligne par terme, et le volet de droite n'affiche que la fiche
+     demandée. Chercher un mot ne demande plus de faire défiler quoi que ce
+     soit : on le lit dans la liste, ou on le tape.
 
-  /* Filtre : caché tant que le script n'a pas pris la main, pour ne pas
-     proposer un champ inerte à qui navigue sans JavaScript. */
-  .filtre{{margin:26px 0 8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;}}
-  .filtre input{{
-    flex:1;min-width:230px;background:var(--surface);border:1px solid var(--border);
-    border-radius:9px;padding:12px 14px;color:var(--ink);font-family:var(--font-sans);font-size:16px;
-  }}
-  .filtre input::placeholder{{color:var(--muted);}}
-  .filtre input:focus{{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent;}}
-  .compte{{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em;}}
+     Sans script, les deux volets redeviennent un document : tout est affiché,
+     dans l'ordre alphabétique. La mise en page est un confort, pas une
+     condition d'accès. */
+  .gl{max-width:1260px;margin-inline:auto;padding:0 24px;}
+  html.gl-js .gl{display:grid;grid-template-columns:290px minmax(0,1fr);align-items:start;}
 
-  .puces{{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 34px;}}
-  .puces a{{
-    display:inline-flex;align-items:center;gap:7px;text-decoration:none;
-    font-family:var(--font-mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;
-    color:var(--ink-soft);background:var(--surface);border:1px solid var(--border);
-    border-radius:999px;padding:7px 13px;
-  }}
-  .puces a:hover{{border-color:var(--accent);color:var(--accent);}}
-  .puces .n{{font-size:11px;color:var(--muted);}}
-  /* La famille affichée se distingue nettement : sans marque d'état, on ne sait
-     plus quelle page on lit ni pourquoi les autres termes ont disparu. */
-  .puces a[aria-current="page"]{{
-    background:var(--accent);border-color:var(--accent);color:var(--accent-ink);
-  }}
-  .puces a[aria-current="page"] .n{{color:var(--accent-ink);opacity:.75;}}
+  .gl-index{padding:22px 0 60px;min-width:0;}
+  /* La tête du rail ne défile pas avec la liste : faire descendre les cent
+     vingt-sept lignes ne doit pas emporter le champ de recherche hors de vue,
+     sans quoi il faut remonter pour corriger un mot. */
+  html.gl-js .gl-index{position:sticky;top:58px;height:calc(100dvh - 58px);
+    display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;
+    padding-right:26px;border-right:1px solid var(--border);}
+  html.gl-js .gl-tete{flex:none;}
+  html.gl-js .liste-zone{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+    overscroll-behavior:contain;padding-bottom:40px;scrollbar-gutter:stable;}
 
-  .puces.inerte a{{opacity:.45;}}
-  .pagination{{
-    display:flex;align-items:center;justify-content:space-between;gap:14px;
-    margin:34px 0 0;padding-top:20px;border-top:1px solid var(--border);
-  }}
-  .pg{{
-    background:var(--surface);border:1px solid var(--border);color:var(--ink);
-    border-radius:9px;padding:10px 16px;cursor:pointer;font-family:var(--font-sans);
-    font-size:14.5px;font-weight:600;
-  }}
-  .pg:hover:not(:disabled){{border-color:var(--accent);color:var(--accent);}}
-  .pg:disabled{{opacity:.4;cursor:not-allowed;}}
-  .pg-etat{{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);text-align:center;}}
+  .gl-cherche{display:flex;align-items:center;gap:9px;background:var(--surface);
+    border:1px solid var(--border);border-radius:9px;padding:0 11px;}
+  .gl-cherche:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent);}
+  .gl-cherche svg{width:15px;height:15px;color:var(--muted);flex:none;}
+  .gl-cherche input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--ink);
+    font-family:var(--font-sans);font-size:15px;padding:10px 0;}
+  .gl-cherche input::placeholder{color:var(--muted);}
+  .gl-cherche input::-webkit-search-cancel-button{display:none;}
+  .gl-cherche kbd{font-family:var(--font-mono);font-size:11px;color:var(--muted);
+    border:1px solid var(--border);border-radius:4px;padding:1px 6px;flex:none;line-height:1.5;}
 
-  .famille{{margin:0 0 12px;scroll-margin-top:74px;}}
-  .famille h2{{font-size:1.4rem;margin:38px 0 4px;letter-spacing:-.01em;}}
-  .fam-intro{{color:var(--muted);margin:0 0 18px;font-size:15.5px;}}
+  .puces{display:flex;flex-wrap:wrap;gap:5px;margin:13px 0 0;}
+  .puces button{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+    background:none;border:1px solid var(--border);color:var(--ink-soft);border-radius:999px;
+    padding:4px 9px;cursor:pointer;line-height:1.6;}
+  .puces button:hover{border-color:var(--accent);color:var(--accent);}
+  .puces button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
 
-  .entree{{
-    border:1px solid var(--border);border-left:3px solid var(--border-strong);
-    border-radius:10px;padding:18px 20px;margin:0 0 12px;background:var(--surface);
-    scroll-margin-top:74px;
-  }}
-  .entree:target{{border-left-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent);}}
-  .entree h3{{font-size:1.12rem;margin:0;display:flex;align-items:baseline;gap:9px;}}
-  .lien-ancre{{text-decoration:none;color:var(--muted);font-family:var(--font-mono);font-size:13px;opacity:0;transition:opacity .15s;}}
-  .entree:hover .lien-ancre,.lien-ancre:focus-visible{{opacity:1;}}
-  .alias{{margin:4px 0 0;font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.03em;}}
-  .simple{{margin:10px 0 0;color:var(--ink-soft);}}
-  .detail{{margin-top:11px;}}
-  .detail summary{{
-    cursor:pointer;font-family:var(--font-mono);font-size:12px;letter-spacing:.09em;
-    text-transform:uppercase;color:var(--accent);width:max-content;
-  }}
-  .detail summary::marker{{color:var(--muted);}}
-  .detail p{{margin:9px 0 0;color:var(--ink-soft);font-size:16px;border-left:2px solid var(--border);padding-left:14px;}}
-  .renvois{{margin:12px 0 0;font-size:14px;display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);}}
-  .renvois a{{text-decoration:none;}}
-  .renvois a:hover{{text-decoration:underline;}}
-  .ou{{font-family:var(--font-mono);font-size:12.5px;}}
+  .compte{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--muted);margin:18px 0 2px;}
 
-  .vide{{display:none;padding:30px 4px;color:var(--muted);}}
-  .vide.on{{display:block;}}
+  .liste{list-style:none;margin:0;padding:0;}
+  .liste .lettre{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;color:var(--muted);
+    padding:15px 9px 5px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+  .liste a{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--ink-soft);
+    font-size:14.5px;line-height:1.4;padding:5px 9px;border-radius:6px;}
+  .liste a:hover{background:var(--surface);color:var(--ink);}
+  .liste .lt{min-width:0;overflow-wrap:anywhere;}
+  .liste .lf{margin-left:auto;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);opacity:0;flex:none;}
+  .liste a:hover .lf{opacity:.7;}
+  .liste a[aria-current="true"]{background:color-mix(in srgb,var(--accent) 15%,transparent);
+    color:var(--ink);box-shadow:inset 2px 0 0 var(--accent);}
+  .liste a[aria-current="true"] .lf{opacity:.7;}
+  .liste mark{background:none;color:var(--accent);font-weight:700;}
+  .vide{color:var(--muted);font-size:14.5px;padding:22px 0;}
 
-  @media (max-width: 620px){{
-    body{{font-size:16px;}}
-    main{{padding:32px 16px 72px;}}
-    .topbar-in{{padding:0 14px;height:52px;gap:10px;}}
-    .back{{font-size:0;gap:0;}}
-    .back svg{{width:20px;height:20px;}}
-    .topbar .tt{{font-size:10.5px;letter-spacing:.02em;}}
-    .icon-btn{{width:40px;height:40px;flex:none;}}
-    h1{{font-size:1.75rem;}}
-    .entree{{padding:15px 16px;}}
-    .entree h3{{font-size:1.05rem;}}
-    .pg{{padding:12px 14px;font-size:13.5px;}}
-    .pg-etat{{font-size:11px;}}
-  }}
-  @media print{{.topbar,.filtre,.puces,.pagination{{display:none;}}
-    .famille[hidden]{{display:block !important;}}main{{max-width:none;padding:0;}}
-    .entree{{break-inside:avoid;}} .detail[open] summary{{display:none;}} body{{font-size:11pt;}}}}
+  .gl-detail{padding:34px 0 110px;min-width:0;}
+  html.gl-js .gl-detail{padding-left:44px;}
+  .retour-liste{display:none;background:none;border:0;color:var(--accent);cursor:pointer;
+    font-family:var(--font-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+    padding:0;margin:0 0 20px;}
+
+  .fil{font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 12px;}
+  .entree h2,.fam-fiche h2{font-size:2rem;line-height:1.14;letter-spacing:-.022em;margin:0;
+    display:flex;align-items:baseline;gap:10px;}
+  .lien-ancre{text-decoration:none;color:var(--muted);font-family:var(--font-mono);font-size:15px;opacity:0;transition:opacity .15s;}
+  .entree:hover .lien-ancre,.lien-ancre:focus-visible{opacity:1;}
+  .alias{margin:9px 0 0;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);letter-spacing:.03em;}
+  .simple{margin:24px 0 0;font-size:19px;line-height:1.62;color:var(--ink);max-width:64ch;}
+  .etq{display:flex;align-items:center;gap:13px;margin:34px 0 10px;
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);}
+  .etq::after{content:"";flex:1;height:1px;background:var(--border);}
+  .niveau2 p{margin:0;color:var(--ink-soft);font-size:16.5px;max-width:66ch;}
+  .renvois{display:flex;flex-wrap:wrap;gap:7px;margin:0;}
+  .renvois a{text-decoration:none;font-size:13.5px;color:var(--ink-soft);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:4px 12px;line-height:1.6;}
+  .renvois a:hover{border-color:var(--accent);color:var(--accent);}
+  .ou{margin:22px 0 0;}
+  .ou a{font-family:var(--font-mono);font-size:12.5px;text-decoration:none;}
+  .ou a:hover{text-decoration:underline;}
+
+  .accueil h1{font-size:2.6rem;line-height:1.1;letter-spacing:-.025em;margin:0 0 16px;}
+  .chapo{color:var(--ink-soft);font-size:17.5px;margin:0 0 10px;max-width:60ch;}
+  .aide{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin:22px 0 0;letter-spacing:.03em;}
+  .aide kbd{border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--ink-soft);}
+  .fam-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:0 40px;margin:30px 0 0;}
+  .fam-grille button{display:block;width:100%;text-align:left;background:none;border:0;
+    border-top:1px solid var(--border);padding:15px 0;cursor:pointer;color:var(--ink);font-family:inherit;}
+  .fam-grille button:hover .fg-n{color:var(--accent);}
+  .fg-n{font-size:15.5px;font-weight:700;display:flex;align-items:baseline;gap:9px;}
+  .fg-c{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);letter-spacing:.08em;}
+  .fg-i{display:block;color:var(--ink-soft);font-size:14px;line-height:1.5;margin-top:5px;}
+  .fam-fiche .fam-intro{margin:22px 0 0;font-size:18px;color:var(--ink-soft);max-width:62ch;}
+
+  /* Sous 940 px les deux volets s'empilent, l'accueil d'abord : masquer le
+     volet droit privait le lecteur mobile du titre et de l'introduction. Le
+     couple grille de familles + pastilles ferait doublon, la grille cède la
+     place. Ouvrir un terme, en revanche, remplace bien la liste - c'est une
+     lecture, pas un choix. */
+  @media (max-width: 939px){
+    html.gl-js .gl{display:flex;flex-direction:column;}
+    html.gl-js .gl-detail{order:1;padding:22px 0 4px;}
+    html.gl-js .gl-index{order:2;position:static;height:auto;overflow:visible;
+      border-right:0;padding:4px 0 40px;display:block;}
+    html.gl-js .liste-zone{overflow:visible;padding-bottom:0;}
+    html.gl-js .gl-cherche{position:sticky;top:64px;z-index:5;}
+    html.gl-js:not(.fiche) .fam-grille,
+    html.gl-js:not(.fiche) .aide{display:none;}
+    html.gl-js.fiche .gl-index{display:none;}
+    html.gl-js.fiche .gl-detail{padding-bottom:90px;}
+    html.gl-js.fiche .retour-liste{display:inline-flex;}
+  }
+  @media (max-width: 620px){
+    body{font-size:16px;}
+    .gl{padding:0 16px;}
+    .topbar-in{padding:0 14px;height:52px;gap:10px;}
+    .back{font-size:0;gap:0;}
+    .back svg{width:20px;height:20px;}
+    .topbar .tt{font-size:10.5px;letter-spacing:.02em;}
+    .icon-btn{width:40px;height:40px;flex:none;}
+    html.gl-js .gl-cherche{top:58px;}
+    .accueil h1{font-size:1.9rem;}
+    .entree h2,.fam-fiche h2{font-size:1.5rem;}
+    .simple{font-size:17px;}
+    .liste a{padding:8px 9px;}
+    .fam-grille{grid-template-columns:1fr;gap:0;}
+  }
+  @media print{
+    .topbar,.gl-cherche,.puces,.compte,.retour-liste,.lien-ancre{display:none;}
+    .gl{display:block;max-width:none;padding:0;}
+    .gl-index{display:none;}
+    .entree{break-inside:avoid;} body{font-size:11pt;}
+  }
 </style>
 <!-- Analytics Umami (cookieless, sans bannière) -->
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d6a8ee08-52c7-4346-96f9-3fccf5c0fa87"></script>
 </head>
 <body>
 <div class="topbar"><div class="topbar-in">
-  <a class="back" href="{SITE}" aria-label="Retour au portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Retour au portfolio</a>
+  <a class="back" href="$site" aria-label="Retour au portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Retour au portfolio</a>
   <span class="tt">Glossaire</span>
   <button class="icon-btn" id="tg" aria-label="Basculer le thème">
     <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     <svg class="theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M19.1 4.9l-1.5 1.5M6.4 17.6l-1.5 1.5"/></svg>
   </button>
 </div></div>
-<main>
-<h1>Glossaire</h1>
-<p class="chapo">Le vocabulaire employé sur ce portfolio et dans le rapport, {n} termes,
-expliqués d'abord en clair puis en détail pour qui veut aller plus loin. Aucune
-connaissance préalable n'est supposée par le premier niveau.</p>
-<p class="chapo">Un mot vous manque en lisant une page&nbsp;? Il est probablement ici.</p>
 
-<div class="filtre" hidden id="filtre">
-  <label class="sr" for="q" hidden>Filtrer les termes</label>
-  <input id="q" type="search" autocomplete="off" placeholder="Filtrer : drift, SHAP, seuil…">
-  <span class="compte" id="compte" role="status" aria-live="polite"></span>
+<div class="gl">
+  <aside class="gl-index" aria-label="Index des termes">
+   <div class="gl-tete">
+    <div class="gl-cherche">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <label class="sr" for="q">Filtrer les termes</label>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Filtrer : drift, SHAP, seuil…">
+      <kbd>/</kbd>
+    </div>
+    <nav class="puces" aria-label="Familles de termes">
+      <button type="button" data-fam="" aria-current="true">Toutes <span class="n">$n</span></button>
+$puces
+    </nav>
+    <p class="compte" id="compte" role="status" aria-live="polite">$n termes</p>
+   </div>
+   <div class="liste-zone">
+    <ol class="liste" id="liste">
+$liste
+    </ol>
+    <p class="vide" id="vide" hidden>Aucun terme ne correspond. Essayez un mot plus court.</p>
+   </div>
+  </aside>
+
+  <main class="gl-detail">
+    <button type="button" class="retour-liste" id="retour">← Tous les termes</button>
+$panneaux
+  </main>
 </div>
 
-<nav class="puces" aria-label="Familles de termes">
-  <a href="#" id="puce-toutes" aria-current="page">Toutes <span class="n">{n}</span></a>
-{chr(10).join('  ' + p for p in puces)}
-</nav>
-
-{chr(10).join(sections)}
-
-<p class="vide" id="vide">Aucun terme ne correspond. Essayez un mot plus court, ou parcourez les familles ci-dessus.</p>
-
-<nav class="pagination" id="pagination" hidden aria-label="Navigation entre les familles">
-  <button type="button" id="prec" class="pg">← Précédent</button>
-  <span class="pg-etat" id="pg-etat" role="status" aria-live="polite"></span>
-  <button type="button" id="suiv" class="pg">Suivant →</button>
-</nav>
-</main>
-
 <script>
-(function () {{
+(function () {
   "use strict";
   /* Thème : même bascule et même stockage que le portfolio et le rapport. */
   var btn = document.getElementById('tg');
   var jeu = document.documentElement.classList.contains('fx-game');
-  if (btn) {{
-    if (jeu) {{
+  if (btn) {
+    if (jeu) {
       btn.setAttribute('aria-disabled', 'true');
       btn.title = 'Le mode Game impose le thème sombre';
-    }} else {{
-      btn.addEventListener('click', function () {{
+    } else {
+      btn.addEventListener('click', function () {
         var t = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', t);
-        try {{ localStorage.setItem('theme', t); }} catch (e) {{}}
-      }});
-    }}
-  }}
+        try { localStorage.setItem('theme', t); } catch (e) {}
+      });
+    }
+  }
 
-  /* Cent vingt-sept entrées d'un seul tenant, c'était une page qu'on fait
-     défiler sans fin pour trouver un mot. Deux réglages indépendants s'en
-     chargent : les pastilles filtrent par famille, et la liste obtenue est
-     découpée en pages de taille fixe. Découper par famille seule ne suffisait
-     pas - la plus fournie en compte vingt et une, soit six écrans.
-
-     La barre de recherche, elle, balaie toujours les cent vingt-sept termes,
-     quelle que soit la page affichée : chercher dans la page courante n'aurait
-     aucun sens.
-
-     Sans script, tout reste affiché : la pagination est un confort de lecture,
-     pas une condition d'accès. */
-  var PAR_PAGE = 10;
-
-  var boite = document.getElementById('filtre');
+  var doc = document.documentElement;
   var champ = document.getElementById('q');
+  var liste = document.getElementById('liste');
+  var detail = document.querySelector('.gl-detail');
+  if (!champ || !liste || !detail) return;
+
+  var lignes = [].slice.call(liste.querySelectorAll('a[data-id]'));
+  var lettres = [].slice.call(liste.querySelectorAll('.lettre'));
+  var puces = [].slice.call(document.querySelectorAll('.puces button'));
   var compte = document.getElementById('compte');
   var vide = document.getElementById('vide');
-  var pagination = document.getElementById('pagination');
-  var etat = document.getElementById('pg-etat');
-  var btnPrec = document.getElementById('prec');
-  var btnSuiv = document.getElementById('suiv');
-  var entrees = [].slice.call(document.querySelectorAll('.entree'));
-  var familles = [].slice.call(document.querySelectorAll('.famille'));
-  var puces = [].slice.call(document.querySelectorAll('.puces a[data-fam]'));
-  var puceToutes = document.getElementById('puce-toutes');
-  if (!champ || !familles.length) return;
-  boite.hidden = false;
-  pagination.hidden = false;
+  var retour = document.getElementById('retour');
 
-  var famille = null;   // null = toutes
-  var page = 0;
+  /* Les panneaux du volet droit : l'accueil, une fiche par famille, une fiche
+     par terme. Un seul est visible à la fois - sauf sans script, où ils le
+     sont tous et forment un document ordinaire. */
+  var panneaux = [].slice.call(detail.querySelectorAll('.accueil, .fam-fiche, .entree'));
+  var parId = {};
+  panneaux.forEach(function (p) { parId[p.id] = p; });
 
-  function sansAccent(s) {{
+  /* Le texte cherchable est relu depuis les fiches : aucune copie à tenir dans
+     des attributs, et la recherche porte donc bien sur les deux niveaux. */
+  var TEXTE = {}, LABEL = {}, NOM = {};
+  lignes.forEach(function (a) {
+    var id = a.getAttribute('data-id');
+    var fiche = parId[id];
+    var alias = fiche ? fiche.querySelector('.alias') : null;
+    LABEL[id] = a.querySelector('.lt').textContent;
+    NOM[id] = sansAccent(LABEL[id] + ' ' + (alias ? alias.textContent : ''));
+    TEXTE[id] = sansAccent(a.textContent + ' ' + (fiche ? fiche.textContent : ''));
+  });
+  var ordreInitial = [].slice.call(liste.children);
+
+  doc.classList.add('gl-js');
+
+  var famille = '';
+  var courant = '';
+
+  function sansAccent(s) {
     return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  }}
+  }
 
-  /* Les termes retenus par les deux réglages, dans l'ordre de la page. */
-  function retenus() {{
+  /* Une recherche porte sur la totalité du glossaire, jamais sur la seule
+     famille affichée : on cherche un mot parce qu'on ignore où il se range.
+     Le filtre de famille est donc levé dès qu'on saisit.
+
+     Les résultats sont classés, et non rendus dans l'ordre alphabétique : taper
+     « shap » ouvrait « Biais algorithmique », qui se contente de mentionner la
+     méthode et passe avant SHAP dans l'alphabet. Un terme dont le nom ou un
+     synonyme commence par ce qu'on tape passe devant ; vient ensuite le nom
+     qui le contient ailleurs ; puis seulement les fiches qui en parlent. */
+  function retenus() {
     var q = sansAccent(champ.value.trim());
-    /* Une recherche porte sur la totalité du glossaire, jamais sur la seule
-       famille affichée : on cherche un mot parce qu'on ignore où il se range.
-       Le filtre par famille est donc levé dès qu'une requête est saisie. */
-    return entrees.filter(function (el) {{
-      if (!q && famille && el.closest('.famille').getAttribute('data-fam') !== famille) return false;
-      if (!q) return true;
-      return sansAccent(el.getAttribute('data-cle') + ' ' + el.textContent).indexOf(q) !== -1;
-    }});
-  }}
+    if (!q) {
+      return lignes.filter(function (a) {
+        return !famille || a.getAttribute('data-fam') === famille;
+      });
+    }
+    var debut = [], dedans = [], corps = [];
+    lignes.forEach(function (a) {
+      var id = a.getAttribute('data-id');
+      if ((' ' + NOM[id]).indexOf(' ' + q) !== -1) debut.push(a);
+      else if (NOM[id].indexOf(q) !== -1) dedans.push(a);
+      else if (TEXTE[id].indexOf(q) !== -1) corps.push(a);
+    });
+    return debut.concat(dedans, corps);
+  }
 
-  function rendre() {{
-    var liste = retenus();
-    var pages = Math.max(1, Math.ceil(liste.length / PAR_PAGE));
-    if (page >= pages) page = pages - 1;
-    var debut = page * PAR_PAGE;
-    var visibles = liste.slice(debut, debut + PAR_PAGE);
+  function surligne(a, q) {
+    var el = a.querySelector('.lt');
+    var t = LABEL[a.getAttribute('data-id')];
+    var i = q ? t.toLowerCase().indexOf(q.toLowerCase()) : -1;
+    el.textContent = '';
+    if (i < 0) { el.textContent = t; return; }
+    el.appendChild(document.createTextNode(t.slice(0, i)));
+    var m = document.createElement('mark');
+    m.textContent = t.slice(i, i + q.length);
+    el.appendChild(m);
+    el.appendChild(document.createTextNode(t.slice(i + q.length)));
+  }
 
-    entrees.forEach(function (el) {{ el.hidden = visibles.indexOf(el) === -1; }});
-    /* Un titre de famille sans terme dessous n'a rien à dire : il ne reste que
-       si la page en cours contient au moins une de ses entrées. */
-    familles.forEach(function (f) {{ f.hidden = !f.querySelector('.entree:not([hidden])'); }});
-
-    var enRecherche = !!champ.value.trim();
-    puces.forEach(function (a) {{
-      if (!enRecherche && a.getAttribute('data-fam') === famille) a.setAttribute('aria-current', 'page');
-      else a.removeAttribute('aria-current');
-    }});
-    if (puceToutes) {{
-      if (!enRecherche && famille === null) puceToutes.setAttribute('aria-current', 'page');
-      else puceToutes.removeAttribute('aria-current');
-    }}
-    /* Pendant une recherche, les pastilles ne filtrent plus rien : les griser
-       évite de laisser croire à un filtre actif qui ne s'applique pas. */
-    var nav = document.querySelector('.puces');
-    if (nav) nav.classList.toggle('inerte', enRecherche);
-
-    vide.classList.toggle('on', liste.length === 0);
-    pagination.hidden = liste.length === 0;
-
+  function rendreIndex() {
     var q = champ.value.trim();
-    if (q) {{
-      compte.textContent = liste.length === 0 ? 'aucun résultat'
-        : liste.length + (liste.length > 1 ? ' résultats' : ' résultat') + ' sur {n}';
-    }} else {{
-      compte.textContent = liste.length + (liste.length > 1 ? ' termes' : ' terme')
-        + (famille ? ' dans cette famille' : ' au total');
-    }}
-    etat.textContent = 'Page ' + (page + 1) + ' sur ' + pages;
-    btnPrec.disabled = page === 0;
-    btnSuiv.disabled = page >= pages - 1;
-  }}
+    var classees = retenus();
+    var gardes = {};
+    classees.forEach(function (a) { gardes[a.getAttribute('data-id')] = 1; });
 
-  function remonter() {{
-    var haut = document.querySelector('.puces');
-    if (haut) haut.scrollIntoView({{ block: 'start' }});
-  }}
+    var n = 0;
+    lignes.forEach(function (a) {
+      var on = !!gardes[a.getAttribute('data-id')];
+      a.parentNode.hidden = !on;
+      if (on) { n++; surligne(a, q); }
+    });
 
-  puces.forEach(function (a) {{
-    a.addEventListener('click', function (ev) {{
+    /* L'ordre affiché doit être celui du classement, sinon la flèche bas et la
+       touche Entrée ouvriraient autre chose que ce qu'on lit en premier. Les
+       lignes retenues sont donc remises dans l'ordre ; hors recherche, la page
+       retrouve son classement alphabétique et ses lettres. */
+    var frag = document.createDocumentFragment();
+    if (q) {
+      classees.forEach(function (a) { frag.appendChild(a.parentNode); });
+      lettres.forEach(function (l) { l.hidden = true; });
+    } else {
+      ordreInitial.forEach(function (li) { frag.appendChild(li); });
+    }
+    liste.appendChild(frag);
+
+    if (!q) {
+      /* Une lettre sans terme dessous n'a rien à annoncer. */
+      lettres.forEach(function (l) {
+        var s = l.nextElementSibling, montre = false;
+        while (s && !s.classList.contains('lettre')) {
+          if (!s.hidden) { montre = true; break; }
+          s = s.nextElementSibling;
+        }
+        l.hidden = !montre;
+      });
+    }
+
+    puces.forEach(function (b) {
+      var actif = !q && b.getAttribute('data-fam') === famille;
+      if (actif) b.setAttribute('aria-current', 'true');
+      else b.removeAttribute('aria-current');
+    });
+
+    vide.hidden = n > 0;
+    compte.textContent = q
+      ? (n === 0 ? 'aucun résultat' : n + (n > 1 ? ' résultats' : ' résultat') + ' sur $n')
+      : n + (n > 1 ? ' termes' : ' terme') + (famille ? ' dans cette famille' : ' au total');
+  }
+
+  function montre(id) {
+    courant = parId[id] ? id : '';
+    panneaux.forEach(function (p) { p.hidden = p.id !== (courant || 'accueil-gl'); });
+    lignes.forEach(function (a) {
+      if (a.getAttribute('data-id') === courant) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+    /* Sur mobile l'index occupe l'écran : ouvrir un terme le remplace, et le
+       bouton de retour est le seul chemin inverse. Choisir une famille, au
+       contraire, filtre la liste - la masquer rendrait le filtre invisible. */
+    var terme = !!courant && courant.indexOf('ff-') !== 0;
+    doc.classList.toggle('fiche', terme);
+    retour.hidden = !terme;
+    detail.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+
+  /* L'adresse suit la fiche pour rester copiable, sans empiler d'historique :
+     revenir en arrière doit ramener au rapport d'où l'on vient, pas parcourir
+     à rebours les vingt termes consultés. */
+  function ouvre(id) {
+    if (!parId[id]) return false;
+    montre(id);
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    return true;
+  }
+
+  lignes.forEach(function (a) {
+    a.addEventListener('click', function (ev) {
       ev.preventDefault();
-      var f = a.getAttribute('data-fam');
-      // Choisir une famille pendant une recherche efface celle-ci : les deux
-      // réglages se contrediraient, et le clic semblerait sans effet.
-      if (champ.value) champ.value = '';
-      famille = (famille === f) ? null : f;   // recliquer la famille active la désélectionne
-      page = 0;
-      rendre();
-      remonter();
-    }});
-  }});
-  if (puceToutes) {{
-    puceToutes.addEventListener('click', function (ev) {{
-      ev.preventDefault(); champ.value = ''; famille = null; page = 0; rendre(); remonter();
-    }});
-  }}
-  btnPrec.addEventListener('click', function () {{ page--; rendre(); remonter(); }});
-  btnSuiv.addEventListener('click', function () {{ page++; rendre(); remonter(); }});
+      ouvre(a.getAttribute('data-id'));
+    });
+  });
 
-  /* Une recherche repart de la première page : rester en page 4 d'un résultat
-     qui en compte deux donnerait une page vide sans raison apparente. */
-  champ.addEventListener('input', function () {{ page = 0; rendre(); }});
-  champ.addEventListener('keydown', function (e) {{
-    if (e.key === 'Escape' && champ.value) {{ champ.value = ''; page = 0; rendre(); }}
-  }});
-
-  /* Les liens du rapport visent un terme précis, que le filtre ou la pagination
-     placent peut-être hors de la page affichée. On lève donc tous les réglages
-     et on ouvre la page qui contient la cible - sans quoi soixante-huit liens
-     aboutiraient à une page où le terme est introuvable. */
-  function suivreAncre(defiler) {{
-    var id = location.hash.slice(1);
-    if (!id) return;
-    var cible = document.getElementById(id);
-    if (!cible) return;
-
-    if (cible.classList.contains('famille')) {{
-      famille = cible.getAttribute('data-fam');
-      champ.value = ''; page = 0; rendre();
-      if (defiler) cible.scrollIntoView({{ block: 'start' }});
-      return;
-    }}
-    if (!cible.classList.contains('entree')) return;
-
+  /* Les renvois d'une fiche à l'autre changent de panneau sans recharger. */
+  detail.addEventListener('click', function (ev) {
+    var a = ev.target.closest ? ev.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    if (!parId[id]) return;
+    ev.preventDefault();
     champ.value = '';
-    famille = null;
-    var rang = entrees.indexOf(cible);
-    page = Math.floor(rang / PAR_PAGE);
-    rendre();
-    // Venir d'un lien du rapport, c'est chercher la précision technique.
-    var d = cible.querySelector('details');
-    if (d) d.open = true;
-    if (defiler) cible.scrollIntoView({{ block: 'start' }});
-  }}
+    famille = '';
+    rendreIndex();
+    ouvre(id);
+    var l = lignes.filter(function (x) { return x.getAttribute('data-id') === id; })[0];
+    if (l) l.scrollIntoView({ block: 'nearest' });
+  });
 
-  window.addEventListener('hashchange', function () {{ suivreAncre(true); }});
+  puces.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-fam');
+      famille = (famille === f) ? '' : f;
+      champ.value = '';
+      rendreIndex();
+      montre(famille ? 'ff-' + famille : '');
+      liste.scrollIntoView({ block: 'nearest' });
+    });
+  });
 
-  rendre();
-  suivreAncre(true);
-}})();
+  retour.addEventListener('click', function () { montre(''); });
+
+  champ.addEventListener('input', rendreIndex);
+  /* Entrée ouvre le premier résultat : taper « shap » puis Entrée doit suffire. */
+  champ.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') {
+      var r = retenus();
+      if (r.length) { ev.preventDefault(); ouvre(r[0].getAttribute('data-id')); }
+    }
+  });
+
+  function saisie(el) {
+    if (!el) return false;
+    var t = (el.tagName || '').toLowerCase();
+    return t === 'input' || t === 'textarea' || t === 'select' || el.isContentEditable;
+  }
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.defaultPrevented) return;
+    var raccourci = (ev.key === '/' && !saisie(ev.target))
+      || ((ev.metaKey || ev.ctrlKey) && (ev.key === 'k' || ev.key === 'K'));
+    if (raccourci) { ev.preventDefault(); champ.focus(); champ.select(); return; }
+    if (ev.key === 'Escape') {
+      if (champ.value) { champ.value = ''; rendreIndex(); }
+      else if (document.activeElement === champ) champ.blur();
+      return;
+    }
+    if (ev.key !== 'ArrowDown' && ev.key !== 'ArrowUp') return;
+    if (saisie(ev.target) && ev.target !== champ) return;
+    var r = retenus();
+    if (!r.length) return;
+    ev.preventDefault();
+    var i = -1;
+    for (var k = 0; k < r.length; k++) { if (r[k].getAttribute('data-id') === courant) { i = k; break; } }
+    i = ev.key === 'ArrowDown' ? i + 1 : i - 1;
+    if (i < 0) i = 0;
+    if (i > r.length - 1) i = r.length - 1;
+    ouvre(r[i].getAttribute('data-id'));
+    r[i].scrollIntoView({ block: 'nearest' });
+  });
+
+  /* Les liens du rapport visent un terme précis : on lève tous les réglages
+     pour que la cible soit celle qu'on affiche, sans quoi soixante-huit liens
+     aboutiraient à une page où le terme reste introuvable. */
+  function suivreAncre() {
+    var id = location.hash.slice(1);
+    if (!parId[id]) { montre(''); return; }
+    champ.value = '';
+    famille = '';
+    rendreIndex();
+    montre(id);
+    var l = lignes.filter(function (x) { return x.getAttribute('data-id') === id; })[0];
+    if (l) l.scrollIntoView({ block: 'center' });
+  }
+
+  window.addEventListener('hashchange', suivreAncre);
+
+  rendreIndex();
+  suivreAncre();
+})();
 </script>
 </body>
 </html>
-"""
+""")
+
+
+def construit_page(g):
+    csp, palettes, amorce = chrome()
+    par_id = {t['id']: t for t in g['termes']}
+    fam_nom = {f['id']: f['nom'] for f in g['familles']}
+    n = len(g['termes'])
+    par_famille = {f['id']: [t for t in g['termes'] if t['famille'] == f['id']]
+                   for f in g['familles']}
+
+    puces = [
+        '      <button type="button" data-fam="%s">%s <span class="n">%d</span></button>'
+        % (e(f['id']), e(court(f['nom'])), len(par_famille[f['id']]))
+        for f in g['familles'] if par_famille[f['id']]
+    ]
+
+    # L'index se lit dans l'ordre alphabétique : on y cherche un mot, pas une
+    # catégorie. Les familles restent accessibles par les pastilles.
+    ordre = sorted(g['termes'], key=lambda t: (sans_accent(t['terme']), t['terme']))
+    liste, lettre_en_cours = [], None
+    for t in ordre:
+        initiale = sans_accent(t['terme'])[:1].upper() or '#'
+        if not initiale.isalpha():
+            initiale = '#'
+        if initiale != lettre_en_cours:
+            lettre_en_cours = initiale
+            liste.append('      <li class="lettre" aria-hidden="true">%s</li>' % initiale)
+        liste.append(
+            '      <li><a href="#%s" data-id="%s" data-fam="%s">'
+            '<span class="lt">%s</span><span class="lf">%s</span></a></li>'
+            % (e(t['id']), e(t['id']), e(t['famille']), e(t['terme']),
+               e(court(fam_nom[t['famille']]))))
+
+    grille = [
+        '        <button type="button" data-fam="%s">'
+        '<span class="fg-n">%s <span class="fg-c">%d</span></span>'
+        '<span class="fg-i">%s</span></button>'
+        % (e(f['id']), e(f['nom']), len(par_famille[f['id']]), e(f['intro']))
+        for f in g['familles'] if par_famille[f['id']]
+    ]
+
+    accueil = (
+        '    <section class="accueil" id="accueil-gl">\n'
+        '      <h1>Glossaire</h1>\n'
+        '      <p class="chapo">Le vocabulaire employé sur ce portfolio et dans le rapport, %d termes,\n'
+        "      expliqués d'abord en clair puis en détail pour qui veut aller plus loin. Aucune\n"
+        '      connaissance préalable n\'est supposée par le premier niveau.</p>\n'
+        '      <p class="chapo">Un mot vous manque en lisant une page&nbsp;? Il est probablement ici.</p>\n'
+        '      <p class="aide"><kbd>/</kbd> pour chercher · <kbd>↑</kbd><kbd>↓</kbd> pour parcourir · '
+        '<kbd>Entrée</kbd> pour ouvrir</p>\n'
+        '      <div class="fam-grille">\n%s\n      </div>\n'
+        '    </section>' % (n, '\n'.join(grille))
+    )
+
+    fiches_fam = [
+        '    <section class="fam-fiche" id="ff-%s">\n'
+        '      <p class="fil">Famille · %d termes</p>\n'
+        '      <h2>%s</h2>\n'
+        '      <p class="fam-intro">%s</p>\n'
+        '    </section>'
+        % (e(f['id']), len(par_famille[f['id']]), e(f['nom']), e(f['intro']))
+        for f in g['familles'] if par_famille[f['id']]
+    ]
+
+    entrees = ['    ' + entree(t, par_id, fam_nom[t['famille']]).replace('\n', '\n    ')
+               for t in ordre]
+
+    return GABARIT.substitute(
+        csp=csp, palettes=palettes, amorce=amorce, n=n, url=URL, site=SITE,
+        puces='\n'.join(puces),
+        liste='\n'.join(liste),
+        panneaux='\n'.join([accueil] + fiches_fam + entrees),
+    )
 
 
 def construit_index(g):

@@ -182,41 +182,44 @@ def _navigateur():
     return evalue, BrowserError
 
 
-def test_pagination_limite_la_page():
-    """La page n'affiche qu'une tranche, pas les cent vingt-sept termes.
+def test_une_seule_fiche_a_la_fois():
+    """Le volet droit n'affiche qu'une définition, pas les cent vingt-sept.
 
-    Sans découpage, la page faisait une trentaine d'écrans : on la faisait
-    défiler sans fin pour trouver un mot.
+    L'ancienne page les empilait toutes : une trentaine d'écrans à faire
+    défiler pour trouver un mot, et un cadre autour de chacune pour compenser
+    l'absence de structure. L'index porte maintenant la navigation, le volet
+    droit ne porte que la lecture.
     """
     evalue, BrowserError = _navigateur()
     expression = """
     (async () => {
-      await new Promise(r => setTimeout(r, 300));
-      const affichés = () => [...document.querySelectorAll('.entree')].filter(e => !e.hidden).length;
-      const sortie = {total: document.querySelectorAll('.entree').length,
-                      page1: affichés(),
-                      etat: document.getElementById('pg-etat').textContent,
-                      hauteur: document.body.scrollHeight};
-      document.getElementById('suiv').click();
-      await new Promise(r => setTimeout(r, 120));
-      sortie.page2 = affichés();
-      sortie.etat2 = document.getElementById('pg-etat').textContent;
-      return JSON.stringify(sortie);
+      await new Promise(r => setTimeout(r, 350));
+      const panneaux = [...document.querySelectorAll('.gl-detail .accueil, .gl-detail .fam-fiche, .gl-detail .entree')];
+      const visibles = panneaux.filter(p => !p.hidden);
+      const lignes = [...document.querySelectorAll('#liste li:not(.lettre)')];
+      return JSON.stringify({
+        panneaux: panneaux.length,
+        visibles: visibles.length,
+        ouvert: visibles.length === 1 ? visibles[0].id : null,
+        lignes: lignes.length,
+        affichees: lignes.filter(l => !l.hidden).length,
+        hauteur: document.body.scrollHeight
+      });
     })()
     """
     try:
         r = evalue('glossaire.html', expression)
-    except BrowserError as e:
-        _skip(str(e))
-    assert r['total'] > 100, r['total']
-    assert r['page1'] <= 12, f"{r['page1']} entrées sur la première page, c'est trop"
-    assert r['page2'] <= 12 and r['page2'] > 0, r['page2']
-    assert r['etat'] != r['etat2'], "« Suivant » n'a pas changé de page"
-    assert r['hauteur'] < 6000, f"page encore haute de {r['hauteur']} px"
+    except BrowserError as exc:
+        _skip(str(exc))
+    assert r['panneaux'] > 130, r['panneaux']          # 127 termes + 9 familles + accueil
+    assert r['visibles'] == 1, f"{r['visibles']} panneaux visibles au lieu d'un"
+    assert r['ouvert'] == 'accueil-gl', r['ouvert']
+    assert r['lignes'] == r['affichees'] > 100, (r['lignes'], r['affichees'])
+    assert r['hauteur'] < 2500, f'page haute de {r["hauteur"]} px'
 
 
 def test_recherche_couvre_tout_le_glossaire():
-    """La recherche ignore le filtre de famille et la page affichée.
+    """La recherche ignore le filtre de famille.
 
     Exigence explicite : on cherche un mot précisément parce qu'on ignore dans
     quelle famille il se range. Une recherche cantonnée à la famille affichée
@@ -226,65 +229,120 @@ def test_recherche_couvre_tout_le_glossaire():
     expression = """
     (async () => {
       const champ = document.getElementById('q');
+      const noms = () => [...document.querySelectorAll('#liste li:not(.lettre)')]
+                           .filter(l => !l.hidden)
+                           .map(l => l.querySelector('.lt').textContent);
       const cherche = async (q) => {
         champ.value = q;
         champ.dispatchEvent(new Event('input'));
         await new Promise(r => setTimeout(r, 120));
-        return [...document.querySelectorAll('.entree')].filter(e => !e.hidden)
-                 .map(e => e.querySelector('h3').textContent.replace('#',''));
+        return noms();
       };
       const sortie = {};
       sortie.sansFiltre = await cherche('drift');
-      // on sélectionne une famille qui ne contient aucun de ces résultats
       champ.value = '';
       champ.dispatchEvent(new Event('input'));
-      const puce = [...document.querySelectorAll('.puces a[data-fam]')]
-                     .find(a => /Sécurité/.test(a.textContent));
+      await new Promise(r => setTimeout(r, 60));
+      const puce = [...document.querySelectorAll('.puces button[data-fam]')]
+                     .find(b => /Sécurité/i.test(b.textContent));
       puce.click();
       await new Promise(r => setTimeout(r, 120));
-      sortie.familleSeule = [...document.querySelectorAll('.entree')].filter(e => !e.hidden).length;
+      sortie.familleSeule = noms().length;
       sortie.avecFiltre = await cherche('drift');
       return JSON.stringify(sortie);
     })()
     """
     try:
         r = evalue('glossaire.html', expression)
-    except BrowserError as e:
-        _skip(str(e))
+    except BrowserError as exc:
+        _skip(str(exc))
     assert len(r['sansFiltre']) >= 5, r['sansFiltre']
-    assert r['familleSeule'] > 0, 'le filtre par famille n\'affiche rien'
+    assert 0 < r['familleSeule'] < 20, r['familleSeule']
     assert r['avecFiltre'] == r['sansFiltre'], (
         'la recherche est restée cantonnée à la famille sélectionnée : '
         f"{r['avecFiltre']} au lieu de {r['sansFiltre']}")
 
 
 def test_lien_du_rapport_atteint_sa_cible():
-    """Un terme visé depuis le rapport doit être affiché, pas masqué par la page.
+    """Un terme visé depuis le rapport est celui qu'on affiche.
 
-    C'est le risque propre à la pagination : soixante-huit liens du rapport
-    visent une ancre que le découpage place ailleurs. Sans levée des réglages,
-    ils aboutiraient tous à une page où le terme est introuvable.
+    Soixante-huit liens du rapport pointent une ancre précise. Comme un seul
+    panneau est visible à la fois, une ancre mal suivie n'afficherait pas la
+    mauvaise fiche : elle n'en afficherait aucune.
     """
     evalue, BrowserError = _navigateur()
     expression = """
     (async () => {
-      await new Promise(r => setTimeout(r, 300));
-      const cible = document.querySelector(':target');
+      await new Promise(r => setTimeout(r, 350));
+      const visibles = [...document.querySelectorAll('.gl-detail .accueil, .gl-detail .fam-fiche, .gl-detail .entree')]
+                         .filter(p => !p.hidden);
+      const ouvert = visibles.length === 1 ? visibles[0] : null;
+      const ligne = document.querySelector('#liste a[aria-current="true"]');
       return JSON.stringify({
-        trouvée: !!cible,
-        visible: cible ? (!cible.hidden && !cible.closest('.famille').hidden) : null,
-        déplié: cible ? !!cible.querySelector('details[open]') : null
+        ouvert: ouvert ? ouvert.id : null,
+        detail: ouvert ? !!ouvert.querySelector('.niveau2 p') : false,
+        longueurDetail: ouvert && ouvert.querySelector('.niveau2 p')
+                          ? ouvert.querySelector('.niveau2 p').textContent.trim().length : 0,
+        surligne: ligne ? ligne.getAttribute('data-id') : null
       });
     })()
     """
     for ancre in ('injection-prompt', 'tjm', 'scoring-credit'):
         try:
             r = evalue(f'glossaire.html#{ancre}', expression)
-        except BrowserError as e:
-            _skip(str(e))
-        assert r['trouvée'], f'#{ancre} : ancre absente'
-        assert r['visible'], f'#{ancre} : la cible est masquée par la pagination'
-        assert r['déplié'], f'#{ancre} : le détail technique n\'est pas déplié'
+        except BrowserError as exc:
+            _skip(str(exc))
+        assert r['ouvert'] == ancre, f"#{ancre} : c'est « {r['ouvert']} » qui s'affiche"
+        assert r['detail'] and r['longueurDetail'] > 40, (
+            f'#{ancre} : le détail technique est absent de la fiche')
+        assert r['surligne'] == ancre, (
+            f"#{ancre} : l'index ne montre pas où l'on se trouve")
+
+
+def test_clavier_ouvre_un_terme():
+    """Chercher puis ouvrir sans quitter le clavier.
+
+    C'est le geste d'un lecteur pressé : « / », trois lettres, Entrée. S'il
+    faut viser une ligne à la souris, l'index dense n'apporte rien.
+    """
+    evalue, BrowserError = _navigateur()
+    expression = """
+    (async () => {
+      const touche = (k, o) => document.dispatchEvent(
+        new KeyboardEvent('keydown', Object.assign({key: k, bubbles: true, cancelable: true}, o || {})));
+      const champ = document.getElementById('q');
+      touche('/');
+      await new Promise(r => setTimeout(r, 60));
+      const focalise = document.activeElement === champ;
+      champ.value = 'shap';
+      champ.dispatchEvent(new Event('input'));
+      await new Promise(r => setTimeout(r, 120));
+      champ.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true, cancelable: true}));
+      await new Promise(r => setTimeout(r, 120));
+      const ouvert = [...document.querySelectorAll('.gl-detail .entree')].filter(p => !p.hidden);
+      const apresEntree = ouvert.length === 1 ? ouvert[0].id : null;
+      const hashEntree = location.hash;
+      touche('ArrowDown');
+      await new Promise(r => setTimeout(r, 120));
+      const ouvert2 = [...document.querySelectorAll('.gl-detail .entree')].filter(p => !p.hidden);
+      return JSON.stringify({
+        focalise: focalise,
+        apresEntree: apresEntree,
+        hash: hashEntree,
+        apresFleche: ouvert2.length === 1 ? ouvert2[0].id : null
+      });
+    })()
+    """
+    try:
+        r = evalue('glossaire.html', expression)
+    except BrowserError as exc:
+        _skip(str(exc))
+    assert r['focalise'], "« / » ne place pas le curseur dans la recherche"
+    assert r['apresEntree'], "Entrée n'ouvre aucun terme"
+    assert r['hash'] == '#' + r['apresEntree'], (
+        f"l'adresse ne suit pas la fiche : {r['hash']} pour {r['apresEntree']}")
+    assert r['apresFleche'] and r['apresFleche'] != r['apresEntree'], (
+        'la flèche bas ne passe pas au résultat suivant')
 
 
 class Ignore(Exception):
