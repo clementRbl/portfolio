@@ -21,6 +21,7 @@ Chrome absent : les tests sont ignorés plutôt qu'échoués, pour que le dépô
 reste utilisable sans lui. La CI, elle, l'a toujours.
 """
 import json
+import re
 import shutil
 import socket
 import subprocess
@@ -439,6 +440,49 @@ def test_cibles_tactiles_de_la_barre():
         assert not m['smallTargets'], (
             f"index.html à {width} px : cible(s) tactile(s) sous {MIN_TOUCH} px "
             f"dans la barre du haut : {m['smallTargets']}")
+
+
+SITE = 'https://clement-reboul.fr/portfolio/'
+
+
+def test_navigation_relative():
+    """Aucun lien de navigation ne doit désigner la production en absolu.
+
+    Vécu deux fois : depuis localhost, cliquer sur « Conduite de projet », sur
+    « Glossaire » ou sur la carte mentale renvoyait sur clement-reboul.fr, et
+    l'on relisait donc le site en ligne en croyant vérifier ses modifications.
+    La copie servie par github.io partait vers l'autre domaine de la même façon.
+
+    Ce que le test n'interdit pas : canonical, og:, twitter: et le JSON-LD, qui
+    déclarent une adresse au lieu de s'y rendre, et les liens hors portfolio.
+    """
+    motifs = (
+        re.compile(r'<a\b[^>]*?\bhref="' + re.escape(SITE)),
+        re.compile(r"location\.href\s*=\s*'" + re.escape(SITE)),
+        re.compile(r"window\.open\('" + re.escape(SITE)),
+    )
+    fautifs = []
+    for nom in PAGES:
+        texte = (ROOT / nom).read_text(encoding='utf-8')
+        for ligne, contenu in enumerate(texte.splitlines(), 1):
+            if any(m.search(contenu) for m in motifs):
+                fautifs.append(f'{nom}:{ligne}')
+    assert not fautifs, ('liens de navigation écrits en absolu, donc cassés hors '
+                         f'production : {fautifs}')
+
+
+def test_livrables_atteignables():
+    """Chaque livrable exigé par la consigne est joignable depuis l'accueil.
+
+    La carte mentale existait, mais n'était citée que dans un lien en corps de
+    texte et une entrée de palette : la rangée des livrables listait le rapport
+    et le glossaire sans elle, et elle passait pour supprimée.
+    """
+    accueil = (ROOT / 'index.html').read_text(encoding='utf-8')
+    for livrable in ('rapport.html', 'glossaire.html', 'carte-mentale.html'):
+        assert (ROOT / livrable).exists(), f'{livrable} : la page a disparu'
+        assert f'href="{livrable}"' in accueil, (
+            f"{livrable} : aucun lien depuis index.html, le livrable est invisible")
 
 
 def main():
