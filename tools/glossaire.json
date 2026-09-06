@@ -441,7 +441,7 @@
 
   {"id": "gradient", "terme": "Descente de gradient", "famille": "ml",
    "alias": ["gradient", "taux d'apprentissage", "learning rate"],
-   "simple": "La méthode d'apprentissage de presque tous les modèles modernes : mesurer l'erreur, regarder dans quelle direction elle diminue, faire un petit pas, recommencer. Le taux d'apprentissage est la taille du pas. C'est ce que dessine le fond de la page d'accueil : les courbes sont les lignes de niveau d'une surface d'erreur, et le point cherche le creux.",
+   "simple": "La méthode d'apprentissage de presque tous les modèles modernes : mesurer l'erreur, regarder dans quelle direction elle diminue, faire un petit pas, recommencer. Le taux d'apprentissage est la taille du pas.",
    "detail": "Trop grand, l'optimisation oscille sans converger ; trop petit, elle traîne et se fige dans un minimum local. En boosting, un taux faible compensé par davantage d'arbres donne en général le meilleur compromis.",
    "voir": ["regularisation", "lightgbm"]},
 
