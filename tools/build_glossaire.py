@@ -31,7 +31,11 @@ PAGE = ROOT / 'glossaire.html'
 INDEX = ROOT / 'assets' / 'glossaire.json'
 MODELE = ROOT / 'rapport.html'
 
-URL = 'https://clement-reboul.fr/portfolio/'
+URL = 'https://clement-reboul.fr/portfolio/'   # adresse publique : canonical, og:, JSON-LD
+# La navigation interne reste relative. Un href absolu vers la production
+# ejecterait le lecteur du serveur local ou de la copie github.io des le
+# premier clic - une page ne doit pas dependre du domaine qui la sert.
+SITE = 'index.html'
 
 
 def charge():
@@ -95,7 +99,7 @@ def entree(t, par_id):
     if renvois:
         pieds.append('<span class="voir">Voir aussi&nbsp;: ' + ' · '.join(renvois) + '</span>')
     if t.get('ou'):
-        pieds.append(f'<a class="ou" href="{URL}#{e(t["ou"])}">Où ça sert sur le site →</a>')
+        pieds.append(f'<a class="ou" href="{SITE}#{e(t["ou"])}">Où ça sert sur le site →</a>')
     if pieds:
         bloc.append('  <p class="renvois">' + ' '.join(pieds) + '</p>')
     bloc.append('</article>')
@@ -264,7 +268,7 @@ def construit_page(g):
 </head>
 <body>
 <div class="topbar"><div class="topbar-in">
-  <a class="back" href="{URL}" aria-label="Retour au portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Retour au portfolio</a>
+  <a class="back" href="{SITE}" aria-label="Retour au portfolio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Retour au portfolio</a>
   <span class="tt">Glossaire</span>
   <button class="icon-btn" id="tg" aria-label="Basculer le thème">
     <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
