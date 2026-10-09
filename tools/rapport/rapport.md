@@ -285,7 +285,7 @@ Le budget d'exécution du POC est négligeable : une surveillance sans alerte du
 
 ### 5.1 Tableau de bord de pilotage
 
-**Méthode.** Kanban sur GitHub Projects, une issue par tâche, avec une estimation en jours, une date de fin prévue et une date de fin réelle. Chaque évolution passe par une Pull Request et une CI bloquante. Avant le code, un document de cadrage fixe les critères d'acceptation, et chacun est vérifiable par un test ou une commande.
+**Méthode.** Kanban sur GitHub Projects ([tableau public](https://github.com/users/clementRbl/projects/5), capture en annexe C), une issue par tâche, avec une estimation en jours, une date de fin prévue et une date de fin réelle. Chaque évolution passe par une Pull Request et une CI bloquante. Avant le code, un document de cadrage fixe les critères d'acceptation, et chacun est vérifiable par un test ou une commande.
 
 **Délais.**
 
@@ -417,6 +417,7 @@ J'ai écrit les tests avant le code qu'ils vérifient. Ce qui n'est pas testé :
 | Alertes des mois 3 et 4 | <https://github.com/clementRbl/credit-scoring-mlops/issues/15> · <https://github.com/clementRbl/credit-scoring-mlops/issues/16> |
 | Exécution du mois 4 | <https://github.com/clementRbl/credit-scoring-mlops/actions/runs/37904674657> |
 | Cadrage et vérification | <https://github.com/clementRbl/credit-scoring-mlops/blob/main/docs/features/2026-10-08-boucle-derive-reentrainement.md> |
+| Kanban de suivi (GitHub Projects) | <https://github.com/users/clementRbl/projects/5> |
 | Projet amont (modélisation) | <https://github.com/clementRbl/pret-a-depenser> |
 
 ### B. Lancer le pipeline
@@ -437,6 +438,8 @@ pytest tests/ --cov=app --cov=pipeline
 ![Issue d'alerte du mois 4 : 0 % de variables en dérive, mais un coût métier en hausse de 46 %.](assets/rapport/issue-alerte-mois4.webp)
 
 ![Model Registry sur DagsHub : quatre versions, leur seuil, et la v4 qui porte l'alias champion.](assets/rapport/mlflow-registry.webp)
+
+![Kanban public sur GitHub Projects : chaque tâche avec son estimation, sa fin prévue et sa fin réelle. Les tâches 11 à 14 concernent le rendu et restaient ouvertes au moment de la capture.](assets/rapport/kanban-suivi.webp)
 
 ![Exécution du workflow pour le mois 4 : surveillance, alerte, réentraînement et PR en 4 min 12 s.](assets/rapport/run-surveillance-mois4.webp)
 
