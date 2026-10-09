@@ -471,6 +471,29 @@ def test_navigation_relative():
                          f'production : {fautifs}')
 
 
+def test_profils_declares_et_visibles():
+    """Les profils du JSON-LD sont ceux que la page montre, et réciproquement.
+
+    « sameAs » sert à déclarer qu'un profil tiers désigne la même personne. Un
+    profil déclaré mais absent de la page est une affirmation invérifiable pour
+    le moteur qui la lit ; un profil affiché mais non déclaré prive le site du
+    rapprochement d'identité qu'il aurait pu obtenir. Les deux listes doivent
+    donc coïncider.
+    """
+    accueil = (ROOT / 'index.html').read_text(encoding='utf-8')
+    bloc = re.search(r'<script type="application/ld\+json">(.*?)</script>', accueil, re.S)
+    assert bloc, 'aucun bloc de données structurées dans index.html'
+    graphe = json.loads(bloc.group(1))['@graph']
+    personne = next(n for n in graphe if n['@type'] == 'Person')
+    declares = set(personne['sameAs'])
+    assert declares, 'aucun profil déclaré dans sameAs'
+
+    liens = set(re.findall(r'<a\b[^>]*?\bhref="(https://[^"]+)"', accueil))
+    for url in declares:
+        assert any(l.rstrip('/') == url.rstrip('/') for l in liens), (
+            f'{url} est déclaré dans sameAs mais aucun lien de la page n\'y mène')
+
+
 def test_livrables_atteignables():
     """Chaque livrable exigé par la consigne est joignable depuis l'accueil.
 
