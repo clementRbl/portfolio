@@ -251,9 +251,9 @@
 <hr />
 <h2 id="résumé">Résumé</h2>
 <p><em>Prêt à Dépenser</em> accorde des crédits à des clients qui ont peu d’historique bancaire. Un modèle <a class="g-lien" href="glossaire.html#lightgbm" title="Définition dans le glossaire">LightGBM</a> estime leur probabilité de défaut ; un <a class="g-lien" href="glossaire.html#seuil-decision" title="Définition dans le glossaire">seuil</a> transforme cette probabilité en décision d’octroi. La première version du projet (V1) a mis ce modèle en production : API <a class="g-lien" href="glossaire.html#fastapi" title="Définition dans le glossaire">FastAPI</a> conteneurisée, <a class="g-lien" href="glossaire.html#ci-cd" title="Définition dans le glossaire">déploiement continu</a> sur <a class="g-lien" href="glossaire.html#hugging-face" title="Définition dans le glossaire">Hugging Face Spaces</a>, journalisation des prédictions, analyse de dérive dans un notebook.</p>
-<p>Cette V1 avait une faiblesse de fond : <strong>le modèle pouvait se dégrader sans que personne le sache</strong>. La surveillance s’arrêtait à un notebook qu’il fallait relancer à la main, rien ne réentraînait le modèle, et ni les données ni les modèles n’étaient versionnés.</p>
-<p>La V2, objet de ce rapport, ferme la boucle. Chaque semaine, un workflow surveille le dernier lot mensuel de demandes. En cas de dérive des données <strong>ou</strong> de hausse du <a class="g-lien" href="glossaire.html#cout-metier" title="Définition dans le glossaire">coût métier</a>, il ouvre une alerte, réentraîne un modèle candidat (le <em>challenger</em>), le compare au modèle en service (le <em>champion</em>) et, si une règle chiffrée est remplie, propose sa mise en production dans une <a class="g-lien" href="glossaire.html#git" title="Définition dans le glossaire">Pull Request</a>. <strong>Un humain valide</strong> : c’est une décision de crédit.</p>
-<p>La boucle a été démontrée de bout en bout sur quatre mois simulés, en conditions réelles (GitHub Actions, DagsHub, Hugging Face). Le mois 3, une clientèle plus jeune, déclenche une alerte de dérive mais <strong>aucune promotion</strong> : réentraîner n’apportait rien. Le mois 4, un choc de défauts invisible pour les tests de dérive des données, fait monter le coût de 46 % ; le challenger le réduit de <strong>8,1 %</strong> sur des données qu’il n’a jamais vues et passe en production après validation. Coût d’infrastructure : <strong>0 €</strong>.</p>
+<p>Cette V1 avait une faiblesse de fond : le modèle pouvait se dégrader sans que personne le sache. La surveillance s’arrêtait à un notebook qu’il fallait relancer à la main, rien ne réentraînait le modèle, et ni les données ni les modèles n’étaient versionnés.</p>
+<p>La V2, objet de ce rapport, ferme la boucle. Chaque semaine, un workflow surveille le dernier lot mensuel de demandes. En cas de dérive des données ou de hausse du <a class="g-lien" href="glossaire.html#cout-metier" title="Définition dans le glossaire">coût métier</a>, il ouvre une alerte, réentraîne un modèle candidat (le <em>challenger</em>), le compare au modèle en service (le <em>champion</em>) et, si une règle chiffrée est remplie, propose sa mise en production dans une <a class="g-lien" href="glossaire.html#git" title="Définition dans le glossaire">Pull Request</a>. Un humain valide : c’est une décision de crédit.</p>
+<p>J’ai fait tourner la boucle de bout en bout sur quatre mois simulés, avec les vrais services (GitHub Actions, DagsHub, Hugging Face). Au mois 3, une clientèle plus jeune déclenche une alerte de dérive, mais aucune promotion : réentraîner n’apportait rien. Au mois 4, un choc de défauts invisible pour les tests de dérive des données fait monter le coût de 46 % ; le challenger le réduit de <strong>8,1 %</strong> sur des données qu’il n’a jamais vues et passe en production après validation. Coût d’infrastructure : <strong>0 €</strong>.</p>
 <p>Le rapport suit le modèle de conduite de projet AI Engineering : besoins (1), <a class="g-lien" href="glossaire.html#audit" title="Définition dans le glossaire">audit</a> de l’existant (2), solution cible (3), mise en œuvre et aide à la décision (4), pilotage (5), conclusion (6) et annexes (7).</p>
 <hr />
 <h2 id="contexte-et-analyse-des-besoins">1. Contexte et analyse des besoins</h2>
@@ -290,14 +290,14 @@
 </tr>
 </tbody>
 </table></div>
-<p>Les niveaux de maturité MLOps couramment utilisés vont de 0 (tout est manuel) à 2 (entraînement, tests et déploiement automatisés de bout en bout). La V1 automatisait le <strong>déploiement du service</strong>, pas le <strong>cycle de vie du modèle</strong>. L’objectif de la V2 est d’atteindre le niveau 1 : un réentraînement déclenché par la surveillance, avec une mise en production gouvernée.</p>
-<p><strong><a class="g-lien" href="glossaire.html#fenetre-contexte" title="Définition dans le glossaire">Contexte</a> réglementaire.</strong> Le scoring de crédit fait partie des systèmes d’IA classés « à haut risque » par le règlement européen sur l’IA. Cela impose notamment une <strong><a class="g-lien" href="glossaire.html#monitoring" title="Définition dans le glossaire">supervision</a> humaine</strong>, une <strong>traçabilité</strong> des décisions et des modèles, et une documentation des données. Ces exigences ont orienté deux choix : la promotion par <a class="g-lien" href="glossaire.html#revue-code" title="Définition dans le glossaire">Pull Request</a> validée par un humain, et le versionnage systématique des données et des modèles.</p>
+<p>Les niveaux de maturité MLOps couramment utilisés vont de 0 (tout est manuel) à 2 (entraînement, tests et déploiement automatisés de bout en bout). La V1 automatisait le déploiement du service, pas le cycle de vie du modèle. L’objectif de la V2 est d’atteindre le niveau 1 : un réentraînement déclenché par la surveillance, avec une mise en production gouvernée.</p>
+<p><strong><a class="g-lien" href="glossaire.html#fenetre-contexte" title="Définition dans le glossaire">Contexte</a> réglementaire.</strong> Le scoring de crédit fait partie des systèmes d’IA classés « à haut risque » par le règlement européen sur l’IA. Le règlement impose une <a class="g-lien" href="glossaire.html#monitoring" title="Définition dans le glossaire">supervision</a> humaine, la traçabilité des décisions et des modèles, et une documentation des données. Ces exigences ont orienté deux choix : la promotion par <a class="g-lien" href="glossaire.html#revue-code" title="Définition dans le glossaire">Pull Request</a> validée par un humain, et le versionnage systématique des données et des modèles.</p>
 <h3 id="collecte-et-analyse-du-besoin-métier">1.2 Collecte et analyse du besoin métier</h3>
-<p><strong>Méthode de recueil.</strong> Le contexte est une mise en situation : il n’y avait pas d’utilisateurs réels à interroger. Le besoin a été établi à partir de trois sources :</p>
+<p><strong>Méthode de recueil.</strong> Le contexte est une mise en situation : il n’y avait pas d’utilisateurs réels à interroger. J’ai établi le besoin à partir de trois sources :</p>
 <ol type="1">
-<li><strong>Les limites documentées de la V1</strong>, listées dans son rapport : surveillance manuelle, pas de réentraînement, pas de validation des entrées, <a class="g-lien" href="glossaire.html#jsonl" title="Définition dans le glossaire">journal</a> non persistant ;</li>
-<li><strong>Le cahier des charges du projet final</strong> : cycle de vie du modèle, réentraînement automatique, suivi des dérives, versionnage des données et des modèles ;</li>
-<li><strong>Un document de <a class="g-lien" href="glossaire.html#cadrage" title="Définition dans le glossaire">cadrage</a></strong> écrit avant tout code (besoin, critères d’acceptation vérifiables, <a class="g-lien" href="glossaire.html#perimetre" title="Définition dans le glossaire">hors périmètre</a>, métrique), puis un backlog d’issues GitHub.</li>
+<li>les limites de la V1, listées dans son rapport : surveillance manuelle, pas de réentraînement, pas de validation des entrées, <a class="g-lien" href="glossaire.html#jsonl" title="Définition dans le glossaire">journal</a> non persistant ;</li>
+<li>le cahier des charges du projet final : cycle de vie du modèle, réentraînement automatique, suivi des dérives, versionnage des données et des modèles ;</li>
+<li>un document de <a class="g-lien" href="glossaire.html#cadrage" title="Définition dans le glossaire">cadrage</a>, écrit avant tout code (besoin, critères d’acceptation vérifiables, <a class="g-lien" href="glossaire.html#perimetre" title="Définition dans le glossaire">hors périmètre</a>, métrique), puis un backlog d’issues GitHub.</li>
 </ol>
 <p><strong>Parties prenantes.</strong></p>
 <div class="tablewrap"><table>
@@ -368,25 +368,25 @@
 <td>Alerte automatique en cas de dérive</td>
 <td>Fort</td>
 <td>Faible</td>
-<td><strong>Retenu</strong>, gain rapide</td>
+<td>Retenu, gain rapide</td>
 </tr>
 <tr class="even">
 <td>Seuil de décision porté par le modèle</td>
 <td>Fort</td>
 <td>Faible</td>
-<td><strong>Retenu</strong>, prérequis du réentraînement</td>
+<td>Retenu, prérequis du réentraînement</td>
 </tr>
 <tr class="odd">
 <td>Versionnage des données et des modèles</td>
 <td>Fort</td>
 <td>Moyen</td>
-<td><strong>Retenu</strong></td>
+<td>Retenu</td>
 </tr>
 <tr class="even">
 <td>Réentraînement et promotion gouvernée</td>
 <td>Fort</td>
 <td>Moyen</td>
-<td><strong>Retenu</strong>, cœur du projet</td>
+<td>Retenu, cœur du projet</td>
 </tr>
 <tr class="odd">
 <td>Journal de production persistant</td>
@@ -502,7 +502,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>Une décision de la V1 mérite d’être rappelée : la conversion <a class="g-lien" href="glossaire.html#onnx" title="Définition dans le glossaire">ONNX</a> du modèle (−39 % de taille, +6 % de vitesse) a été <strong>testée puis écartée</strong>, parce qu’elle imposait un pré-encodage des variables catégorielles, source d’erreurs silencieuses. En production, la fiabilité prime sur une micro-optimisation.</p>
+<p>Dans la V1, j’avais testé puis écarté la conversion <a class="g-lien" href="glossaire.html#onnx" title="Définition dans le glossaire">ONNX</a> du modèle (−39 % de taille, +6 % de vitesse) : elle imposait un pré-encodage des variables catégorielles, source d’erreurs silencieuses. En production, la fiabilité prime sur une micro-optimisation.</p>
 <h3 id="évaluation-de-ladéquation-aux-besoins">2.2 Évaluation de l’adéquation aux besoins</h3>
 <div class="tablewrap"><table>
 <colgroup>
@@ -539,17 +539,17 @@
 <td>✅ Adéquat</td>
 </tr>
 <tr class="odd">
-<td><strong>Surveillance</strong></td>
+<td>Surveillance</td>
 <td>Notebook à relancer à la main, aucune alerte</td>
 <td>❌ Une dégradation passe inaperçue</td>
 </tr>
 <tr class="even">
-<td><strong>Maintenance du modèle</strong></td>
+<td>Maintenance du modèle</td>
 <td>Aucun réentraînement ; seuil 0,47 écrit en dur dans l’API</td>
 <td>❌ Un nouveau modèle serait servi avec un seuil faux</td>
 </tr>
 <tr class="odd">
-<td><strong>Traçabilité</strong></td>
+<td>Traçabilité</td>
 <td>Données non versionnées ; MLflow local, dans un autre dépôt</td>
 <td>❌ Impossible de dire sur quoi un modèle a appris</td>
 </tr>
@@ -560,12 +560,12 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>Un écart moins visible, découvert pendant l’audit.</strong> Le modèle servi avait été entraîné sur <strong>100 % des données étiquetées</strong>. Toute simulation de « nouvelles données » tirées de ce jeu aurait donc mesuré le modèle sur des demandes qu’il connaissait déjà. Il fallait réentraîner un point de départ honnête avant toute chose (section 4.1, étape 1).</p>
-<p><strong>Conclusion de l’audit.</strong> La V1 est solide comme <em>service</em>, mais pas comme <em>système qui apprend</em>. L’écart à combler n’est pas le modèle : c’est tout ce qui l’entoure dans la durée.</p>
+<p><strong>Un écart moins visible, découvert pendant l’audit.</strong> Le modèle servi avait appris sur 100 % des données étiquetées. Toute simulation de « nouvelles données » tirées de ce jeu aurait donc mesuré le modèle sur des demandes qu’il connaissait déjà. Il fallait réentraîner un point de départ honnête avant toute chose (section 4.1, étape 1).</p>
+<p><strong>Conclusion de l’audit.</strong> La V1 sert le modèle correctement, mais rien ne le surveille ni ne le met à jour. La V2 garde le même algorithme et construit ce qui manque autour : surveillance, réentraînement, versionnage et mise à jour contrôlée.</p>
 <hr />
 <h2 id="identification-de-la-solution-technique-cible">3. Identification de la solution technique cible</h2>
 <h3 id="comparatif-des-approches">3.1 Comparatif des approches</h3>
-<p>Chaque décision a été prise sur des options explicites, avant d’écrire du code.</p>
+<p>J’ai tranché chaque décision entre des options explicites, avant d’écrire du code.</p>
 <div class="tablewrap"><table>
 <colgroup>
 <col style="width: 25%" />
@@ -584,43 +584,43 @@
 <tbody>
 <tr class="odd">
 <td><a class="g-lien" href="glossaire.html#langgraph" title="Définition dans le glossaire">Orchestration</a></td>
-<td><a class="g-lien" href="glossaire.html#etl" title="Définition dans le glossaire">Airflow</a> · cron local · <strong>GitHub Actions</strong></td>
+<td><a class="g-lien" href="glossaire.html#etl" title="Définition dans le glossaire">Airflow</a> · cron local · GitHub Actions</td>
 <td>GitHub Actions</td>
 <td>Déjà utilisé par le CI/CD, gratuit pour un dépôt public, visible par un tiers. <a class="g-lien" href="glossaire.html#airflow" title="Définition dans le glossaire">Airflow</a>, que j’ai pratiqué sur un autre projet, demanderait un serveur à maintenir pour un seul flux hebdomadaire</td>
 </tr>
 <tr class="even">
 <td>Registre et stockage des données</td>
-<td>MLflow auto-hébergé + S3 · <a class="g-lien" href="glossaire.html#cloud-manage" title="Définition dans le glossaire">cloud</a> managé · <strong>DagsHub</strong></td>
+<td>MLflow auto-hébergé + S3 · <a class="g-lien" href="glossaire.html#cloud-manage" title="Définition dans le glossaire">cloud</a> managé · DagsHub</td>
 <td>DagsHub</td>
 <td>MLflow (Registry compris) et stockage DVC hébergés gratuitement au même endroit, consultables par un lien</td>
 </tr>
 <tr class="odd">
 <td>Déclencheur</td>
-<td>Calendrier fixe · dérive des données seule · <strong>dérive OU coût métier</strong></td>
+<td>Calendrier fixe · dérive des données seule · dérive ou coût métier</td>
 <td>Les deux</td>
 <td>La dérive de concept est invisible pour un test de dérive des données (démontré au mois 4)</td>
 </tr>
 <tr class="even">
 <td>Mise en production</td>
-<td>Automatique · <strong>Pull Request validée par un humain</strong> · déploiement fantôme</td>
+<td>Automatique · Pull Request validée par un humain · déploiement fantôme</td>
 <td>Pull Request</td>
 <td>Secteur régulé : supervision humaine ; s’appuie sur le CI/CD existant</td>
 </tr>
 <tr class="odd">
 <td>Entraînement du challenger</td>
-<td>Recherche d’<a class="g-lien" href="glossaire.html#hyperparametres" title="Définition dans le glossaire">hyperparamètres</a> · pondération des données récentes · <strong>hyperparamètres du champion</strong></td>
+<td>Recherche d’<a class="g-lien" href="glossaire.html#hyperparametres" title="Définition dans le glossaire">hyperparamètres</a> · pondération des données récentes · hyperparamètres du champion</td>
 <td>Hyperparamètres du champion</td>
-<td>Une seule chose change (les données) ; quelques minutes en CI. La pondération a été testée puis écartée (section 4.2)</td>
+<td>Une seule chose change (les données) ; quelques minutes en CI. J’ai testé puis écarté la pondération (section 4.2)</td>
 </tr>
 <tr class="even">
 <td>Évaluation</td>
-<td>Test figé seul · <strong>données récentes + garde-fou</strong></td>
+<td>Test figé seul · données récentes + garde-fou</td>
 <td>Données récentes + garde-fou</td>
 <td>Juger sur le présent sans casser le passé</td>
 </tr>
 <tr class="odd">
 <td>Versionnage</td>
-<td>Tout dans DVC · <strong>données dans DVC, modèles dans le Registry</strong></td>
+<td>Tout dans DVC · données dans DVC, modèles dans le Registry</td>
 <td>Mixte</td>
 <td>Le modèle pèse 732 Ko : en git, la PR montre directement ce qui change, et la CI n’a pas besoin d’identifiants</td>
 </tr>
@@ -705,12 +705,12 @@
 </svg>
 <figcaption>Architecture de la V2 : la surveillance déclenche l'alerte et le réentraînement ; la mise en production passe par une Pull Request validée par un humain.</figcaption>
 </figure>
-<p>La surveillance et le réentraînement tournent dans GitHub Actions, sur des données récupérées depuis DagsHub. Le modèle candidat est enregistré dans le Model Registry. S’il est promu, le workflow ouvre une Pull Request qui modifie deux fichiers : <code>model/model.pkl</code> et <code>model/model_meta.json</code>. Après fusion par un humain, le CI/CD existant teste, construit l’image, la déploie sur Hugging Face et donne au modèle l’alias <code>champion</code>.</p>
+<p>La surveillance et le réentraînement tournent dans GitHub Actions, sur des données récupérées depuis DagsHub. Le workflow enregistre le modèle candidat dans le Model Registry. S’il est promu, le workflow ouvre une Pull Request qui modifie deux fichiers : <code>model/model.pkl</code> et <code>model/model_meta.json</code>. Après fusion par un humain, le CI/CD existant teste, construit l’image, la déploie sur Hugging Face et donne au modèle l’alias <code>champion</code>.</p>
 <p><strong>Sécurité de la chaîne.</strong> Les identifiants DagsHub sont des secrets GitHub, jamais dans le code. Le workflow ne demande que les droits dont il a besoin (contenu, issues, PR), et les entrées manuelles passent par des variables d’environnement pour éviter toute injection de commande. L’API garde les protections de la V1.</p>
 <h3 id="le-seuil-voyage-avec-le-modèle">3.3 Le seuil voyage avec le modèle</h3>
-<p>Le seuil de décision minimise le coût métier sur des prédictions <em><a class="g-lien" href="glossaire.html#oof" title="Définition dans le glossaire">out-of-fold</a></em>, où chaque demande est scorée par un modèle qui ne l’a pas vue. Un modèle réentraîné a donc <strong>son propre seuil</strong> : 0,50 pour le champion v1, 0,48 pour la v4. La V1 écrivait 0,47 en dur dans l’API ; la V2 range le seuil et la version dans <code>model_meta.json</code>, écrit en même temps que le modèle, et l’API les lit au démarrage. <code>GET /health</code> renvoie la version servie.</p>
+<p>Le seuil de décision minimise le coût métier sur des prédictions <em><a class="g-lien" href="glossaire.html#oof" title="Définition dans le glossaire">out-of-fold</a></em> : chaque demande y est notée par un modèle qui ne l’a pas vue. Un modèle réentraîné a donc son propre seuil : 0,50 pour le champion v1, 0,48 pour la v4. La V1 écrivait 0,47 en dur dans l’API ; la V2 range le seuil et la version dans <code>model_meta.json</code>, écrit en même temps que le modèle, et l’API les lit au démarrage. <code>GET /health</code> renvoie la version servie.</p>
 <h3 id="identification-et-priorisation-des-cas-dusage">3.4 Identification et priorisation des cas d’usage</h3>
-<p>Les cas d’usage ont été évalués sur deux axes : la <strong>valeur</strong> pour la direction des risques et l’<strong>effort</strong> de mise en œuvre.</p>
+<p>J’ai classé les cas d’usage selon deux axes : leur valeur pour la direction des risques et l’effort de mise en œuvre.</p>
 <div class="tablewrap"><table>
 <colgroup>
 <col style="width: 25%" />
@@ -765,11 +765,11 @@
 </tr>
 </tbody>
 </table></div>
-<p>La surveillance porte sur les <strong>20 variables les plus importantes</strong> du champion, plutôt que sur les 255 : une dérive sur une variable que le modèle n’utilise presque pas ne justifie pas une alerte.</p>
+<p>La surveillance porte sur les 20 variables les plus importantes du champion, plutôt que sur les 255 : une dérive sur une variable que le modèle n’utilise presque pas ne justifie pas une alerte.</p>
 <hr />
 <h2 id="stratégie-de-mise-en-œuvre-et-dindustrialisation">4. Stratégie de mise en œuvre et d’industrialisation</h2>
 <h3 id="démarche-projet">4.1 Démarche projet</h3>
-<p><strong>Données de la simulation.</strong> Le jeu Home Credit n’a pas de dates. Les 307 511 demandes ont été découpées une fois pour toutes, de façon stratifiée (même taux de défaut partout) et avec une graine fixe :</p>
+<p><strong>Données de la simulation.</strong> Le jeu Home Credit n’a pas de dates. J’ai découpé les 307 511 demandes une fois pour toutes, de façon stratifiée (même taux de défaut partout) et avec une graine fixe :</p>
 <div class="tablewrap"><table>
 <colgroup>
 <col style="width: 33%" />
@@ -801,10 +801,10 @@
 </tr>
 </tbody>
 </table></div>
-<p>Deux dérives ont été injectées, avec des paramètres écrits dans la configuration :</p>
+<p>J’ai injecté deux dérives, dont les paramètres sont écrits dans la configuration :</p>
 <ul>
-<li><strong>Mois 3, dérive des données</strong> : une campagne attire une clientèle plus jeune. Tous les moins de 40 ans sont gardés, seulement 25 % des autres ; les montants sont multipliés par 1,3. Chaque ligne reste une vraie demande.</li>
-<li><strong>Mois 4, dérive de concept</strong> : un choc économique fait défaillir 15 % des bons payeurs parmi les salariés aux revenus modestes. Les variables ne bougent pas : seule la relation entre elles et le défaut change.</li>
+<li>Mois 3, dérive des données : une campagne attire une clientèle plus jeune. Tous les moins de 40 ans sont gardés, seulement 25 % des autres ; les montants sont multipliés par 1,3. Chaque ligne reste une vraie demande.</li>
+<li>Mois 4, dérive de concept : un choc économique fait défaillir 15 % des bons payeurs parmi les salariés aux revenus modestes. Les variables ne bougent pas : seule la relation entre elles et le défaut change.</li>
 </ul>
 <p><strong>Feuille de route.</strong></p>
 <div class="tablewrap"><table>
@@ -855,7 +855,7 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>Responsabilités.</strong> J’ai porté la conception, le développement et l’exploitation. La validation des promotions joue le rôle du responsable des risques : c’est elle qui fusionne la PR.</p>
+<p><strong>Responsabilités.</strong> J’ai porté la conception, le développement et l’exploitation. Pour la démonstration, j’ai aussi tenu le rôle du responsable des risques, qui relit et fusionne la Pull Request de promotion.</p>
 <p><strong>Outils par phase.</strong></p>
 <div class="tablewrap"><table>
 <colgroup>
@@ -894,8 +894,8 @@
 <h3 id="aide-à-la-prise-de-décision">4.2 Aide à la prise de décision</h3>
 <p><strong>La règle de promotion, telle qu’elle est présentée au décideur.</strong> Le challenger apprend sur la référence, les mois déjà reçus et 70 % du mois courant. Les 30 % restants servent à le comparer au champion, aucun des deux ne les ayant vus. Il est promu si :</p>
 <ol type="1">
-<li>son coût métier sur ces données récentes est <strong>inférieur d’au moins 1 %</strong> à celui du champion ;</li>
-<li>il ne dégrade pas le <strong>test figé</strong> de plus de <strong>2 %</strong> (on ne casse pas le passé).</li>
+<li>son coût métier sur ces données récentes est inférieur d’au moins 1 % à celui du champion ;</li>
+<li>il ne dégrade pas le test figé de plus de 2 % (on ne casse pas le passé).</li>
 </ol>
 <p><strong>Ce que la règle a décidé.</strong></p>
 <figure class="fig">
@@ -930,15 +930,7 @@
 </svg>
 <figcaption>Coût métier par demande sur les 30 % du mois jamais vus par les deux modèles. Plus bas est meilleur.</figcaption>
 </figure>
-<div class="tablewrap"><table style="width:100%;">
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-</colgroup>
+<div class="tablewrap"><table>
 <thead>
 <tr class="header">
 <th>Mois</th>
@@ -956,23 +948,23 @@
 <td>0,562</td>
 <td>+0,8 %</td>
 <td>+0,3 %</td>
-<td><strong>Non promu</strong> : le champion reste</td>
+<td>Non promu : le champion reste</td>
 </tr>
 <tr class="even">
 <td>4</td>
 <td>0,742</td>
 <td>0,682</td>
-<td><strong>−8,1 %</strong></td>
+<td>−8,1 %</td>
 <td>−1,0 %</td>
-<td><strong>Promu</strong> après validation (v4)</td>
+<td>Promu après validation (v4)</td>
 </tr>
 </tbody>
 </table></div>
-<p>Le mois 3 illustre un point qu’il faut savoir expliquer à une direction : <strong>une population plus risquée ne rend pas le modèle faux</strong>. Le coût monte parce que les clients sont plus risqués, pas parce que le modèle se trompe davantage sur eux ; réentraîner n’y change rien, et la règle évite une mise en production inutile.</p>
+<p>Le mois 3 montre une chose à savoir expliquer à une direction : une population plus risquée ne rend pas le modèle faux. Le coût monte parce que les clients sont plus risqués ; le modèle, lui, ne se trompe pas davantage sur eux. Réentraîner n’y change rien, et la règle évite une mise en production inutile.</p>
 <p><strong><a class="g-lien" href="glossaire.html#arbitrage" title="Définition dans le glossaire">Arbitrages</a> présentés avec leurs preuves.</strong></p>
 <ul>
-<li><em>Faut-il pondérer les données récentes ?</em> Testé avec un poids de 5 et de 10 sur le mois courant. Les résultats n’étaient pas réguliers (×5 moins bon que ×1, ×10 meilleur), signe que le hasard pesait autant que la pondération. Avec le choc du mois 4, la pondération ×10 dégradait le test figé de 2,7 % et violait le garde-fou. <strong>Écartée.</strong></li>
-<li><em>Le gain du mois 4 est-il réel ?</em> Un intervalle de confiance à 90 % calculé par rééchantillonnage donne un écart compris entre <strong>−11,6 % et −4,2 %</strong> : même la borne la moins favorable est un gain.</li>
+<li><em>Faut-il pondérer les données récentes ?</em> J’ai testé un poids de 5 puis de 10 sur le mois courant. Les résultats n’étaient pas réguliers (×5 moins bon que ×1, ×10 meilleur), signe que le hasard pesait autant que la pondération. Avec le choc du mois 4, la pondération ×10 dégradait le test figé de 2,7 % et violait le garde-fou. Je l’ai écartée.</li>
+<li><em>Le gain du mois 4 est-il réel ?</em> Un intervalle de confiance à 90 % calculé par rééchantillonnage donne un écart compris entre −11,6 % et −4,2 % : même la borne la moins favorable est un gain.</li>
 </ul>
 <p><strong>Risques et opportunités.</strong></p>
 <div class="tablewrap"><table>
@@ -1063,19 +1055,19 @@
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>A. POC (réalisé)</strong></td>
+<td>A. POC (réalisé)</td>
 <td>5,75 jours estimés, soit <strong>2 588 €</strong></td>
 <td><strong>0 €</strong> : GitHub Actions gratuit en dépôt public, DagsHub et Hugging Face gratuits</td>
 <td>Démonstration, validation du concept</td>
 </tr>
 <tr class="even">
-<td><strong>B. Production légère</strong></td>
+<td>B. Production légère</td>
 <td>A + 5 jours de <a class="g-lien" href="glossaire.html#durcissement" title="Définition dans le glossaire">durcissement</a> (journal persistant, validation des entrées, verrouillage des dépendances, audit d’<a class="g-lien" href="glossaire.html#biais-algorithmique" title="Définition dans le glossaire">équité</a>), soit <strong>4 838 €</strong></td>
 <td>≈ <strong>22 $</strong> pour un Space toujours actif (palier CPU Upgrade, 0,03 $/h), + <strong>99 à 119 $ par utilisateur</strong> si le registre doit être privé (DagsHub Team)</td>
 <td>Une équipe qui veut la même chaîne, en privé</td>
 </tr>
 <tr class="odd">
-<td><strong>C. Cloud managé</strong></td>
+<td>C. Cloud managé</td>
 <td>B + 10 à 15 jours de migration (SageMaker, Vertex AI ou Azure ML), soit environ <strong>9 300 à 11 600 €</strong></td>
 <td>À chiffrer sur devis : dépend de l’instance et du volume</td>
 <td>Une banque avec <a class="g-lien" href="glossaire.html#sla" title="Définition dans le glossaire">SLA</a>, volumes élevés, exigences d’audit</td>
@@ -1146,12 +1138,12 @@
 </table></div>
 <p><strong>Impacts et leviers d’atténuation.</strong></p>
 <ul>
-<li><strong>Biais et non-discrimination.</strong> Parmi les 20 variables les plus importantes figure <code>CODE_GENDER</code>. L’utiliser dans une décision de crédit pose un problème de non-discrimination. <em>Recommandation</em> : retirer la variable et mesurer l’effet sur le coût, puis auditer l’équité des décisions par sous-groupe avant toute mise en production réelle.</li>
-<li><strong>Réglementaire.</strong> Supervision humaine (PR), traçabilité (Registry, issues, exécutions) et documentation (README, cadrage, ce rapport) répondent aux exigences des systèmes à haut risque. Il manque une revue de conformité formelle.</li>
-<li><strong>RGPD.</strong> Les données sont anonymisées à la source. Le journal ne contient qu’un identifiant de demande, une probabilité et une décision.</li>
-<li><strong>Organisationnel.</strong> Un modèle ne part plus en production sans qu’un responsable l’ait vu. Cela demande une astreinte de relecture, légère : une PR par promotion.</li>
-<li><strong>Sécurité.</strong> Secrets hors du code, droits minimaux du workflow, protections de l’API conservées.</li>
-<li><strong><a class="g-lien" href="glossaire.html#latence" title="Définition dans le glossaire">Latence</a>.</strong> Inchangée : l’API charge le modèle une fois au démarrage. Après une promotion, le nouveau modèle répond moins d’une minute après la fin du déploiement.</li>
+<li>Biais et non-discrimination : parmi les 20 variables les plus importantes figure <code>CODE_GENDER</code>. L’utiliser dans une décision de crédit pose un problème de non-discrimination. <em>Recommandation</em> : retirer la variable et mesurer l’effet sur le coût, puis auditer l’équité des décisions par sous-groupe avant toute mise en production réelle.</li>
+<li>Réglementation : la supervision humaine (PR), la traçabilité (Registry, issues, exécutions) et la documentation (README, cadrage, ce rapport) répondent aux exigences des systèmes à haut risque. Il manque une revue de conformité formelle.</li>
+<li>RGPD : les données sont anonymisées à la source. Le journal ne contient qu’un identifiant de demande, une probabilité et une décision.</li>
+<li>Organisation : un modèle ne part plus en production sans qu’un responsable l’ait vu. Cela demande une astreinte de relecture, légère : une PR par promotion.</li>
+<li>Sécurité : les secrets restent hors du code, le workflow a des droits minimaux, l’API garde ses protections.</li>
+<li><a class="g-lien" href="glossaire.html#latence" title="Définition dans le glossaire">Latence</a> : inchangée, car l’API charge le modèle une fois au démarrage. Après une promotion, le nouveau modèle répond moins d’une minute après la fin du déploiement.</li>
 </ul>
 <hr />
 <h2 id="contrôle-et-suivi-du-projet">5. Contrôle et suivi du projet</h2>
@@ -1489,7 +1481,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>Un écart de conception est aussi à signaler. Les paramètres de simulation ont été <strong>ajustés après essai</strong>, et ce choix est documenté : au mois 3, la dérive tombait pile au seuil de 30 % ; au mois 4, un choc de 8 % produisait un gain du challenger noyé dans le bruit. Il a été porté à 15 %, et le mois 3, sans promotion, garde la démonstration honnête.</p>
+<p>J’ai aussi ajusté les paramètres de simulation après essai, et je l’ai documenté : au mois 3, la dérive tombait pile au seuil de 30 % ; au mois 4, un choc de 8 % produisait un gain du challenger noyé dans le bruit. J’ai porté le choc à 15 %. Le mois 3, qui se termine sans promotion, garde la démonstration honnête.</p>
 <h3 id="outils-et-processus-de-suivi">5.2 Outils et processus de suivi</h3>
 <p><strong>En production.</strong></p>
 <div class="tablewrap"><table>
@@ -1572,22 +1564,22 @@
 </tr>
 </tbody>
 </table></div>
-<p>Les tests ont été écrits <strong>avant</strong> le code qu’ils vérifient. Ce qui n’est pas testé : la tenue en charge de l’API, peu utile à quelques requêtes par jour.</p>
+<p>J’ai écrit les tests avant le code qu’ils vérifient. Ce qui n’est pas testé : la tenue en charge de l’API, peu utile à quelques requêtes par jour.</p>
 <hr />
 <h2 id="conclusion-et-recommandations">6. Conclusion et recommandations</h2>
 <h3 id="résumé-des-choix-clés">Résumé des choix clés</h3>
 <ol type="1">
-<li><strong>Deux déclencheurs</strong> : la dérive des données voit une population qui change, le coût métier voit un modèle qui se trompe. Le mois 4 montre qu’il faut les deux.</li>
-<li><strong>Une règle de promotion chiffrée et un humain qui valide</strong> : le mois 3 prouve que réentraîner n’est pas toujours utile, le mois 4 que la correction est réelle.</li>
-<li><strong>Le seuil voyage avec le modèle</strong> : la décision métier suit chaque nouvelle version.</li>
-<li><strong>Des données et des modèles versionnés</strong> : chaque modèle en production se relie à ses données, ses métriques et la PR qui l’a validé.</li>
+<li>Deux déclencheurs : la dérive des données voit une population qui change, le coût métier voit un modèle qui se trompe. Le mois 4 montre qu’il faut les deux.</li>
+<li>Une règle de promotion chiffrée et un humain qui valide : le mois 3 prouve que réentraîner n’est pas toujours utile, le mois 4 que la correction est réelle.</li>
+<li>Le seuil voyage avec le modèle : la décision métier suit chaque nouvelle version.</li>
+<li>Des données et des modèles versionnés : chaque modèle en production se relie à ses données, ses métriques et la PR qui l’a validé.</li>
 </ol>
 <h3 id="perspectives">Perspectives</h3>
 <ul>
-<li>Brancher de <strong>vrais retours de défaut</strong>, qui arrivent des mois après l’octroi, et journaliser durablement les prédictions.</li>
-<li><strong>Valider le schéma</strong> des lots entrants avant tout entraînement.</li>
-<li>Intégrer l’<strong>intervalle de confiance</strong> à la règle de promotion, au lieu d’une marge fixe de 1 %.</li>
-<li>Mesurer la dérive par rapport aux données d’entraînement du modèle <strong>en service</strong>, pas seulement à la population d’origine.</li>
+<li>Brancher de vrais retours de défaut, qui arrivent des mois après l’octroi, et journaliser durablement les prédictions.</li>
+<li>Valider le schéma des lots entrants avant tout entraînement.</li>
+<li>Intégrer l’intervalle de confiance à la règle de promotion, au lieu d’une marge fixe de 1 %.</li>
+<li>Mesurer la dérive par rapport aux données d’entraînement du modèle en service, pas seulement à la population d’origine.</li>
 <li>Étendre la même boucle aux systèmes à base de modèles de langage : évaluation en ligne, coût par requête.</li>
 </ul>
 <h3 id="prochaines-étapes-recommandées-par-priorité">Prochaines étapes recommandées, par priorité</h3>
@@ -1706,7 +1698,7 @@
 <figcaption aria-hidden="true">Exécution du workflow pour le mois 4 : surveillance, alerte, réentraînement et PR en 4 min 12 s.</figcaption>
 </figure>
 <h3 id="d.-glossaire">D. Glossaire</h3>
-<p>Le vocabulaire technique de ce rapport, et de tout le portfolio, est expliqué sur une page dédiée, en clair d’abord puis en détail : <a href="glossaire.html"><strong>consulter le glossaire</strong></a>. Les termes soulignés dans le texte mènent directement à leur définition.</p>
+<p>Le vocabulaire technique de ce rapport, et de tout le portfolio, est expliqué sur une page dédiée, en clair d’abord puis en détail : <a href="glossaire.html">consulter le glossaire</a>. Les termes soulignés dans le texte mènent directement à leur définition.</p>
 </main>
 <script>
 (function () {

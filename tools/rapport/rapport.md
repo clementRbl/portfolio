@@ -24,11 +24,11 @@
 
 *Prêt à Dépenser* accorde des crédits à des clients qui ont peu d'historique bancaire. Un modèle LightGBM estime leur probabilité de défaut ; un seuil transforme cette probabilité en décision d'octroi. La première version du projet (V1) a mis ce modèle en production : API FastAPI conteneurisée, déploiement continu sur Hugging Face Spaces, journalisation des prédictions, analyse de dérive dans un notebook.
 
-Cette V1 avait une faiblesse de fond : **le modèle pouvait se dégrader sans que personne le sache**. La surveillance s'arrêtait à un notebook qu'il fallait relancer à la main, rien ne réentraînait le modèle, et ni les données ni les modèles n'étaient versionnés.
+Cette V1 avait une faiblesse de fond : le modèle pouvait se dégrader sans que personne le sache. La surveillance s'arrêtait à un notebook qu'il fallait relancer à la main, rien ne réentraînait le modèle, et ni les données ni les modèles n'étaient versionnés.
 
-La V2, objet de ce rapport, ferme la boucle. Chaque semaine, un workflow surveille le dernier lot mensuel de demandes. En cas de dérive des données **ou** de hausse du coût métier, il ouvre une alerte, réentraîne un modèle candidat (le *challenger*), le compare au modèle en service (le *champion*) et, si une règle chiffrée est remplie, propose sa mise en production dans une Pull Request. **Un humain valide** : c'est une décision de crédit.
+La V2, objet de ce rapport, ferme la boucle. Chaque semaine, un workflow surveille le dernier lot mensuel de demandes. En cas de dérive des données ou de hausse du coût métier, il ouvre une alerte, réentraîne un modèle candidat (le *challenger*), le compare au modèle en service (le *champion*) et, si une règle chiffrée est remplie, propose sa mise en production dans une Pull Request. Un humain valide : c'est une décision de crédit.
 
-La boucle a été démontrée de bout en bout sur quatre mois simulés, en conditions réelles (GitHub Actions, DagsHub, Hugging Face). Le mois 3, une clientèle plus jeune, déclenche une alerte de dérive mais **aucune promotion** : réentraîner n'apportait rien. Le mois 4, un choc de défauts invisible pour les tests de dérive des données, fait monter le coût de 46 % ; le challenger le réduit de **8,1 %** sur des données qu'il n'a jamais vues et passe en production après validation. Coût d'infrastructure : **0 €**.
+J'ai fait tourner la boucle de bout en bout sur quatre mois simulés, avec les vrais services (GitHub Actions, DagsHub, Hugging Face). Au mois 3, une clientèle plus jeune déclenche une alerte de dérive, mais aucune promotion : réentraîner n'apportait rien. Au mois 4, un choc de défauts invisible pour les tests de dérive des données fait monter le coût de 46 % ; le challenger le réduit de **8,1 %** sur des données qu'il n'a jamais vues et passe en production après validation. Coût d'infrastructure : **0 €**.
 
 Le rapport suit le modèle de conduite de projet AI Engineering : besoins (1), audit de l'existant (2), solution cible (3), mise en œuvre et aide à la décision (4), pilotage (5), conclusion (6) et annexes (7).
 
@@ -47,17 +47,17 @@ Le rapport suit le modèle de conduite de projet AI Engineering : besoins (1), a
 | **Maturité MLOps** | **Niveau 0 à 1** : le service est automatisé, mais l'entraînement, la surveillance et la mise à jour du modèle sont manuels |
 | **Contraintes** | Budget d'infrastructure nul (POC), décision explicable, données anonymisées, secteur régulé |
 
-Les niveaux de maturité MLOps couramment utilisés vont de 0 (tout est manuel) à 2 (entraînement, tests et déploiement automatisés de bout en bout). La V1 automatisait le **déploiement du service**, pas le **cycle de vie du modèle**. L'objectif de la V2 est d'atteindre le niveau 1 : un réentraînement déclenché par la surveillance, avec une mise en production gouvernée.
+Les niveaux de maturité MLOps couramment utilisés vont de 0 (tout est manuel) à 2 (entraînement, tests et déploiement automatisés de bout en bout). La V1 automatisait le déploiement du service, pas le cycle de vie du modèle. L'objectif de la V2 est d'atteindre le niveau 1 : un réentraînement déclenché par la surveillance, avec une mise en production gouvernée.
 
-**Contexte réglementaire.** Le scoring de crédit fait partie des systèmes d'IA classés « à haut risque » par le règlement européen sur l'IA. Cela impose notamment une **supervision humaine**, une **traçabilité** des décisions et des modèles, et une documentation des données. Ces exigences ont orienté deux choix : la promotion par Pull Request validée par un humain, et le versionnage systématique des données et des modèles.
+**Contexte réglementaire.** Le scoring de crédit fait partie des systèmes d'IA classés « à haut risque » par le règlement européen sur l'IA. Le règlement impose une supervision humaine, la traçabilité des décisions et des modèles, et une documentation des données. Ces exigences ont orienté deux choix : la promotion par Pull Request validée par un humain, et le versionnage systématique des données et des modèles.
 
 ### 1.2 Collecte et analyse du besoin métier
 
-**Méthode de recueil.** Le contexte est une mise en situation : il n'y avait pas d'utilisateurs réels à interroger. Le besoin a été établi à partir de trois sources :
+**Méthode de recueil.** Le contexte est une mise en situation : il n'y avait pas d'utilisateurs réels à interroger. J'ai établi le besoin à partir de trois sources :
 
-1. **Les limites documentées de la V1**, listées dans son rapport : surveillance manuelle, pas de réentraînement, pas de validation des entrées, journal non persistant ;
-2. **Le cahier des charges du projet final** : cycle de vie du modèle, réentraînement automatique, suivi des dérives, versionnage des données et des modèles ;
-3. **Un document de cadrage** écrit avant tout code (besoin, critères d'acceptation vérifiables, hors périmètre, métrique), puis un backlog d'issues GitHub.
+1. les limites de la V1, listées dans son rapport : surveillance manuelle, pas de réentraînement, pas de validation des entrées, journal non persistant ;
+2. le cahier des charges du projet final : cycle de vie du modèle, réentraînement automatique, suivi des dérives, versionnage des données et des modèles ;
+3. un document de cadrage, écrit avant tout code (besoin, critères d'acceptation vérifiables, hors périmètre, métrique), puis un backlog d'issues GitHub.
 
 **Parties prenantes.**
 
@@ -80,10 +80,10 @@ Les niveaux de maturité MLOps couramment utilisés vont de 0 (tout est manuel) 
 
 | Besoin | Impact | Effort | Décision |
 |---|---|---|---|
-| Alerte automatique en cas de dérive | Fort | Faible | **Retenu**, gain rapide |
-| Seuil de décision porté par le modèle | Fort | Faible | **Retenu**, prérequis du réentraînement |
-| Versionnage des données et des modèles | Fort | Moyen | **Retenu** |
-| Réentraînement et promotion gouvernée | Fort | Moyen | **Retenu**, cœur du projet |
+| Alerte automatique en cas de dérive | Fort | Faible | Retenu, gain rapide |
+| Seuil de décision porté par le modèle | Fort | Faible | Retenu, prérequis du réentraînement |
+| Versionnage des données et des modèles | Fort | Moyen | Retenu |
+| Réentraînement et promotion gouvernée | Fort | Moyen | Retenu, cœur du projet |
 | Journal de production persistant | Moyen | Moyen | Reporté (limite assumée) |
 | Validation des données en entrée | Moyen | Moyen | Reporté |
 | Test de charge de l'API | Faible ici | Moyen | Reporté : quelques requêtes par jour |
@@ -105,7 +105,7 @@ Les niveaux de maturité MLOps couramment utilisés vont de 0 (tout est manuel) 
 | Sécurité | slowapi, CORS, en-têtes | 20 requêtes/min sur `/predict`, origines limitées, aucune trace d'erreur exposée |
 | Surveillance | JSONL, Evidently (notebook), Streamlit (local) | Analyse de dérive ponctuelle, tableau de bord à lancer soi-même |
 
-Une décision de la V1 mérite d'être rappelée : la conversion ONNX du modèle (−39 % de taille, +6 % de vitesse) a été **testée puis écartée**, parce qu'elle imposait un pré-encodage des variables catégorielles, source d'erreurs silencieuses. En production, la fiabilité prime sur une micro-optimisation.
+Dans la V1, j'avais testé puis écarté la conversion ONNX du modèle (−39 % de taille, +6 % de vitesse) : elle imposait un pré-encodage des variables catégorielles, source d'erreurs silencieuses. En production, la fiabilité prime sur une micro-optimisation.
 
 ### 2.2 Évaluation de l'adéquation aux besoins
 
@@ -115,14 +115,14 @@ Une décision de la V1 mérite d'être rappelée : la conversion ONNX du modèle
 | Robustesse | 14 tests automatisés, API couverte à 96 %, CI bloquante | ✅ Adéquat |
 | Sécurité | Limitation de débit, CORS restreint, en-têtes de sécurité | ✅ Adéquat pour un POC |
 | Coût | 0 € d'infrastructure | ✅ Adéquat |
-| **Surveillance** | Notebook à relancer à la main, aucune alerte | ❌ Une dégradation passe inaperçue |
-| **Maintenance du modèle** | Aucun réentraînement ; seuil 0,47 écrit en dur dans l'API | ❌ Un nouveau modèle serait servi avec un seuil faux |
-| **Traçabilité** | Données non versionnées ; MLflow local, dans un autre dépôt | ❌ Impossible de dire sur quoi un modèle a appris |
+| Surveillance | Notebook à relancer à la main, aucune alerte | ❌ Une dégradation passe inaperçue |
+| Maintenance du modèle | Aucun réentraînement ; seuil 0,47 écrit en dur dans l'API | ❌ Un nouveau modèle serait servi avec un seuil faux |
+| Traçabilité | Données non versionnées ; MLflow local, dans un autre dépôt | ❌ Impossible de dire sur quoi un modèle a appris |
 | Persistance du journal | Fichier local au conteneur, perdu au redémarrage | ⚠️ Reporté |
 
-**Un écart moins visible, découvert pendant l'audit.** Le modèle servi avait été entraîné sur **100 % des données étiquetées**. Toute simulation de « nouvelles données » tirées de ce jeu aurait donc mesuré le modèle sur des demandes qu'il connaissait déjà. Il fallait réentraîner un point de départ honnête avant toute chose (section 4.1, étape 1).
+**Un écart moins visible, découvert pendant l'audit.** Le modèle servi avait appris sur 100 % des données étiquetées. Toute simulation de « nouvelles données » tirées de ce jeu aurait donc mesuré le modèle sur des demandes qu'il connaissait déjà. Il fallait réentraîner un point de départ honnête avant toute chose (section 4.1, étape 1).
 
-**Conclusion de l'audit.** La V1 est solide comme *service*, mais pas comme *système qui apprend*. L'écart à combler n'est pas le modèle : c'est tout ce qui l'entoure dans la durée.
+**Conclusion de l'audit.** La V1 sert le modèle correctement, mais rien ne le surveille ni ne le met à jour. La V2 garde le même algorithme et construit ce qui manque autour : surveillance, réentraînement, versionnage et mise à jour contrôlée.
 
 ---
 
@@ -130,33 +130,33 @@ Une décision de la V1 mérite d'être rappelée : la conversion ONNX du modèle
 
 ### 3.1 Comparatif des approches
 
-Chaque décision a été prise sur des options explicites, avant d'écrire du code.
+J'ai tranché chaque décision entre des options explicites, avant d'écrire du code.
 
 | Décision | Options étudiées | Retenu | Pourquoi |
 |---|---|---|---|
-| Orchestration | Airflow · cron local · **GitHub Actions** | GitHub Actions | Déjà utilisé par le CI/CD, gratuit pour un dépôt public, visible par un tiers. Airflow, que j'ai pratiqué sur un autre projet, demanderait un serveur à maintenir pour un seul flux hebdomadaire |
-| Registre et stockage des données | MLflow auto-hébergé + S3 · cloud managé · **DagsHub** | DagsHub | MLflow (Registry compris) et stockage DVC hébergés gratuitement au même endroit, consultables par un lien |
-| Déclencheur | Calendrier fixe · dérive des données seule · **dérive OU coût métier** | Les deux | La dérive de concept est invisible pour un test de dérive des données (démontré au mois 4) |
-| Mise en production | Automatique · **Pull Request validée par un humain** · déploiement fantôme | Pull Request | Secteur régulé : supervision humaine ; s'appuie sur le CI/CD existant |
-| Entraînement du challenger | Recherche d'hyperparamètres · pondération des données récentes · **hyperparamètres du champion** | Hyperparamètres du champion | Une seule chose change (les données) ; quelques minutes en CI. La pondération a été testée puis écartée (section 4.2) |
-| Évaluation | Test figé seul · **données récentes + garde-fou** | Données récentes + garde-fou | Juger sur le présent sans casser le passé |
-| Versionnage | Tout dans DVC · **données dans DVC, modèles dans le Registry** | Mixte | Le modèle pèse 732 Ko : en git, la PR montre directement ce qui change, et la CI n'a pas besoin d'identifiants |
+| Orchestration | Airflow · cron local · GitHub Actions | GitHub Actions | Déjà utilisé par le CI/CD, gratuit pour un dépôt public, visible par un tiers. Airflow, que j'ai pratiqué sur un autre projet, demanderait un serveur à maintenir pour un seul flux hebdomadaire |
+| Registre et stockage des données | MLflow auto-hébergé + S3 · cloud managé · DagsHub | DagsHub | MLflow (Registry compris) et stockage DVC hébergés gratuitement au même endroit, consultables par un lien |
+| Déclencheur | Calendrier fixe · dérive des données seule · dérive ou coût métier | Les deux | La dérive de concept est invisible pour un test de dérive des données (démontré au mois 4) |
+| Mise en production | Automatique · Pull Request validée par un humain · déploiement fantôme | Pull Request | Secteur régulé : supervision humaine ; s'appuie sur le CI/CD existant |
+| Entraînement du challenger | Recherche d'hyperparamètres · pondération des données récentes · hyperparamètres du champion | Hyperparamètres du champion | Une seule chose change (les données) ; quelques minutes en CI. J'ai testé puis écarté la pondération (section 4.2) |
+| Évaluation | Test figé seul · données récentes + garde-fou | Données récentes + garde-fou | Juger sur le présent sans casser le passé |
+| Versionnage | Tout dans DVC · données dans DVC, modèles dans le Registry | Mixte | Le modèle pèse 732 Ko : en git, la PR montre directement ce qui change, et la CI n'a pas besoin d'identifiants |
 
 ### 3.2 Architecture cible
 
 <!-- figure: architecture | Architecture de la V2 : la surveillance déclenche l'alerte et le réentraînement ; la mise en production passe par une Pull Request validée par un humain. -->
 
-La surveillance et le réentraînement tournent dans GitHub Actions, sur des données récupérées depuis DagsHub. Le modèle candidat est enregistré dans le Model Registry. S'il est promu, le workflow ouvre une Pull Request qui modifie deux fichiers : `model/model.pkl` et `model/model_meta.json`. Après fusion par un humain, le CI/CD existant teste, construit l'image, la déploie sur Hugging Face et donne au modèle l'alias `champion`.
+La surveillance et le réentraînement tournent dans GitHub Actions, sur des données récupérées depuis DagsHub. Le workflow enregistre le modèle candidat dans le Model Registry. S'il est promu, le workflow ouvre une Pull Request qui modifie deux fichiers : `model/model.pkl` et `model/model_meta.json`. Après fusion par un humain, le CI/CD existant teste, construit l'image, la déploie sur Hugging Face et donne au modèle l'alias `champion`.
 
 **Sécurité de la chaîne.** Les identifiants DagsHub sont des secrets GitHub, jamais dans le code. Le workflow ne demande que les droits dont il a besoin (contenu, issues, PR), et les entrées manuelles passent par des variables d'environnement pour éviter toute injection de commande. L'API garde les protections de la V1.
 
 ### 3.3 Le seuil voyage avec le modèle
 
-Le seuil de décision minimise le coût métier sur des prédictions *out-of-fold*, où chaque demande est scorée par un modèle qui ne l'a pas vue. Un modèle réentraîné a donc **son propre seuil** : 0,50 pour le champion v1, 0,48 pour la v4. La V1 écrivait 0,47 en dur dans l'API ; la V2 range le seuil et la version dans `model_meta.json`, écrit en même temps que le modèle, et l'API les lit au démarrage. `GET /health` renvoie la version servie.
+Le seuil de décision minimise le coût métier sur des prédictions *out-of-fold* : chaque demande y est notée par un modèle qui ne l'a pas vue. Un modèle réentraîné a donc son propre seuil : 0,50 pour le champion v1, 0,48 pour la v4. La V1 écrivait 0,47 en dur dans l'API ; la V2 range le seuil et la version dans `model_meta.json`, écrit en même temps que le modèle, et l'API les lit au démarrage. `GET /health` renvoie la version servie.
 
 ### 3.4 Identification et priorisation des cas d'usage
 
-Les cas d'usage ont été évalués sur deux axes : la **valeur** pour la direction des risques et l'**effort** de mise en œuvre.
+J'ai classé les cas d'usage selon deux axes : leur valeur pour la direction des risques et l'effort de mise en œuvre.
 
 | Cas d'usage | Valeur | Effort | Priorité |
 |---|---|---|---|
@@ -167,7 +167,7 @@ Les cas d'usage ont été évalués sur deux axes : la **valeur** pour la direct
 | Proposer la promotion, déployer après validation | Forte | Moyen | 3 |
 | Réentraînement continu sans validation humaine | Faible (risque réglementaire) | Faible | Écarté |
 
-La surveillance porte sur les **20 variables les plus importantes** du champion, plutôt que sur les 255 : une dérive sur une variable que le modèle n'utilise presque pas ne justifie pas une alerte.
+La surveillance porte sur les 20 variables les plus importantes du champion, plutôt que sur les 255 : une dérive sur une variable que le modèle n'utilise presque pas ne justifie pas une alerte.
 
 ---
 
@@ -175,7 +175,7 @@ La surveillance porte sur les **20 variables les plus importantes** du champion,
 
 ### 4.1 Démarche projet
 
-**Données de la simulation.** Le jeu Home Credit n'a pas de dates. Les 307 511 demandes ont été découpées une fois pour toutes, de façon stratifiée (même taux de défaut partout) et avec une graine fixe :
+**Données de la simulation.** Le jeu Home Credit n'a pas de dates. J'ai découpé les 307 511 demandes une fois pour toutes, de façon stratifiée (même taux de défaut partout) et avec une graine fixe :
 
 | Part | Demandes | Rôle |
 |---|---|---|
@@ -183,10 +183,10 @@ La surveillance porte sur les **20 variables les plus importantes** du champion,
 | Quatre lots mensuels (20 %) | 4 × ≈ 15 375 | Les « nouvelles données » |
 | Test figé (20 %) | 61 503 | Jamais appris ; sert de garde-fou |
 
-Deux dérives ont été injectées, avec des paramètres écrits dans la configuration :
+J'ai injecté deux dérives, dont les paramètres sont écrits dans la configuration :
 
-- **Mois 3, dérive des données** : une campagne attire une clientèle plus jeune. Tous les moins de 40 ans sont gardés, seulement 25 % des autres ; les montants sont multipliés par 1,3. Chaque ligne reste une vraie demande.
-- **Mois 4, dérive de concept** : un choc économique fait défaillir 15 % des bons payeurs parmi les salariés aux revenus modestes. Les variables ne bougent pas : seule la relation entre elles et le défaut change.
+- Mois 3, dérive des données : une campagne attire une clientèle plus jeune. Tous les moins de 40 ans sont gardés, seulement 25 % des autres ; les montants sont multipliés par 1,3. Chaque ligne reste une vraie demande.
+- Mois 4, dérive de concept : un choc économique fait défaillir 15 % des bons payeurs parmi les salariés aux revenus modestes. Les variables ne bougent pas : seule la relation entre elles et le défaut change.
 
 **Feuille de route.**
 
@@ -198,7 +198,7 @@ Deux dérives ont été injectées, avec des paramètres écrits dans la configu
 | 4. Automatisation | Workflow hebdomadaire, alerte, PR, alias après déploiement ; seuil lu par l'API | 12/10 | `monitoring.yml`, CI/CD étendu |
 | 5. Démonstration | Mois 1 à 4 en conditions réelles, preuves, documentation | 13/10 | Exécutions, PR de promotion, README |
 
-**Responsabilités.** J'ai porté la conception, le développement et l'exploitation. La validation des promotions joue le rôle du responsable des risques : c'est elle qui fusionne la PR.
+**Responsabilités.** J'ai porté la conception, le développement et l'exploitation. Pour la démonstration, j'ai aussi tenu le rôle du responsable des risques, qui relit et fusionne la Pull Request de promotion.
 
 **Outils par phase.**
 
@@ -214,8 +214,8 @@ Deux dérives ont été injectées, avec des paramètres écrits dans la configu
 
 **La règle de promotion, telle qu'elle est présentée au décideur.** Le challenger apprend sur la référence, les mois déjà reçus et 70 % du mois courant. Les 30 % restants servent à le comparer au champion, aucun des deux ne les ayant vus. Il est promu si :
 
-1. son coût métier sur ces données récentes est **inférieur d'au moins 1 %** à celui du champion ;
-2. il ne dégrade pas le **test figé** de plus de **2 %** (on ne casse pas le passé).
+1. son coût métier sur ces données récentes est inférieur d'au moins 1 % à celui du champion ;
+2. il ne dégrade pas le test figé de plus de 2 % (on ne casse pas le passé).
 
 **Ce que la règle a décidé.**
 
@@ -223,15 +223,15 @@ Deux dérives ont été injectées, avec des paramètres écrits dans la configu
 
 | Mois | Champion | Challenger | Écart | Test figé | Décision |
 |---|---|---|---|---|---|
-| 3 | 0,557 | 0,562 | +0,8 % | +0,3 % | **Non promu** : le champion reste |
-| 4 | 0,742 | 0,682 | **−8,1 %** | −1,0 % | **Promu** après validation (v4) |
+| 3 | 0,557 | 0,562 | +0,8 % | +0,3 % | Non promu : le champion reste |
+| 4 | 0,742 | 0,682 | −8,1 % | −1,0 % | Promu après validation (v4) |
 
-Le mois 3 illustre un point qu'il faut savoir expliquer à une direction : **une population plus risquée ne rend pas le modèle faux**. Le coût monte parce que les clients sont plus risqués, pas parce que le modèle se trompe davantage sur eux ; réentraîner n'y change rien, et la règle évite une mise en production inutile.
+Le mois 3 montre une chose à savoir expliquer à une direction : une population plus risquée ne rend pas le modèle faux. Le coût monte parce que les clients sont plus risqués ; le modèle, lui, ne se trompe pas davantage sur eux. Réentraîner n'y change rien, et la règle évite une mise en production inutile.
 
 **Arbitrages présentés avec leurs preuves.**
 
-- *Faut-il pondérer les données récentes ?* Testé avec un poids de 5 et de 10 sur le mois courant. Les résultats n'étaient pas réguliers (×5 moins bon que ×1, ×10 meilleur), signe que le hasard pesait autant que la pondération. Avec le choc du mois 4, la pondération ×10 dégradait le test figé de 2,7 % et violait le garde-fou. **Écartée.**
-- *Le gain du mois 4 est-il réel ?* Un intervalle de confiance à 90 % calculé par rééchantillonnage donne un écart compris entre **−11,6 % et −4,2 %** : même la borne la moins favorable est un gain.
+- *Faut-il pondérer les données récentes ?* J'ai testé un poids de 5 puis de 10 sur le mois courant. Les résultats n'étaient pas réguliers (×5 moins bon que ×1, ×10 meilleur), signe que le hasard pesait autant que la pondération. Avec le choc du mois 4, la pondération ×10 dégradait le test figé de 2,7 % et violait le garde-fou. Je l'ai écartée.
+- *Le gain du mois 4 est-il réel ?* Un intervalle de confiance à 90 % calculé par rééchantillonnage donne un écart compris entre −11,6 % et −4,2 % : même la borne la moins favorable est un gain.
 
 **Risques et opportunités.**
 
@@ -252,9 +252,9 @@ Le mois 3 illustre un point qu'il faut savoir expliquer à une direction : **une
 
 | Scénario | Mise en œuvre | Infrastructure mensuelle | Pour qui |
 |---|---|---|---|
-| **A. POC (réalisé)** | 5,75 jours estimés, soit **2 588 €** | **0 €** : GitHub Actions gratuit en dépôt public, DagsHub et Hugging Face gratuits | Démonstration, validation du concept |
-| **B. Production légère** | A + 5 jours de durcissement (journal persistant, validation des entrées, verrouillage des dépendances, audit d'équité), soit **4 838 €** | ≈ **22 $** pour un Space toujours actif (palier CPU Upgrade, 0,03 $/h), + **99 à 119 $ par utilisateur** si le registre doit être privé (DagsHub Team) | Une équipe qui veut la même chaîne, en privé |
-| **C. Cloud managé** | B + 10 à 15 jours de migration (SageMaker, Vertex AI ou Azure ML), soit environ **9 300 à 11 600 €** | À chiffrer sur devis : dépend de l'instance et du volume | Une banque avec SLA, volumes élevés, exigences d'audit |
+| A. POC (réalisé) | 5,75 jours estimés, soit **2 588 €** | **0 €** : GitHub Actions gratuit en dépôt public, DagsHub et Hugging Face gratuits | Démonstration, validation du concept |
+| B. Production légère | A + 5 jours de durcissement (journal persistant, validation des entrées, verrouillage des dépendances, audit d'équité), soit **4 838 €** | ≈ **22 $** pour un Space toujours actif (palier CPU Upgrade, 0,03 $/h), + **99 à 119 $ par utilisateur** si le registre doit être privé (DagsHub Team) | Une équipe qui veut la même chaîne, en privé |
+| C. Cloud managé | B + 10 à 15 jours de migration (SageMaker, Vertex AI ou Azure ML), soit environ **9 300 à 11 600 €** | À chiffrer sur devis : dépend de l'instance et du volume | Une banque avec SLA, volumes élevés, exigences d'audit |
 
 Le budget d'exécution du POC est négligeable : une surveillance sans alerte dure 1 à 2 minutes, un mois avec réentraînement environ 4 minutes de machine.
 
@@ -272,12 +272,12 @@ Le budget d'exécution du POC est négligeable : une surveillance sans alerte du
 
 **Impacts et leviers d'atténuation.**
 
-- **Biais et non-discrimination.** Parmi les 20 variables les plus importantes figure `CODE_GENDER`. L'utiliser dans une décision de crédit pose un problème de non-discrimination. *Recommandation* : retirer la variable et mesurer l'effet sur le coût, puis auditer l'équité des décisions par sous-groupe avant toute mise en production réelle.
-- **Réglementaire.** Supervision humaine (PR), traçabilité (Registry, issues, exécutions) et documentation (README, cadrage, ce rapport) répondent aux exigences des systèmes à haut risque. Il manque une revue de conformité formelle.
-- **RGPD.** Les données sont anonymisées à la source. Le journal ne contient qu'un identifiant de demande, une probabilité et une décision.
-- **Organisationnel.** Un modèle ne part plus en production sans qu'un responsable l'ait vu. Cela demande une astreinte de relecture, légère : une PR par promotion.
-- **Sécurité.** Secrets hors du code, droits minimaux du workflow, protections de l'API conservées.
-- **Latence.** Inchangée : l'API charge le modèle une fois au démarrage. Après une promotion, le nouveau modèle répond moins d'une minute après la fin du déploiement.
+- Biais et non-discrimination : parmi les 20 variables les plus importantes figure `CODE_GENDER`. L'utiliser dans une décision de crédit pose un problème de non-discrimination. *Recommandation* : retirer la variable et mesurer l'effet sur le coût, puis auditer l'équité des décisions par sous-groupe avant toute mise en production réelle.
+- Réglementation : la supervision humaine (PR), la traçabilité (Registry, issues, exécutions) et la documentation (README, cadrage, ce rapport) répondent aux exigences des systèmes à haut risque. Il manque une revue de conformité formelle.
+- RGPD : les données sont anonymisées à la source. Le journal ne contient qu'un identifiant de demande, une probabilité et une décision.
+- Organisation : un modèle ne part plus en production sans qu'un responsable l'ait vu. Cela demande une astreinte de relecture, légère : une PR par promotion.
+- Sécurité : les secrets restent hors du code, le workflow a des droits minimaux, l'API garde ses protections.
+- Latence : inchangée, car l'API charge le modèle une fois au démarrage. Après une promotion, le nouveau modèle répond moins d'une minute après la fin du déploiement.
 
 ---
 
@@ -346,7 +346,7 @@ Le budget d'exécution du POC est négligeable : une surveillance sans alerte du
 | 2 | Challenger promu, mais aucune PR ouverte, alors que l'exécution était « réussie » | MLflow écrit aussi sur la sortie standard ; la lecture du résultat échouait sans erreur visible | Résultat relu depuis son fichier ; une erreur de lecture arrête désormais l'étape | Un pipeline doit échouer bruyamment, jamais sauter des étapes en silence |
 | 3 | Fausse alerte hebdomadaire anticipée après la promotion | La référence de coût restait celle de l'ancien régime : après le choc, même un modèle adapté coûte plus | La référence devient le coût auquel le modèle servi a été accepté | Une alerte se juge par rapport au niveau d'acceptation du modèle |
 
-Un écart de conception est aussi à signaler. Les paramètres de simulation ont été **ajustés après essai**, et ce choix est documenté : au mois 3, la dérive tombait pile au seuil de 30 % ; au mois 4, un choc de 8 % produisait un gain du challenger noyé dans le bruit. Il a été porté à 15 %, et le mois 3, sans promotion, garde la démonstration honnête.
+J'ai aussi ajusté les paramètres de simulation après essai, et je l'ai documenté : au mois 3, la dérive tombait pile au seuil de 30 % ; au mois 4, un choc de 8 % produisait un gain du challenger noyé dans le bruit. J'ai porté le choc à 15 %. Le mois 3, qui se termine sans promotion, garde la démonstration honnête.
 
 ### 5.2 Outils et processus de suivi
 
@@ -371,7 +371,7 @@ Un écart de conception est aussi à signaler. Les paramètres de simulation ont
 | Reproductibilité | Mêmes chiffres en local et en CI ; CI rejouée depuis un clone vierge | Comparaison des sorties |
 | Code et workflows | Style, erreurs de workflow | Ruff, pre-commit, actionlint |
 
-Les tests ont été écrits **avant** le code qu'ils vérifient. Ce qui n'est pas testé : la tenue en charge de l'API, peu utile à quelques requêtes par jour.
+J'ai écrit les tests avant le code qu'ils vérifient. Ce qui n'est pas testé : la tenue en charge de l'API, peu utile à quelques requêtes par jour.
 
 ---
 
@@ -379,17 +379,17 @@ Les tests ont été écrits **avant** le code qu'ils vérifient. Ce qui n'est pa
 
 ### Résumé des choix clés
 
-1. **Deux déclencheurs** : la dérive des données voit une population qui change, le coût métier voit un modèle qui se trompe. Le mois 4 montre qu'il faut les deux.
-2. **Une règle de promotion chiffrée et un humain qui valide** : le mois 3 prouve que réentraîner n'est pas toujours utile, le mois 4 que la correction est réelle.
-3. **Le seuil voyage avec le modèle** : la décision métier suit chaque nouvelle version.
-4. **Des données et des modèles versionnés** : chaque modèle en production se relie à ses données, ses métriques et la PR qui l'a validé.
+1. Deux déclencheurs : la dérive des données voit une population qui change, le coût métier voit un modèle qui se trompe. Le mois 4 montre qu'il faut les deux.
+2. Une règle de promotion chiffrée et un humain qui valide : le mois 3 prouve que réentraîner n'est pas toujours utile, le mois 4 que la correction est réelle.
+3. Le seuil voyage avec le modèle : la décision métier suit chaque nouvelle version.
+4. Des données et des modèles versionnés : chaque modèle en production se relie à ses données, ses métriques et la PR qui l'a validé.
 
 ### Perspectives
 
-- Brancher de **vrais retours de défaut**, qui arrivent des mois après l'octroi, et journaliser durablement les prédictions.
-- **Valider le schéma** des lots entrants avant tout entraînement.
-- Intégrer l'**intervalle de confiance** à la règle de promotion, au lieu d'une marge fixe de 1 %.
-- Mesurer la dérive par rapport aux données d'entraînement du modèle **en service**, pas seulement à la population d'origine.
+- Brancher de vrais retours de défaut, qui arrivent des mois après l'octroi, et journaliser durablement les prédictions.
+- Valider le schéma des lots entrants avant tout entraînement.
+- Intégrer l'intervalle de confiance à la règle de promotion, au lieu d'une marge fixe de 1 %.
+- Mesurer la dérive par rapport aux données d'entraînement du modèle en service, pas seulement à la population d'origine.
 - Étendre la même boucle aux systèmes à base de modèles de langage : évaluation en ligne, coût par requête.
 
 ### Prochaines étapes recommandées, par priorité
@@ -442,4 +442,4 @@ pytest tests/ --cov=app --cov=pipeline
 
 ### D. Glossaire
 
-Le vocabulaire technique de ce rapport, et de tout le portfolio, est expliqué sur une page dédiée, en clair d'abord puis en détail : [**consulter le glossaire**](glossaire.html). Les termes soulignés dans le texte mènent directement à leur définition.
+Le vocabulaire technique de ce rapport, et de tout le portfolio, est expliqué sur une page dédiée, en clair d'abord puis en détail : [consulter le glossaire](glossaire.html). Les termes soulignés dans le texte mènent directement à leur définition.
