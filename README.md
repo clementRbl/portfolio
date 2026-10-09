@@ -10,12 +10,14 @@ Sert aussi de support commercial : la section **Prestations** liste des missions
 | Page | Description |
 |---|---|
 | `index.html` | Portfolio : profil, compétences, projets, projet phare, **prestations**, réflexivité, contact |
-| `rapport.html` | Rapport de conduite de projet Data (industrialisation d'un modèle de scoring crédit, MLOps) |
+| `rapport.html` | Rapport de conduite de projet AI Engineering : surveillance et réentraînement automatiques du modèle de scoring crédit (V2) |
 | `carte-mentale.html` | Carte mentale interactive des compétences |
 | `assets/` | Captures des projets, CV PDF, image de partage Open Graph |
 | `assets/search-index.json` | Index de recherche vectorielle de la palette (généré) |
 | `tools/build_index.py` | Génère l'index : TF-IDF + SVD tronquée sur `tools/corpus.json` |
 | `tools/build_images.py` | Fabrique les médias d'`assets/` d'après `tools/images.json` |
+| `tools/build_rapport.py` | Régénère le contenu de `rapport.html` depuis `tools/rapport/rapport.md` (pandoc) et ses figures SVG |
+| `tools/rapport/charts.py` | Dessine les graphiques du rapport dans `tools/rapport/figures/` |
 | `sitemap.xml` | Plan de site (à déclarer dans Google Search Console) |
 
 ## Lancer en local
@@ -108,6 +110,22 @@ uv run --with plotly --with kaleido python3 tools/build_images.py
 Les sources vivent dans les dépôts des projets, hors de celui-ci : le script ne
 tourne donc que sur une machine qui les héberge, et signale celles qu'il ne
 trouve pas au lieu de s'arrêter.
+
+## Le rapport
+
+Le rapport s'écrit en Markdown dans `tools/rapport/rapport.md`, au format du
+modèle de conduite de projet AI Engineering. Seul le contenu de `<main>` est
+régénéré : en-tête, styles et script de thème de `rapport.html` restent tels
+quels. Les figures sont des SVG insérés dans la page, sans couleur en dur, pour
+suivre les trois palettes.
+
+```bash
+python3 tools/rapport/charts.py    # si les chiffres des graphiques changent
+python3 tools/build_rapport.py     # pandoc requis
+python3 tools/link_glossaire.py    # repose les liens du glossaire
+```
+
+Le PDF du livrable s'imprime depuis le navigateur, en mode Standard clair.
 
 ## Les trois pages ne font qu'un site
 

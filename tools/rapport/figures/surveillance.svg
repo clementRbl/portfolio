@@ -1,0 +1,55 @@
+<svg viewBox="0 0 760 290" role="img" aria-label="Surveillance des mois 1 à 4. Mois 3 : 35 % des variables dérivent (alerte). Mois 4 : aucune dérive des données, mais un coût métier en hausse de 45,9 % (alerte)." xmlns="http://www.w3.org/2000/svg">
+  <title>Surveillance des mois 1 à 4</title>
+  <desc>Mois 3 : 35 % des variables dérivent (alerte). Mois 4 : aucune dérive des données, mais un coût métier en hausse de 45,9 % (alerte).</desc>
+  <text class="c-title" x="20" y="24">Variables surveillées qui dérivent</text>
+  <line class="c-axis" x1="54" x2="320" y1="250.0" y2="250.0"/>
+  <text class="c-tick" x="48" y="254.0" text-anchor="end">0 %</text>
+  <line class="c-grid" x1="54" x2="320" y1="200.0" y2="200.0"/>
+  <text class="c-tick" x="48" y="204.0" text-anchor="end">10 %</text>
+  <line class="c-grid" x1="54" x2="320" y1="150.0" y2="150.0"/>
+  <text class="c-tick" x="48" y="154.0" text-anchor="end">20 %</text>
+  <line class="c-grid" x1="54" x2="320" y1="100.0" y2="100.0"/>
+  <text class="c-tick" x="48" y="104.0" text-anchor="end">30 %</text>
+  <line class="c-grid" x1="54" x2="320" y1="50.0" y2="50.0"/>
+  <text class="c-tick" x="48" y="54.0" text-anchor="end">40 %</text>
+  <line class="c-thr" x1="54" x2="320" y1="100.0" y2="100.0"/>
+  <text class="c-tick" x="60" y="94.0">seuil d'alerte 30 %</text>
+  <text class="c-lab" x="87.19999999999999" y="242.0" text-anchor="middle">0 %</text>
+  <text class="c-tick" x="87.19999999999999" y="270" text-anchor="middle">Mois 1</text>
+  <text class="c-lab" x="153.7" y="242.0" text-anchor="middle">0 %</text>
+  <text class="c-tick" x="153.7" y="270" text-anchor="middle">Mois 2</text>
+  <path class="c-2" d="M203.6,250.0 V79.0 Q203.6,75.0 207.6,75.0 H232.8 Q236.8,75.0 236.8,79.0 V250.0 Z"><title>Mois 3 : 35 %</title></path>
+  <text class="c-lab" x="220.2" y="67.0" text-anchor="middle">35 % ▲</text>
+  <text class="c-tick" x="220.2" y="270" text-anchor="middle">Mois 3</text>
+  <text class="c-lab" x="286.70000000000005" y="242.0" text-anchor="middle">0 %</text>
+  <text class="c-tick" x="286.70000000000005" y="270" text-anchor="middle">Mois 4</text>
+  <text class="c-title" x="420" y="24">Variation du coût métier</text>
+  <line class="c-grid" x1="454" x2="720" y1="250.0" y2="250.0"/>
+  <text class="c-tick" x="448" y="254.0" text-anchor="end">−10 %</text>
+  <line class="c-axis" x1="454" x2="720" y1="216.7" y2="216.7"/>
+  <text class="c-tick" x="448" y="220.7" text-anchor="end">0 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="183.3" y2="183.3"/>
+  <text class="c-tick" x="448" y="187.3" text-anchor="end">+10 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="150.0" y2="150.0"/>
+  <text class="c-tick" x="448" y="154.0" text-anchor="end">+20 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="116.7" y2="116.7"/>
+  <text class="c-tick" x="448" y="120.7" text-anchor="end">+30 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="83.3" y2="83.3"/>
+  <text class="c-tick" x="448" y="87.3" text-anchor="end">+40 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="50.0" y2="50.0"/>
+  <text class="c-tick" x="448" y="54.0" text-anchor="end">+50 %</text>
+  <line class="c-thr" x1="454" x2="720" y1="183.3" y2="183.3"/>
+  <text class="c-tick" x="460" y="177.3">seuil d'alerte +10 %</text>
+  <path class="c-2" d="M470.6,216.7 V214.3 Q470.6,210.3 474.6,210.3 H499.8 Q503.8,210.3 503.8,214.3 V216.7 Z"><title>Mois 1 : +1,9 %</title></path>
+  <text class="c-lab" x="487.20000000000005" y="202.3" text-anchor="middle">+1,9 %</text>
+  <text class="c-tick" x="487.20000000000005" y="270" text-anchor="middle">Mois 1</text>
+  <path class="c-2" d="M537.1,216.7 V216.7 Q537.1,218.3 538.7,218.3 H568.7 Q570.3000000000001,218.3 570.3000000000001,216.7 V216.7 Z"><title>Mois 2 : −0,5 %</title></path>
+  <text class="c-lab" x="553.7" y="208.7" text-anchor="middle">−0,5 %</text>
+  <text class="c-tick" x="553.7" y="270" text-anchor="middle">Mois 2</text>
+  <path class="c-2" d="M603.6,216.7 V179.0 Q603.6,175.0 607.6,175.0 H632.8000000000001 Q636.8000000000001,175.0 636.8000000000001,179.0 V216.7 Z"><title>Mois 3 : +12,5 %</title></path>
+  <text class="c-lab" x="620.2" y="167.0" text-anchor="middle">+12,5 % ▲</text>
+  <text class="c-tick" x="620.2" y="270" text-anchor="middle">Mois 3</text>
+  <path class="c-2" d="M670.1,216.7 V67.7 Q670.1,63.7 674.1,63.7 H699.3000000000001 Q703.3000000000001,63.7 703.3000000000001,67.7 V216.7 Z"><title>Mois 4 : +45,9 %</title></path>
+  <text class="c-lab" x="686.7" y="55.7" text-anchor="middle">+45,9 % ▲</text>
+  <text class="c-tick" x="686.7" y="270" text-anchor="middle">Mois 4</text>
+</svg>

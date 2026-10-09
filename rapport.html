@@ -10,14 +10,14 @@
      absent : une balise meta ne peut pas le porter, seul l'en-tête le fait. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cloud.umami.is; connect-src 'self' https://cloud.umami.is https://gateway.umami.is; object-src 'none'; base-uri 'self'; form-action 'none'">
 <title>Rapport de conduite de projet - Clément Reboul</title>
-<meta name="description" content="Rapport de conduite de projet Data : industrialisation et mise en production d'un modèle de scoring crédit (MLOps).">
+<meta name="description" content="Rapport de conduite de projet AI Engineering : surveillance et réentraînement automatiques d'un modèle de scoring crédit, avec mise en production validée par un humain.">
 <link rel="canonical" href="https://clement-reboul.fr/portfolio/rapport.html">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:url" content="https://clement-reboul.fr/portfolio/rapport.html">
-<meta property="og:title" content="Mise en production d'un modèle de scoring crédit - rapport MLOps">
-<meta property="og:description" content="Étude de cas MLOps détaillée par Clément Reboul, AI Engineer freelance : API FastAPI, CI/CD, monitoring de drift et arbitrages d'ingénieur.">
+<meta property="og:title" content="Surveillance et réentraînement d'un modèle de scoring crédit - rapport MLOps">
+<meta property="og:description" content="Étude de cas MLOps par Clément Reboul, AI Engineer : dérive, réentraînement, Model Registry, promotion validée par Pull Request, et les arbitrages qui vont avec.">
 <meta property="og:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://clement-reboul.fr/portfolio/assets/og-clement-reboul.png">
@@ -152,7 +152,39 @@
     .chapeau-liens{gap:8px 14px; font-size:12.5px;}
   }
 
-  @media print{.topbar{display:none;}main{max-width:none;padding:0;}h2{break-after:avoid;}table,.tablewrap,pre,blockquote{break-inside:avoid;}body{font-size:11pt;}}
+  /* Figures du rapport. Les SVG sont insérés dans la page, sans couleur en dur :
+     ces classes les colorent avec le thème actif. Les deux couleurs de séries
+     ont été validées (luminosité, saturation, daltonisme, contraste) pour chaque
+     mode, sur son propre fond. */
+  :root{--chart-1:#1FA488;--chart-2:#C27C26;}
+  :root.fx-standard{--chart-1:#C27C26;--chart-2:#4A8FE0;}
+  :root[data-theme="light"].fx-standard{--chart-1:#B45309;--chart-2:#1D4ED8;}
+  .fig{margin:1.8em 0;break-inside:avoid;}
+  .fig svg{display:block;width:100%;height:auto;}
+  main figure{margin:1.8em 0;break-inside:avoid;}
+  main figure img{display:block;max-width:100%;height:auto;border:1px solid var(--border);border-radius:8px;}
+  main figcaption{font-size:13px;color:var(--muted);margin-top:.6em;line-height:1.5;}
+  .f-box{fill:var(--surface-2);stroke:var(--border-strong);stroke-width:1.2;}
+  .f-box-acc{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.4;}
+  .f-t{fill:var(--ink);font:600 14px var(--font-sans);}
+  .f-s{fill:var(--ink-soft);font:12px var(--font-sans);}
+  .f-m{fill:var(--muted);font:12px var(--font-sans);}
+  .f-a{fill:var(--accent);font:600 12px var(--font-sans);}
+  .f-arrow{stroke:var(--ink-soft);stroke-width:1.5;fill:none;}
+  .f-arrow-acc{stroke:var(--accent);stroke-width:1.8;fill:none;}
+  .f-dash{stroke-dasharray:5 4;}
+  .f-head{fill:var(--ink-soft);}
+  .f-head-acc{fill:var(--accent);}
+  .c-1{fill:var(--chart-1);}
+  .c-2{fill:var(--chart-2);}
+  .c-grid{stroke:var(--border);stroke-width:1;}
+  .c-axis{stroke:var(--border-strong);stroke-width:1;}
+  .c-thr{stroke:var(--ink-soft);stroke-width:1.5;stroke-dasharray:6 4;}
+  .c-title{fill:var(--ink);font:600 13px var(--font-sans);}
+  .c-lab{fill:var(--ink);font:600 12px var(--font-sans);}
+  .c-tick{fill:var(--muted);font:11px var(--font-sans);}
+
+  @media print{.topbar{display:none;}main{max-width:none;padding:0;}h2,h3{break-after:avoid;}pre,blockquote,figure,tr{break-inside:avoid;}body{font-size:9.5pt;}th,td{padding:4px 7px;}main figure img{max-width:80%;margin:0 auto;}.chapeau{margin:.8em 0 1.2em;}}
 </style>
 <!-- Analytics Umami (cookieless, sans bannière) -->
 <script defer src="https://cloud.umami.is/script.js" data-website-id="d6a8ee08-52c7-4346-96f9-3fccf5c0fa87"></script>
@@ -167,998 +199,1514 @@
   </button>
 </div></div>
 <main>
-<h1 id="rapport-de-conduite-de-projet-data">Rapport de conduite de
-projet Data</h1>
-
-<!-- La page s'ouvrait sur son titre et un tableau d'identité : un lecteur
-     arrivé depuis le portfolio ne savait ni ce qu'il lisait, ni pourquoi. Ce
-     chapeau répond aux trois questions qu'on se pose en arrivant - de quoi
-     parle ce document, combien de temps il prend, où aller si on veut le code. -->
+<h1 id="rapport-de-conduite-de-projet-ai-engineering">Rapport de conduite de projet AI Engineering</h1>
 <div class="chapeau">
-  <p><b>De quoi il s'agit.</b> Ce document raconte comment j'ai mené un projet
-  de bout en bout, du besoin métier jusqu'à la mise en production : le cadrage,
-  les choix techniques et ce qu'ils ont coûté, les risques, les tests, le suivi
-  du modèle une fois en ligne. Il porte sur <i>Credit Scoring MLOps</i>, le
-  projet détaillé sur le portfolio.</p>
-  <p><b>Pourquoi le lire.</b> Le code montre ce que je sais faire ; ce rapport
-  montre comment je décide, ce que j'écarte et pourquoi. Comptez une vingtaine
-  de minutes pour l'ensemble, ou parcourez les tableaux, qui portent l'essentiel
-  des arbitrages. Les termes techniques <span class="ex-glo">soulignés ainsi</span>
-  mènent à leur définition dans le glossaire.</p>
-  <p class="chapeau-liens">
-    <a href="index.html">← Le portfolio</a>
-    <a href="glossaire.html">Le glossaire</a>
-    <a href="https://github.com/clementRbl/credit-scoring-mlops">Le code du projet</a>
-    <a href="https://clementrbl-credit-scoring-api.hf.space/docs">L'API en production</a>
-  </p>
+<p>
+<b>De quoi il s’agit.</b> Ce document raconte comment j’ai mené mon projet personnel technique, du besoin jusqu’à la production : la V2 de <i>Credit Scoring MLOps</i>, qui surveille un modèle de crédit chaque semaine, le réentraîne quand il dérive et ne le remplace qu’après validation humaine. Tout ce qui est décrit a réellement tourné, et chaque chiffre renvoie à une exécution, une issue ou une Pull Request publique.
+</p>
+<p>
+<b>Pourquoi le lire.</b> Le code montre ce que je sais faire ; ce rapport montre comment je décide, ce que j’écarte et pourquoi. Comptez une vingtaine de minutes, ou parcourez les tableaux, qui portent l’essentiel des arbitrages. Les termes techniques <span class="ex-glo">soulignés ainsi</span> mènent à leur définition dans le glossaire.
+</p>
+<p class="chapeau-liens">
+<a href="index.html">← Le portfolio</a> <a href="glossaire.html">Le glossaire</a> <a href="https://github.com/clementRbl/credit-scoring-mlops">Le code du projet</a> <a href="https://clementrbl-credit-scoring-api.hf.space/docs">L’API en production</a> <a href="https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow">Le registre des modèles</a>
+</p>
 </div>
-<h2
-id="industrialisation-et-mise-en-production-dun-modèle-de-scoring-crédit-mlops">Industrialisation
-et mise en production d'un modèle de scoring crédit (MLOps)</h2>
+<h2 id="surveillance-et-réentraînement-automatiques-dun-modèle-de-scoring-crédit">Surveillance et réentraînement automatiques d’un modèle de scoring crédit</h2>
 <div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <tbody>
 <tr class="odd">
 <td><strong>Auteur</strong></td>
-<td>Clément Reboul - AI Engineer</td>
+<td>Clément Reboul, AI Engineer</td>
 </tr>
 <tr class="even">
-<td><strong>Portfolio en ligne</strong></td>
-<td><a
-href="index.html">https://clement-reboul.fr/portfolio/</a></td>
+<td><strong>Projet personnel technique</strong></td>
+<td><em><a class="g-lien" href="glossaire.html#scoring-credit" title="Définition dans le glossaire">Credit Scoring</a> <a class="g-lien" href="glossaire.html#mlops" title="Définition dans le glossaire">MLOps</a></em>, V2 : boucle <a class="g-lien" href="glossaire.html#data-drift" title="Définition dans le glossaire">dérive</a> → réentraînement → promotion</td>
 </tr>
 <tr class="odd">
-<td><strong>Projet technique</strong></td>
-<td><em><a class="g-lien" href="glossaire.html#scoring-credit" title="Définition dans le glossaire">Credit Scoring</a> <a class="g-lien" href="glossaire.html#mlops" title="Définition dans le glossaire">MLOps</a></em> - mise en production du modèle de
-scoring « Prêt à Dépenser »</td>
-</tr>
-<tr class="even">
 <td><strong>Dépôt GitHub</strong></td>
-<td><a
-href="https://github.com/clementRbl/credit-scoring-mlops">https://github.com/clementRbl/credit-scoring-mlops</a></td>
+<td><a href="https://github.com/clementRbl/credit-scoring-mlops" class="uri">https://github.com/clementRbl/credit-scoring-mlops</a></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>API en production</strong></td>
-<td><a
-href="https://clementrbl-credit-scoring-api.hf.space/docs">https://clementrbl-credit-scoring-api.hf.space/docs</a>
-<em>(<a class="g-lien" href="glossaire.html#hugging-face" title="Définition dans le glossaire">Hugging Face Spaces</a>)</em></td>
-</tr>
-<tr class="even">
-<td><strong>Projet amont (modélisation)</strong></td>
-<td><a
-href="https://github.com/clementRbl/pret-a-depenser">https://github.com/clementRbl/pret-a-depenser</a></td>
+<td><a href="https://clementrbl-credit-scoring-api.hf.space/docs" class="uri">https://clementrbl-credit-scoring-api.hf.space/docs</a></td>
 </tr>
 <tr class="odd">
-<td><strong>Date</strong></td>
-<td>Juillet 2026, révisé en septembre 2026</td>
+<td><strong>Registre des modèles (<a class="g-lien" href="glossaire.html#mlflow" title="Définition dans le glossaire">MLflow</a>)</strong></td>
+<td><a href="https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow" class="uri">https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow</a></td>
+</tr>
+<tr class="even">
+<td><strong>Portfolio</strong></td>
+<td><a href="index.html">https://clement-reboul.fr/portfolio/</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Période</strong></td>
+<td>V1 : mars à septembre 2026 · V2 : 8 et 9 octobre 2026</td>
 </tr>
 </tbody>
 </table></div>
 <hr />
-<h2 id="résumé-exécutif">Résumé exécutif</h2>
-<p>Ce rapport décrit la <strong>conduite de bout en bout</strong> d'un
-projet data représentatif du métier d'AI Engineer : passer d'un modèle
-de machine learning entraîné en environnement de recherche à un
-<strong>service prédictif fiable, déployé et monitoré en
-production</strong>.</p>
-<p>Le cas métier est le <strong>scoring crédit</strong> de la société
-<em>Prêt à Dépenser</em> : <a class="g-lien" href="glossaire.html#inference" title="Définition dans le glossaire">prédire</a> la probabilité de défaut de paiement
-d'un client afin d'automatiser la décision d'octroi de crédit. La
-modélisation (comparaison de 5 algorithmes, optimisation d'un
-<strong><a class="g-lien" href="glossaire.html#cout-metier" title="Définition dans le glossaire">coût métier asymétrique</a></strong>, <a class="g-lien" href="glossaire.html#shap" title="Définition dans le glossaire">interprétabilité</a> SHAP,
-<a class="g-lien" href="glossaire.html#mlflow" title="Définition dans le glossaire">tracking</a> MLflow) a abouti à un modèle <strong><a class="g-lien" href="glossaire.html#lightgbm" title="Définition dans le glossaire">LightGBM</a></strong> (<a class="g-lien" href="glossaire.html#oof" title="Définition dans le glossaire">AUC-OOF</a>
-≈ 0,78 ; coût métier minimisé à ≈ 153 000 ; <a class="g-lien" href="glossaire.html#seuil-decision" title="Définition dans le glossaire">seuil de décision</a> 0,47).</p>
-<p>La phase d'<strong>industrialisation</strong> - objet principal de ce
-rapport - expose ce modèle via une <strong>API <a class="g-lien" href="glossaire.html#fastapi" title="Définition dans le glossaire">FastAPI</a> conteneurisée
-(<a class="g-lien" href="glossaire.html#docker" title="Définition dans le glossaire">Docker</a>)</strong>, déployée automatiquement sur <strong>Hugging Face
-Spaces</strong> via un <strong><a class="g-lien" href="glossaire.html#pipeline-sklearn" title="Définition dans le glossaire">pipeline</a> CI/CD <a class="g-lien" href="glossaire.html#ci-cd" title="Définition dans le glossaire">GitHub Actions</a></strong>
-(test → build → deploy). La production est <strong>monitorée</strong> :
-journalisation structurée des prédictions (<a class="g-lien" href="glossaire.html#jsonl" title="Définition dans le glossaire">JSONL</a>), analyse de
-<strong><a class="g-lien" href="glossaire.html#data-drift" title="Définition dans le glossaire">data drift</a></strong> (<a class="g-lien" href="glossaire.html#evidently" title="Définition dans le glossaire">Evidently AI</a>) et <strong><a class="g-lien" href="glossaire.html#streamlit" title="Définition dans le glossaire">dashboard</a></strong>
-de suivi (Streamlit).</p>
-<p>Le rapport est structuré autour des <strong>5 axes /
-compétences</strong> évalués :</p>
+<h2 id="résumé">Résumé</h2>
+<p><em>Prêt à Dépenser</em> accorde des crédits à des clients qui ont peu d’historique bancaire. Un modèle <a class="g-lien" href="glossaire.html#lightgbm" title="Définition dans le glossaire">LightGBM</a> estime leur probabilité de défaut ; un <a class="g-lien" href="glossaire.html#seuil-decision" title="Définition dans le glossaire">seuil</a> transforme cette probabilité en décision d’octroi. La première version du projet (V1) a mis ce modèle en production : API <a class="g-lien" href="glossaire.html#fastapi" title="Définition dans le glossaire">FastAPI</a> conteneurisée, <a class="g-lien" href="glossaire.html#ci-cd" title="Définition dans le glossaire">déploiement continu</a> sur <a class="g-lien" href="glossaire.html#hugging-face" title="Définition dans le glossaire">Hugging Face Spaces</a>, journalisation des prédictions, analyse de dérive dans un notebook.</p>
+<p>Cette V1 avait une faiblesse de fond : le modèle pouvait se dégrader sans que personne le sache. La surveillance s’arrêtait à un notebook qu’il fallait relancer à la main, rien ne réentraînait le modèle, et ni les données ni les modèles n’étaient versionnés.</p>
+<p>La V2, objet de ce rapport, ferme la boucle. Chaque semaine, un workflow surveille le dernier lot mensuel de demandes. En cas de dérive des données ou de hausse du <a class="g-lien" href="glossaire.html#cout-metier" title="Définition dans le glossaire">coût métier</a>, il ouvre une alerte, réentraîne un modèle candidat (le <em>challenger</em>), le compare au modèle en service (le <em>champion</em>) et, si une règle chiffrée est remplie, propose sa mise en production dans une <a class="g-lien" href="glossaire.html#git" title="Définition dans le glossaire">Pull Request</a>. Un humain valide : c’est une décision de crédit.</p>
+<p>J’ai fait tourner la boucle de bout en bout sur quatre mois simulés, avec les vrais services (GitHub Actions, DagsHub, Hugging Face). Au mois 3, une clientèle plus jeune déclenche une alerte de dérive, mais aucune promotion : réentraîner n’apportait rien. Au mois 4, un choc de défauts invisible pour les tests de dérive des données fait monter le coût de 46 % ; le challenger le réduit de <strong>8,1 %</strong> sur des données qu’il n’a jamais vues et passe en production après validation. Coût d’infrastructure : <strong>0 €</strong>.</p>
+<p>Le rapport suit le modèle de conduite de projet AI Engineering : besoins (1), <a class="g-lien" href="glossaire.html#audit" title="Définition dans le glossaire">audit</a> de l’existant (2), solution cible (3), mise en œuvre et aide à la décision (4), pilotage (5), conclusion (6) et annexes (7).</p>
+<hr />
+<h2 id="contexte-et-analyse-des-besoins">1. Contexte et analyse des besoins</h2>
+<h3 id="présentation-de-lorganisation-et-du-contexte">1.1 Présentation de l’organisation et du contexte</h3>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Secteur</strong></td>
+<td>Crédit à la consommation, clientèle peu ou pas bancarisée</td>
+</tr>
+<tr class="even">
+<td><strong>Enjeu métier</strong></td>
+<td>Décider vite et de façon justifiable ; un défaut coûte environ <strong>dix fois</strong> un bon client refusé</td>
+</tr>
+<tr class="odd">
+<td><strong>Données</strong></td>
+<td>Jeu <em>Home Credit</em> : 307 511 demandes étiquetées (8,07 % de défauts), 255 <a class="g-lien" href="glossaire.html#feature-engineering" title="Définition dans le glossaire">variables</a> après agrégation de 7 tables</td>
+</tr>
+<tr class="even">
+<td><strong>Maturité IA</strong></td>
+<td>Un modèle en production, servi par API, avec déploiement continu (V1)</td>
+</tr>
+<tr class="odd">
+<td><strong>Maturité MLOps</strong></td>
+<td><strong>Niveau 0 à 1</strong> : le service est automatisé, mais l’entraînement, la surveillance et la mise à jour du modèle sont manuels</td>
+</tr>
+<tr class="even">
+<td><strong>Contraintes</strong></td>
+<td>Budget d’infrastructure nul (<a class="g-lien" href="glossaire.html#poc" title="Définition dans le glossaire">POC</a>), décision explicable, données anonymisées, secteur régulé</td>
+</tr>
+</tbody>
+</table></div>
+<p>Les niveaux de maturité MLOps couramment utilisés vont de 0 (tout est manuel) à 2 (entraînement, tests et déploiement automatisés de bout en bout). La V1 automatisait le déploiement du service, pas le cycle de vie du modèle. L’objectif de la V2 est d’atteindre le niveau 1 : un réentraînement déclenché par la surveillance, avec une mise en production gouvernée.</p>
+<p><strong><a class="g-lien" href="glossaire.html#fenetre-contexte" title="Définition dans le glossaire">Contexte</a> réglementaire.</strong> Le scoring de crédit fait partie des systèmes d’IA classés « à haut risque » par le règlement européen sur l’IA. Le règlement impose une <a class="g-lien" href="glossaire.html#monitoring" title="Définition dans le glossaire">supervision</a> humaine, la traçabilité des décisions et des modèles, et une documentation des données. Ces exigences ont orienté deux choix : la promotion par <a class="g-lien" href="glossaire.html#revue-code" title="Définition dans le glossaire">Pull Request</a> validée par un humain, et le versionnage systématique des données et des modèles.</p>
+<h3 id="collecte-et-analyse-du-besoin-métier">1.2 Collecte et analyse du besoin métier</h3>
+<p><strong>Méthode de recueil.</strong> Le contexte est une mise en situation : il n’y avait pas d’utilisateurs réels à interroger. J’ai établi le besoin à partir de trois sources :</p>
 <ol type="1">
-<li><strong>Collecte des besoins métiers</strong> et analyse du <a class="g-lien" href="glossaire.html#fenetre-contexte" title="Définition dans le glossaire">contexte</a>
-de l'organisation ;</li>
-<li><strong><a class="g-lien" href="glossaire.html#audit" title="Définition dans le glossaire">Audit</a> de la solution data</strong> et de son adéquation aux
-besoins ;</li>
-<li><strong>Identification de la solution technique</strong> ;</li>
-<li><strong>Appui stratégique et méthodologique</strong> à la prise de
-décision ;</li>
-<li><strong>Contrôle et analyse du projet</strong> (délais, coûts,
-<a class="g-lien" href="glossaire.html#livrable" title="Définition dans le glossaire">livrables</a>, performance).</li>
+<li>les limites de la V1, listées dans son rapport : surveillance manuelle, pas de réentraînement, pas de validation des entrées, <a class="g-lien" href="glossaire.html#jsonl" title="Définition dans le glossaire">journal</a> non persistant ;</li>
+<li>le cahier des charges du projet final : cycle de vie du modèle, réentraînement automatique, suivi des dérives, versionnage des données et des modèles ;</li>
+<li>un document de <a class="g-lien" href="glossaire.html#cadrage" title="Définition dans le glossaire">cadrage</a>, écrit avant tout code (besoin, critères d’acceptation vérifiables, <a class="g-lien" href="glossaire.html#perimetre" title="Définition dans le glossaire">hors périmètre</a>, métrique), puis un backlog d’issues GitHub.</li>
 </ol>
-<hr />
-<h2 id="0-contexte-et-cadrage-du-projet">0. Contexte et cadrage du
-projet</h2>
-<p><strong>Prêt à Dépenser</strong> est une société financière proposant
-des crédits à la consommation à une clientèle disposant de <strong>peu
-ou pas d'historique de prêt</strong>. L'entreprise ne peut donc pas
-s'appuyer sur les scores bancaires classiques et doit construire son
-propre outil d'évaluation du risque à partir de <strong>sources de
-données variées</strong> (données comportementales, historiques d'autres
-institutions, etc.).</p>
-<p>Le projet s'est déroulé en <strong>deux phases</strong>, à l'image
-d'un cycle de vie ML industriel :</p>
+<p><strong>Parties prenantes.</strong></p>
 <div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Phase</th>
-<th>Objet</th>
-<th>Livrable clé</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Phase 1 - Modélisation &amp; MLOps (tracking)</strong></td>
-<td>Construire, comparer et sélectionner un modèle de scoring ; assurer
-la traçabilité des expériences</td>
-<td>Modèle LightGBM + tracking MLflow
-(<code>pret-a-depenser</code>)</td>
-</tr>
-<tr class="even">
-<td><strong>Phase 2 - Industrialisation &amp; mise en
-production</strong></td>
-<td>Exposer, déployer, tester, monitorer le modèle en conditions
-réelles</td>
-<td>API + CI/CD + <a class="g-lien" href="glossaire.html#monitoring" title="Définition dans le glossaire">monitoring</a> (<code>credit-scoring-mlops</code>)</td>
-</tr>
-</tbody>
-</table></div>
-<p>Ce rapport traite les deux phases mais <strong>met l'accent sur la
-mise en production</strong> (phase 2), qui correspond au cœur de métier
-de l'AI Engineer et au besoin le plus recherché sur le marché :
-<em>faire passer un modèle du notebook à la production</em>.</p>
-<hr />
-<h2
-id="axe-1--collecte-des-besoins-métiers-et-analyse-du-contexte-de-lorganisation">Axe
-1 - Collecte des besoins métiers et analyse du contexte de
-l'organisation</h2>
-<h3 id="11-besoin-métier-central">1.1 Besoin métier central</h3>
-<p>Le besoin exprimé est d'<strong>automatiser et fiabiliser la décision
-d'octroi de crédit</strong>. Chaque demande doit être classée en
-<strong>crédit accordé</strong> ou <strong>refusé</strong>, à partir
-d'une <strong>probabilité de défaut</strong> calculée
-automatiquement.</p>
-<p>Deux risques métier s'opposent, avec un <strong>coût
-asymétrique</strong> - c'est le point de <a class="g-lien" href="glossaire.html#cadrage" title="Définition dans le glossaire">cadrage</a> le plus structurant du
-projet :</p>
-<div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Erreur</th>
-<th>Signification métier</th>
-<th>Conséquence</th>
-<th>Coût relatif</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Faux négatif (FN)</strong></td>
-<td>Mauvais client prédit « bon » → crédit accordé à tort</td>
-<td><strong>Perte en capital</strong> (défaut de remboursement)</td>
-<td><strong>10</strong></td>
-</tr>
-<tr class="even">
-<td><strong>Faux positif (FP)</strong></td>
-<td>Bon client prédit « mauvais » → crédit refusé à tort</td>
-<td><strong>Manque à gagner</strong> (marge perdue)</td>
-<td><strong>1</strong></td>
-</tr>
-</tbody>
-</table></div>
-<p>Un défaut coûte donc <strong>10 fois plus cher</strong> qu'un refus
-injustifié. Ce ratio impose de <strong>ne pas se contenter d'un seuil de
-décision à 0,5</strong> ni d'optimiser l'accuracy : il faut construire
-une <strong>métrique de coût métier</strong>
-<code>Coût = 10 × FN + 1 × FP</code> et <strong>optimiser le
-seuil</strong> pour la minimiser.</p>
-<h3 id="12-besoins-fonctionnels-et-non-fonctionnels">1.2 Besoins
-fonctionnels et non-fonctionnels</h3>
-<p>Au-delà de la performance prédictive, la <strong>mise en
-production</strong> fait émerger des besoins d'ingénierie souvent
-négligés en phase de recherche :</p>
-<div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Type</th>
-<th>Besoin</th>
-<th>Traduction technique</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Fonctionnel</td>
-<td>Prédire à la demande pour un client donné</td>
-<td><a class="g-lien" href="glossaire.html#rest" title="Définition dans le glossaire">API REST</a> <a class="g-lien" href="glossaire.html#batch-temps-reel" title="Définition dans le glossaire">temps réel</a></td>
-</tr>
-<tr class="even">
-<td>Fonctionnel</td>
-<td>Transparence de la décision</td>
-<td>Explicabilité (SHAP global + local)</td>
-</tr>
-<tr class="odd">
-<td>Non-fonctionnel</td>
-<td><strong>Fiabilité</strong></td>
-<td><a class="g-lien" href="glossaire.html#tests-automatises" title="Définition dans le glossaire">Tests automatisés</a>, gestion d'erreurs, CI/CD bloquant</td>
-</tr>
-<tr class="even">
-<td>Non-fonctionnel</td>
-<td><strong><a class="g-lien" href="glossaire.html#sla" title="Définition dans le glossaire">Disponibilité</a> &amp; <a class="g-lien" href="glossaire.html#latence" title="Définition dans le glossaire">latence</a></strong></td>
-<td>Service conteneurisé, inférence &lt; 10 ms</td>
-</tr>
-<tr class="odd">
-<td>Non-fonctionnel</td>
-<td><strong>Traçabilité / auditabilité</strong></td>
-<td>Journalisation structurée de chaque prédiction</td>
-</tr>
-<tr class="even">
-<td>Non-fonctionnel</td>
-<td><strong>Maintenabilité</strong></td>
-<td>Détection de drift, monitoring, réentraînement possible</td>
-</tr>
-<tr class="odd">
-<td>Non-fonctionnel</td>
-<td><strong><a class="g-lien" href="glossaire.html#rgpd" title="Définition dans le glossaire">Conformité</a> (RGPD)</strong></td>
-<td>Logs maîtrisés, décision explicable pour le client</td>
-</tr>
-</tbody>
-</table></div>
-<h3
-id="13-analyse-du-contexte-organisationnel-et-des-parties-prenantes">1.3
-Analyse du contexte organisationnel et des parties prenantes</h3>
-<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th>Partie prenante</th>
 <th>Attente</th>
-<th>Impact sur la solution</th>
+<th>Ce que la V2 lui apporte</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Chargés d'études crédit</strong> (utilisateurs)</td>
-<td>Une décision fiable <strong>et justifiable</strong> auprès du
-client</td>
-<td>Score + décision + explicabilité SHAP</td>
+<td>Chargés d’études crédit</td>
+<td>Un score fiable dans la durée</td>
+<td>Un modèle surveillé chaque semaine</td>
 </tr>
 <tr class="even">
-<td><strong>Équipe Data</strong> (<em>data owners</em>)</td>
-<td>Fournir les données ; mais les schémas peuvent évoluer</td>
-<td>Besoin d'un <strong><a class="g-lien" href="glossaire.html#contrat-donnees" title="Définition dans le glossaire">contrat de données</a></strong> et de validation en
-entrée</td>
+<td>Direction des risques</td>
+<td>Savoir quand le modèle se trompe davantage, garder la main sur ce qui part en production</td>
+<td>Alertes chiffrées en coût métier, promotion par validation humaine</td>
 </tr>
 <tr class="odd">
-<td><strong>Direction / risque</strong></td>
-<td>Piloter l'<a class="g-lien" href="glossaire.html#arbitrage" title="Définition dans le glossaire">arbitrage</a> risque / volume d'octroi</td>
-<td>Seuil de décision = levier stratégique ajustable</td>
+<td>Équipe data</td>
+<td>Savoir sur quelles données un modèle a été entraîné</td>
+<td>Données versionnées (DVC), modèles versionnés (Registry)</td>
 </tr>
 <tr class="even">
-<td><strong>Conformité / <a class="g-lien" href="glossaire.html#dpo" title="Définition dans le glossaire">DPO</a></strong></td>
-<td>Respect RGPD, <a class="g-lien" href="glossaire.html#biais-algorithmique" title="Définition dans le glossaire">non-discrimination</a></td>
-<td>Explicabilité, journalisation maîtrisée</td>
+<td><a class="g-lien" href="glossaire.html#rgpd" title="Définition dans le glossaire">Conformité</a></td>
+<td>Traçabilité, supervision humaine</td>
+<td>Historique des versions, des alertes et des décisions de promotion</td>
+</tr>
+<tr class="odd">
+<td>Exploitation</td>
+<td>Un processus qui tourne sans intervention</td>
+<td>Workflow planifié, alertes dans l’outil de suivi existant</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Point de vigilance organisationnel identifié :</strong> en
-entreprise, la donnée est produite par une équipe tierce. Un changement
-silencieux de format, de type ou de casse en amont peut <strong>fausser
-les prédictions sans lever d'erreur</strong> (erreurs silencieuses). Ce
-constat a orienté les recommandations méthodologiques (cf. Axe 4).</p>
-<hr />
-<h2
-id="axe-2--audit-de-la-solution-data-et-de-son-adéquation-aux-besoins">Axe
-2 - Audit de la solution data et de son adéquation aux besoins</h2>
-<h3 id="21-audit-des-données">2.1 Audit des données</h3>
+<p><strong>Objectifs.</strong></p>
+<ul>
+<li><em>Métier</em> : détecter une dégradation en moins d’une semaine et la corriger sans dégrader le passé.</li>
+<li><em>Technique</em> : automatiser surveillance et réentraînement, versionner données et modèles, garder la mise en production sous contrôle humain.</li>
+</ul>
+<p><strong>Contraintes.</strong> Coût d’infrastructure nul, aucune donnée personnelle, aucun secret dans le code, échéance fixe (soutenance du 20 octobre).</p>
+<p><strong>Hiérarchisation des besoins (impact / effort).</strong></p>
 <div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Dimension</th>
-<th>Constat</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Sources</strong></td>
-<td>Jeu <em>Home Credit</em> multi-tables : demande courante
-(<code>application</code>), historique bureau (<code>bureau</code>,
-<code>bureau_balance</code>), crédits antérieurs
-(<code>previous_application</code>), soldes (<code>POS_CASH</code>,
-<code>credit_card_balance</code>), échéanciers
-(<code>installments_payments</code>)</td>
-</tr>
-<tr class="even">
-<td><strong>Intégration</strong></td>
-<td>Jointures sur <code>SK_ID_CURR</code> + <strong><a class="g-lien" href="glossaire.html#feature-engineering" title="Définition dans le glossaire">feature engineering</a>
-par agrégation</strong> des tables annexes (moyennes, sommes,
-comptes)</td>
-</tr>
-<tr class="odd">
-<td><strong>Volumétrie features</strong></td>
-<td><strong>255 variables</strong> en entrée du modèle final (239
-numériques + 16 catégorielles)</td>
-</tr>
-<tr class="even">
-<td><strong>Qualité</strong></td>
-<td><a class="g-lien" href="glossaire.html#valeurs-manquantes" title="Définition dans le glossaire">Valeurs manquantes</a> nombreuses (imputées et documentées), doublons
-contrôlés, visualisation <code>missingno</code></td>
-</tr>
-<tr class="odd">
-<td><strong>Déséquilibre</strong></td>
-<td>Bons clients ≫ défauts → traité par
-<code>class_weight='balanced'</code> (LR, RF, LGBM) et
-<code>scale_pos_weight</code> (<a class="g-lien" href="glossaire.html#xgboost" title="Définition dans le glossaire">XGBoost</a>)</td>
-</tr>
-<tr class="even">
-<td><strong><a class="g-lien" href="glossaire.html#fuite-donnees" title="Définition dans le glossaire">Fuite de données</a></strong></td>
-<td>Preprocessing et seuil ajustés <strong>uniquement</strong> sur train
-/ validation <em>out-of-fold</em> → pas de fuite</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="22-audit-du-modèle-et-de-sa-performance">2.2 Audit du modèle et
-de sa performance</h3>
-<p>Cinq familles de modèles ont été comparées en <strong><a class="g-lien" href="glossaire.html#validation-croisee" title="Définition dans le glossaire">validation
-croisée</a> StratifiedKFold (5 plis, prédictions OOF)</strong>, évaluées à
-la fois sur des métriques techniques et sur le <strong>coût
-métier</strong> :</p>
-<div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Modèle</th>
-<th>AUC-OOF</th>
-<th>Coût métier OOF</th>
-<th>Commentaire</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>LightGBM</strong> <em>(retenu)</em></td>
-<td><strong>≈ 0,78</strong></td>
-<td><strong>≈ 153 000</strong> <em>(minimal)</em></td>
-<td>Gère nativement les catégorielles, meilleur compromis</td>
-</tr>
-<tr class="even">
-<td>XGBoost</td>
-<td>≈ 0,78</td>
-<td>≈ 153 000</td>
-<td>Très proche, plus lourd à servir</td>
-</tr>
-<tr class="odd">
-<td><a class="g-lien" href="glossaire.html#random-forest" title="Définition dans le glossaire">Random Forest</a></td>
-<td>≈ 0,77</td>
-<td>≈ 155 000</td>
-<td>Correct, moins performant</td>
-</tr>
-<tr class="even">
-<td><a class="g-lien" href="glossaire.html#mlp" title="Définition dans le glossaire">MLP</a></td>
-<td>≈ 0,77</td>
-<td>≈ 159 000</td>
-<td>Sensible au <a class="g-lien" href="glossaire.html#normalisation" title="Définition dans le glossaire">scaling</a>, peu explicable</td>
-</tr>
-<tr class="odd">
-<td><a class="g-lien" href="glossaire.html#classification-regression" title="Définition dans le glossaire">Régression logistique</a></td>
-<td>≈ 0,74</td>
-<td>≈ 169 000</td>
-<td><a class="g-lien" href="glossaire.html#baseline" title="Définition dans le glossaire">Baseline</a> interprétable</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Seuil de décision retenu : 0,47</strong> (et non 0,5),
-déterminé par balayage de 99 seuils pour <strong>minimiser le coût
-métier</strong>. La courbe <em>coût vs seuil</em> justifie ce choix.</p>
-<p><strong>Garde-fou <a class="g-lien" href="glossaire.html#surapprentissage" title="Définition dans le glossaire">overfitting</a> :</strong> l'AUC de tête du challenge
-Kaggle <em>Home Credit</em> avoisine 0,80 ; une AUC ≈ 0,78 en OOF est
-donc <strong>performante et crédible</strong>, sans signe de
-surapprentissage.</p>
-<p><strong>Interprétabilité :</strong> importance globale (native
-LightGBM + <em>SHAP summary</em>) et <strong>locale par client</strong>
-(<em>SHAP waterfall / force plot</em>), répondant à l'exigence de
-transparence des chargés d'études.</p>
-<h3 id="23-verdict-daudit--adéquation-vs-écart-dindustrialisation">2.3
-Verdict d'audit : adéquation vs écart d'industrialisation</h3>
-<div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Critère de besoin</th>
-<th>Couvert par la solution modèle ?</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Prédiction automatique du risque</td>
-<td>✅ Oui (probabilité de défaut)</td>
-</tr>
-<tr class="even">
-<td>Prise en compte du coût métier asymétrique</td>
-<td>✅ Oui (métrique + seuil optimisés)</td>
-</tr>
-<tr class="odd">
-<td>Transparence de la décision</td>
-<td>✅ Oui (SHAP)</td>
-</tr>
-<tr class="even">
-<td>Traçabilité des expériences</td>
-<td>✅ Oui (MLflow : params, métriques, Model Registry)</td>
-</tr>
-<tr class="odd">
-<td><strong>Disponibilité en temps réel</strong></td>
-<td>❌ <strong>Non</strong> - modèle non exposé</td>
-</tr>
-<tr class="even">
-<td><strong>Monitoring en production</strong></td>
-<td>❌ <strong>Non</strong> - pas de suivi du drift</td>
-</tr>
-<tr class="odd">
-<td><strong>Robustesse aux évolutions de données</strong></td>
-<td>⚠️ Partiel - pas de validation en entrée</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Conclusion de l'audit :</strong> la solution de
-<strong>modélisation est mature et adéquate</strong> au besoin métier,
-mais <strong>non industrialisée</strong>. L'écart à combler est
-précisément la <strong>mise en production</strong> - objet de la phase 2
-et des axes suivants.</p>
-<hr />
-<h2 id="axe-3--identification-de-la-solution-technique">Axe 3 - Identification de la solution technique</h2>
-<h3 id="31-architecture-de-mise-en-production">3.1 Architecture de mise
-en production</h3>
-<pre><code>┌─────────────┐   HTTP    ┌──────────────────────────────┐
-│   Client    │──────────▶│   Hugging Face Spaces         │
-│  (Swagger / │           │   (conteneur Docker)          │
-│   appli)    │◀──────────│   FastAPI + LightGBM · :7860  │
-└─────────────┘   JSON    └──────────────┬────────────────┘
-                                         │ log de chaque prédiction
-                              ┌──────────▼───────────────┐
-                              │  logs/predictions.jsonl   │
-                              │  (JSON structuré)         │
-                              └──────────┬───────────────┘
-                                         │ lecture / analyse
-                    ┌────────────────────▼───────────────────┐
-                    │  Dashboard Streamlit  +  Notebook        │
-                    │  Evidently (data drift)                  │
-                    └─────────────────────────────────────────┘
-
-  CI/CD : GitHub Actions  ──▶  test (pytest) ─▶ build (Docker) ─▶ deploy (HF)</code></pre>
-<h3 id="32-choix-techniques-et-justifications">3.2 Choix techniques et
-justifications</h3>
-<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th>Besoin</th>
-<th>Outil retenu</th>
-<th>Justification</th>
+<th>Impact</th>
+<th>Effort</th>
+<th>Décision</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Exposition (API)</strong></td>
-<td><strong>FastAPI</strong></td>
-<td>Documentation Swagger auto-générée, validation Pydantic, standard de
-l'industrie ML, asynchrone</td>
+<td>Alerte automatique en cas de dérive</td>
+<td>Fort</td>
+<td>Faible</td>
+<td>Retenu, gain rapide</td>
 </tr>
 <tr class="even">
-<td><strong>Conteneurisation</strong></td>
-<td><strong>Docker</strong> (<code>python:3.12-slim</code>)</td>
-<td><a class="g-lien" href="glossaire.html#reproductibilite" title="Définition dans le glossaire">Reproductibilité</a>, utilisateur non-root (sécurité), ne copie que le
-nécessaire</td>
+<td>Seuil de décision porté par le modèle</td>
+<td>Fort</td>
+<td>Faible</td>
+<td>Retenu, prérequis du réentraînement</td>
 </tr>
 <tr class="odd">
-<td><strong>Déploiement</strong></td>
-<td><strong>Hugging Face Spaces</strong> (SDK Docker)</td>
-<td>Gratuit, URL publique, intégration <a class="g-lien" href="glossaire.html#git" title="Définition dans le glossaire">Git</a>, port 7860</td>
+<td>Versionnage des données et des modèles</td>
+<td>Fort</td>
+<td>Moyen</td>
+<td>Retenu</td>
 </tr>
 <tr class="even">
-<td><strong>CI/CD</strong></td>
-<td><strong>GitHub Actions</strong></td>
-<td>Gratuit, intégré au dépôt, secrets pour les credentials</td>
+<td>Réentraînement et promotion gouvernée</td>
+<td>Fort</td>
+<td>Moyen</td>
+<td>Retenu, cœur du projet</td>
 </tr>
 <tr class="odd">
-<td><strong>Journalisation</strong></td>
-<td><strong>JSONL structuré</strong></td>
-<td>Simple, lisible avec <a class="g-lien" href="glossaire.html#pandas" title="Définition dans le glossaire">pandas</a>, une ligne = un objet JSON (robuste aux
-crashs)</td>
+<td>Journal de production persistant</td>
+<td>Moyen</td>
+<td>Moyen</td>
+<td>Reporté (limite assumée)</td>
 </tr>
 <tr class="even">
-<td><strong>Détection de drift</strong></td>
-<td><strong>Evidently AI</strong> (0.4.33)</td>
-<td>Standard open-source, tests statistiques automatiques, rapports
-visuels</td>
+<td><a class="g-lien" href="glossaire.html#contrat-donnees" title="Définition dans le glossaire">Validation des données</a> en entrée</td>
+<td>Moyen</td>
+<td>Moyen</td>
+<td>Reporté</td>
 </tr>
 <tr class="odd">
-<td><strong>Dashboard monitoring</strong></td>
-<td><strong>Streamlit</strong></td>
-<td>Rapide à construire, lecture directe des logs</td>
+<td>Test de charge de l’API</td>
+<td>Faible ici</td>
+<td>Moyen</td>
+<td>Reporté : quelques requêtes par jour</td>
 </tr>
 <tr class="even">
-<td><strong>Tests</strong></td>
-<td><strong>pytest + pytest-cov</strong></td>
-<td>14 tests, <strong>96 % de couverture</strong> sur l'API</td>
-</tr>
-<tr class="odd">
-<td><strong><a class="g-lien" href="glossaire.html#limitation-debit" title="Définition dans le glossaire">Limitation de débit</a></strong></td>
-<td><strong>slowapi</strong></td>
-<td>Le calcul est offert par Hugging Face : une boucle, même involontaire,
-le consomme pour tout le monde. 60 requêtes/minute par adresse, 30 sur
-<code>/clients</code>, 20 sur <code>/predict</code></td>
-</tr>
-<tr class="even">
-<td><strong>Exposition HTTP</strong></td>
-<td><strong>En-têtes de sécurité + <a class="g-lien" href="glossaire.html#cors" title="Définition dans le glossaire">CORS</a> restreint</strong></td>
-<td>Origines connues seulement au lieu de <code>*</code>, en-têtes
-<code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>,
-<code>Referrer-Policy</code>, <a class="g-lien" href="glossaire.html#csp" title="Définition dans le glossaire">CSP</a> et <a class="g-lien" href="glossaire.html#hsts" title="Définition dans le glossaire">HSTS</a>, en-tête <code>server</code>
-retiré, erreurs internes rendues génériques</td>
-</tr>
-<tr class="odd">
-<td><strong>Qualité de code</strong></td>
-<td><strong><a class="g-lien" href="glossaire.html#linter" title="Définition dans le glossaire">Ruff</a></strong></td>
-<td>Linter rapide, intégré en pre-commit et CI</td>
+<td>Magasin de variables, tests A/B</td>
+<td>Moyen</td>
+<td>Fort</td>
+<td>Hors périmètre</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="33-détails-dimplémentation-clés">3.3 Détails d'implémentation
-clés</h3>
-<ul>
-<li><strong>Chargement du modèle une seule fois au démarrage</strong>
-(et non à chaque requête) → latence maîtrisée.</li>
-<li><strong>Endpoints :</strong> <code>GET /health</code>,
-<code>GET /clients</code>, <code>POST /predict?SK_ID_CURR=…</code>,
-<code>GET /docs</code>. Version servie : <strong>1.1.0</strong>.</li>
-<li><strong>Une documentation qui se suffit à elle-même :</strong>
-<code>/docs</code> partait du principe que le lecteur connaissait le projet.
-Il porte désormais un texte de cadrage, des étiquettes par domaine, un
-exemple d'identifiant accordé, un refusé et un inconnu, et la description
-de chaque code d'erreur. <code>GET /clients</code> a été ajouté pour cette
-raison : sans lui, personne ne pouvait deviner un <code>SK_ID_CURR</code>
-valide, et le premier appel renvoyait toujours 404.</li>
-<li><strong>Réponse type :</strong>
-<code>{ "SK_ID_CURR": 100001, "probability": 0.3718, "decision": "ACCORDE", "threshold": 0.47 }</code>.</li>
-<li><strong>Gestion d'erreurs :</strong> client inconnu →
-<code>404</code>, identifiant non entier → <code>422</code>.</li>
-<li><strong>Journalisation :</strong> chaque appel écrit
-<code>timestamp</code>, <code>SK_ID_CURR</code>,
-<code>probability</code>, <code>decision</code>,
-<code>inference_time_ms</code>.</li>
-<li><strong>Latence mesurée :</strong> ≈ <strong>6 ms</strong> par
-inférence.</li>
-<li><strong><a class="g-lien" href="glossaire.html#durcissement" title="Définition dans le glossaire">Surface d'attaque</a> réduite :</strong> le service est public et
-sans authentification - c'est voulu, il n'expose aucune donnée personnelle -
-mais il est limité en débit, restreint dans ses origines, et ne renvoie
-jamais de trace interne au client.</li>
-</ul>
-<h3 id="34-décision-dingénierie--onnx-écarté-volontairement">3.4
-Décision d'ingénierie : ONNX écarté volontairement</h3>
-<p>Une conversion <strong><a class="g-lien" href="glossaire.html#onnx" title="Définition dans le glossaire">ONNX</a></strong> du classifieur a été testée :
-<strong>-39 % de taille</strong> et <strong>+6 % de vitesse</strong>.
-Elle a néanmoins été <strong>retirée</strong>, après échange avec le
-mentor, pour trois raisons :</p>
-<ol type="1">
-<li>ONNX ne gère pas nativement les <strong>features
-catégorielles</strong> → nécessite un pré-encodage, source
-d'<strong>erreurs silencieuses</strong> ;</li>
-<li>l'approche hybride (pkl pour le preprocessing, onnx pour
-l'inférence) ajoute un <strong>point de fragilité</strong> ;</li>
-<li>le gain (+6 %) est <strong>marginal</strong> au regard du
-risque.</li>
-</ol>
-<blockquote>
-<p><em>« En production, la fiabilité prime sur une micro-optimisation.
-»</em> - L'API utilise directement <code>pipeline.predict_proba()</code>
-du pipeline <a class="g-lien" href="glossaire.html#scikit-learn" title="Définition dans le glossaire">scikit-learn</a>, pour ~6 ms d'inférence fiable.</p>
-</blockquote>
-<p>Cette décision illustre une posture d'ingénieur : <strong>arbitrer
-entre performance et robustesse</strong>, et documenter le
-raisonnement.</p>
 <hr />
-<h2
-id="axe-4--appui-stratégique-et-méthodologique-à-la-prise-de-décision">Axe
-4 - Appui stratégique et méthodologique à la prise de décision</h2>
-<h3 id="41-le-projet-comme-outil-daide-à-la-décision">4.1 Le projet
-comme outil d'aide à la décision</h3>
-<p>La solution ne se contente pas de prédire : elle <strong>outille la
-décision</strong> à plusieurs niveaux.</p>
+<h2 id="audit-de-la-solution-existante-v1">2. Audit de la solution existante (V1)</h2>
+<h3 id="solution-actuelle">2.1 Solution actuelle</h3>
+<figure class="fig">
+<svg viewBox="0 0 760 250" role="img" aria-label="Flux de la V1. Le déploiement est automatisé ; l'entraînement, la copie du modèle et l'analyse de dérive sont manuels." xmlns="http://www.w3.org/2000/svg">
+  <title>Flux de la V1</title>
+  <desc>Le déploiement est automatisé ; l'entraînement, la copie du modèle et l'analyse de dérive sont manuels.</desc>
+  <defs>
+    <marker id="v1-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-head" d="M0,0 L10,5 L0,10 z"/></marker>
+  </defs>
+  <rect class="f-box" x="20" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="57" text-anchor="middle">Notebooks de modélisation</text>
+  <text class="f-s" x="120" y="78" text-anchor="middle">MLflow local, autre dépôt</text>
+
+  <rect class="f-box" x="280" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="57" text-anchor="middle">Dépôt de l'API</text>
+  <text class="f-s" x="380" y="78" text-anchor="middle">app.py · model.pkl</text>
+
+  <rect class="f-box" x="540" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="640" y="57" text-anchor="middle">GitHub Actions</text>
+  <text class="f-s" x="640" y="78" text-anchor="middle">test → build → deploy</text>
+
+  <rect class="f-box" x="540" y="160" width="200" height="64" rx="8"/>
+  <text class="f-t" x="640" y="187" text-anchor="middle">Hugging Face Space</text>
+  <text class="f-s" x="640" y="208" text-anchor="middle">FastAPI · seuil 0,47 en dur</text>
+
+  <rect class="f-box" x="280" y="160" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="187" text-anchor="middle">Journal JSONL</text>
+  <text class="f-s" x="380" y="208" text-anchor="middle">perdu au redémarrage</text>
+
+  <rect class="f-box" x="20" y="160" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="187" text-anchor="middle">Notebook <a class="g-lien" href="glossaire.html#evidently" title="Définition dans le glossaire">Evidently</a></text>
+  <text class="f-s" x="120" y="208" text-anchor="middle">relancé à la main</text>
+
+  <path class="f-arrow f-dash" d="M220,62 H276" marker-end="url(#v1-head)"/>
+  <text class="f-m" x="250" y="52" text-anchor="middle">copie</text>
+  <path class="f-arrow" d="M480,62 H536" marker-end="url(#v1-head)"/>
+  <text class="f-m" x="510" y="52" text-anchor="middle">push</text>
+  <path class="f-arrow" d="M640,94 V156" marker-end="url(#v1-head)"/>
+  <path class="f-arrow" d="M540,192 H484" marker-end="url(#v1-head)"/>
+  <text class="f-m" x="510" y="182" text-anchor="middle">écrit</text>
+  <path class="f-arrow f-dash" d="M280,192 H224" marker-end="url(#v1-head)"/>
+  <text class="f-m" x="250" y="182" text-anchor="middle">lu</text>
+  <text class="f-m" x="20" y="244">Trait plein : automatique · pointillé : manuel</text>
+</svg>
+<figcaption>Flux de la V1 : le service est déployé automatiquement, mais l'entraînement, la copie du modèle et l'analyse de dérive restent manuels.</figcaption>
+</figure>
 <div class="tablewrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th>Niveau</th>
-<th>Levier fourni</th>
-<th>Décision facilitée</th>
+<th>Brique</th>
+<th>Outil</th>
+<th>Rôle</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Opérationnel</strong> (chargé d'études)</td>
-<td>Score + décision + explicabilité SHAP</td>
-<td>Accorder / refuser <strong>et justifier</strong></td>
+<td>Modélisation</td>
+<td>LightGBM, <a class="g-lien" href="glossaire.html#scikit-learn" title="Définition dans le glossaire">scikit-learn</a>, <a class="g-lien" href="glossaire.html#shap" title="Définition dans le glossaire">SHAP</a>, MLflow (local)</td>
+<td>5 modèles comparés, coût métier, seuil optimisé (0,47), explicabilité</td>
 </tr>
 <tr class="even">
-<td><strong>Tactique</strong> (pilotage)</td>
-<td>Dashboard : taux de refus, latence, <a class="g-lien" href="glossaire.html#distribution" title="Définition dans le glossaire">distribution</a> des scores</td>
-<td>Détecter une dérive, déclencher un réentraînement</td>
+<td>Service</td>
+<td>FastAPI, <a class="g-lien" href="glossaire.html#docker" title="Définition dans le glossaire">Docker</a></td>
+<td><code>POST /predict</code>, <code>GET /health</code>, documentation <a class="g-lien" href="glossaire.html#rest" title="Définition dans le glossaire">Swagger</a>, environ 6 ms par <a class="g-lien" href="glossaire.html#inference" title="Définition dans le glossaire">prédiction</a></td>
 </tr>
 <tr class="odd">
-<td><strong>Stratégique</strong> (direction risque)</td>
-<td><strong>Seuil de décision ajustable</strong> (0,47)</td>
-<td>Arbitrer l'appétence au risque : baisser le seuil = plus prudent
-(moins de défauts, plus de refus) ; le relever = plus de volume</td>
+<td>Déploiement</td>
+<td>GitHub Actions → Hugging Face Spaces</td>
+<td>test → build → deploy à chaque push</td>
+</tr>
+<tr class="even">
+<td>Sécurité</td>
+<td>slowapi, <a class="g-lien" href="glossaire.html#cors" title="Définition dans le glossaire">CORS</a>, en-têtes</td>
+<td>20 requêtes/min sur <code>/predict</code>, origines limitées, aucune trace d’erreur exposée</td>
+</tr>
+<tr class="odd">
+<td>Surveillance</td>
+<td>JSONL, Evidently (notebook), <a class="g-lien" href="glossaire.html#streamlit" title="Définition dans le glossaire">Streamlit</a> (local)</td>
+<td>Analyse de dérive ponctuelle, tableau de bord à lancer soi-même</td>
 </tr>
 </tbody>
 </table></div>
-<p>Le <strong>seuil métier</strong> est le levier stratégique central :
-il traduit une décision <strong>business</strong> (combien de risque
-accepter) en paramètre <strong>technique</strong>. Le rapport rend ce
-lien explicite via la courbe <em>coût vs seuil</em>.</p>
-<h3 id="42-vulgarisation-et-communication">4.2 Vulgarisation et
-communication</h3>
-<p>Une part clé de l'appui méthodologique consiste à <strong>traduire le
-technique en enjeux métier</strong> :</p>
-<ul>
-<li>« AUC 0,78 » → <em>« le modèle distingue correctement bons et
-mauvais payeurs »</em> ;</li>
-<li>« drift sur <code>AMT_CREDIT</code> » → <em>« la distribution des
-montants demandés évolue ; à surveiller »</em> ;</li>
-<li>« coût métier 153 000 vs 169 000 » → <em>« le modèle et le seuil
-retenus réduisent les pertes attendues d'environ 10 % par rapport à la
-baseline »</em>.</li>
-</ul>
-<h3 id="43-recommandations-méthodologiques-formulées">4.3
-Recommandations méthodologiques formulées</h3>
-<p>Pour sécuriser l'exploitation en production, plusieurs
-recommandations ont été explicitement documentées :</p>
-<ol type="1">
-<li><strong>Contrat de données (<em>data contract</em>)</strong> avec
-l'équipe Data : figer types, plages et catégories attendues, et faire
-échouer le pipeline <strong>côté fournisseur</strong> plutôt que côté
-modèle.</li>
-<li><strong>Validation des entrées</strong> : vérifier types et bornes ;
-détecter les catégories inconnues
-(<code>ignore_encoding_error=False</code>).</li>
-<li><strong>Stratégie de réaction au drift</strong> : selon l'importance
-de la variable - la retirer, la <a class="g-lien" href="glossaire.html#transformeur" title="Définition dans le glossaire">transformer</a>, pondérer les observations
-récentes (<code>sample_weight</code>) ou <strong>réentraîner</strong>
-(solution de référence).</li>
-<li><strong>Séparation <code>train</code> /
-<code>predict</code></strong> en production, avec un
-<strong>réentraînement planifié</strong> (ex. <a class="g-lien" href="glossaire.html#etl" title="Définition dans le glossaire">Airflow</a>) pour empêcher
-l'accumulation de drift.</li>
-</ol>
-<h3 id="44-trade-offs-présentés-pour-éclairer-la-décision">4.4
-Trade-offs présentés pour éclairer la décision</h3>
+<p>Dans la V1, j’avais testé puis écarté la conversion <a class="g-lien" href="glossaire.html#onnx" title="Définition dans le glossaire">ONNX</a> du modèle (−39 % de taille, +6 % de vitesse) : elle imposait un pré-encodage des variables catégorielles, source d’erreurs silencieuses. En production, la fiabilité prime sur une micro-optimisation.</p>
+<h3 id="évaluation-de-ladéquation-aux-besoins">2.2 Évaluation de l’adéquation aux besoins</h3>
 <div class="tablewrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Critère</th>
+<th>Constat sur la V1</th>
+<th>Écart</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Performance</td>
+<td>AUC ≈ 0,78 en <a class="g-lien" href="glossaire.html#validation-croisee" title="Définition dans le glossaire">validation croisée</a>, coût métier minimisé</td>
+<td>✅ Adéquat</td>
+</tr>
+<tr class="even">
+<td>Robustesse</td>
+<td>14 <a class="g-lien" href="glossaire.html#tests-automatises" title="Définition dans le glossaire">tests automatisés</a>, API couverte à 96 %, CI bloquante</td>
+<td>✅ Adéquat</td>
+</tr>
+<tr class="odd">
+<td>Sécurité</td>
+<td><a class="g-lien" href="glossaire.html#limitation-debit" title="Définition dans le glossaire">Limitation de débit</a>, CORS restreint, en-têtes de sécurité</td>
+<td>✅ Adéquat pour un POC</td>
+</tr>
+<tr class="even">
+<td>Coût</td>
+<td>0 € d’infrastructure</td>
+<td>✅ Adéquat</td>
+</tr>
+<tr class="odd">
+<td>Surveillance</td>
+<td>Notebook à relancer à la main, aucune alerte</td>
+<td>❌ Une dégradation passe inaperçue</td>
+</tr>
+<tr class="even">
+<td>Maintenance du modèle</td>
+<td>Aucun réentraînement ; seuil 0,47 écrit en dur dans l’API</td>
+<td>❌ Un nouveau modèle serait servi avec un seuil faux</td>
+</tr>
+<tr class="odd">
+<td>Traçabilité</td>
+<td>Données non versionnées ; MLflow local, dans un autre dépôt</td>
+<td>❌ Impossible de dire sur quoi un modèle a appris</td>
+</tr>
+<tr class="even">
+<td>Persistance du journal</td>
+<td>Fichier local au conteneur, perdu au redémarrage</td>
+<td>⚠️ Reporté</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Un écart moins visible, découvert pendant l’audit.</strong> Le modèle servi avait appris sur 100 % des données étiquetées. Toute simulation de « nouvelles données » tirées de ce jeu aurait donc mesuré le modèle sur des demandes qu’il connaissait déjà. Il fallait réentraîner un point de départ honnête avant toute chose (section 4.1, étape 1).</p>
+<p><strong>Conclusion de l’audit.</strong> La V1 sert le modèle correctement, mais rien ne le surveille ni ne le met à jour. La V2 garde le même algorithme et construit ce qui manque autour : surveillance, réentraînement, versionnage et mise à jour contrôlée.</p>
+<hr />
+<h2 id="identification-de-la-solution-technique-cible">3. Identification de la solution technique cible</h2>
+<h3 id="comparatif-des-approches">3.1 Comparatif des approches</h3>
+<p>J’ai tranché chaque décision entre des options explicites, avant d’écrire du code.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th>Décision</th>
-<th>Option retenue</th>
-<th>Alternative</th>
-<th>Arbitrage</th>
+<th>Options étudiées</th>
+<th>Retenu</th>
+<th>Pourquoi</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Format d'inférence</td>
-<td>Pipeline sklearn</td>
-<td>ONNX</td>
-<td><strong>Fiabilité</strong> &gt; micro-perf</td>
+<td><a class="g-lien" href="glossaire.html#langgraph" title="Définition dans le glossaire">Orchestration</a></td>
+<td><a class="g-lien" href="glossaire.html#etl" title="Définition dans le glossaire">Airflow</a> · cron local · GitHub Actions</td>
+<td>GitHub Actions</td>
+<td>Déjà utilisé par le CI/CD, gratuit pour un dépôt public, visible par un tiers. <a class="g-lien" href="glossaire.html#airflow" title="Définition dans le glossaire">Airflow</a>, que j’ai pratiqué sur un autre projet, demanderait un serveur à maintenir pour un seul flux hebdomadaire</td>
 </tr>
 <tr class="even">
-<td>Stockage des logs</td>
-<td>JSONL fichier</td>
-<td>Base de données</td>
-<td><strong>Simplicité</strong> (<a class="g-lien" href="glossaire.html#poc" title="Définition dans le glossaire">POC</a>) vs <a class="g-lien" href="glossaire.html#scalabilite" title="Définition dans le glossaire">scalabilité</a></td>
+<td>Registre et stockage des données</td>
+<td>MLflow auto-hébergé + S3 · <a class="g-lien" href="glossaire.html#cloud-manage" title="Définition dans le glossaire">cloud</a> managé · DagsHub</td>
+<td>DagsHub</td>
+<td>MLflow (Registry compris) et stockage DVC hébergés gratuitement au même endroit, consultables par un lien</td>
 </tr>
 <tr class="odd">
-<td>Hébergement</td>
-<td>HF Spaces (gratuit)</td>
-<td><a class="g-lien" href="glossaire.html#cloud-manage" title="Définition dans le glossaire">Cloud</a> managé (AWS/GCP)</td>
-<td><strong>Coût nul</strong> vs SLA/robustesse</td>
+<td>Déclencheur</td>
+<td>Calendrier fixe · dérive des données seule · dérive ou coût métier</td>
+<td>Les deux</td>
+<td>La dérive de concept est invisible pour un test de dérive des données (démontré au mois 4)</td>
 </tr>
 <tr class="even">
-<td>Détection de drift</td>
-<td>Evidently</td>
-<td>Great Expectations / Alibi Detect</td>
-<td><strong>Rapidité de mise en œuvre</strong></td>
+<td>Mise en production</td>
+<td>Automatique · Pull Request validée par un humain · déploiement fantôme</td>
+<td>Pull Request</td>
+<td>Secteur régulé : supervision humaine ; s’appuie sur le CI/CD existant</td>
+</tr>
+<tr class="odd">
+<td>Entraînement du challenger</td>
+<td>Recherche d’<a class="g-lien" href="glossaire.html#hyperparametres" title="Définition dans le glossaire">hyperparamètres</a> · pondération des données récentes · hyperparamètres du champion</td>
+<td>Hyperparamètres du champion</td>
+<td>Une seule chose change (les données) ; quelques minutes en CI. J’ai testé puis écarté la pondération (section 4.2)</td>
+</tr>
+<tr class="even">
+<td>Évaluation</td>
+<td>Test figé seul · données récentes + garde-fou</td>
+<td>Données récentes + garde-fou</td>
+<td>Juger sur le présent sans casser le passé</td>
+</tr>
+<tr class="odd">
+<td>Versionnage</td>
+<td>Tout dans DVC · données dans DVC, modèles dans le Registry</td>
+<td>Mixte</td>
+<td>Le modèle pèse 732 Ko : en git, la PR montre directement ce qui change, et la CI n’a pas besoin d’identifiants</td>
 </tr>
 </tbody>
 </table></div>
-<p>Documenter ces arbitrages permet au décideur de <strong>comprendre
-les limites</strong> de la solution et les conditions d'un passage à
-l'échelle.</p>
+<h3 id="architecture-cible">3.2 Architecture cible</h3>
+<figure class="fig">
+<svg viewBox="0 0 760 480" role="img" aria-label="Architecture de la V2. Chaque lundi, GitHub Actions surveille le dernier lot ; en cas d'alerte, il ouvre une issue et réentraîne un challenger, enregistré dans le Model Registry. Si la règle de promotion est remplie, une Pull Request est ouverte ; après fusion par un humain, le CI/CD déploie le modèle et lui donne l'alias champion." xmlns="http://www.w3.org/2000/svg">
+  <title>Architecture cible de la V2</title>
+  <desc>Surveillance hebdomadaire, alerte, réentraînement, Registry, Pull Request validée par un humain, déploiement et alias champion.</desc>
+  <defs>
+    <marker id="ar-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="ar-head-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-head-acc" d="M0,0 L10,5 L0,10 z"/></marker>
+  </defs>
+
+  <!-- Colonne de gauche : données et service -->
+  <rect class="f-box" x="20" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="57" text-anchor="middle">Lots mensuels</text>
+  <text class="f-s" x="120" y="78" text-anchor="middle">DVC · stockage DagsHub</text>
+
+  <rect class="f-box" x="20" y="250" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="277" text-anchor="middle">Client</text>
+  <text class="f-s" x="120" y="298" text-anchor="middle">chargé d'études, portfolio</text>
+
+  <rect class="f-box" x="20" y="390" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="417" text-anchor="middle">Hugging Face Space</text>
+  <text class="f-s" x="120" y="438" text-anchor="middle">FastAPI · seuil et version lus</text>
+
+  <!-- Colonne centrale : la boucle -->
+  <rect class="f-box-acc" x="280" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="57" text-anchor="middle">Surveillance</text>
+  <text class="f-s" x="380" y="78" text-anchor="middle">monitoring.yml · chaque lundi</text>
+
+  <rect class="f-box" x="280" y="140" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="167" text-anchor="middle">Réentraînement</text>
+  <text class="f-s" x="380" y="188" text-anchor="middle">challenger contre champion</text>
+
+  <rect class="f-box" x="280" y="250" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="277" text-anchor="middle">Pull Request</text>
+  <text class="f-s" x="380" y="298" text-anchor="middle">model.pkl · model_meta.json</text>
+
+  <rect class="f-box" x="280" y="390" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="417" text-anchor="middle">CI/CD</text>
+  <text class="f-s" x="380" y="438" text-anchor="middle">test → build → deploy</text>
+
+  <!-- Colonne de droite : traces -->
+  <rect class="f-box" x="540" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="640" y="57" text-anchor="middle">Issue d'alerte</text>
+  <text class="f-s" x="640" y="78" text-anchor="middle">chiffres + rapport Evidently</text>
+
+  <rect class="f-box" x="540" y="140" width="200" height="64" rx="8"/>
+  <text class="f-t" x="640" y="167" text-anchor="middle">MLflow Model Registry</text>
+  <text class="f-s" x="640" y="188" text-anchor="middle">DagsHub · versions, alias</text>
+
+  <!-- Flèches -->
+  <path class="f-arrow" d="M220,62 H276" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="250" y="52" text-anchor="middle">dvc pull</text>
+
+  <path class="f-arrow" d="M480,62 H536" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="510" y="52" text-anchor="middle">alerte</text>
+
+  <path class="f-arrow" d="M380,94 V136" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="390" y="120">si dérive ou coût en hausse</text>
+
+  <path class="f-arrow" d="M480,172 H536" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="510" y="162" text-anchor="middle">version</text>
+
+  <path class="f-arrow" d="M380,204 V246" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="390" y="230">si la règle est remplie</text>
+
+  <path class="f-arrow-acc" d="M380,314 V386" marker-end="url(#ar-head-acc)"/>
+  <text class="f-a" x="390" y="355">fusion par un humain</text>
+
+  <path class="f-arrow" d="M280,422 H224" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="250" y="412" text-anchor="middle">déploie</text>
+
+  <path class="f-arrow" d="M480,422 H640 V208" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="650" y="330">alias « champion »</text>
+
+  <path class="f-arrow" d="M120,314 V386" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="130" y="355">POST /predict</text>
+</svg>
+<figcaption>Architecture de la V2 : la surveillance déclenche l'alerte et le réentraînement ; la mise en production passe par une Pull Request validée par un humain.</figcaption>
+</figure>
+<p>La surveillance et le réentraînement tournent dans GitHub Actions, sur des données récupérées depuis DagsHub. Le workflow enregistre le modèle candidat dans le Model Registry. S’il est promu, le workflow ouvre une Pull Request qui modifie deux fichiers : <code>model/model.pkl</code> et <code>model/model_meta.json</code>. Après fusion par un humain, le CI/CD existant teste, construit l’image, la déploie sur Hugging Face et donne au modèle l’alias <code>champion</code>.</p>
+<p><strong>Sécurité de la chaîne.</strong> Les identifiants DagsHub sont des secrets GitHub, jamais dans le code. Le workflow ne demande que les droits dont il a besoin (contenu, issues, PR), et les entrées manuelles passent par des variables d’environnement pour éviter toute injection de commande. L’API garde les protections de la V1.</p>
+<h3 id="le-seuil-voyage-avec-le-modèle">3.3 Le seuil voyage avec le modèle</h3>
+<p>Le seuil de décision minimise le coût métier sur des prédictions <em><a class="g-lien" href="glossaire.html#oof" title="Définition dans le glossaire">out-of-fold</a></em> : chaque demande y est notée par un modèle qui ne l’a pas vue. Un modèle réentraîné a donc son propre seuil : 0,50 pour le champion v1, 0,48 pour la v4. La V1 écrivait 0,47 en dur dans l’API ; la V2 range le seuil et la version dans <code>model_meta.json</code>, écrit en même temps que le modèle, et l’API les lit au démarrage. <code>GET /health</code> renvoie la version servie.</p>
+<h3 id="identification-et-priorisation-des-cas-dusage">3.4 Identification et priorisation des cas d’usage</h3>
+<p>J’ai classé les cas d’usage selon deux axes : leur valeur pour la direction des risques et l’effort de mise en œuvre.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Cas d’usage</th>
+<th>Valeur</th>
+<th>Effort</th>
+<th>Priorité</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Détecter une dérive des données sur les variables qui comptent</td>
+<td>Forte</td>
+<td>Faible</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Détecter une hausse du coût métier (dérive de concept)</td>
+<td>Forte</td>
+<td>Faible</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Alerter là où l’équipe travaille déjà (issue GitHub)</td>
+<td>Moyenne</td>
+<td>Faible</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>Réentraîner et comparer champion / challenger</td>
+<td>Forte</td>
+<td>Moyen</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>Proposer la promotion, déployer après validation</td>
+<td>Forte</td>
+<td>Moyen</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Réentraînement continu sans validation humaine</td>
+<td>Faible (risque réglementaire)</td>
+<td>Faible</td>
+<td>Écarté</td>
+</tr>
+</tbody>
+</table></div>
+<p>La surveillance porte sur les 20 variables les plus importantes du champion, plutôt que sur les 255 : une dérive sur une variable que le modèle n’utilise presque pas ne justifie pas une alerte.</p>
 <hr />
-<h2
-id="axe-5--contrôle-et-analyse-du-projet-délais-coûts-livrables-performance">Axe
-5 - Contrôle et analyse du projet (délais, coûts, livrables,
-performance)</h2>
-<h3 id="51-livrables-produits-et-contrôle">5.1 Livrables produits et
-contrôle</h3>
+<h2 id="stratégie-de-mise-en-œuvre-et-dindustrialisation">4. Stratégie de mise en œuvre et d’industrialisation</h2>
+<h3 id="démarche-projet">4.1 Démarche projet</h3>
+<p><strong>Données de la simulation.</strong> Le jeu Home Credit n’a pas de dates. J’ai découpé les 307 511 demandes une fois pour toutes, de façon stratifiée (même taux de défaut partout) et avec une graine fixe :</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>Demandes</th>
+<th>Rôle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a class="g-lien" href="glossaire.html#baseline" title="Définition dans le glossaire">Référence</a> (60 %)</td>
+<td>184 506</td>
+<td>Entraîne le champion v1</td>
+</tr>
+<tr class="even">
+<td>Quatre lots mensuels (20 %)</td>
+<td>4 × ≈ 15 375</td>
+<td>Les « nouvelles données »</td>
+</tr>
+<tr class="odd">
+<td>Test figé (20 %)</td>
+<td>61 503</td>
+<td>Jamais appris ; sert de garde-fou</td>
+</tr>
+</tbody>
+</table></div>
+<p>J’ai injecté deux dérives, dont les paramètres sont écrits dans la configuration :</p>
+<ul>
+<li>Mois 3, dérive des données : une campagne attire une clientèle plus jeune. Tous les moins de 40 ans sont gardés, seulement 25 % des autres ; les montants sont multipliés par 1,3. Chaque ligne reste une vraie demande.</li>
+<li>Mois 4, dérive de concept : un choc économique fait défaillir 15 % des bons payeurs parmi les salariés aux revenus modestes. Les variables ne bougent pas : seule la relation entre elles et le défaut change.</li>
+</ul>
+<p><strong>Feuille de route.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Étape</th>
+<th>Contenu</th>
+<th>Jalon prévu</th>
+<th>Livrable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1. Fondations</td>
+<td>Cadrage ; DagsHub, DVC ; <a class="g-lien" href="glossaire.html#chunking" title="Définition dans le glossaire">découpage</a> ; champion v1 réentraîné sur la référence</td>
+<td>08/10</td>
+<td>Données versionnées, v1 dans le Registry</td>
+</tr>
+<tr class="even">
+<td>2. Surveillance</td>
+<td>Simulation des lots ; dérive Evidently et coût métier</td>
+<td>09/10</td>
+<td>Rapport de surveillance par mois</td>
+</tr>
+<tr class="odd">
+<td>3. Réentraînement</td>
+<td>Challenger, règle de promotion, enregistrement</td>
+<td>10/10</td>
+<td>Décision chiffrée de promotion</td>
+</tr>
+<tr class="even">
+<td>4. Automatisation</td>
+<td>Workflow hebdomadaire, alerte, PR, alias après déploiement ; seuil lu par l’API</td>
+<td>12/10</td>
+<td><code>monitoring.yml</code>, CI/CD étendu</td>
+</tr>
+<tr class="odd">
+<td>5. Démonstration</td>
+<td>Mois 1 à 4 en conditions réelles, preuves, documentation</td>
+<td>13/10</td>
+<td>Exécutions, PR de promotion, README</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Responsabilités.</strong> J’ai porté la conception, le développement et l’exploitation. Pour la démonstration, j’ai aussi tenu le rôle du responsable des risques, qui relit et fusionne la Pull Request de promotion.</p>
+<p><strong>Outils par phase.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Phase</th>
+<th>Outils</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Développement et tests</td>
+<td><a class="g-lien" href="glossaire.html#python" title="Définition dans le glossaire">Python 3</a>.12, uv, pytest, Ruff, <a class="g-lien" href="glossaire.html#linter" title="Définition dans le glossaire">pre-commit</a></td>
+</tr>
+<tr class="even">
+<td>Données et modèles</td>
+<td>DVC, MLflow Model Registry (DagsHub), LightGBM, scikit-learn</td>
+</tr>
+<tr class="odd">
+<td>Surveillance</td>
+<td>Evidently 0.4.33, coût métier <code>10 × FN + 1 × FP</code></td>
+</tr>
+<tr class="even">
+<td>Intégration et déploiement</td>
+<td>GitHub Actions, Docker, Hugging Face Spaces</td>
+</tr>
+<tr class="odd">
+<td>Pilotage</td>
+<td>GitHub Projects (Kanban), issues, Pull Requests</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="aide-à-la-prise-de-décision">4.2 Aide à la prise de décision</h3>
+<p><strong>La règle de promotion, telle qu’elle est présentée au décideur.</strong> Le challenger apprend sur la référence, les mois déjà reçus et 70 % du mois courant. Les 30 % restants servent à le comparer au champion, aucun des deux ne les ayant vus. Il est promu si :</p>
+<ol type="1">
+<li>son coût métier sur ces données récentes est inférieur d’au moins 1 % à celui du champion ;</li>
+<li>il ne dégrade pas le test figé de plus de 2 % (on ne casse pas le passé).</li>
+</ol>
+<p><strong>Ce que la règle a décidé.</strong></p>
+<figure class="fig">
+<svg viewBox="0 0 760 300" role="img" aria-label="Champion contre challenger. Mois 3 : 0,557 contre 0,562, non promu. Mois 4 : 0,742 contre 0,682, promu." xmlns="http://www.w3.org/2000/svg">
+  <title>Champion contre challenger</title>
+  <desc>Mois 3 : 0,557 contre 0,562, non promu. Mois 4 : 0,742 contre 0,682, promu.</desc>
+  <text class="c-title" x="20" y="24">Coût métier par demande sur des données jamais vues</text>
+  <rect class="c-1" x="430" y="13" width="12" height="12" rx="2"/><text class="c-tick" x="448" y="23">Champion (en service)</text>
+  <rect class="c-2" x="600" y="13" width="12" height="12" rx="2"/><text class="c-tick" x="618" y="23">Challenger (réentraîné)</text>
+  <line class="c-axis" x1="70" x2="740" y1="250.0" y2="250.0"/>
+  <text class="c-tick" x="62" y="254.0" text-anchor="end">0,0</text>
+  <line class="c-grid" x1="70" x2="740" y1="202.5" y2="202.5"/>
+  <text class="c-tick" x="62" y="206.5" text-anchor="end">0,2</text>
+  <line class="c-grid" x1="70" x2="740" y1="155.0" y2="155.0"/>
+  <text class="c-tick" x="62" y="159.0" text-anchor="end">0,4</text>
+  <line class="c-grid" x1="70" x2="740" y1="107.5" y2="107.5"/>
+  <text class="c-tick" x="62" y="111.5" text-anchor="end">0,6</text>
+  <line class="c-grid" x1="70" x2="740" y1="60.0" y2="60.0"/>
+  <text class="c-tick" x="62" y="64.0" text-anchor="end">0,8</text>
+  <path class="c-1" d="M146.5,250.0 V121.7 Q146.5,117.7 150.5,117.7 H232.5 Q236.5,117.7 236.5,121.7 V250.0 Z"><title>Mois 3, Champion : 0,557</title></path>
+  <text class="c-lab" x="191.5" y="109.7" text-anchor="middle">0,557</text>
+  <path class="c-2" d="M238.5,250.0 V120.6 Q238.5,116.6 242.5,116.6 H324.5 Q328.5,116.6 328.5,120.6 V250.0 Z"><title>Mois 3, Challenger : 0,562</title></path>
+  <text class="c-lab" x="283.5" y="108.6" text-anchor="middle">0,562</text>
+  <text class="c-tick" x="237.5" y="270" text-anchor="middle">Mois 3</text>
+  <text class="c-lab" x="237.5" y="290" text-anchor="middle">+0,8 % · non promu</text>
+  <path class="c-1" d="M481.5,250.0 V77.8 Q481.5,73.8 485.5,73.8 H567.5 Q571.5,73.8 571.5,77.8 V250.0 Z"><title>Mois 4, Champion : 0,742</title></path>
+  <text class="c-lab" x="526.5" y="65.8" text-anchor="middle">0,742</text>
+  <path class="c-2" d="M573.5,250.0 V92.1 Q573.5,88.1 577.5,88.1 H659.5 Q663.5,88.1 663.5,92.1 V250.0 Z"><title>Mois 4, Challenger : 0,682</title></path>
+  <text class="c-lab" x="618.5" y="80.1" text-anchor="middle">0,682</text>
+  <text class="c-tick" x="572.5" y="270" text-anchor="middle">Mois 4</text>
+  <text class="c-lab" x="572.5" y="290" text-anchor="middle">−8,1 % · promu</text>
+</svg>
+<figcaption>Coût métier par demande sur les 30 % du mois jamais vus par les deux modèles. Plus bas est meilleur.</figcaption>
+</figure>
 <div class="tablewrap"><table>
 <thead>
 <tr class="header">
-<th>#</th>
+<th>Mois</th>
+<th>Champion</th>
+<th>Challenger</th>
+<th>Écart</th>
+<th>Test figé</th>
+<th>Décision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3</td>
+<td>0,557</td>
+<td>0,562</td>
+<td>+0,8 %</td>
+<td>+0,3 %</td>
+<td>Non promu : le champion reste</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0,742</td>
+<td>0,682</td>
+<td>−8,1 %</td>
+<td>−1,0 %</td>
+<td>Promu après validation (v4)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le mois 3 montre une chose à savoir expliquer à une direction : une population plus risquée ne rend pas le modèle faux. Le coût monte parce que les clients sont plus risqués ; le modèle, lui, ne se trompe pas davantage sur eux. Réentraîner n’y change rien, et la règle évite une mise en production inutile.</p>
+<p><strong><a class="g-lien" href="glossaire.html#arbitrage" title="Définition dans le glossaire">Arbitrages</a> présentés avec leurs preuves.</strong></p>
+<ul>
+<li><em>Faut-il pondérer les données récentes ?</em> J’ai testé un poids de 5 puis de 10 sur le mois courant. Les résultats n’étaient pas réguliers (×5 moins bon que ×1, ×10 meilleur), signe que le hasard pesait autant que la pondération. Avec le choc du mois 4, la pondération ×10 dégradait le test figé de 2,7 % et violait le garde-fou. Je l’ai écartée.</li>
+<li><em>Le gain du mois 4 est-il réel ?</em> Un intervalle de confiance à 90 % calculé par rééchantillonnage donne un écart compris entre −11,6 % et −4,2 % : même la borne la moins favorable est un gain.</li>
+</ul>
+<p><strong>Risques et opportunités.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Risque</th>
+<th>Probabilité</th>
+<th>Impact</th>
+<th>Atténuation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Promotion d’un modèle meilleur par hasard</td>
+<td>Moyenne</td>
+<td>Fort</td>
+<td>Garde-fou du test figé ; validation humaine ; marge à relever avec plus de données</td>
+</tr>
+<tr class="even">
+<td>Alertes à répétition sans cause réelle</td>
+<td>Moyenne</td>
+<td>Moyen</td>
+<td>Seuils mesurés contre le bruit naturel (au plus +3,7 % entre lots sans dérive) ; référence de coût propre au modèle servi</td>
+</tr>
+<tr class="odd">
+<td>Données de défaut connues tardivement</td>
+<td>Forte (réalité métier)</td>
+<td>Fort</td>
+<td>La dérive des données alerte tôt ; le coût confirme quand les défauts sont connus</td>
+</tr>
+<tr class="even">
+<td>Panne d’un service gratuit</td>
+<td>Faible</td>
+<td>Moyen</td>
+<td>Données et modèles reconstructibles depuis git, DVC et le Registry</td>
+</tr>
+<tr class="odd">
+<td>Biais de décision</td>
+<td>Moyenne</td>
+<td>Fort</td>
+<td>Voir les impacts ci-dessous</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Opportunité</th>
+<th>Gain</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Même boucle pour d’autres modèles</td>
+<td>Les modules de surveillance et de promotion ne dépendent pas du scoring</td>
+</tr>
+<tr class="even">
+<td>Historique de décisions</td>
+<td>Chaque promotion laisse une trace (PR, version, métriques) réutilisable en audit</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Scénarios budgétaires.</strong> Hypothèse : taux journalier de 450 € HT.</p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scénario</th>
+<th>Mise en œuvre</th>
+<th>Infrastructure mensuelle</th>
+<th>Pour qui</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A. POC (réalisé)</td>
+<td>5,75 jours estimés, soit <strong>2 588 €</strong></td>
+<td><strong>0 €</strong> : GitHub Actions gratuit en dépôt public, DagsHub et Hugging Face gratuits</td>
+<td>Démonstration, validation du concept</td>
+</tr>
+<tr class="even">
+<td>B. Production légère</td>
+<td>A + 5 jours de <a class="g-lien" href="glossaire.html#durcissement" title="Définition dans le glossaire">durcissement</a> (journal persistant, validation des entrées, verrouillage des dépendances, audit d’<a class="g-lien" href="glossaire.html#biais-algorithmique" title="Définition dans le glossaire">équité</a>), soit <strong>4 838 €</strong></td>
+<td>≈ <strong>22 $</strong> pour un Space toujours actif (palier CPU Upgrade, 0,03 $/h), + <strong>99 à 119 $ par utilisateur</strong> si le registre doit être privé (DagsHub Team)</td>
+<td>Une équipe qui veut la même chaîne, en privé</td>
+</tr>
+<tr class="odd">
+<td>C. Cloud managé</td>
+<td>B + 10 à 15 jours de migration (SageMaker, Vertex AI ou Azure ML), soit environ <strong>9 300 à 11 600 €</strong></td>
+<td>À chiffrer sur devis : dépend de l’instance et du volume</td>
+<td>Une banque avec <a class="g-lien" href="glossaire.html#sla" title="Définition dans le glossaire">SLA</a>, volumes élevés, exigences d’audit</td>
+</tr>
+</tbody>
+</table></div>
+<p>Le budget d’exécution du POC est négligeable : une surveillance sans alerte dure 1 à 2 minutes, un mois avec réentraînement environ 4 minutes de machine.</p>
+<p><strong><a class="g-lien" href="glossaire.html#kpi" title="Définition dans le glossaire">Indicateurs</a> de succès.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Indicateur</th>
+<th>Cible</th>
+<th>Mesuré</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Métier</td>
+<td>Coût métier par demande après correction</td>
+<td>Baisse significative quand le modèle dérive</td>
+<td>−8,1 % au mois 4</td>
+</tr>
+<tr class="even">
+<td>Métier</td>
+<td>Délai de détection d’une dégradation</td>
+<td>≤ 1 semaine</td>
+<td>Hebdomadaire (planifié)</td>
+</tr>
+<tr class="odd">
+<td>Métier</td>
+<td>Promotions inutiles évitées</td>
+<td>0 promotion sans gain</td>
+<td>Mois 3 refusé</td>
+</tr>
+<tr class="even">
+<td>Technique</td>
+<td>Fausses alertes sur des lots sans dérive</td>
+<td>0</td>
+<td>0 sur les mois 1 et 2</td>
+</tr>
+<tr class="odd">
+<td>Technique</td>
+<td>Durée d’un cycle complet</td>
+<td>&lt; 10 min</td>
+<td>4 min 12 s (mois 4)</td>
+</tr>
+<tr class="even">
+<td>Technique</td>
+<td><a class="g-lien" href="glossaire.html#reproductibilite" title="Définition dans le glossaire">Reproductibilité</a></td>
+<td>Mêmes chiffres en local et en CI</td>
+<td>Identiques au dix-millième</td>
+</tr>
+<tr class="odd">
+<td>Qualité</td>
+<td>Tests</td>
+<td>Tous verts</td>
+<td>47 tests, API couverte à 96 %</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Impacts et leviers d’atténuation.</strong></p>
+<ul>
+<li>Biais et non-discrimination : parmi les 20 variables les plus importantes figure <code>CODE_GENDER</code>. L’utiliser dans une décision de crédit pose un problème de non-discrimination. <em>Recommandation</em> : retirer la variable et mesurer l’effet sur le coût, puis auditer l’équité des décisions par sous-groupe avant toute mise en production réelle.</li>
+<li>Réglementation : la supervision humaine (PR), la traçabilité (Registry, issues, exécutions) et la documentation (README, cadrage, ce rapport) répondent aux exigences des systèmes à haut risque. Il manque une revue de conformité formelle.</li>
+<li>RGPD : les données sont anonymisées à la source. Le journal ne contient qu’un identifiant de demande, une probabilité et une décision.</li>
+<li>Organisation : un modèle ne part plus en production sans qu’un responsable l’ait vu. Cela demande une astreinte de relecture, légère : une PR par promotion.</li>
+<li>Sécurité : les secrets restent hors du code, le workflow a des droits minimaux, l’API garde ses protections.</li>
+<li><a class="g-lien" href="glossaire.html#latence" title="Définition dans le glossaire">Latence</a> : inchangée, car l’API charge le modèle une fois au démarrage. Après une promotion, le nouveau modèle répond moins d’une minute après la fin du déploiement.</li>
+</ul>
+<hr />
+<h2 id="contrôle-et-suivi-du-projet">5. Contrôle et suivi du projet</h2>
+<h3 id="tableau-de-bord-de-pilotage">5.1 Tableau de bord de pilotage</h3>
+<p><strong>Méthode.</strong> Kanban sur GitHub Projects (<a href="https://github.com/users/clementRbl/projects/5">tableau public</a>, capture en annexe C), une issue par tâche, avec une estimation en jours, une date de fin prévue et une date de fin réelle. Chaque évolution passe par une Pull Request et une CI bloquante. Avant le code, un document de cadrage fixe les critères d’acceptation, et chacun est vérifiable par un test ou une commande.</p>
+<p><strong>Délais.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tâche</th>
+<th>Estimation (j)</th>
+<th>Fin prévue</th>
+<th>Fin réelle</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cadrer la V2</td>
+<td>0,5</td>
+<td>08/10</td>
+<td>08/10</td>
+</tr>
+<tr class="even">
+<td>Brancher DagsHub (DVC, Registry)</td>
+<td>0,5</td>
+<td>08/10</td>
+<td>08/10</td>
+</tr>
+<tr class="odd">
+<td>Découper les données, réentraîner le champion v1</td>
+<td>0,5</td>
+<td>08/10</td>
+<td>08/10</td>
+</tr>
+<tr class="even">
+<td>Servir le seuil et la version depuis les métadonnées</td>
+<td>0,25</td>
+<td>12/10</td>
+<td>08/10</td>
+</tr>
+<tr class="odd">
+<td>Simuler les lots et leurs dérives</td>
+<td>0,5</td>
+<td>09/10</td>
+<td>08/10</td>
+</tr>
+<tr class="even">
+<td>Surveiller chaque lot</td>
+<td>0,5</td>
+<td>09/10</td>
+<td>08/10</td>
+</tr>
+<tr class="odd">
+<td>Réentraîner et appliquer la règle de promotion</td>
+<td>1</td>
+<td>10/10</td>
+<td>09/10</td>
+</tr>
+<tr class="even">
+<td>Automatiser (workflow, alerte, PR, alias)</td>
+<td>1</td>
+<td>12/10</td>
+<td>09/10</td>
+</tr>
+<tr class="odd">
+<td>Démontrer la boucle de bout en bout</td>
+<td>0,5</td>
+<td>13/10</td>
+<td>09/10</td>
+</tr>
+<tr class="even">
+<td>Documenter la V2</td>
+<td>0,5</td>
+<td>13/10</td>
+<td>08/10</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td><strong>5,75</strong></td>
+<td><strong>13/10</strong></td>
+<td><strong>09/10</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Analyse de l’écart.</strong> La partie technique s’est terminée quatre jours avant la date prévue. Deux raisons : la réutilisation du code d’entraînement et de l’API de la V1, et un cadrage qui avait tranché toutes les décisions avant la première ligne de code. L’avance a absorbé trois incidents (tableau ci-dessous) sans décaler le planning.</p>
+<p><strong>Coûts.</strong> 0 € d’infrastructure dépensés. L’effort est suivi en jours estimés, pas en heures pointées.</p>
+<p><strong><a class="g-lien" href="glossaire.html#livrable" title="Définition dans le glossaire">Livrables</a>.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
 <th>Livrable</th>
-<th>Support</th>
-<th>Statut</th>
+<th>Où</th>
+<th>État</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Données versionnées</td>
+<td><code>data/*.dvc</code>, stockage DagsHub</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td><a class="g-lien" href="glossaire.html#pipeline-sklearn" title="Définition dans le glossaire">Pipeline</a> (découpage, simulation, surveillance, réentraînement)</td>
+<td><code>pipeline/</code></td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>API avec seuil et version lus dans le modèle</td>
+<td><code>app.py</code>, <code>model/model_meta.json</code></td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Workflow hebdomadaire</td>
+<td><code>.github/workflows/monitoring.yml</code></td>
+<td>✅</td>
+</tr>
+<tr class="odd">
+<td>Démonstration réelle des mois 1 à 4</td>
+<td>Exécutions GitHub, issues n°15 et 16, PR n°18</td>
+<td>✅</td>
+</tr>
+<tr class="even">
+<td>Documentation</td>
+<td>README, cadrage avec section de vérification</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Qualité des données.</strong> Chaque part garde le taux de défaut d’origine (8,07 %). Aucun identifiant n’est commun à deux parts (testé). Deux exécutions du découpage produisent des fichiers identiques octet pour octet. La validation du schéma des lots entrants reste une limite (section 6).</p>
+<p><strong>Performances.</strong></p>
+<figure class="fig">
+<svg viewBox="0 0 760 290" role="img" aria-label="Surveillance des mois 1 à 4. Mois 3 : 35 % des variables dérivent (alerte). Mois 4 : aucune dérive des données, mais un coût métier en hausse de 45,9 % (alerte)." xmlns="http://www.w3.org/2000/svg">
+  <title>Surveillance des mois 1 à 4</title>
+  <desc>Mois 3 : 35 % des variables dérivent (alerte). Mois 4 : aucune dérive des données, mais un coût métier en hausse de 45,9 % (alerte).</desc>
+  <text class="c-title" x="20" y="24">Variables surveillées qui dérivent</text>
+  <line class="c-axis" x1="54" x2="320" y1="250.0" y2="250.0"/>
+  <text class="c-tick" x="48" y="254.0" text-anchor="end">0 %</text>
+  <line class="c-grid" x1="54" x2="320" y1="200.0" y2="200.0"/>
+  <text class="c-tick" x="48" y="204.0" text-anchor="end">10 %</text>
+  <line class="c-grid" x1="54" x2="320" y1="150.0" y2="150.0"/>
+  <text class="c-tick" x="48" y="154.0" text-anchor="end">20 %</text>
+  <line class="c-grid" x1="54" x2="320" y1="100.0" y2="100.0"/>
+  <text class="c-tick" x="48" y="104.0" text-anchor="end">30 %</text>
+  <line class="c-grid" x1="54" x2="320" y1="50.0" y2="50.0"/>
+  <text class="c-tick" x="48" y="54.0" text-anchor="end">40 %</text>
+  <line class="c-thr" x1="54" x2="320" y1="100.0" y2="100.0"/>
+  <text class="c-tick" x="60" y="94.0">seuil d'alerte 30 %</text>
+  <text class="c-lab" x="87.19999999999999" y="242.0" text-anchor="middle">0 %</text>
+  <text class="c-tick" x="87.19999999999999" y="270" text-anchor="middle">Mois 1</text>
+  <text class="c-lab" x="153.7" y="242.0" text-anchor="middle">0 %</text>
+  <text class="c-tick" x="153.7" y="270" text-anchor="middle">Mois 2</text>
+  <path class="c-2" d="M203.6,250.0 V79.0 Q203.6,75.0 207.6,75.0 H232.8 Q236.8,75.0 236.8,79.0 V250.0 Z"><title>Mois 3 : 35 %</title></path>
+  <text class="c-lab" x="220.2" y="67.0" text-anchor="middle">35 % ▲</text>
+  <text class="c-tick" x="220.2" y="270" text-anchor="middle">Mois 3</text>
+  <text class="c-lab" x="286.70000000000005" y="242.0" text-anchor="middle">0 %</text>
+  <text class="c-tick" x="286.70000000000005" y="270" text-anchor="middle">Mois 4</text>
+  <text class="c-title" x="420" y="24">Variation du coût métier</text>
+  <line class="c-grid" x1="454" x2="720" y1="250.0" y2="250.0"/>
+  <text class="c-tick" x="448" y="254.0" text-anchor="end">−10 %</text>
+  <line class="c-axis" x1="454" x2="720" y1="216.7" y2="216.7"/>
+  <text class="c-tick" x="448" y="220.7" text-anchor="end">0 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="183.3" y2="183.3"/>
+  <text class="c-tick" x="448" y="187.3" text-anchor="end">+10 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="150.0" y2="150.0"/>
+  <text class="c-tick" x="448" y="154.0" text-anchor="end">+20 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="116.7" y2="116.7"/>
+  <text class="c-tick" x="448" y="120.7" text-anchor="end">+30 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="83.3" y2="83.3"/>
+  <text class="c-tick" x="448" y="87.3" text-anchor="end">+40 %</text>
+  <line class="c-grid" x1="454" x2="720" y1="50.0" y2="50.0"/>
+  <text class="c-tick" x="448" y="54.0" text-anchor="end">+50 %</text>
+  <line class="c-thr" x1="454" x2="720" y1="183.3" y2="183.3"/>
+  <text class="c-tick" x="460" y="177.3">seuil d'alerte +10 %</text>
+  <path class="c-2" d="M470.6,216.7 V214.3 Q470.6,210.3 474.6,210.3 H499.8 Q503.8,210.3 503.8,214.3 V216.7 Z"><title>Mois 1 : +1,9 %</title></path>
+  <text class="c-lab" x="487.20000000000005" y="202.3" text-anchor="middle">+1,9 %</text>
+  <text class="c-tick" x="487.20000000000005" y="270" text-anchor="middle">Mois 1</text>
+  <path class="c-2" d="M537.1,216.7 V216.7 Q537.1,218.3 538.7,218.3 H568.7 Q570.3000000000001,218.3 570.3000000000001,216.7 V216.7 Z"><title>Mois 2 : −0,5 %</title></path>
+  <text class="c-lab" x="553.7" y="208.7" text-anchor="middle">−0,5 %</text>
+  <text class="c-tick" x="553.7" y="270" text-anchor="middle">Mois 2</text>
+  <path class="c-2" d="M603.6,216.7 V179.0 Q603.6,175.0 607.6,175.0 H632.8000000000001 Q636.8000000000001,175.0 636.8000000000001,179.0 V216.7 Z"><title>Mois 3 : +12,5 %</title></path>
+  <text class="c-lab" x="620.2" y="167.0" text-anchor="middle">+12,5 % ▲</text>
+  <text class="c-tick" x="620.2" y="270" text-anchor="middle">Mois 3</text>
+  <path class="c-2" d="M670.1,216.7 V67.7 Q670.1,63.7 674.1,63.7 H699.3000000000001 Q703.3000000000001,63.7 703.3000000000001,67.7 V216.7 Z"><title>Mois 4 : +45,9 %</title></path>
+  <text class="c-lab" x="686.7" y="55.7" text-anchor="middle">+45,9 % ▲</text>
+  <text class="c-tick" x="686.7" y="270" text-anchor="middle">Mois 4</text>
+</svg>
+<figcaption>Les deux déclencheurs ne voient pas la même chose : au mois 4, aucune variable ne dérive, mais le coût métier bondit.</figcaption>
+</figure>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mois</th>
+<th>Ce qui change</th>
+<th>Variables qui dérivent</th>
+<th>Coût métier</th>
+<th>Résultat</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>1</td>
-<td>Historique de versions (commits, branches,
-<code>.gitignore</code>)</td>
-<td>GitHub (public)</td>
-<td>✅</td>
+<td>Rien</td>
+<td>0 %</td>
+<td>+1,9 %</td>
+<td>Aucune alerte</td>
 </tr>
 <tr class="even">
 <td>2</td>
-<td>Scripts API (routes documentées, gestion d'erreurs)</td>
-<td><code>app.py</code> (FastAPI)</td>
-<td>✅</td>
+<td>Rien</td>
+<td>0 %</td>
+<td>−0,5 %</td>
+<td>Aucune alerte</td>
 </tr>
 <tr class="odd">
 <td>3</td>
-<td>Dockerfile fonctionnel</td>
-<td><code>Dockerfile</code></td>
-<td>✅</td>
+<td>Clientèle plus jeune, montants × 1,3</td>
+<td><strong>35 %</strong></td>
+<td>+12,5 %</td>
+<td>Alerte ; challenger non promu</td>
 </tr>
 <tr class="even">
 <td>4</td>
-<td>Tests automatisés</td>
-<td><code>tests/test_api.py</code> - 14 tests, <strong>96 %</strong></td>
-<td>✅</td>
+<td>15 % des bons payeurs d’un segment font défaut</td>
+<td><strong>0 %</strong></td>
+<td><strong>+45,9 %</strong></td>
+<td>Alerte ; v4 promue</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Version</th>
+<th>Entraînée sur</th>
+<th>Seuil</th>
+<th>AUC (test figé)</th>
+<th>Statut</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>v1</td>
+<td>Référence (184 506 demandes)</td>
+<td>0,50</td>
+<td>0,778</td>
+<td>Champion jusqu’au 09/10</td>
+</tr>
+<tr class="even">
+<td>v2</td>
+<td>Référence + mois 1 à 3</td>
+<td>0,49</td>
+<td></td>
+<td>Challenger du mois 3, non promu</td>
+</tr>
+<tr class="odd">
+<td>v3</td>
+<td>Référence + mois 1 à 4</td>
+<td>0,48</td>
+<td></td>
+<td>Promue mais jamais livrée (incident n°2)</td>
+</tr>
+<tr class="even">
+<td>v4</td>
+<td>Référence + mois 1 à 4 (234 680)</td>
+<td>0,48</td>
+<td><strong>0,782</strong></td>
+<td><strong>Champion en production</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Incidents et écarts.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>N°</th>
+<th>Ce qui s’est passé</th>
+<th>Cause</th>
+<th>Correction</th>
+<th>Leçon</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Échec du premier lancement à la récupération des données</td>
+<td>Une résolution de dépendances partie de zéro a retenu une version de 2017 d’une bibliothèque réseau, incompatible avec Python 3.12. En local, l’environnement préexistant masquait le problème</td>
+<td>Version minimale imposée ; vérifié en rejouant la CI depuis un clone vierge</td>
+<td>Tester l’installation dans un environnement neuf ; verrouiller les versions</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Challenger promu, mais aucune PR ouverte, alors que l’exécution était « réussie »</td>
+<td>MLflow écrit aussi sur la sortie standard ; la lecture du résultat échouait sans erreur visible</td>
+<td>Résultat relu depuis son fichier ; une erreur de lecture arrête désormais l’étape</td>
+<td>Un pipeline doit échouer bruyamment, jamais sauter des étapes en silence</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Fausse alerte hebdomadaire anticipée après la promotion</td>
+<td>La référence de coût restait celle de l’ancien régime : après le choc, même un modèle adapté coûte plus</td>
+<td>La référence devient le coût auquel le modèle servi a été accepté</td>
+<td>Une alerte se juge par rapport au niveau d’acceptation du modèle</td>
+</tr>
+</tbody>
+</table></div>
+<p>J’ai aussi ajusté les paramètres de simulation après essai, et je l’ai documenté : au mois 3, la dérive tombait pile au seuil de 30 % ; au mois 4, un choc de 8 % produisait un gain du challenger noyé dans le bruit. J’ai porté le choc à 15 %. Le mois 3, qui se termine sans promotion, garde la démonstration honnête.</p>
+<h3 id="outils-et-processus-de-suivi">5.2 Outils et processus de suivi</h3>
+<p><strong>En production.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Outil</th>
+<th>Ce qu’il suit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rapport Evidently (joint à chaque exécution)</td>
+<td>Dérive de chacune des 20 variables surveillées</td>
+</tr>
+<tr class="even">
+<td>Coût métier par mois (<code>summary.json</code>)</td>
+<td>Performance au regard de l’enjeu réel</td>
+</tr>
+<tr class="odd">
+<td>Issues GitHub</td>
+<td>Alertes, avec chiffres et lien vers l’exécution</td>
+</tr>
+<tr class="even">
+<td>MLflow Model Registry</td>
+<td>Versions, métriques, seuil, alias <code>champion</code> / <code>challenger</code></td>
+</tr>
+<tr class="odd">
+<td><code>GET /health</code></td>
+<td>Version réellement servie</td>
+</tr>
+<tr class="even">
+<td>Journal JSONL de l’API</td>
+<td>Chaque prédiction : probabilité, décision, latence</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Méthodologie de test et d’évaluation.</strong></p>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Niveau</th>
+<th>Ce qui est testé</th>
+<th>Outil</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Unitaire</td>
+<td>Règles de décision à leurs bornes exactes : 30 % de dérive, +10 % de coût, −1 % et +2 % pour la promotion ; coût métier ; découpage</td>
+<td>pytest (32 tests)</td>
+</tr>
+<tr class="even">
+<td>API</td>
+<td>Réponses, erreurs 404 et 422, seuil appliqué, documentation</td>
+<td>pytest + TestClient (15 tests, 96 % de couverture)</td>
+</tr>
+<tr class="odd">
+<td>Intégration</td>
+<td>Boucle complète sur les vrais services</td>
+<td>Exécutions manuelles du workflow (bac à sable des lots simulés)</td>
+</tr>
+<tr class="even">
+<td>Reproductibilité</td>
+<td>Mêmes chiffres en local et en CI ; CI rejouée depuis un clone vierge</td>
+<td>Comparaison des sorties</td>
+</tr>
+<tr class="odd">
+<td>Code et workflows</td>
+<td>Style, erreurs de workflow</td>
+<td>Ruff, pre-commit, actionlint</td>
+</tr>
+</tbody>
+</table></div>
+<p>J’ai écrit les tests avant le code qu’ils vérifient. Ce qui n’est pas testé : la tenue en charge de l’API, peu utile à quelques requêtes par jour.</p>
+<hr />
+<h2 id="conclusion-et-recommandations">6. Conclusion et recommandations</h2>
+<h3 id="résumé-des-choix-clés">Résumé des choix clés</h3>
+<ol type="1">
+<li>Deux déclencheurs : la dérive des données voit une population qui change, le coût métier voit un modèle qui se trompe. Le mois 4 montre qu’il faut les deux.</li>
+<li>Une règle de promotion chiffrée et un humain qui valide : le mois 3 prouve que réentraîner n’est pas toujours utile, le mois 4 que la correction est réelle.</li>
+<li>Le seuil voyage avec le modèle : la décision métier suit chaque nouvelle version.</li>
+<li>Des données et des modèles versionnés : chaque modèle en production se relie à ses données, ses métriques et la PR qui l’a validé.</li>
+</ol>
+<h3 id="perspectives">Perspectives</h3>
+<ul>
+<li>Brancher de vrais retours de défaut, qui arrivent des mois après l’octroi, et journaliser durablement les prédictions.</li>
+<li>Valider le schéma des lots entrants avant tout entraînement.</li>
+<li>Intégrer l’intervalle de confiance à la règle de promotion, au lieu d’une marge fixe de 1 %.</li>
+<li>Mesurer la dérive par rapport aux données d’entraînement du modèle en service, pas seulement à la population d’origine.</li>
+<li>Étendre la même boucle aux systèmes à base de modèles de langage : évaluation en ligne, coût par requête.</li>
+</ul>
+<h3 id="prochaines-étapes-recommandées-par-priorité">Prochaines étapes recommandées, par priorité</h3>
+<div class="tablewrap"><table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Priorité</th>
+<th>Action</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Audit d’équité, retrait de <code>CODE_GENDER</code> et mesure de l’effet</td>
+<td>1 j</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Verrouillage complet des dépendances du pipeline</td>
+<td>0,5 j</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Journal de prédictions persistant</td>
+<td>1 à 2 j</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Validation du schéma des lots entrants</td>
+<td>1 j</td>
 </tr>
 <tr class="odd">
 <td>5</td>
-<td>Pipeline CI/CD (test → build → deploy)</td>
-<td><code>.github/workflows/ci-cd.yml</code></td>
-<td>✅</td>
-</tr>
-<tr class="even">
-<td>6</td>
-<td>Analyse de data drift</td>
-<td><code>notebooks/data_drift_analysis.ipynb</code> (Evidently)</td>
-<td>✅</td>
-</tr>
-<tr class="odd">
-<td>7</td>
-<td>Stockage production + captures</td>
-<td><code>logs/predictions.jsonl</code> + <code>screenshots/</code></td>
-<td>✅</td>
-</tr>
-<tr class="even">
-<td>8</td>
-<td>Documentation README (lancement, monitoring)</td>
-<td><code>README.md</code></td>
-<td>✅</td>
-</tr>
-<tr class="odd">
-<td>9</td>
-<td>Durcissement de l'exposition publique</td>
-<td>Limitation de débit, CORS restreint, en-têtes de sécurité, erreurs
-génériques</td>
-<td>✅</td>
-</tr>
-<tr class="even">
-<td>10</td>
-<td>Documentation d'API lisible sans connaître le projet</td>
-<td><code>/docs</code> : cadrage, étiquettes, exemples, codes d'erreur,
-endpoint <code>/clients</code></td>
-<td>✅</td>
+<td>Intervalle de confiance dans la règle de promotion</td>
+<td>1 j</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="52-performance-mesurée">5.2 Performance mesurée</h3>
-<p><strong>Performance modèle :</strong></p>
-<div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Indicateur</th>
-<th>Valeur</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>AUC-OOF (LightGBM)</td>
-<td>≈ 0,78</td>
-</tr>
-<tr class="even">
-<td>Coût métier minimisé</td>
-<td>≈ 153 000 (vs ≈ 169 000 baseline)</td>
-</tr>
-<tr class="odd">
-<td>Seuil de décision optimal</td>
-<td>0,47</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Performance système :</strong></p>
-<div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Indicateur</th>
-<th>Valeur</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Latence d'inférence</td>
-<td>≈ 6 ms</td>
-</tr>
-<tr class="even">
-<td>Couverture de tests</td>
-<td>96 % (14 tests)</td>
-</tr>
-<tr class="odd">
-<td>Jobs CI/CD</td>
-<td>3 (test / build / deploy)</td>
-</tr>
-<tr class="even">
-<td>Taux de refus observé (monitoring)</td>
-<td>≈ 30 % (cohérent avec le seuil)</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Monitoring / drift :</strong> sur les 20 variables les plus
-importantes, <strong>3 présentent un drift statistiquement
-significatif</strong> (<code>AMT_CREDIT</code> p=0,0009 ;
-<code>AMT_GOODS_PRICE</code> p=0,0019 ; <code>FLAG_EMAIL</code>
-p&lt;0,0001), mais <strong>pas de drift global</strong> du jeu de
-données (seuil Evidently à 50 %). Le drift sur les montants est attendu
-(périodes de collecte différentes) : <strong>le modèle reste
-pertinent</strong>, sans réentraînement immédiat requis.</p>
-<h3 id="53-analyse-des-coûts">5.3 Analyse des coûts</h3>
-<div class="tablewrap"><table>
-<thead>
-<tr class="header">
-<th>Poste</th>
-<th>Coût (POC)</th>
-<th>À prévoir en production réelle</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Hébergement API</td>
-<td><strong>0 €</strong> (HF Spaces gratuit)</td>
-<td>Instance managée avec SLA</td>
-</tr>
-<tr class="even">
-<td>CI/CD</td>
-<td><strong>0 €</strong> (GitHub Actions)</td>
-<td>Runners dédiés si volume</td>
-</tr>
-<tr class="odd">
-<td>Outillage</td>
-<td><strong>0 €</strong> (open-source : FastAPI, Docker, Evidently,
-Streamlit)</td>
-<td>Licences/observabilité (<a class="g-lien" href="glossaire.html#grafana" title="Définition dans le glossaire">Grafana</a>, WhyLabs…)</td>
-</tr>
-<tr class="even">
-<td>Stockage logs</td>
-<td><strong>0 €</strong> (fichier local)</td>
-<td>Base persistante (<a class="g-lien" href="glossaire.html#postgresql" title="Définition dans le glossaire">PostgreSQL</a>, S3)</td>
-</tr>
-</tbody>
-</table></div>
-<p>Le projet démontre qu'une <strong>mise en production complète et
-crédible</strong> est réalisable à <strong>coût d'infrastructure
-nul</strong> grâce à l'écosystème open-source - un argument fort en
-phase de POC.</p>
-<h3 id="54-gestion-de-projet-délais-et-qualité">5.4 Gestion de projet,
-délais et qualité</h3>
-<ul>
-<li><strong>Approche itérative</strong> et découpée en étapes (cf. cycle
-en deux phases), chaque étape produisant un livrable vérifiable.</li>
-<li><strong>Qualité par construction :</strong> commits réguliers,
-branches, linter Ruff, <strong>CI/CD bloquant</strong> (le déploiement
-échoue si un test échoue) → la qualité n'est pas un contrôle <em>a
-posteriori</em> mais un garde-fou automatisé.</li>
-<li><strong>Definition of Done respectée :</strong> les 8
-livrables attendus sont produits et validés. Deux s'y sont ajoutés après
-coup - le durcissement de l'exposition publique et une documentation d'API
-utilisable sans connaître le projet - parce qu'un service ouvert sur
-Internet et une page <code>/docs</code> illisible sont deux dettes qu'un
-livrable coché ne rattrape pas.</li>
-</ul>
 <hr />
-<h2 id="bilan-limites-et-perspectives">Bilan, limites et
-perspectives</h2>
-<h3 id="ce-qui-fonctionne">Ce qui fonctionne</h3>
-<ul>
-<li>Un modèle <strong>performant et explicable</strong>, aligné sur un
-<strong>coût métier</strong> réel.</li>
-<li>Une <strong>API fiable, testée (96 %), conteneurisée et
-déployée</strong> en continu.</li>
-<li>Un <strong>monitoring opérationnel</strong> : journalisation, drift,
-dashboard.</li>
-<li>Un coût d'infrastructure <strong>nul</strong>, une
-<strong>reproductibilité</strong> totale.</li>
-</ul>
-<h3 id="limites-assumées">Limites assumées</h3>
+<h2 id="annexes">7. Annexes</h2>
+<h3 id="a.-liens">A. Liens</h3>
 <div class="tablewrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th>Limite</th>
-<th>Impact</th>
-<th>Piste</th>
+<th>Ressource</th>
+<th>Lien</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Logs en <strong>fichier local</strong> au conteneur</td>
-<td>Non persistant, non scalable</td>
-<td>Base de données / <a class="g-lien" href="glossaire.html#stockage-objet" title="Définition dans le glossaire">stockage objet</a></td>
+<td>Dépôt du projet</td>
+<td><a href="https://github.com/clementRbl/credit-scoring-mlops" class="uri">https://github.com/clementRbl/credit-scoring-mlops</a></td>
 </tr>
 <tr class="even">
-<td>Pas de <strong>réentraînement automatisé</strong></td>
-<td>Drift potentiellement accumulé</td>
-<td>Pipeline planifié (<a class="g-lien" href="glossaire.html#airflow" title="Définition dans le glossaire">Airflow</a>)</td>
+<td>API en production</td>
+<td><a href="https://clementrbl-credit-scoring-api.hf.space/docs" class="uri">https://clementrbl-credit-scoring-api.hf.space/docs</a></td>
 </tr>
 <tr class="odd">
-<td>Pas de <strong>validation des données en entrée</strong></td>
-<td>Erreurs silencieuses possibles</td>
-<td>Contrat de données + validation</td>
+<td>Registre des modèles (MLflow sur DagsHub)</td>
+<td><a href="https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow" class="uri">https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow</a></td>
 </tr>
 <tr class="even">
-<td>Pas d'<strong>alerting</strong> automatique</td>
-<td>Détection manuelle du drift</td>
-<td>Grafana / seuils + notifications</td>
+<td>Pull Request de promotion (mois 4)</td>
+<td><a href="https://github.com/clementRbl/credit-scoring-mlops/pull/18" class="uri">https://github.com/clementRbl/credit-scoring-mlops/pull/18</a></td>
 </tr>
 <tr class="odd">
-<td>Dashboard <strong>local</strong> (non déployé)</td>
-<td>Monitoring non temps réel</td>
-<td>Observabilité managée</td>
+<td>Alertes des mois 3 et 4</td>
+<td><a href="https://github.com/clementRbl/credit-scoring-mlops/issues/15" class="uri">https://github.com/clementRbl/credit-scoring-mlops/issues/15</a> · <a href="https://github.com/clementRbl/credit-scoring-mlops/issues/16" class="uri">https://github.com/clementRbl/credit-scoring-mlops/issues/16</a></td>
+</tr>
+<tr class="even">
+<td>Exécution du mois 4</td>
+<td><a href="https://github.com/clementRbl/credit-scoring-mlops/actions/runs/37904674657" class="uri">https://github.com/clementRbl/credit-scoring-mlops/actions/runs/37904674657</a></td>
+</tr>
+<tr class="odd">
+<td>Cadrage et vérification</td>
+<td><a href="https://github.com/clementRbl/credit-scoring-mlops/blob/main/docs/features/2026-10-08-boucle-derive-reentrainement.md" class="uri">https://github.com/clementRbl/credit-scoring-mlops/blob/main/docs/features/2026-10-08-boucle-derive-reentrainement.md</a></td>
+</tr>
+<tr class="even">
+<td>Kanban de suivi (GitHub Projects)</td>
+<td><a href="https://github.com/users/clementRbl/projects/5" class="uri">https://github.com/users/clementRbl/projects/5</a></td>
+</tr>
+<tr class="odd">
+<td>Projet amont (modélisation)</td>
+<td><a href="https://github.com/clementRbl/pret-a-depenser" class="uri">https://github.com/clementRbl/pret-a-depenser</a></td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="perspectives-dévolution">Perspectives d'évolution</h3>
-<p>Feature store, réentraînement continu déclenché sur drift, A/B
-testing de modèles, alerting automatisé, et - dans une logique 2026 - extension des mêmes principes MLOps aux <strong>systèmes
-<a class="g-lien" href="glossaire.html#genai" title="Définition dans le glossaire">GenAI</a>/<a class="g-lien" href="glossaire.html#llm" title="Définition dans le glossaire">LLM</a></strong> (observabilité, évaluation en ligne, suivi
-coût/tokens), déjà explorés dans mon projet <a class="g-lien" href="glossaire.html#rag" title="Définition dans le glossaire">RAG</a>
-<em>Puls-Events</em>.</p>
-<h3 id="apports-personnels-réflexivité">Apports personnels
-(réflexivité)</h3>
-<p>Ce projet a fait évoluer ma représentation du métier : l'AI Engineer
-ne se juge pas au score d'un notebook mais à sa capacité à livrer un
-<strong>système fiable, monitoré et maintenable</strong>. Trois
-convictions en ressortent :</p>
-<ol type="1">
-<li><strong>La fiabilité prime sur la micro-optimisation</strong> (cf.
-décision ONNX) ;</li>
-<li><strong>l'évaluation et le monitoring sont le cœur du
-métier</strong>, pas une finition ;</li>
-<li><strong>la valeur naît du lien technique ↔︎ métier</strong> (le
-seuil, le coût, l'explicabilité), pas de la seule modélisation.</li>
-</ol>
-<hr />
-<h2 id="annexes">Annexes</h2>
-<h3 id="a-liens-du-projet">A. Liens du projet</h3>
-<ul>
-<li><strong>Dépôt (mise en production) :</strong> <a
-href="https://github.com/clementRbl/credit-scoring-mlops">https://github.com/clementRbl/credit-scoring-mlops</a></li>
-<li><strong>API en ligne (Swagger) :</strong> <a
-href="https://clementrbl-credit-scoring-api.hf.space/docs">https://clementrbl-credit-scoring-api.hf.space/docs</a></li>
-<li><strong>Dépôt (modélisation &amp; MLflow) :</strong> <a
-href="https://github.com/clementRbl/pret-a-depenser">https://github.com/clementRbl/pret-a-depenser</a></li>
-</ul>
-<h3 id="b-captures-dans-le-dépôt">B. Captures (dans le dépôt)</h3>
-<ul>
-<li><code>screenshots/logs_jsonl.png</code> - journalisation structurée
-des prédictions</li>
-<li><code>screenshots/dashboard_streamlit_1.png</code> /
-<code>_2.png</code> - dashboard de monitoring</li>
-</ul>
-<h3 id="c-glossaire">C. Glossaire</h3>
-<!-- Ce glossaire tenait en neuf lignes, au bas d'une page longue : personne
-     ne le trouvait, et il ne couvrait que le vocabulaire de ce rapport. Il vit
-     désormais sur sa propre page, qui couvre tout le portfolio et donne deux
-     niveaux de lecture. Le dupliquer ici garantirait qu'une des deux copies
-     finisse par mentir. -->
-<p>Le vocabulaire technique de ce rapport - et de tout le portfolio - est
-expliqué sur une page dédiée, en clair d'abord puis en détail :
-<a href="glossaire.html"><b>consulter le glossaire</b></a>. Les termes
-soulignés dans le texte ci-dessus mènent directement à leur définition.</p>
-
+<h3 id="b.-lancer-le-pipeline">B. Lancer le pipeline</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> venv <span class="kw">&amp;&amp;</span> <span class="ex">uv</span> pip install <span class="at">-r</span> requirements-pipeline.txt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env.example .env                  <span class="co"># identifiants DagsHub</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">dvc</span> pull                              <span class="co"># données versionnées</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pipeline.monitor <span class="at">--month</span> 4  <span class="co"># rapports dans reports/month_4/</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pipeline.retrain <span class="at">--month</span> 4  <span class="co"># challenger et décision de promotion</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> tests/ <span class="at">--cov</span><span class="op">=</span>app <span class="at">--cov</span><span class="op">=</span>pipeline</span></code></pre></div>
+<h3 id="c.-captures">C. Captures</h3>
+<figure>
+<img src="assets/rapport/pr-promotion-v4.webp" alt="Pull Request de promotion ouverte par le workflow : le tableau champion / challenger que le relecteur valide." />
+<figcaption aria-hidden="true">Pull Request de promotion ouverte par le workflow : le tableau champion / challenger que le relecteur valide.</figcaption>
+</figure>
+<figure>
+<img src="assets/rapport/issue-alerte-mois4.webp" alt="Issue d’alerte du mois 4 : 0 % de variables en dérive, mais un coût métier en hausse de 46 %." />
+<figcaption aria-hidden="true">Issue d’alerte du mois 4 : 0 % de variables en dérive, mais un coût métier en hausse de 46 %.</figcaption>
+</figure>
+<figure>
+<img src="assets/rapport/mlflow-registry.webp" alt="Model Registry sur DagsHub : quatre versions, leur seuil, et la v4 qui porte l’alias champion." />
+<figcaption aria-hidden="true">Model Registry sur DagsHub : quatre versions, leur seuil, et la v4 qui porte l’alias champion.</figcaption>
+</figure>
+<figure>
+<img src="assets/rapport/kanban-suivi.webp" alt="Kanban public sur GitHub Projects : chaque tâche avec son estimation, sa fin prévue et sa fin réelle. Les tâches 11 à 14 concernent le rendu et restaient ouvertes au moment de la capture." />
+<figcaption aria-hidden="true">Kanban public sur GitHub Projects : chaque tâche avec son estimation, sa fin prévue et sa fin réelle. Les tâches 11 à 14 concernent le rendu et restaient ouvertes au moment de la capture.</figcaption>
+</figure>
+<figure>
+<img src="assets/rapport/run-surveillance-mois4.webp" alt="Exécution du workflow pour le mois 4 : surveillance, alerte, réentraînement et PR en 4 min 12 s." />
+<figcaption aria-hidden="true">Exécution du workflow pour le mois 4 : surveillance, alerte, réentraînement et PR en 4 min 12 s.</figcaption>
+</figure>
+<h3 id="d.-glossaire">D. Glossaire</h3>
+<p>Le vocabulaire technique de ce rapport, et de tout le portfolio, est expliqué sur une page dédiée, en clair d’abord puis en détail : <a href="glossaire.html">consulter le glossaire</a>. Les termes soulignés dans le texte mènent directement à leur définition.</p>
 </main>
 <script>
 (function () {
