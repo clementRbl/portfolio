@@ -1,0 +1,41 @@
+<svg viewBox="0 0 760 250" role="img" aria-label="Flux de la V1. Le déploiement est automatisé ; l'entraînement, la copie du modèle et l'analyse de dérive sont manuels." xmlns="http://www.w3.org/2000/svg">
+  <title>Flux de la V1</title>
+  <desc>Le déploiement est automatisé ; l'entraînement, la copie du modèle et l'analyse de dérive sont manuels.</desc>
+  <defs>
+    <marker id="v1-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-head" d="M0,0 L10,5 L0,10 z"/></marker>
+  </defs>
+  <rect class="f-box" x="20" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="57" text-anchor="middle">Notebooks de modélisation</text>
+  <text class="f-s" x="120" y="78" text-anchor="middle">MLflow local, autre dépôt</text>
+
+  <rect class="f-box" x="280" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="57" text-anchor="middle">Dépôt de l'API</text>
+  <text class="f-s" x="380" y="78" text-anchor="middle">app.py · model.pkl</text>
+
+  <rect class="f-box" x="540" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="640" y="57" text-anchor="middle">GitHub Actions</text>
+  <text class="f-s" x="640" y="78" text-anchor="middle">test → build → deploy</text>
+
+  <rect class="f-box" x="540" y="160" width="200" height="64" rx="8"/>
+  <text class="f-t" x="640" y="187" text-anchor="middle">Hugging Face Space</text>
+  <text class="f-s" x="640" y="208" text-anchor="middle">FastAPI · seuil 0,47 en dur</text>
+
+  <rect class="f-box" x="280" y="160" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="187" text-anchor="middle">Journal JSONL</text>
+  <text class="f-s" x="380" y="208" text-anchor="middle">perdu au redémarrage</text>
+
+  <rect class="f-box" x="20" y="160" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="187" text-anchor="middle">Notebook Evidently</text>
+  <text class="f-s" x="120" y="208" text-anchor="middle">relancé à la main</text>
+
+  <path class="f-arrow f-dash" d="M220,62 H276" marker-end="url(#v1-head)"/>
+  <text class="f-m" x="250" y="52" text-anchor="middle">copie</text>
+  <path class="f-arrow" d="M480,62 H536" marker-end="url(#v1-head)"/>
+  <text class="f-m" x="510" y="52" text-anchor="middle">push</text>
+  <path class="f-arrow" d="M640,94 V156" marker-end="url(#v1-head)"/>
+  <path class="f-arrow" d="M540,192 H484" marker-end="url(#v1-head)"/>
+  <text class="f-m" x="510" y="182" text-anchor="middle">écrit</text>
+  <path class="f-arrow f-dash" d="M280,192 H224" marker-end="url(#v1-head)"/>
+  <text class="f-m" x="250" y="182" text-anchor="middle">lu</text>
+  <text class="f-m" x="20" y="244">Trait plein : automatique · pointillé : manuel</text>
+</svg>

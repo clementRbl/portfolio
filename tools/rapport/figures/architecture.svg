@@ -1,0 +1,75 @@
+<svg viewBox="0 0 760 480" role="img" aria-label="Architecture de la V2. Chaque lundi, GitHub Actions surveille le dernier lot ; en cas d'alerte, il ouvre une issue et réentraîne un challenger, enregistré dans le Model Registry. Si la règle de promotion est remplie, une Pull Request est ouverte ; après fusion par un humain, le CI/CD déploie le modèle et lui donne l'alias champion." xmlns="http://www.w3.org/2000/svg">
+  <title>Architecture cible de la V2</title>
+  <desc>Surveillance hebdomadaire, alerte, réentraînement, Registry, Pull Request validée par un humain, déploiement et alias champion.</desc>
+  <defs>
+    <marker id="ar-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-head" d="M0,0 L10,5 L0,10 z"/></marker>
+    <marker id="ar-head-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-head-acc" d="M0,0 L10,5 L0,10 z"/></marker>
+  </defs>
+
+  <!-- Colonne de gauche : données et service -->
+  <rect class="f-box" x="20" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="57" text-anchor="middle">Lots mensuels</text>
+  <text class="f-s" x="120" y="78" text-anchor="middle">DVC · stockage DagsHub</text>
+
+  <rect class="f-box" x="20" y="250" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="277" text-anchor="middle">Client</text>
+  <text class="f-s" x="120" y="298" text-anchor="middle">chargé d'études, portfolio</text>
+
+  <rect class="f-box" x="20" y="390" width="200" height="64" rx="8"/>
+  <text class="f-t" x="120" y="417" text-anchor="middle">Hugging Face Space</text>
+  <text class="f-s" x="120" y="438" text-anchor="middle">FastAPI · seuil et version lus</text>
+
+  <!-- Colonne centrale : la boucle -->
+  <rect class="f-box-acc" x="280" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="57" text-anchor="middle">Surveillance</text>
+  <text class="f-s" x="380" y="78" text-anchor="middle">monitoring.yml · chaque lundi</text>
+
+  <rect class="f-box" x="280" y="140" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="167" text-anchor="middle">Réentraînement</text>
+  <text class="f-s" x="380" y="188" text-anchor="middle">challenger contre champion</text>
+
+  <rect class="f-box" x="280" y="250" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="277" text-anchor="middle">Pull Request</text>
+  <text class="f-s" x="380" y="298" text-anchor="middle">model.pkl · model_meta.json</text>
+
+  <rect class="f-box" x="280" y="390" width="200" height="64" rx="8"/>
+  <text class="f-t" x="380" y="417" text-anchor="middle">CI/CD</text>
+  <text class="f-s" x="380" y="438" text-anchor="middle">test → build → deploy</text>
+
+  <!-- Colonne de droite : traces -->
+  <rect class="f-box" x="540" y="30" width="200" height="64" rx="8"/>
+  <text class="f-t" x="640" y="57" text-anchor="middle">Issue d'alerte</text>
+  <text class="f-s" x="640" y="78" text-anchor="middle">chiffres + rapport Evidently</text>
+
+  <rect class="f-box" x="540" y="140" width="200" height="64" rx="8"/>
+  <text class="f-t" x="640" y="167" text-anchor="middle">MLflow Model Registry</text>
+  <text class="f-s" x="640" y="188" text-anchor="middle">DagsHub · versions, alias</text>
+
+  <!-- Flèches -->
+  <path class="f-arrow" d="M220,62 H276" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="250" y="52" text-anchor="middle">dvc pull</text>
+
+  <path class="f-arrow" d="M480,62 H536" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="510" y="52" text-anchor="middle">alerte</text>
+
+  <path class="f-arrow" d="M380,94 V136" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="390" y="120">si dérive ou coût en hausse</text>
+
+  <path class="f-arrow" d="M480,172 H536" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="510" y="162" text-anchor="middle">version</text>
+
+  <path class="f-arrow" d="M380,204 V246" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="390" y="230">si la règle est remplie</text>
+
+  <path class="f-arrow-acc" d="M380,314 V386" marker-end="url(#ar-head-acc)"/>
+  <text class="f-a" x="390" y="355">fusion par un humain</text>
+
+  <path class="f-arrow" d="M280,422 H224" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="250" y="412" text-anchor="middle">déploie</text>
+
+  <path class="f-arrow" d="M480,422 H640 V208" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="650" y="330">alias « champion »</text>
+
+  <path class="f-arrow" d="M120,314 V386" marker-end="url(#ar-head)"/>
+  <text class="f-m" x="130" y="355">POST /predict</text>
+</svg>
