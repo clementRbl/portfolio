@@ -55,7 +55,7 @@
    "vos expériences précédentes",
    "vos employeurs précédents"
   ],
-  "answer": "J'ai passé cinq ans à développer des applications web à Paris, en Vue et TypeScript, en NestJS puis en Django, avant de suivre le parcours AI Engineer d'OpenClassrooms de novembre 2025 à août 2026.",
+  "answer": "J'ai passé cinq ans à développer des applications web à Paris, en Vue et TypeScript, en NestJS puis en Django, avant de suivre le parcours AI Engineer d'OpenClassrooms de novembre 2025 à octobre 2026.",
   "section": "parcours"
  },
  {
@@ -105,7 +105,7 @@
  {
   "id": "projet-phare",
   "title": "Projet phare - Credit Scoring MLOps",
-  "text": "Mise en production d'un modèle de scoring crédit. API FastAPI conteneurisée, déploiement continu GitHub Actions vers Hugging Face Spaces, journalisation des prédictions, détection de data drift avec Evidently, dashboard de monitoring Streamlit. AUC 0,78, latence six millisecondes, couverture de tests 96 pour cent, seuil de décision 0,47. Arbitrage ONNX écarté. Essayez le modèle en direct.",
+  "text": "Mise en production d'un modèle de scoring crédit. API FastAPI conteneurisée, déploiement continu GitHub Actions vers Hugging Face Spaces. V2 : surveillance hebdomadaire de la dérive avec Evidently et du coût métier, issue d'alerte, réentraînement d'un challenger, règle de promotion, Pull Request validée par un humain, MLflow Model Registry, DVC, DagsHub. AUC 0,78, coût métier en baisse de 8,1 pour cent après réentraînement, latence six millisecondes, couverture de l'API 96 pour cent, seuil de décision lu dans l'API. Essayez le modèle en direct.",
   "queries": [
    "comment tu surveilles un modèle en production",
    "tu gères le drift",
@@ -130,7 +130,7 @@
    "vous gérez le monitoring",
    "votre meilleur projet"
   ],
-  "answer": "Credit Scoring MLOps fait passer un LightGBM du notebook à la production : l'API FastAPI est conteneurisée, déployée à chaque push, chaque prédiction est journalisée et le drift est surveillé. Le modèle atteint 0,78 d'AUC, l'inférence prend environ 6 ms, et l'API est couverte à 96 % sur 14 tests.",
+  "answer": "Credit Scoring MLOps sert un LightGBM derrière une API FastAPI conteneurisée, déployée à chaque push. Dans la V2, un workflow surveille chaque lundi la dérive et le coût métier, réentraîne un challenger en cas d'alerte et propose sa mise en production dans une Pull Request. Au quatrième mois simulé, le modèle promu a réduit le coût métier de 8,1 %. L'AUC est de 0,78, l'inférence prend environ 6 ms, et l'API est couverte à 96 %.",
   "section": "projet-phare"
  },
  {
@@ -185,7 +185,7 @@
  {
   "id": "reflexivite",
   "title": "Réflexivité",
-  "text": "Recul sur le métier et axes d'amélioration. La fiabilité prime sur la micro-optimisation. Évaluation et monitoring au cœur du métier. Prochains défis, agents IA orchestration multi-outils, fine-tuning de LLM, cloud managé et observabilité, réentraînement automatisé sur drift, LLMOps suivi coût et tokens.",
+  "text": "Recul sur le métier et axes d'amélioration. Ce que la formation m'a apporté, ce que je referais autrement, ma méthode aujourd'hui : cadrage, Kanban, Pull Request, CI bloquante, journal d'incidents. La fiabilité prime sur la micro-optimisation. Évaluation et monitoring au cœur du métier. Prochains défis : fine-tuning de LLM, surveillance avec étiquettes différées, cloud managé et observabilité, LLMOps suivi coût et tokens.",
   "queries": [
    "tes limites",
    "ce que tu ne sais pas encore",
@@ -270,7 +270,7 @@
   "id": "mlops",
   "section": "projet-phare",
   "title": "MLOps et mise en production",
-  "text": "mise en production déployer déploiement industrialisation Docker conteneur CI CD GitHub Actions monitoring surveillance drift Evidently MLflow journalisation logs latence Hugging Face Spaces notebook",
+  "text": "mise en production déployer déploiement industrialisation Docker conteneur CI CD GitHub Actions monitoring surveillance drift Evidently MLflow journalisation logs latence Hugging Face Spaces notebook réentraînement champion challenger registry DVC dérive promotion",
   "queries": [
    "vous avez déjà déployé un modèle",
    "vous savez mettre un modèle en production",
@@ -280,7 +280,7 @@
    "comment vous détectez le drift",
    "vous conteneurisez"
   ],
-  "answer": "C'est mon cœur de métier. Le projet Credit Scoring va du notebook à la production : API FastAPI conteneurisée, déploiement continu par GitHub Actions vers Hugging Face Spaces, journalisation de chaque prédiction, détection de drift avec Evidently et tableau de bord de suivi. L'API tourne : vous pouvez l'appeler depuis le haut de cette page."
+  "answer": "C'est mon cœur de métier. Le projet Credit Scoring va du notebook à la production : API FastAPI conteneurisée, déploiement continu par GitHub Actions vers Hugging Face Spaces, puis une boucle qui surveille la dérive chaque semaine, réentraîne un challenger et propose sa mise en production dans une Pull Request. L'API tourne : vous pouvez l'appeler depuis le haut de cette page."
  },
  {
   "id": "vision",
@@ -417,7 +417,7 @@
    "vous êtes autodidacte",
    "vous avez un bac plus 5"
   ],
-  "answer": "Le parcours AI Engineer d'OpenClassrooms, de novembre 2025 à août 2026, au niveau Bac+5 : machine learning, MLOps, GenAI et RAG, apprentissage par renforcement, agents et fine-tuning. Avant cela, concepteur-développeur chez Simplon, développeur web et web mobile à l'École O'clock, et une première année chez The Hacking Project."
+  "answer": "Le parcours AI Engineer d'OpenClassrooms, de novembre 2025 à octobre 2026, au niveau Bac+5 : machine learning, MLOps, GenAI et RAG, apprentissage par renforcement, agents et fine-tuning. Avant cela, concepteur-développeur chez Simplon, développeur web et web mobile à l'École O'clock, et une première année chez The Hacking Project."
  },
  {
   "id": "production",

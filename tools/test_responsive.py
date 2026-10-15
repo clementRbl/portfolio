@@ -66,6 +66,18 @@ class _Quiet(SimpleHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
+    def translate_path(self, path):
+        # En production, le portfolio vit sous /portfolio/ derrière le proxy
+        # Netlify, et l'adresse sans barre finale sert elle aussi l'accueil. Le
+        # serveur de test reproduit ces deux adresses : sans elles, la
+        # redirection vers /portfolio/ ne pourrait pas être vérifiée ici.
+        chemin = path.split('?')[0]
+        if chemin == '/portfolio':
+            path = '/index.html'
+        elif chemin.startswith('/portfolio/'):
+            path = path[len('/portfolio'):]
+        return super().translate_path(path)
+
 
 def _free_port():
     with socket.socket() as s:
@@ -506,6 +518,22 @@ def test_livrables_atteignables():
         assert (ROOT / livrable).exists(), f'{livrable} : la page a disparu'
         assert f'href="{livrable}"' in accueil, (
             f"{livrable} : aucun lien depuis index.html, le livrable est invisible")
+
+
+def test_adresse_sans_barre_finale():
+    """« clement-reboul.fr/portfolio » recharge l'adresse avec la barre finale.
+
+    Sans cette redirection (script en tête d'index.html), la page s'affiche mais
+    le navigateur résout « assets/… » en /assets/… : portrait, polices et liens
+    internes répondent 404. Un audit fait avec curl, qui n'exécute pas le script,
+    l'a cru absente ; ce test la vérifie dans un vrai navigateur.
+    """
+    missing = _deps_missing()
+    if missing:
+        _skip(missing)
+    m = evalue('portfolio', "JSON.stringify({chemin: location.pathname})")
+    assert m['chemin'] == '/portfolio/', (
+        f"/portfolio n'a pas été redirigé vers /portfolio/ (chemin final : {m['chemin']})")
 
 
 def main():

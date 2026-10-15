@@ -533,7 +533,14 @@ document.documentElement.classList.add('js');
 
   /* ---------- COMPÉTENCES ---------- */
   .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 54px; }
-  .skill-head { margin-bottom: 7px; }
+  .skill-head { margin-bottom: 7px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
+  /* Niveau sur 5 : la pastille porte l'information, le libellé la redit en texte
+     pour qui ne distingue pas les pastilles (lecteur d'écran : aria-label). */
+  .lvl { display: inline-flex; gap: 4px; }
+  .lvl i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--ember); }
+  .lvl i.on { background: var(--ember); }
+  .lvl-txt { font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; color: var(--muted); }
+  .langs .lang { display: inline-flex; align-items: center; gap: 10px; }
   .skill-head .name { font-family: var(--font-mono); font-weight: 600; font-size: 13.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); }
   .skill-tags { font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.65; }
   .langs { margin-top: 42px; padding-top: 26px; border-top: 1px solid var(--border); display: flex; gap: 30px; flex-wrap: wrap; align-items: center; }
@@ -649,6 +656,11 @@ document.documentElement.classList.add('js');
   .shift .tl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
   .shift.after .tl { color: var(--moss); }
   .shift p { margin-top: 13px; font-size: 1.14rem; color: var(--ink); }
+  .refl-three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-bottom: 28px; }
+  .refl-card { padding: 22px 24px; }
+  .refl-card h3 { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ember); }
+  .refl-card p { margin-top: 11px; font-size: 14.5px; line-height: 1.6; color: var(--ink-dim); }
+  @media (max-width: 1000px) { .refl-three { grid-template-columns: minmax(0, 1fr); } }
   .axes { display: flex; flex-wrap: wrap; gap: 10px; }
   .axes .chip { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .04em; padding: 9px 15px; border: 1px solid var(--border-2); color: var(--ink-dim); display: inline-flex; gap: 8px; }
   .axes .chip::before { content: "▸"; color: var(--ember); }
@@ -853,8 +865,8 @@ document.documentElement.classList.add('js');
   .gauge { position: relative; height: 30px; margin-top: 14px; background: var(--surface-2); border: 1px solid var(--border); }
   .gauge .fillp { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--good); opacity: .55; transition: width .5s cubic-bezier(.2,.7,.2,1); }
   .gauge.refuse .fillp { background: var(--blood); }
-  .gauge .thr { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--ember); left: 47%; }
-  .gauge .thr::after { content: "seuil 0,47"; position: absolute; top: -17px; left: 50%; transform: translateX(-50%);
+  .gauge .thr { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--ember); left: 48%; }
+  .gauge .thr::after { content: "seuil 0,48"; position: absolute; top: -17px; left: 50%; transform: translateX(-50%);
     font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; color: var(--ember); white-space: nowrap; }
   .gauge-scale { display: flex; justify-content: space-between; margin-top: 7px; font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); }
   .verdict { margin-top: 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -869,12 +881,12 @@ document.documentElement.classList.add('js');
 
   /* Le repère de seuil devient pilotable : sa position et son libellé viennent
      du curseur, plus d'une valeur écrite en dur dans la feuille de style. */
-  .gauge .thr { left: calc(var(--thr, 47) * 1%); transition: left .12s linear; }
+  .gauge .thr { left: calc(var(--thr, 48) * 1%); transition: left .12s linear; }
   .gauge .thr::after { content: "seuil " attr(data-lbl); }
 
   /* ---------- SEUIL PILOTABLE ----------
-     L'arbitrage le plus intéressant du projet était invisible : le seuil est à
-     0,47 et non 0,50 parce que le coût métier est asymétrique. On le rend
+     L'arbitrage le plus intéressant du projet était invisible : le seuil est
+     sous 0,50 parce que le coût métier est asymétrique. On le rend
      manipulable, parce qu'on comprend un arbitrage en le déplaçant, pas en le
      lisant. Aucun appel réseau : tout se recalcule sur les probabilités déjà
      obtenues de l'API. */
@@ -1771,7 +1783,7 @@ document.documentElement.classList.add('js');
         <div class="tl-col">
           <span class="hud-label">Formation</span>
           <ol class="tl">
-            <li class="tl-item tl-current"><div class="tl-when">nov. 2025 - août 2026</div><div class="tl-role">AI Engineer · Bac+5</div><div class="tl-org">OpenClassrooms</div><div class="tl-tech">ML · MLOps · GenAI/RAG · RL · agents · fine-tuning</div></li>
+            <li class="tl-item tl-current"><div class="tl-when">nov. 2025 - oct. 2026</div><div class="tl-role">AI Engineer · Bac+5</div><div class="tl-org">OpenClassrooms</div><div class="tl-tech">ML · MLOps · GenAI/RAG · RL · agents · fine-tuning</div></li>
             <li class="tl-item"><div class="tl-when">2021 - 2022</div><div class="tl-role">Concepteur-développeur · Bac+4</div><div class="tl-org">Simplon.co</div><div class="tl-tech">développement d'applications</div></li>
             <li class="tl-item"><div class="tl-when">2020</div><div class="tl-role">Dév. Web & Web Mobile · Bac+2</div><div class="tl-org">École O'clock</div><div class="tl-tech">front-end · back-end · sécurité</div></li>
             <li class="tl-item"><div class="tl-when">2019 - 2020</div><div class="tl-role">Développeur web</div><div class="tl-org">The Hacking Project</div><div class="tl-tech">Ruby on Rails · peer learning</div></li>
@@ -1801,17 +1813,17 @@ document.documentElement.classList.add('js');
         <p>La stack que j'utilise en mission, adossée à des projets concrets et des livrables publics. <a href="carte-mentale.html" target="_blank" rel="noopener">Carte mentale interactive →</a></p>
       </div>
       <div class="skills-grid reveal">
-        <div><div class="skill-head"><span class="name">Machine Learning &amp; Modélisation</span></div><div class="skill-tags">scikit-learn · LightGBM · XGBoost · SHAP · coût métier</div></div>
-        <div><div class="skill-head"><span class="name">MLOps &amp; Mise en production</span></div><div class="skill-tags">FastAPI · Docker · CI/CD · MLflow · Evidently · Prometheus</div></div>
-        <div><div class="skill-head"><span class="name">GenAI &amp; LLM / RAG</span></div><div class="skill-tags">LangChain · Faiss · Milvus · Mistral · Ragas · guardrails</div></div>
-        <div><div class="skill-head"><span class="name">Agents &amp; orchestration</span></div><div class="skill-tags">LangGraph · routage conditionnel · agrégation de sources · traçage MLflow</div></div>
-        <div><div class="skill-head"><span class="name">Deep Learning &amp; Computer Vision</span></div><div class="skill-tags">PyTorch · ResNet-50 · transfer learning · semi-supervisé</div></div>
-        <div><div class="skill-head"><span class="name">Data Engineering</span></div><div class="skill-tags">Airflow · PostgreSQL · ETL · pandas</div></div>
-        <div><div class="skill-head"><span class="name">Reinforcement Learning</span></div><div class="skill-tags">Gymnasium · DQN · stable-baselines3</div></div>
-        <div><div class="skill-head"><span class="name">Langages &amp; outils</span></div><div class="skill-tags">Python · SQL · Git · Angular · Streamlit · pytest · Ruff</div></div>
-        <div><div class="skill-head"><span class="name">Conduite de projet data</span></div><div class="skill-tags">cadrage besoins · audit · trade-offs · vulgarisation</div></div>
+        <div><div class="skill-head"><span class="name">Machine Learning &amp; Modélisation</span><span class="lvl" role="img" aria-label="Niveau avancé, 4 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="lvl-txt" aria-hidden="true">Avancé</span></div><div class="skill-tags">scikit-learn · LightGBM · XGBoost · SHAP · coût métier</div></div>
+        <div><div class="skill-head"><span class="name">MLOps &amp; Mise en production</span><span class="lvl" role="img" aria-label="Niveau avancé, 4 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="lvl-txt" aria-hidden="true">Avancé</span></div><div class="skill-tags">FastAPI · Docker · CI/CD · MLflow · Evidently · Prometheus</div></div>
+        <div><div class="skill-head"><span class="name">GenAI &amp; LLM / RAG</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">LangChain · Faiss · Milvus · Mistral · Ragas · guardrails</div></div>
+        <div><div class="skill-head"><span class="name">Agents &amp; orchestration</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">LangGraph · routage conditionnel · agrégation de sources · traçage MLflow</div></div>
+        <div><div class="skill-head"><span class="name">Deep Learning &amp; Computer Vision</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">PyTorch · ResNet-50 · transfer learning · semi-supervisé</div></div>
+        <div><div class="skill-head"><span class="name">Data Engineering</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">Airflow · PostgreSQL · ETL · pandas</div></div>
+        <div><div class="skill-head"><span class="name">Reinforcement Learning</span><span class="lvl" role="img" aria-label="Niveau notions, 2 sur 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Notions</span></div><div class="skill-tags">Gymnasium · DQN · stable-baselines3</div></div>
+        <div><div class="skill-head"><span class="name">Langages &amp; outils</span><span class="lvl" role="img" aria-label="Niveau avancé, 4 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="lvl-txt" aria-hidden="true">Avancé</span></div><div class="skill-tags">Python · SQL · Git · Angular · Streamlit · pytest · Ruff</div></div>
+        <div><div class="skill-head"><span class="name">Conduite de projet data</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">cadrage besoins · audit · trade-offs · vulgarisation</div></div>
       </div>
-      <div class="langs reveal"><span class="hud-label">Langues</span><span><b>Français</b> <span class="muted"> - natif</span></span><span><b>Anglais</b> <span class="muted"> - professionnel</span></span></div>
+      <div class="langs reveal"><span class="hud-label">Langues</span><span class="lang"><b>Français</b> <span class="lvl" role="img" aria-label="Niveau natif, 5 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="lvl-txt" aria-hidden="true">Natif</span></span><span class="lang"><b>Anglais</b> <span class="muted">lecture de documentation technique</span></span></div>
     </div>
   </section>
 
@@ -1827,8 +1839,8 @@ document.documentElement.classList.add('js');
             <div>
               <h3>Credit Scoring MLOps</h3>
               <p class="role">Mise en production d'un modèle de scoring crédit</p>
-              <p class="desc">Industrialisation complète d'un modèle LightGBM : API FastAPI conteneurisée, déploiement continu (GitHub Actions → Hugging Face Spaces), journalisation des prédictions, détection de data drift (Evidently) et dashboard de monitoring.</p>
-              <div class="tags"><span class="tag">FastAPI</span><span class="tag">Docker</span><span class="tag">CI/CD</span><span class="tag">Evidently</span><span class="tag">LightGBM</span></div>
+              <p class="desc">Un modèle LightGBM servi par une API FastAPI conteneurisée, déployée en continu sur Hugging Face Spaces. La V2 ajoute une boucle : chaque lundi, le workflow surveille la dérive et le coût métier, réentraîne un challenger en cas d'alerte et propose sa mise en production dans une Pull Request.</p>
+              <div class="tags"><span class="tag">FastAPI</span><span class="tag">Docker</span><span class="tag">CI/CD</span><span class="tag">Evidently</span><span class="tag">MLflow Registry</span><span class="tag">DVC</span></div>
               <div class="proj-links">
                 <a href="https://github.com/clementRbl/credit-scoring-mlops" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a>
                 <a href="https://clementrbl-credit-scoring-api.hf.space/docs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg> API</a>
@@ -1943,31 +1955,32 @@ document.documentElement.classList.add('js');
   <!-- PROJET PHARE -->
   <section id="projet-phare">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 05 - étude de cas</span><h2>Credit Scoring MLOps</h2><p>Le sujet le plus demandé de 2026 : faire passer un modèle du notebook à une production fiable. Détaillé dans le rapport de conduite de projet.</p></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 05 - étude de cas</span><h2>Credit Scoring MLOps</h2><p>Un modèle de crédit se dégrade quand la clientèle change. La V2 le surveille chaque semaine, le réentraîne en cas d'alerte et laisse un humain valider la mise en production. Le rapport de conduite de projet raconte tout le chantier.</p></div>
       <div class="panel flag reveal">
         <div class="kpi-row tnum">
-          <div class="kpi"><div class="v">0,78</div><div class="c">AUC-OOF (LightGBM)</div></div>
+          <div class="kpi"><div class="v">0,78</div><div class="c">AUC sur le test figé (v4)</div></div>
+          <div class="kpi"><div class="v">−8,1&nbsp;%</div><div class="c">Coût métier après réentraînement</div></div>
+          <div class="kpi"><div class="v">2/4</div><div class="c">Mois simulés en alerte</div></div>
           <div class="kpi"><div class="v">~6&nbsp;ms</div><div class="c">Latence d'inférence</div></div>
-          <div class="kpi"><div class="v">96&nbsp;%</div><div class="c">Couverture de tests</div></div>
-          <div class="kpi"><div class="v">3/20</div><div class="c">Features en drift</div></div>
-          <div class="kpi"><div class="v">3&nbsp;jobs</div><div class="c">Pipeline CI/CD</div></div>
+          <div class="kpi"><div class="v">96&nbsp;%</div><div class="c">Couverture de l'API</div></div>
           <div class="kpi"><div class="v">0&nbsp;€</div><div class="c">Coût d'infra</div></div>
         </div>
         <div class="flag-body">
           <div>
             <h3>Ce que démontre le projet</h3>
             <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span><b>Serving temps réel</b> - API FastAPI, modèle chargé une fois, endpoints documentés (Swagger), erreurs gérées (404/422).</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span><b>Déploiement continu</b> - GitHub Actions : test → build → deploy vers Hugging Face Spaces à chaque push.</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span><b>Monitoring</b> - journalisation JSONL, détection de drift Evidently, dashboard Streamlit.</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span><b>Arbitrage d'ingénieur</b> - ONNX testé (-39 % taille) puis écarté : la fiabilité prime sur la micro-optimisation.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Chaque lundi, GitHub Actions compare le dernier lot mensuel à la référence avec Evidently et recalcule le coût métier. Une dérive ou un coût en hausse ouvre une issue d'alerte.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Le challenger réentraîné doit coûter au moins 1 % de moins que le champion sur des données qu'aucun des deux n'a vues, sans dégrader le test figé. Au mois 3, la règle a refusé ; au mois 4, elle a promu la v4.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>La promotion arrive en Pull Request. Après fusion, le CI/CD déploie le modèle, l'API lit son seuil et sa version, et le Registry MLflow lui donne l'alias champion.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>DVC versionne les données, le Registry MLflow versionne les modèles, tous deux hébergés sur DagsHub.</span></li>
             </ul>
             <div style="display:flex;gap:13px;margin-top:24px;flex-wrap:wrap">
               <a class="btn btn-primary" href="rapport.html">Lire le rapport</a>
-              <a class="btn btn-ghost" href="https://clementrbl-credit-scoring-api.hf.space/docs" target="_blank" rel="noopener">Tester l'API</a>
+              <a class="btn btn-ghost" href="https://github.com/clementRbl/credit-scoring-mlops/pull/18" target="_blank" rel="noopener">La PR de promotion</a>
+              <a class="btn btn-ghost" href="https://github.com/users/clementRbl/projects/5" target="_blank" rel="noopener">Le suivi du projet</a>
             </div>
           </div>
-          <div class="shot"><img src="assets/mlops-logs.png" width="1000" height="674" alt="Journalisation JSONL : chaque prédiction enregistre timestamp, id client, probabilité, décision, temps d'inférence." loading="lazy" decoding="async"></div>
+          <div class="shot"><img src="assets/rapport/pr-promotion-v4.webp" width="910" height="570" alt="Pull Request de promotion ouverte par le workflow au mois 4 : le tableau champion / challenger que le relecteur valide." loading="lazy" decoding="async"></div>
         </div>
         <div class="tryout">
           <h3>Essayez le modèle</h3>
@@ -1980,7 +1993,7 @@ document.documentElement.classList.add('js');
                 <span>Probabilité de défaut</span>
                 <span class="val tnum" id="try-val">-</span>
               </div>
-              <div class="gauge" id="try-gauge"><div class="fillp" id="try-fill"></div><div class="thr" data-lbl="0,47"></div></div>
+              <div class="gauge" id="try-gauge"><div class="fillp" id="try-fill"></div><div class="thr" data-lbl="0,48"></div></div>
               <div class="gauge-scale"><span>0,00 remboursement certain</span><span>défaut certain 1,00</span></div>
               <div class="verdict">
                 <span class="tag-d" id="try-dec">-</span>
@@ -1990,12 +2003,12 @@ document.documentElement.classList.add('js');
               <div class="thr-ctl">
                 <div class="thr-head">
                   <label for="thr-range">Seuil de décision</label>
-                  <span class="thr-val tnum" id="thr-val">0,47</span>
-                  <button type="button" id="thr-reset" disabled>revenir à 0,47</button>
+                  <span class="thr-val tnum" id="thr-val">0,48</span>
+                  <button type="button" id="thr-reset" disabled>revenir à <span data-model-thr>0,48</span></button>
                 </div>
-                <input type="range" id="thr-range" min="5" max="95" step="1" value="47"
+                <input type="range" id="thr-range" min="5" max="95" step="1" value="48"
                        aria-label="Seuil de décision, en centièmes" aria-describedby="thr-why">
-                <p class="thr-why" id="thr-why"><b>Pourquoi 0,47 et pas 0,50 ?</b> Parce que les deux erreurs ne coûtent pas pareil. Accorder un prêt à quelqu'un qui ne remboursera pas fait perdre le capital ; refuser un bon client ne fait perdre qu'une marge. Le projet chiffre ce rapport à <b>dix contre un</b>, et 0,47 est le seuil qui minimise la facture totale sur le jeu de validation. Déplacez-le : à gauche la banque devient frileuse, à droite elle prête les yeux fermés.</p>
+                <p class="thr-why" id="thr-why"><b>Pourquoi <span data-model-thr>0,48</span> et pas 0,50 ?</b> Parce que les deux erreurs ne coûtent pas pareil. Accorder un prêt à quelqu'un qui ne remboursera pas fait perdre le capital ; refuser un bon client ne fait perdre qu'une marge. Le projet chiffre ce rapport à <b>dix contre un</b>. Chaque modèle reçoit le seuil qui minimise cette facture en validation croisée, et l'API renvoie celui du modèle qu'elle sert. Déplacez-le : à gauche la banque devient frileuse, à droite elle prête les yeux fermés.</p>
                 <p class="thr-count" id="thr-count"></p>
               </div>
             </div>
@@ -2018,9 +2031,10 @@ document.documentElement.classList.add('js');
             </div>
           </div>
         </div>
-        <div class="pipe" role="img" aria-label="Pipeline MLOps : client vers API FastAPI Docker sur Hugging Face Spaces, logs JSONL, drift Evidently et dashboard Streamlit ; en parallèle CI/CD GitHub Actions test build deploy.">
-          <div class="lane"><span class="lane-label">Serving</span><span class="node">Client</span><span class="arr">→</span><span class="node accent">FastAPI · Docker</span><span class="arr">→</span><span class="node ok">HF Spaces</span><span class="arr">→</span><span class="node">logs JSONL</span><span class="arr">→</span><span class="node">Evidently · Streamlit</span></div>
-          <div class="lane"><span class="lane-label">CI/CD</span><span class="node">push main</span><span class="arr">→</span><span class="node">pytest 96%</span><span class="arr">→</span><span class="node">docker build</span><span class="arr">→</span><span class="node ok">deploy</span></div>
+        <div class="pipe" role="img" aria-label="Boucle MLOps de la V2. Serving : client vers API FastAPI Docker sur Hugging Face Spaces. Surveillance chaque lundi : lot mensuel versionné par DVC, dérive Evidently et coût métier, issue d'alerte, challenger enregistré dans MLflow. Promotion : Pull Request, fusion par un humain, CI/CD, alias champion.">
+          <div class="lane"><span class="lane-label">Serving</span><span class="node">Client</span><span class="arr">→</span><span class="node accent">FastAPI · Docker</span><span class="arr">→</span><span class="node ok">HF Spaces</span></div>
+          <div class="lane"><span class="lane-label">Lundi</span><span class="node">lot mensuel · DVC</span><span class="arr">→</span><span class="node">Evidently + coût métier</span><span class="arr">→</span><span class="node">issue d'alerte</span><span class="arr">→</span><span class="node">challenger · MLflow</span></div>
+          <div class="lane"><span class="lane-label">Promotion</span><span class="node">Pull Request</span><span class="arr">→</span><span class="node accent">fusion humaine</span><span class="arr">→</span><span class="node">CI/CD</span><span class="arr">→</span><span class="node ok">alias champion</span></div>
         </div>
       </div>
     </div>
@@ -2096,7 +2110,7 @@ document.documentElement.classList.add('js');
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><h3>Vulgarisation</h3><p>Traduire AUC, drift et coût métier en enjeux business ; READMEs, rapports et dashboards pédagogiques.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><h3>Gestion de projet</h3><p>Découpage itératif, Definition of Done, CI/CD comme garde-fou qualité automatisé.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/></svg></div><h3>Créativité</h3><p>Pagination par curseur de date (RAG) ; labels faibles générés par clustering en semi-supervisé.</p></div>
-        <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><h3>Rigueur</h3><p>Tests automatisés (96 % sur 14 tests), reproductibilité Docker, documentation systématique des choix et limites.</p></div>
+        <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><h3>Rigueur</h3><p>Tests automatisés (47 tests sur le scoring, API couverte à 96 %), reproductibilité Docker, documentation systématique des choix et limites.</p></div>
       </div>
     </div>
   </section>
@@ -2104,18 +2118,22 @@ document.documentElement.classList.add('js');
   <!-- RÉFLEXIVITÉ -->
   <section id="reflexivite">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 08</span><h2>Réflexivité</h2><p>Prendre du recul fait partie du métier. Voici l'évolution de ma représentation du rôle d'AI Engineer.</p></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 08</span><h2>Réflexivité</h2><p>Prendre du recul fait partie du métier : ce que j'ai appris, ce que je changerais, et comment je travaille maintenant.</p></div>
       <div class="refl-grid reveal">
         <div class="panel shift"><span class="tl">Avant</span><p>« Un bon modèle, c'est un bon score dans un notebook. »</p></div>
         <div class="panel shift after"><span class="tl">Aujourd'hui</span><p>« La valeur, c'est un système <b>fiable, monitoré et maintenable</b> en production. »</p></div>
       </div>
+      <div class="refl-three reveal">
+        <div class="panel refl-card"><h3>Ce que la formation m'a apporté</h3><p>Je venais du développement web. J'ai appris à juger un modèle sur ce qu'il coûte à l'entreprise plutôt que sur son score, et à le traiter comme un logiciel : tests, CI, déploiement, surveillance. Les dix projets m'ont mené du ML classique aux LLM, aux agents et au reinforcement learning.</p></div>
+        <div class="panel refl-card"><h3>Ce que je referais autrement</h3><p>Dans la V1 du scoring, le seuil de décision était écrit en dur dans l'API et le modèle servi avait appris sur toutes les données. Pour simuler de nouveaux mois dans la V2, j'ai dû réentraîner le champion sur 60 % des données. Aujourd'hui, je range le seuil avec le modèle et je mets un test figé de côté dès le départ.</p></div>
+        <div class="panel refl-card"><h3>Ma méthode aujourd'hui</h3><p>Je cadre avant de coder : le besoin, des critères d'acceptation vérifiables, les décisions techniques. Je découpe en tâches estimées sur un Kanban, chaque changement passe par une Pull Request et une CI bloquante, et je note les incidents. Sur la V2, la partie technique s'est terminée quatre jours avant la date prévue, malgré trois incidents.</p></div>
+      </div>
       <div class="reveal">
         <p class="muted" style="max-width:70ch;margin-bottom:20px">Trois convictions : la <b style="color:var(--ink)">fiabilité prime sur la micro-optimisation</b> ; l'<b style="color:var(--ink)">évaluation et le monitoring</b> sont le cœur du métier ; la valeur naît du <b style="color:var(--ink)">lien technique ↔ métier</b>. Mes prochains défis :</p>
         <div class="axes">
-          <span class="chip">Agents IA (orchestration multi-outils)</span>
-          <span class="chip">Fine-tuning de LLM</span>
+          <span class="chip">Fine-tuning de LLM (SFT, LoRA, DPO)</span>
+          <span class="chip">Surveillance avec étiquettes différées</span>
           <span class="chip">Cloud managé &amp; observabilité</span>
-          <span class="chip">Réentraînement automatisé sur drift</span>
           <span class="chip">LLMOps : suivi coût / tokens</span>
         </div>
       </div>
@@ -2138,7 +2156,7 @@ document.documentElement.classList.add('js');
         <div class="cm-meta">
           <div><span class="cm-k">base_model</span><span class="cm-v">Développeur web, 5 ans en production</span></div>
           <div><span class="cm-k">fine_tuned_on</span><span class="cm-v">AI Engineer Bac+5, OpenClassrooms</span></div>
-          <div><span class="cm-k">languages</span><span class="cm-v">FR natif et anglais professionnel</span></div>
+          <div><span class="cm-k">languages</span><span class="cm-v">FR natif, anglais technique (lecture)</span></div>
           <div><span class="cm-k">deployment</span><span class="cm-v">Île-de-France, Hauts-de-France</span></div>
           <div><span class="cm-k">status</span><span class="cm-v ok">Disponible en freelance &amp; CDI</span></div>
           <div><span class="cm-k">license</span><span class="cm-v">Mission cadrée, périmètre annoncé</span></div>
@@ -3228,17 +3246,22 @@ FX.onStart(function (mode) {
 window.CREDIT_API = (function () {
   "use strict";
   var BASE = 'https://clementrbl-credit-scoring-api.hf.space';
-  var THRESHOLD = 0.47;
+  /* Seuil du modèle servi. 0,48 est celui de la v4, en production depuis le
+     9 octobre 2026 ; il ne sert que tant que l'API n'a pas répondu. Chaque
+     réponse de /predict porte le seuil du modèle en service, et c'est lui qui
+     fait foi : après une promotion, la démo suit sans modification. */
+  var threshold = 0.48;
 
   /* Identifiants réellement présents dans le jeu de données servi par l'API,
      relevés en la sondant. Les probabilités ne servent QUE de repli hors ligne :
-     en fonctionnement normal, c'est l'API qui les renvoie. */
+     en fonctionnement normal, c'est l'API qui les renvoie. Relevées sur le
+     modèle v4 le 9 octobre 2026. */
   var CLIENTS = [
-    { id: 100057, p: 0.0706 }, { id: 100117, p: 0.1280 }, { id: 100512, p: 0.1412 },
-    { id: 100150, p: 0.1980 }, { id: 100141, p: 0.2616 }, { id: 100042, p: 0.2809 },
-    { id: 100128, p: 0.3031 }, { id: 100001, p: 0.3718 }, { id: 100109, p: 0.3862 },
-    { id: 100106, p: 0.4340 }, { id: 100311, p: 0.5411 }, { id: 100005, p: 0.6660 },
-    { id: 100038, p: 0.6987 }, { id: 456250, p: 0.7310 }, { id: 100107, p: 0.7932 }
+    { id: 100057, p: 0.0716 }, { id: 100512, p: 0.1037 }, { id: 100117, p: 0.1359 },
+    { id: 100150, p: 0.1461 }, { id: 100141, p: 0.2144 }, { id: 100042, p: 0.3025 },
+    { id: 100106, p: 0.3387 }, { id: 100109, p: 0.4019 }, { id: 100001, p: 0.4063 },
+    { id: 100311, p: 0.4556 }, { id: 100128, p: 0.5490 }, { id: 100005, p: 0.6214 },
+    { id: 100038, p: 0.6342 }, { id: 456250, p: 0.7495 }, { id: 100107, p: 0.8005 }
   ];
 
   /* Caractéristiques lisibles des mêmes dossiers, relevées dans le parquet servi
@@ -3267,7 +3290,7 @@ window.CREDIT_API = (function () {
   var online = null;          // null = pas encore su, true/false ensuite
   var budget = 40;            // plafond d'appels par visite : l'API est sur un Space gratuit
 
-  function decisionFor(p) { return p < THRESHOLD ? 'ACCORDE' : 'REFUSE'; }
+  function decisionFor(p) { return p < threshold ? 'ACCORDE' : 'REFUSE'; }
 
   function cached(id) {
     for (var i = 0; i < CLIENTS.length; i++) if (CLIENTS[i].id === id) return CLIENTS[i];
@@ -3279,7 +3302,7 @@ window.CREDIT_API = (function () {
     var c = cached(id);
     var fallback = function (ms) {
       return { live: false, ms: ms || 0,
-               data: { SK_ID_CURR: id, probability: c.p, decision: decisionFor(c.p), threshold: THRESHOLD } };
+               data: { SK_ID_CURR: id, probability: c.p, decision: decisionFor(c.p), threshold: threshold } };
     };
     if (budget <= 0 || !window.fetch || !window.AbortController) return Promise.resolve(fallback());
     budget--;
@@ -3290,6 +3313,7 @@ window.CREDIT_API = (function () {
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(function (d) {
         clearTimeout(to); online = true;
+        if (typeof d.threshold === 'number') threshold = d.threshold;
         return { live: true, ms: Math.round((window.performance || Date).now() - t0), data: d };
       })
       .catch(function () { clearTimeout(to); online = false; return fallback(); });
@@ -3304,7 +3328,7 @@ window.CREDIT_API = (function () {
       .catch(function () { clearTimeout(to); online = false; return false; });
   }
 
-  return { BASE: BASE, THRESHOLD: THRESHOLD, CLIENTS: CLIENTS, PROFILES: PROFILES,
+  return { BASE: BASE, threshold: function () { return threshold; }, CLIENTS: CLIENTS, PROFILES: PROFILES,
            predict: predict, health: health, decisionFor: decisionFor,
            isOnline: function () { return online; } };
 })();
@@ -3414,6 +3438,7 @@ window.CREDIT_API = (function () {
   var thrCount = document.getElementById('thr-count');
   var idBox = document.getElementById('try-id');
   var busy = false, last = null;
+  var modelThr = API.threshold();   // seuil affiché comme « celui du modèle »
 
   /* Probabilités des dossiers proposés : celles du repli au départ, remplacées
      par la vraie réponse dès que l'API en renvoie une. Le décompte sous le
@@ -3425,13 +3450,27 @@ window.CREDIT_API = (function () {
   function fr(n, d) { return n.toFixed(d).replace('.', ','); }
   function num(n) { return n.toLocaleString ? n.toLocaleString('fr-FR') : String(n); }
   function put(id, v) { var e = document.getElementById(id); if (e) e.textContent = v; }
-  function thr() { return thrRange ? parseInt(thrRange.value, 10) / 100 : API.THRESHOLD; }
+  function thr() { return thrRange ? parseInt(thrRange.value, 10) / 100 : modelThr; }
+
+  /* L'API a renvoyé un autre seuil que celui affiché (nouveau modèle promu) :
+     le texte suit, et le curseur aussi s'il était resté sur l'ancien seuil. */
+  function followModelThr() {
+    var now = API.threshold();
+    if (now === modelThr) return;
+    if (thrRange && parseInt(thrRange.value, 10) === Math.round(modelThr * 100)) {
+      thrRange.value = Math.round(now * 100);
+    }
+    modelThr = now;
+    [].slice.call(document.querySelectorAll('[data-model-thr]')).forEach(function (e) {
+      e.textContent = fr(now, 2);
+    });
+  }
 
   /* Le seuil n'appartient pas au modèle : c'est une décision de gestion posée
      sur sa sortie. Le déplacer ne relance donc aucun appel, on reclasse des
      probabilités déjà obtenues. */
   function paint() {
-    var t = thr(), defaut = Math.abs(t - API.THRESHOLD) < 1e-9;
+    var t = thr(), defaut = Math.abs(t - modelThr) < 1e-9;
     if (gauge) gauge.style.setProperty('--thr', Math.round(t * 100));
     var mark = gauge && gauge.querySelector('.thr');
     if (mark) mark.setAttribute('data-lbl', fr(t, 2));
@@ -3442,14 +3481,14 @@ window.CREDIT_API = (function () {
     API.CLIENTS.forEach(function (c) {
       var pp = probs[c.id];
       if (pp < t) acc++; else ref++;
-      if ((pp < t) !== (pp < API.THRESHOLD)) bascule++;
+      if ((pp < t) !== (pp < modelThr)) bascule++;
     });
     if (thrCount) {
       var s = function (n, mot) { return n + ' ' + mot + (n > 1 ? 's' : ''); };
       thrCount.innerHTML = 'Sur les ' + API.CLIENTS.length + ' dossiers proposés : <b>' +
         s(acc, 'accordé') + '</b>, <b>' + s(ref, 'refusé') + '</b>.' +
         (bascule ? ' <span class="off">' + bascule + (bascule > 1 ? ' basculent' : ' bascule') +
-                   ' par rapport à 0,47.</span>' : '');
+                   ' par rapport à ' + fr(modelThr, 2) + '.</span>' : '');
     }
 
     if (!last) return;
@@ -3465,7 +3504,7 @@ window.CREDIT_API = (function () {
        que l'API a réellement répondu. */
     metaEl.textContent = defaut
       ? src + ' · à ' + fr(Math.abs(p - t), 3) + ' du seuil'
-      : src + ' · décision simulée à ' + fr(t, 2) + ', l’API a répondu ' + last.r.data.decision + ' à 0,47';
+      : src + ' · décision simulée à ' + fr(t, 2) + ', l’API a répondu ' + last.r.data.decision + ' à ' + fr(modelThr, 2);
   }
 
   function renderProfile(id) {
@@ -3495,13 +3534,14 @@ window.CREDIT_API = (function () {
       '&nbsp;&nbsp;<span class="k">"decision"</span>: "' + esc(d.decision) + '",<br>' +
       '&nbsp;&nbsp;<span class="k">"threshold"</span>: ' + esc(d.threshold) + '<br>}';
     renderProfile(id);
+    followModelThr();
     paint();
   }
 
   if (thrRange) {
     thrRange.addEventListener('input', paint);
     if (thrReset) thrReset.addEventListener('click', function () {
-      thrRange.value = Math.round(API.THRESHOLD * 100);
+      thrRange.value = Math.round(modelThr * 100);
       paint();
       thrRange.focus();
     });
