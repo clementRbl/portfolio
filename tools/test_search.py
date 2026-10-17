@@ -142,6 +142,8 @@ def test_intentions_connues():
         ('Vous avez déjà construit un agent ?', 'projets'),
         ('Du LangGraph ?', 'projets'),
         ('Le projet sur les échecs ?', 'projets'),
+        ('Vous avez déjà fine-tuné un modèle ?', 'projets'),
+        ('Du LoRA ou du DPO ?', 'projets'),
     ]
     ecarts = []
     for q, attendu in attendus:
