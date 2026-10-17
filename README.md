@@ -91,7 +91,10 @@ projet et la figure d'origine, le cadrage et la taille produite ;
 
 Une capture peut aussi venir d'une application qu'il faut faire tourner : celle
 de l'agent d'ouvertures FFE a été prise sur la pile lancée en local, puis
-déposée dans `docs/captures/` du projet, d'où le manifeste la reprend.
+déposée dans `docs/captures/` du projet, d'où le manifeste la reprend. Quand le
+projet est privé ou n'a pas de dépôt local (SDIS-Predict, SaadFlow, l'interface
+MLflow du triage médical), la capture est déposée dans `tools/captures/` de ce
+dépôt, et le manifeste la cadre comme n'importe quelle autre source.
 
 Les vignettes de projet sont toutes produites en 1200x500, le rapport que la
 feuille de style impose aux couvertures : le cadrage est donc décidé à la

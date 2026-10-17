@@ -9,10 +9,15 @@ recette produise deux fois le même fichier.
     python3 tools/build_images.py                 # tout sauf les figures Plotly
     uv run --with plotly --with kaleido \
         python3 tools/build_images.py             # tout
+    python3 tools/build_images.py sdis-dashboard.webp   # une seule entrée
 
 Les sources vivent hors du dépôt, dans les projets eux-mêmes (Livrables/), donc
 le script ne tourne que sur la machine qui les héberge. Une source absente est
-signalée et sautée : le reste se construit quand même.
+signalée et sautée : le reste se construit quand même. Exception : les captures
+d'applications qu'il faut faire tourner pour les voir (tableau de bord
+SDIS-Predict, interface MLflow du triage médical, vitrine SaadFlow) sont
+déposées telles quelles dans tools/captures/, puisque leur projet est privé ou
+qu'il n'y a pas de dépôt local où les ranger.
 
 Recette d'une entrée de tools/images.json :
 
@@ -196,6 +201,14 @@ def build(item, tmpdir):
 
 def main():
     items = json.loads((ROOT / 'tools' / 'images.json').read_text(encoding='utf-8'))
+    # Des noms de fichiers en arguments limitent la construction à ces entrées :
+    # ajouter une vignette ne refait pas les quatorze autres.
+    wanted = set(sys.argv[1:])
+    if wanted:
+        items = [i for i in items if i['out'] in wanted]
+        missing = wanted - {i['out'] for i in items}
+        if missing:
+            sys.exit('entrée(s) absente(s) de tools/images.json : ' + ', '.join(sorted(missing)))
     ASSETS.mkdir(exist_ok=True)
     ok = skipped = 0
     with tempfile.TemporaryDirectory() as tmp:

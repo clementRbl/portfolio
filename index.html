@@ -553,6 +553,8 @@ document.documentElement.classList.add('js');
      d'une même rangée prennent la hauteur de la plus haute - c'est déjà ce que
      font les prestations. */
   .proj-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 22px; align-items: stretch; }
+.proj-sub { margin: 54px 0 22px; max-width: 760px; }
+.proj-sub p { margin-top: 10px; font-size: 15.5px; }
   .proj { padding: 26px; display: flex; flex-direction: column; transition: transform .16s, border-color .16s; }
   .proj:hover { transform: translateY(-3px); border-color: var(--border-2); }
   @media (prefers-reduced-motion: reduce) { .proj:hover { transform: none; } }
@@ -1730,7 +1732,7 @@ document.documentElement.classList.add('js');
       </ul>
       <div class="hero-stats tnum">
         <div><div class="k">5</div><div class="l">Ans dev web · lead</div></div>
-        <div><div class="k">10</div><div class="l">Projets IA</div></div>
+        <div><div class="k">11</div><div class="l">Projets IA</div></div>
         <div><div class="k">02</div><div class="l">API en prod</div></div>
       </div>
     </div>
@@ -1744,7 +1746,7 @@ document.documentElement.classList.add('js');
         <div>
           <p class="lead"><b>5 ans développeur web</b>, puis reconversion via le parcours <b>AI Engineer</b> Master.</p>
           <p class="muted">De ces années de dev, je garde une culture d'ingénieur : du code testé, déployé, maintenu. C'est souvent ce qui manque entre un notebook et une vraie mise en production.</p>
-          <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift) et systèmes GenAI (RAG, évaluation LLM).</p>
+          <p class="muted">J'ai couvert toute la chaîne : modélisation (scoring, classification, computer vision), industrialisation MLOps (API, Docker, CI/CD, monitoring de drift), systèmes GenAI (RAG, évaluation LLM) et spécialisation de LLM (SFT, LoRA, DPO, service vLLM).</p>
           <p class="muted">Ma conviction : un modèle ne vaut que <b>servi, surveillé et maintenable</b>. La valeur naît en production, pas dans le notebook. Disponible en freelance ou en CDI sur les sujets MLOps et LLMOps, les plus demandés de 2026.</p>
         </div>
         <div class="panel">
@@ -1816,11 +1818,13 @@ document.documentElement.classList.add('js');
         <div><div class="skill-head"><span class="name">Machine Learning &amp; Modélisation</span><span class="lvl" role="img" aria-label="Niveau avancé, 4 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="lvl-txt" aria-hidden="true">Avancé</span></div><div class="skill-tags">scikit-learn · LightGBM · XGBoost · SHAP · coût métier</div></div>
         <div><div class="skill-head"><span class="name">MLOps &amp; Mise en production</span><span class="lvl" role="img" aria-label="Niveau avancé, 4 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="lvl-txt" aria-hidden="true">Avancé</span></div><div class="skill-tags">FastAPI · Docker · CI/CD · MLflow · Evidently · Prometheus</div></div>
         <div><div class="skill-head"><span class="name">GenAI &amp; LLM / RAG</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">LangChain · Faiss · Milvus · Mistral · Ragas · guardrails</div></div>
+        <div><div class="skill-head"><span class="name">Fine-tuning de LLM</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">SFT · LoRA · DPO · TRL · PEFT · vLLM</div></div>
         <div><div class="skill-head"><span class="name">Agents &amp; orchestration</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">LangGraph · routage conditionnel · agrégation de sources · traçage MLflow</div></div>
         <div><div class="skill-head"><span class="name">Deep Learning &amp; Computer Vision</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">PyTorch · ResNet-50 · transfer learning · semi-supervisé</div></div>
         <div><div class="skill-head"><span class="name">Data Engineering</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">Airflow · PostgreSQL · ETL · pandas</div></div>
         <div><div class="skill-head"><span class="name">Reinforcement Learning</span><span class="lvl" role="img" aria-label="Niveau notions, 2 sur 5"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Notions</span></div><div class="skill-tags">Gymnasium · DQN · stable-baselines3</div></div>
-        <div><div class="skill-head"><span class="name">Langages &amp; outils</span><span class="lvl" role="img" aria-label="Niveau avancé, 4 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="lvl-txt" aria-hidden="true">Avancé</span></div><div class="skill-tags">Python · SQL · Git · Angular · Streamlit · pytest · Ruff</div></div>
+        <div><div class="skill-head"><span class="name">Langages &amp; outils</span><span class="lvl" role="img" aria-label="Niveau avancé, 4 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="lvl-txt" aria-hidden="true">Avancé</span></div><div class="skill-tags">Python · SQL · Git · Streamlit · pytest · Ruff · uv</div></div>
+        <div><div class="skill-head"><span class="name">Front-end</span><span class="lvl" role="img" aria-label="Niveau avancé, 4 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="lvl-txt" aria-hidden="true">Avancé</span></div><div class="skill-tags">Vue 3 · TypeScript · Quasar · Nuxt · Angular · Vitest</div></div>
         <div><div class="skill-head"><span class="name">Conduite de projet data</span><span class="lvl" role="img" aria-label="Niveau opérationnel, 3 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="lvl-txt" aria-hidden="true">Opérationnel</span></div><div class="skill-tags">cadrage besoins · audit · trade-offs · vulgarisation</div></div>
       </div>
       <div class="langs reveal"><span class="hud-label">Langues</span><span class="lang"><b>Français</b> <span class="lvl" role="img" aria-label="Niveau natif, 5 sur 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="lvl-txt" aria-hidden="true">Natif</span></span><span class="lang"><b>Anglais</b> <span class="muted">lecture de documentation technique</span></span></div>
@@ -1830,7 +1834,7 @@ document.documentElement.classList.add('js');
   <!-- PROJETS -->
   <section id="projets">
     <div class="wrap">
-      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 04</span><h2>Projets</h2><p>Dix projets couvrant ML, MLOps, agents IA, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
+      <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 04</span><h2>Projets</h2><p>Onze projets couvrant ML, MLOps, fine-tuning de LLM, agents IA, GenAI, computer vision, régression et RL. La plupart des dépôts sont publics et documentés.</p></div>
       <div class="proj-grid reveal">
 
         <article class="panel proj feat">
@@ -1849,6 +1853,15 @@ document.documentElement.classList.add('js');
             </div>
             <div class="shot"><img src="assets/mlops-dashboard.webp" width="1200" height="438" alt="Dashboard Streamlit de monitoring : distribution des scores, décisions, latence." loading="lazy" decoding="async"></div>
           </div>
+        </article>
+
+        <article class="panel proj">
+          <div class="badges"><span class="badge">Fine-tuning LLM · POC</span></div>
+          <h3>Triage médical</h3><p class="role">Agent d'aide au triage aux urgences</p>
+          <p class="desc">Qwen3-1.7B spécialisé par SFT + LoRA (1 % des paramètres entraînés, 42 min sur une RTX 3080) sur 5 000 paires bilingues anonymisées, puis trois runs DPO dont deux échecs documentés. 91,9 % d'exactitude et 31 urgences vitales sur 31 détectées, là où le modèle de base ne répond jamais au format. Servi par vLLM derrière une API FastAPI sur GPU, avec un garde-fou par barème et un journal d'audit chaîné.</p>
+          <div class="tags"><span class="tag">SFT</span><span class="tag">LoRA</span><span class="tag">DPO</span><span class="tag">vLLM</span><span class="tag">FastAPI</span><span class="tag">Modal</span></div>
+          <div class="cover"><img src="assets/triage-sft-convergence.webp" width="1200" height="500" alt="Courbe MLflow de la perte de validation du fine-tuning : de 1,54 au pas 50 à 1,36 au pas 500, un plateau dès le pas 400." loading="lazy" decoding="async"></div>
+          <div class="proj-links"><a href="https://github.com/clementRbl/agent-ia-triage-medical" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
         <article class="panel proj">
@@ -1946,6 +1959,31 @@ document.documentElement.classList.add('js');
           <p class="desc">Preuve de concept de segmentation d'images de vêtements à partir d'un modèle pré-entraîné (Hugging Face) : évaluation par IoU, visualisations, et estimation de coût « build vs buy » pour cadrer la faisabilité.</p>
           <div class="tags"><span class="tag">Computer Vision</span><span class="tag">Segmentation</span><span class="tag">Hugging Face</span><span class="tag">POC</span></div>
           <div class="cover"><img src="assets/fashion-segmentation.webp" width="1200" height="500" alt="Une photo de vêtement, son masque de segmentation par classe et la superposition des deux." loading="lazy" decoding="async"></div>
+          <div class="proj-links"><a href="https://github.com/clementRbl/modetrends" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
+        </article>
+
+      </div>
+      <div class="proj-sub reveal">
+        <span class="hud-label">Hors formation · en production</span>
+        <p class="muted">Deux produits que je fais tourner pour de vrais utilisateurs, à côté du parcours. Le code est privé ; ce qu'ils font ne l'est pas.</p>
+      </div>
+      <div class="proj-grid reveal">
+
+        <article class="panel proj">
+          <div class="badges"><span class="badge live">● En production</span><span class="badge">Série temporelle · Agent LLM</span><span class="badge">Code privé</span></div>
+          <h3>SDIS<span class="dash">-</span>Predict</h3><p class="role">Prévision des interventions des sapeurs-pompiers</p>
+          <p class="desc">Micro-SaaS qui prévoit le nombre d'interventions quotidiennes d'un service d'incendie à partir du calendrier (fériés, ponts, vacances) et de la météo. LightGBM sur 21 variables, seuil de tension par territoire, et un briefing opérationnel rédigé par un agent LLM à partir des prévisions. Entraîné sur trois ans de la London Fire Brigade et sur un jeu de démonstration pour l'Oise. Interface Reflex, image Docker publiée par la CI et déployée sur un VPS, accès par compte.</p>
+          <div class="tags"><span class="tag">LightGBM</span><span class="tag">Open-Meteo</span><span class="tag">OpenAI</span><span class="tag">Reflex</span><span class="tag">Docker</span><span class="tag">CI/CD</span></div>
+          <div class="cover"><img src="assets/sdis-dashboard.webp" width="1200" height="500" alt="Tableau de bord SDIS-Predict : prévision de la charge opérationnelle sur quatorze jours, avec les jours en tension signalés." loading="lazy" decoding="async"></div>
+        </article>
+
+        <article class="panel proj">
+          <div class="badges"><span class="badge live">● En bêta</span><span class="badge">SaaS · GenAI</span><span class="badge">Code privé</span></div>
+          <h3>SaadFlow</h3><p class="role">Montage des dossiers d'aide à domicile</p>
+          <p class="desc">Plateforme B2B pour les services d'aide à domicile : éligibilité APA et PCH, Cerfa pré-remplis, pièces lues par vision et OCR dans un worker asynchrone, intake conversationnel et courriers rédigés par LLM (Mistral ou Anthropic), RAG réglementaire sur pgvector. FastAPI et Next.js, 324 tests, déploiement continu sur VPS avec suivi d'erreurs et page de statut. Bêta sans données de santé réelles tant que l'hébergement n'est pas certifié HDS.</p>
+          <div class="tags"><span class="tag">FastAPI</span><span class="tag">Next.js</span><span class="tag">pgvector</span><span class="tag">Mistral</span><span class="tag">Redis</span><span class="tag">Docker</span></div>
+          <div class="cover"><img src="assets/saadflow-landing.webp" width="1200" height="500" alt="Vitrine de SaadFlow : promesse de financement débloqué plus tôt, et un dossier type avec GIR estimé, reste à charge et étapes d'instruction." loading="lazy" decoding="async"></div>
+          <div class="proj-links"><a href="https://saadflow.fr" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg> Site</a></div>
         </article>
 
       </div>
@@ -2106,7 +2144,7 @@ document.documentElement.classList.add('js');
       <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 07</span><h2>Soft skills</h2></div>
       <div class="soft-grid reveal">
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3>Esprit d'analyse</h3><p>Détection d'une fuite de données par audit MD5 sur BrainScanAI ; arbitrage risque/perf sur le retrait d'ONNX.</p></div>
-        <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/><path d="M9 21h6"/></svg></div><h3>Curiosité continue</h3><p>Du ML classique au GenAI/RAG et au RL en un an ; veille active sur les tendances MLOps/LLMOps 2026.</p></div>
+        <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/><path d="M9 21h6"/></svg></div><h3>Curiosité continue</h3><p>Du ML classique au GenAI/RAG, au fine-tuning de LLM et au RL en un an ; veille active sur les tendances MLOps/LLMOps 2026.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><h3>Vulgarisation</h3><p>Traduire AUC, drift et coût métier en enjeux business ; READMEs, rapports et dashboards pédagogiques.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><h3>Gestion de projet</h3><p>Découpage itératif, Definition of Done, CI/CD comme garde-fou qualité automatisé.</p></div>
         <div class="panel soft"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"/></svg></div><h3>Créativité</h3><p>Pagination par curseur de date (RAG) ; labels faibles générés par clustering en semi-supervisé.</p></div>
@@ -2124,14 +2162,13 @@ document.documentElement.classList.add('js');
         <div class="panel shift after"><span class="tl">Aujourd'hui</span><p>« La valeur, c'est un système <b>fiable, monitoré et maintenable</b> en production. »</p></div>
       </div>
       <div class="refl-three reveal">
-        <div class="panel refl-card"><h3>Ce que la formation m'a apporté</h3><p>Je venais du développement web. J'ai appris à juger un modèle sur ce qu'il coûte à l'entreprise plutôt que sur son score, et à le traiter comme un logiciel : tests, CI, déploiement, surveillance. Les dix projets m'ont mené du ML classique aux LLM, aux agents et au reinforcement learning.</p></div>
+        <div class="panel refl-card"><h3>Ce que la formation m'a apporté</h3><p>Je venais du développement web. J'ai appris à juger un modèle sur ce qu'il coûte à l'entreprise plutôt que sur son score, et à le traiter comme un logiciel : tests, CI, déploiement, surveillance. Les onze projets m'ont mené du ML classique aux LLM, à leur fine-tuning, aux agents et au reinforcement learning.</p></div>
         <div class="panel refl-card"><h3>Ce que je referais autrement</h3><p>Dans la V1 du scoring, le seuil de décision était écrit en dur dans l'API et le modèle servi avait appris sur toutes les données. Pour simuler de nouveaux mois dans la V2, j'ai dû réentraîner le champion sur 60 % des données. Aujourd'hui, je range le seuil avec le modèle et je mets un test figé de côté dès le départ.</p></div>
         <div class="panel refl-card"><h3>Ma méthode aujourd'hui</h3><p>Je cadre avant de coder : le besoin, des critères d'acceptation vérifiables, les décisions techniques. Je découpe en tâches estimées sur un Kanban, chaque changement passe par une Pull Request et une CI bloquante, et je note les incidents. Sur la V2, la partie technique s'est terminée quatre jours avant la date prévue, malgré trois incidents.</p></div>
       </div>
       <div class="reveal">
         <p class="muted" style="max-width:70ch;margin-bottom:20px">Trois convictions : la <b style="color:var(--ink)">fiabilité prime sur la micro-optimisation</b> ; l'<b style="color:var(--ink)">évaluation et le monitoring</b> sont le cœur du métier ; la valeur naît du <b style="color:var(--ink)">lien technique ↔ métier</b>. Mes prochains défis :</p>
         <div class="axes">
-          <span class="chip">Fine-tuning de LLM (SFT, LoRA, DPO)</span>
           <span class="chip">Surveillance avec étiquettes différées</span>
           <span class="chip">Cloud managé &amp; observabilité</span>
           <span class="chip">LLMOps : suivi coût / tokens</span>
@@ -2162,7 +2199,7 @@ document.documentElement.classList.add('js');
           <div><span class="cm-k">license</span><span class="cm-v">Mission cadrée, périmètre annoncé</span></div>
         </div>
         <div class="cm-metrics tnum">
-          <div><div class="n">10</div><div class="c">Projets IA</div></div>
+          <div><div class="n">11</div><div class="c">Projets IA</div></div>
           <div><div class="n">02</div><div class="c">API en production</div></div>
           <div><div class="n">96&nbsp;%</div><div class="c">Couverture de tests</div></div>
           <div><div class="n">0,78</div><div class="c">AUC du modèle servi</div></div>
@@ -2174,6 +2211,7 @@ document.documentElement.classList.add('js');
             <ul>
               <li>Mise en production d'un modèle : API, CI/CD, monitoring de drift</li>
               <li>Systèmes GenAI : RAG, évaluation, garde-fous</li>
+              <li>Spécialisation d'un LLM : SFT, LoRA, DPO, service vLLM</li>
               <li>Renfort front Vue&nbsp;3 ou Quasar, migration Vue&nbsp;2 vers 3</li>
             </ul>
           </div>
@@ -2203,7 +2241,7 @@ document.documentElement.classList.add('js');
       <div class="panel ask reveal" id="ask">
         <div class="ask-head">
           <span class="hud-label">Interrogez le CV</span>
-          <span class="ask-eng">TF-IDF + SVD, rang 14, 25 documents · l'index tient dans la page, aucune requête ne part</span>
+          <span class="ask-eng">TF-IDF + SVD, rang 14, 26 documents · l'index tient dans la page, aucune requête ne part</span>
         </div>
         <form class="ask-form" id="ask-form" autocomplete="off">
           <input id="ask-q" type="text" aria-label="Posez une question sur le CV" placeholder="Vous connaissez Docker ? Vous êtes disponible ?">
@@ -4049,7 +4087,7 @@ FX.onStart(function (mode) {
     var typer = null;
     var SUGG = ['Vous connaissez Docker ?', 'Vous êtes disponible ?',
                 'Vous avez déjà construit un agent ?', 'Vous avez déjà déployé un modèle ?',
-                'Vous faites du RAG ?', 'Quels sont vos tarifs ?', 'Quel est votre diplôme ?',
+                'Vous faites du RAG ?', 'Vous avez déjà fine-tuné un modèle ?', 'Quels sont vos tarifs ?', 'Quel est votre diplôme ?',
                 'Vous travaillez où ?'];
     SUGG.forEach(function (q) {
       var b = document.createElement('button');

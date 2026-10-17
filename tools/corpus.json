@@ -61,7 +61,7 @@
  {
   "id": "competences",
   "title": "Hard skills",
-  "text": "Stack technique. Machine learning, scikit-learn, LightGBM, XGBoost, SHAP, coût métier. MLOps, FastAPI, Docker, CI/CD, MLflow, Evidently. GenAI, LangChain, Faiss, Mistral, Ragas, guardrails. PyTorch, ResNet-50, transfer learning. Airflow, PostgreSQL, ETL, pandas. Gymnasium, DQN, stable-baselines3. Python, SQL, Git, Streamlit, pytest, Ruff. Agents LangGraph, index vectoriel Milvus, Angular, Prometheus.",
+  "text": "Stack technique. Machine learning, scikit-learn, LightGBM, XGBoost, SHAP, coût métier. MLOps, FastAPI, Docker, CI/CD, MLflow, Evidently. GenAI, LangChain, Faiss, Mistral, Ragas, guardrails. PyTorch, ResNet-50, transfer learning. Airflow, PostgreSQL, ETL, pandas. Gymnasium, DQN, stable-baselines3. Python, SQL, Git, Streamlit, pytest, Ruff. Agents LangGraph, index vectoriel Milvus, Prometheus. Fine-tuning de LLM, SFT, LoRA, DPO, TRL, PEFT, vLLM. Front-end Vue 3, TypeScript, Quasar, Nuxt, Angular, Vitest.",
   "queries": [
    "quelles technologies tu maîtrises",
    "tu connais quoi",
@@ -77,13 +77,13 @@
    "vous savez faire quoi",
    "votre stack"
   ],
-  "answer": "Côté mise en production, je travaille avec Python, FastAPI, Docker, GitHub Actions, MLflow et Evidently. Côté modélisation, scikit-learn, LightGBM et SHAP. Côté GenAI, LangChain et LangGraph, Faiss et Milvus, Mistral et Ragas. La carte mentale détaille chaque famille.",
+  "answer": "Côté mise en production, je travaille avec Python, FastAPI, Docker, GitHub Actions, MLflow et Evidently. Côté modélisation, scikit-learn, LightGBM et SHAP. Côté GenAI, LangChain et LangGraph, Faiss et Milvus, Mistral et Ragas, et le fine-tuning avec LoRA, DPO et vLLM. Côté front, Vue 3, TypeScript et Quasar. La carte mentale détaille chaque famille.",
   "section": "competences"
  },
  {
   "id": "projets",
   "title": "Projets",
-  "text": "Dix projets couvrant machine learning, MLOps, agents IA, GenAI, computer vision, régression et reinforcement learning. Dépôts publics et documentés. Credit scoring, agent LangGraph d'ouvertures d'échecs pour la Fédération Française des Échecs, avec un RAG Wikichess sur index vectoriel Milvus. Chatbot RAG Puls-Events. BrainScanAI, Seattle Energy, segmentation client.",
+  "text": "Onze projets couvrant machine learning, MLOps, fine-tuning de LLM, agents IA, GenAI, computer vision, régression et reinforcement learning. Dépôts publics et documentés. Credit scoring, agent LangGraph d'ouvertures d'échecs pour la Fédération Française des Échecs, avec un RAG Wikichess sur index vectoriel Milvus. Chatbot RAG Puls-Events. Agent de triage médical, Qwen fine-tuné. BrainScanAI, Seattle Energy, segmentation client. Hors formation, deux produits en production au code privé : SDIS-Predict, prévision des interventions de pompiers, et SaadFlow, dossiers d'aide à domicile.",
   "queries": [
    "montre-moi ton travail",
    "tes réalisations",
@@ -99,7 +99,7 @@
    "du langgraph",
    "un projet avec une base vectorielle"
   ],
-  "answer": "Dix projets couvrent la chaîne complète, du scoring crédit mis en production à l'agent d'ouvertures d'échecs construit pour la Fédération Française des Échecs, en passant par un chatbot RAG, la détection de tumeurs sur IRM, un pipeline ETL et un agent d'apprentissage par renforcement. La plupart des dépôts sont publics et documentés.",
+  "answer": "Onze projets couvrent la chaîne complète, du scoring crédit mis en production à l'agent d'ouvertures d'échecs construit pour la Fédération Française des Échecs, en passant par un LLM fine-tuné pour le triage aux urgences, un chatbot RAG, la détection de tumeurs sur IRM, un pipeline ETL et un agent d'apprentissage par renforcement. La plupart des dépôts sont publics et documentés. À côté, deux produits tournent pour de vrais utilisateurs : SDIS-Predict et SaadFlow.",
   "section": "projets"
  },
  {
@@ -185,14 +185,13 @@
  {
   "id": "reflexivite",
   "title": "Réflexivité",
-  "text": "Recul sur le métier et axes d'amélioration. Ce que la formation m'a apporté, ce que je referais autrement, ma méthode aujourd'hui : cadrage, Kanban, Pull Request, CI bloquante, journal d'incidents. La fiabilité prime sur la micro-optimisation. Évaluation et monitoring au cœur du métier. Prochains défis : fine-tuning de LLM, surveillance avec étiquettes différées, cloud managé et observabilité, LLMOps suivi coût et tokens.",
+  "text": "Recul sur le métier et axes d'amélioration. Ce que la formation m'a apporté, ce que je referais autrement, ma méthode aujourd'hui : cadrage, Kanban, Pull Request, CI bloquante, journal d'incidents. La fiabilité prime sur la micro-optimisation. Évaluation et monitoring au cœur du métier. Prochains défis : surveillance avec étiquettes différées, cloud managé et observabilité, LLMOps suivi coût et tokens.",
   "queries": [
    "tes limites",
    "ce que tu ne sais pas encore",
    "tes axes de progression",
    "tu apprends quoi en ce moment",
    "tes convictions",
-   "fine-tuning",
    "agents ia",
    "vos limites",
    "vos axes de progrès",
@@ -265,6 +264,23 @@
    "vous faites des agents"
   ],
   "answer": "Oui, avec LangGraph. L'agent d'ouvertures que j'ai construit pour la Fédération Française des Échecs interroge la théorie Lichess, le moteur Stockfish, un index vectoriel Milvus et YouTube, puis bifurque : dès que la position sort de la théorie, il laisse tomber le contexte et s'en remet au moteur. Chaque nœud du graphe est tracé dans MLflow."
+ },
+ {
+  "id": "finetuning",
+  "section": "projets",
+  "title": "Fine-tuning de LLM",
+  "text": "fine-tuning finetuning fine tuner tuné spécialisation spécialiser entraîner LLM modèle de langage SFT supervised LoRA adaptateur PEFT TRL DPO préférences alignement Qwen vLLM inférence GPU triage médical urgences évaluation clinique sous-triage",
+  "queries": [
+   "vous avez déjà fine-tuné un modèle",
+   "du fine-tuning",
+   "vous savez entraîner un llm",
+   "du lora",
+   "du dpo",
+   "vous connaissez vllm",
+   "spécialiser un modèle de langage",
+   "tu as déjà fine-tuné un modèle"
+  ],
+  "answer": "Oui, de bout en bout sur le projet de triage médical : Qwen3-1.7B spécialisé par SFT avec LoRA, 1 % des paramètres entraînés en 42 minutes sur une carte grand public, puis trois runs DPO dont deux échecs documentés. Le modèle passe de 0 à 92 % d'exactitude et détecte les 31 urgences vitales du jeu de test. Il est servi par vLLM derrière une API FastAPI sur GPU."
  },
  {
   "id": "mlops",
@@ -423,7 +439,7 @@
   "id": "production",
   "section": "projet-phare",
   "title": "Ce qui tourne en production",
-  "text": "production en ligne déployé API Hugging Face Spaces Swagger endpoint latence appel réel démonstration vivant tourne",
+  "text": "production en ligne déployé API Hugging Face Spaces Swagger endpoint latence appel réel démonstration vivant tourne VPS SaaS utilisateurs",
   "queries": [
    "quest-ce qui tourne en production",
    "vous avez du code en ligne",
@@ -431,7 +447,7 @@
    "du hugging face",
    "je peux tester quelque chose"
   ],
-  "answer": "Deux API tournent sur Hugging Face Spaces. Celle du scoring crédit met environ 6 ms à répondre : le panneau du haut de page et la démonstration de l'étude de cas l'appellent vraiment, et les chiffres affichés sont ses propres réponses. La seconde sert les modèles d'énergie et d'émissions des bâtiments de Seattle."
+  "answer": "Deux API tournent sur Hugging Face Spaces. Celle du scoring crédit met environ 6 ms à répondre : le panneau du haut de page et la démonstration de l'étude de cas l'appellent vraiment, et les chiffres affichés sont ses propres réponses. La seconde sert les modèles d'énergie et d'émissions des bâtiments de Seattle. Hors formation, SDIS-Predict et SaadFlow tournent aussi sur des serveurs que j'administre, pour de vrais utilisateurs."
  },
  {
   "id": "engagement",

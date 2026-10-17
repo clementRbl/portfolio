@@ -176,5 +176,56 @@
   "filter": "crop=600:250:0:150",
   "quality": 80,
   "note": "Affiche de la video : descente moteur allume, entre les deux fanions"
+ },
+ {
+  "out": "triage-sft-convergence.webp",
+  "from": "file",
+  "src": "falDatacorps/portfolio/tools/captures/triage-mlflow-eval-loss.png",
+  "crop": [
+   1350,
+   563,
+   "northwest",
+   45,
+   95
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Courbe eval_loss du run SFT dans MLflow (triage medical), vue agrandie sans barre d'outils"
+ },
+ {
+  "out": "sdis-dashboard.webp",
+  "from": "file",
+  "src": "falDatacorps/portfolio/tools/captures/sdis-predict-tableau-de-bord.png",
+  "crop": [
+   1200,
+   500,
+   "northwest",
+   120,
+   275
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Tableau de bord SDIS-Predict, London Fire Brigade sur 14 jours : periode calme, indicateurs, jour par jour"
+ },
+ {
+  "out": "saadflow-landing.webp",
+  "from": "file",
+  "src": "falDatacorps/portfolio/tools/captures/saadflow-vitrine.png",
+  "crop": [
+   1200,
+   500,
+   "northwest",
+   120,
+   130
+  ],
+  "size": [
+   1200,
+   500
+  ],
+  "note": "Vitrine saadflow.fr : promesse et dossier type (GIR, reste a charge, etapes)"
  }
 ]
