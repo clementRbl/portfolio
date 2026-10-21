@@ -453,13 +453,13 @@
   "id": "engagement",
   "section": "parcours",
   "title": "Engagement",
-  "text": "engagement pompier sapeur volontaire caserne bénévole ville habitants service équipe sang-froid",
+  "text": "engagement pompier sapeur volontaire caserne bénévole population service équipe sang-froid",
   "queries": [
    "vous faites quoi à côté",
    "vos engagements",
    "vous êtes pompier",
    "du bénévolat"
   ],
-  "answer": "Je suis sapeur-pompier volontaire dans ma ville. Le sang-froid, l'esprit d'équipe et le sens du service s'y apprennent autrement qu'au clavier, et ça ne s'arrête pas à la caserne."
+  "answer": "Je suis sapeur-pompier volontaire. Le sang-froid, l'esprit d'équipe et le sens du service s'y apprennent autrement qu'au clavier, et ça ne s'arrête pas à la caserne."
  }
 ]
