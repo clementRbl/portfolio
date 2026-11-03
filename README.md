@@ -9,8 +9,8 @@ Sert aussi de support commercial : la section **Prestations** liste des missions
 
 | Page | Description |
 |---|---|
-| `index.html` | Portfolio : profil, compétences, projets, projet phare, **prestations**, réflexivité, contact |
-| `rapport.html` | Rapport de conduite de projet AI Engineering : surveillance et réentraînement automatiques du modèle de scoring crédit (V2) |
+| `index.html` | Portfolio : profil, parcours, compétences, projets, projet phare, CV en model card, **prestations**, contact |
+| `rapport.html` | Rapport de conduite de projet AI Engineering : surveillance et réentraînement automatiques du modèle de scoring crédit (V2), réflexivité en conclusion |
 | `carte-mentale.html` | Carte mentale interactive des compétences |
 | `assets/` | Captures des projets, CV PDF, image de partage Open Graph |
 | `assets/search-index.json` | Index de recherche vectorielle de la palette (généré) |
@@ -60,8 +60,8 @@ cas sans qu'aucun de ses mots n'ait été saisi.
 servie telle quelle. La recherche est vectorielle, la réponse ne l'est pas :
 aucun modèle n'écrit de phrase, donc aucune phrase ne peut être inventée.
 
-Le corpus mêle deux sortes de documents. Onze correspondent aux sections du
-site. Les autres sont thématiques - « rag », « agents », « tarifs »,
+Le corpus mêle deux sortes de documents. Neuf correspondent aux sections du
+site, dans l'ordre de la page : le rail sémantique les reprend tel quel. Les autres sont thématiques - « rag », « agents », « tarifs »,
 « formation » - et portent un champ `section` qui dit où envoyer le visiteur.
 Ils existent parce qu'une question précise mérite une réponse précise :
 « Vous faites du RAG ? » ne doit pas renvoyer le résumé des dix projets.
@@ -177,8 +177,9 @@ Thème clair/sombre, responsive, accessible (navigation clavier, contenu visible
 ### Deux directions artistiques
 
 Le site se charge en mode **Standard** : palette froide, angles droits, surfaces
-propres - registre instrument de mesure. La navigation y passe par une **palette
-de commandes** (`⌘K` / `Ctrl K`, ou `M`).
+propres - registre instrument de mesure. L'en-tête porte quatre liens toujours
+visibles (Projets, Parcours, CV, Contact) ; la **palette de commandes**
+(`⌘K` / `Ctrl K`, ou `M`) reste en bonus.
 
 Le mode Standard a ses propres animations, toutes adossées à une donnée réelle
 du projet : flux d'inférence qui s'écrit jeton par jeton dans le panneau de

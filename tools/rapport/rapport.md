@@ -402,6 +402,18 @@ J'ai écrit les tests avant le code qu'ils vérifient. Ce qui n'est pas testé :
 | 4 | Validation du schéma des lots entrants | 1 j |
 | 5 | Intervalle de confiance dans la règle de promotion | 1 j |
 
+### Réflexivité
+
+Avant un bon modèle était pour moi un bon score dans un notebook. Aujourd'hui c'est un système **qui tient en production** et que l'on sait surveiller et maintenir.
+
+Je venais du développement web. La formation m'a appris à juger un modèle sur ce qu'il coûte à l'entreprise plutôt que sur son score. Elle m'a aussi appris à le traiter comme un logiciel avec ses tests, sa CI, son déploiement et sa surveillance. Les onze projets m'ont mené du ML classique aux LLM fine-tunés, aux agents et au reinforcement learning.
+
+Je referais deux choses autrement dans la V1 du scoring. Le seuil de décision était écrit en dur dans l'API et le modèle servi avait appris sur toutes les données. Pour simuler de nouveaux mois dans la V2 j'ai dû réentraîner le champion sur 60 % des données. Aujourd'hui je range le seuil avec le modèle et je mets de côté un jeu de test figé dès le départ.
+
+Je cadre maintenant avant de coder : le besoin, des critères d'acceptation vérifiables, les décisions techniques. Je découpe le travail en tâches estimées sur un Kanban. Chaque changement passe par une Pull Request et une CI bloquante et je note les incidents. Sur la V2 la partie technique a fini quatre jours avant la date prévue malgré trois incidents.
+
+J'en tire trois convictions. La **fiabilité prime sur la micro-optimisation**. L'**évaluation et le monitoring** sont le cœur du métier. La valeur naît du **lien entre la technique et le métier**. Il me reste à progresser sur la surveillance avec étiquettes différées, sur le cloud managé et son observabilité, et sur le suivi du coût et des tokens en LLMOps.
+
 ---
 
 ## 7. Annexes

@@ -269,7 +269,7 @@
       <li><a href="#chunking" data-id="chunking" data-fam="genai"><span class="lt">Chunking</span><span class="lf">GenAI</span></a></li>
       <li><a href="#ci-cd" data-id="ci-cd" data-fam="mlops"><span class="lt">CI/CD</span><span class="lf">MLOps</span></a></li>
       <li><a href="#classification-regression" data-id="classification-regression" data-fam="metier"><span class="lt">Classification &amp; régression</span><span class="lf">Métier</span></a></li>
-      <li><a href="#cloud-manage" data-id="cloud-manage" data-fam="mlops"><span class="lt">Cloud managé (AWS, GCP)</span><span class="lf">MLOps</span></a></li>
+      <li><a href="#cloud-manage" data-id="cloud-manage" data-fam="mlops"><span class="lt">Cloud managé (Azure, AWS, GCP)</span><span class="lf">MLOps</span></a></li>
       <li><a href="#clustering" data-id="clustering" data-fam="vision"><span class="lt">Clustering</span><span class="lf">Vision</span></a></li>
       <li><a href="#computer-vision" data-id="computer-vision" data-fam="vision"><span class="lt">Computer Vision</span><span class="lf">Vision</span></a></li>
       <li><a href="#contrat-donnees" data-id="contrat-donnees" data-fam="mlops"><span class="lt">Contrat de données</span><span class="lf">MLOps</span></a></li>
@@ -532,7 +532,7 @@
       <div class="niveau2"><p>Un arbitrage se documente avec ce qu&#x27;on a écarté et pourquoi, sinon il se rejoue tous les six mois par quelqu&#x27;un qui ignore qu&#x27;il a déjà été tranché. Le format utile tient en quatre lignes : le choix retenu, les options écartées, le critère qui a départagé, et la condition qui justifierait de revenir dessus. Cette dernière ligne est la plus souvent oubliée alors qu&#x27;elle transforme une décision figée en décision révisable : « à reconsidérer si le volume dépasse tant » vaut mieux qu&#x27;un choix qu&#x27;on n&#x27;ose plus toucher. C&#x27;est ce que porte le tableau des choix techniques du rapport.</p></div>
       <p class="etq">Voir aussi</p>
       <p class="renvois"><a href="#onnx">ONNX</a><a href="#dette-technique">Dette technique</a></p>
-      <p class="ou"><a href="index.html#reflexivite">Où ça sert sur le site →</a></p>
+      <p class="ou"><a href="index.html#projet-phare">Où ça sert sur le site →</a></p>
     </article>
     <article class="entree" id="artefact" data-fam="mlops">
       <p class="fil">MLOps &amp; mise en production</p>
@@ -667,14 +667,14 @@
     </article>
     <article class="entree" id="cloud-manage" data-fam="mlops">
       <p class="fil">MLOps &amp; mise en production</p>
-      <h2>Cloud managé (AWS, GCP)<a class="lien-ancre" href="#cloud-manage" aria-label="Lien direct vers Cloud managé (AWS, GCP)">#</a></h2>
-      <p class="alias">aws · gcp · cloud</p>
+      <h2>Cloud managé (Azure, AWS, GCP)<a class="lien-ancre" href="#cloud-manage" aria-label="Lien direct vers Cloud managé (Azure, AWS, GCP)">#</a></h2>
+      <p class="alias">azure · aws · gcp · cloud</p>
       <p class="simple">Louer chez un grand fournisseur des services déjà administrés — machines, bases de données, files d&#x27;attente, entraînement de modèles — plutôt que de les installer et de les maintenir soi-même. On y gagne du temps, de la robustesse et des mécanismes de reprise qu&#x27;on n&#x27;écrirait pas seul ; on y perd en maîtrise du coût et en portabilité, chaque fournisseur ayant ses interfaces propres.</p>
       <p class="etq">En détail</p>
-      <div class="niveau2"><p>Une limite que j&#x27;assume : mes déploiements tournent sur Docker et Hugging Face, et ma pratique d&#x27;AWS et GCP est en montée. Les concepts d&#x27;industrialisation s&#x27;y transposent — conteneur, registre d&#x27;images, variables d&#x27;environnement, journalisation centralisée, montée en charge horizontale sont les mêmes objets sous d&#x27;autres noms — et c&#x27;est l&#x27;outillage propre à chaque fournisseur qui s&#x27;apprend. Deux points structurent le choix en pratique : le modèle de facturation, où le transfert sortant et les requêtes coûtent souvent plus que le calcul lui-même, et le degré d&#x27;adhérence accepté, un service très intégré étant plus rapide à mettre en place et plus difficile à quitter. Une infrastructure décrite en code reste le meilleur garde-fou contre la configuration à la main, quel que soit le fournisseur.</p></div>
+      <div class="niveau2"><p>Une limite que j&#x27;assume : mes déploiements tournent sur Azure, Docker et Hugging Face, et ma pratique d&#x27;AWS et GCP est en montée. Les concepts d&#x27;industrialisation s&#x27;y transposent — conteneur, registre d&#x27;images, variables d&#x27;environnement, journalisation centralisée, montée en charge horizontale sont les mêmes objets sous d&#x27;autres noms — et c&#x27;est l&#x27;outillage propre à chaque fournisseur qui s&#x27;apprend. Deux points structurent le choix en pratique : le modèle de facturation, où le transfert sortant et les requêtes coûtent souvent plus que le calcul lui-même, et le degré d&#x27;adhérence accepté, un service très intégré étant plus rapide à mettre en place et plus difficile à quitter. Une infrastructure décrite en code reste le meilleur garde-fou contre la configuration à la main, quel que soit le fournisseur.</p></div>
       <p class="etq">Voir aussi</p>
       <p class="renvois"><a href="#docker">Docker</a><a href="#sla">SLA</a></p>
-      <p class="ou"><a href="index.html#reflexivite">Où ça sert sur le site →</a></p>
+      <p class="ou"><a href="index.html#cv">Où ça sert sur le site →</a></p>
     </article>
     <article class="entree" id="clustering" data-fam="vision">
       <p class="fil">Vision &amp; renforcement</p>
@@ -814,7 +814,7 @@
       <div class="niveau2"><p>Devient dangereuse quand elle n&#x27;est plus recensée : personne ne sait plus ce qui est délibéré et ce qui est accidentel, et chaque modification se fait à l&#x27;aveugle. Un registre tenu à jour nomme le raccourci, la raison, le coût estimé du remboursement et le signal qui indiquera qu&#x27;il faut payer — « à remplacer par une base dès que le volume dépasse tant ». En apprentissage automatique, la dette prend des formes propres au domaine : dépendances de données non déclarées, variables calculées différemment à l&#x27;entraînement et en production, modèles empilés dont personne ne sait plus lequel décide. Les limites assumées du rapport tiennent ce registre.</p></div>
       <p class="etq">Voir aussi</p>
       <p class="renvois"><a href="#scalabilite">Scalabilité</a><a href="#poc">POC</a><a href="#arbitrage">Arbitrage</a></p>
-      <p class="ou"><a href="index.html#reflexivite">Où ça sert sur le site →</a></p>
+      <p class="ou"><a href="index.html#projet-phare">Où ça sert sur le site →</a></p>
     </article>
     <article class="entree" id="distribution" data-fam="ml">
       <p class="fil">Modélisation</p>
@@ -1654,7 +1654,7 @@
       <p class="etq">En détail</p>
       <div class="niveau2"><p>Se rédige en centiles et sur une fenêtre d&#x27;observation, avec une contrepartie en cas de manquement — sans quoi c&#x27;est une intention, pas un engagement. Les ordres de grandeur méritent d&#x27;être connus : 99 % de disponibilité laissent plus de sept heures d&#x27;indisponibilité par mois, 99,9 % en laissent quarante-trois minutes, et chaque neuf supplémentaire coûte davantage que le précédent. On distingue l&#x27;objectif interne, fixé plus strict, de l&#x27;engagement contractuel, la marge entre les deux constituant le budget d&#x27;erreur que l&#x27;équipe peut dépenser en déploiements. Passer d&#x27;un hébergement gratuit à un service avec engagement est le premier poste de coût d&#x27;une mise en production réelle, et se chiffre au cadrage plutôt qu&#x27;après.</p></div>
       <p class="etq">Voir aussi</p>
-      <p class="renvois"><a href="#centiles">Centiles (p95, p99)</a><a href="#cloud-manage">Cloud managé (AWS, GCP)</a><a href="#hugging-face">Hugging Face Spaces</a></p>
+      <p class="renvois"><a href="#centiles">Centiles (p95, p99)</a><a href="#cloud-manage">Cloud managé (Azure, AWS, GCP)</a><a href="#hugging-face">Hugging Face Spaces</a></p>
       <p class="ou"><a href="index.html#prestations">Où ça sert sur le site →</a></p>
     </article>
     <article class="entree" id="stockage-objet" data-fam="data">
@@ -1830,7 +1830,7 @@
       <div class="niveau2"><p>Ce n&#x27;est pas simplifier jusqu&#x27;à l&#x27;approximation : c&#x27;est choisir le niveau de détail qui permet de décider juste. La ligne à ne pas franchir est celle où la simplification changerait la décision — dire qu&#x27;un modèle « a 78 % de réussite » quand il s&#x27;agit d&#x27;une AUC est faux et conduit à des attentes qu&#x27;aucun seuil ne satisfera. Trois réflexes aident : donner un ordre de grandeur avant la métrique, nommer l&#x27;erreur qu&#x27;on accepte en même temps que la performance qu&#x27;on annonce, et montrer un cas concret plutôt qu&#x27;une moyenne. Ce glossaire relève du même exercice, avec ses deux niveaux de lecture.</p></div>
       <p class="etq">Voir aussi</p>
       <p class="renvois"><a href="#shap">SHAP</a><a href="#kpi">KPI</a></p>
-      <p class="ou"><a href="index.html#soft-skills">Où ça sert sur le site →</a></p>
+      <p class="ou"><a href="index.html#projets">Où ça sert sur le site →</a></p>
     </article>
     <article class="entree" id="xgboost" data-fam="ml">
       <p class="fil">Modélisation</p>

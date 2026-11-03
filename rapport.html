@@ -218,31 +218,31 @@
 <col style="width: 50%" />
 </colgroup>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Auteur</strong></td>
 <td>Clément Reboul, AI Engineer</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Projet personnel technique</strong></td>
 <td><em><a class="g-lien" href="glossaire.html#scoring-credit" title="Définition dans le glossaire">Credit Scoring</a> <a class="g-lien" href="glossaire.html#mlops" title="Définition dans le glossaire">MLOps</a></em>, V2 : boucle <a class="g-lien" href="glossaire.html#data-drift" title="Définition dans le glossaire">dérive</a> → réentraînement → promotion</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Dépôt GitHub</strong></td>
 <td><a href="https://github.com/clementRbl/credit-scoring-mlops" class="uri">https://github.com/clementRbl/credit-scoring-mlops</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>API en production</strong></td>
 <td><a href="https://clementrbl-credit-scoring-api.hf.space/docs" class="uri">https://clementrbl-credit-scoring-api.hf.space/docs</a></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Registre des modèles (<a class="g-lien" href="glossaire.html#mlflow" title="Définition dans le glossaire">MLflow</a>)</strong></td>
 <td><a href="https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow" class="uri">https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Portfolio</strong></td>
 <td><a href="index.html">https://clement-reboul.fr/portfolio/</a></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Période</strong></td>
 <td>V1 : mars à septembre 2026 · V2 : 8 et 9 octobre 2026</td>
 </tr>
@@ -264,27 +264,27 @@
 <col style="width: 50%" />
 </colgroup>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Secteur</strong></td>
 <td>Crédit à la consommation, clientèle peu ou pas bancarisée</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Enjeu métier</strong></td>
 <td>Décider vite et de façon justifiable ; un défaut coûte environ <strong>dix fois</strong> un bon client refusé</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Données</strong></td>
 <td>Jeu <em>Home Credit</em> : 307 511 demandes étiquetées (8,07 % de défauts), 255 <a class="g-lien" href="glossaire.html#feature-engineering" title="Définition dans le glossaire">variables</a> après agrégation de 7 tables</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Maturité IA</strong></td>
 <td>Un modèle en production, servi par API, avec déploiement continu (V1)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Maturité MLOps</strong></td>
 <td><strong>Niveau 0 à 1</strong> : le service est automatisé, mais l’entraînement, la surveillance et la mise à jour du modèle sont manuels</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Contraintes</strong></td>
 <td>Budget d’infrastructure nul (<a class="g-lien" href="glossaire.html#poc" title="Définition dans le glossaire">POC</a>), décision explicable, données anonymisées, secteur régulé</td>
 </tr>
@@ -307,34 +307,34 @@
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Partie prenante</th>
 <th>Attente</th>
 <th>Ce que la V2 lui apporte</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Chargés d’études crédit</td>
 <td>Un score fiable dans la durée</td>
 <td>Un modèle surveillé chaque semaine</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Direction des risques</td>
 <td>Savoir quand le modèle se trompe davantage, garder la main sur ce qui part en production</td>
 <td>Alertes chiffrées en coût métier, promotion par validation humaine</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Équipe data</td>
 <td>Savoir sur quelles données un modèle a été entraîné</td>
 <td>Données versionnées (DVC), modèles versionnés (Registry)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a class="g-lien" href="glossaire.html#rgpd" title="Définition dans le glossaire">Conformité</a></td>
 <td>Traçabilité, supervision humaine</td>
 <td>Historique des versions, des alertes et des décisions de promotion</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Exploitation</td>
 <td>Un processus qui tourne sans intervention</td>
 <td>Workflow planifié, alertes dans l’outil de suivi existant</td>
@@ -356,7 +356,7 @@
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Besoin</th>
 <th>Impact</th>
 <th>Effort</th>
@@ -364,49 +364,49 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Alerte automatique en cas de dérive</td>
 <td>Fort</td>
 <td>Faible</td>
 <td>Retenu, gain rapide</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Seuil de décision porté par le modèle</td>
 <td>Fort</td>
 <td>Faible</td>
 <td>Retenu, prérequis du réentraînement</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Versionnage des données et des modèles</td>
 <td>Fort</td>
 <td>Moyen</td>
 <td>Retenu</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Réentraînement et promotion gouvernée</td>
 <td>Fort</td>
 <td>Moyen</td>
 <td>Retenu, cœur du projet</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Journal de production persistant</td>
 <td>Moyen</td>
 <td>Moyen</td>
 <td>Reporté (limite assumée)</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a class="g-lien" href="glossaire.html#contrat-donnees" title="Définition dans le glossaire">Validation des données</a> en entrée</td>
 <td>Moyen</td>
 <td>Moyen</td>
 <td>Reporté</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Test de charge de l’API</td>
 <td>Faible ici</td>
 <td>Moyen</td>
 <td>Reporté : quelques requêtes par jour</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Magasin de variables, tests A/B</td>
 <td>Moyen</td>
 <td>Fort</td>
@@ -468,34 +468,34 @@
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Brique</th>
 <th>Outil</th>
 <th>Rôle</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Modélisation</td>
 <td>LightGBM, <a class="g-lien" href="glossaire.html#scikit-learn" title="Définition dans le glossaire">scikit-learn</a>, <a class="g-lien" href="glossaire.html#shap" title="Définition dans le glossaire">SHAP</a>, MLflow (local)</td>
 <td>5 modèles comparés, coût métier, seuil optimisé (0,47), explicabilité</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Service</td>
 <td>FastAPI, <a class="g-lien" href="glossaire.html#docker" title="Définition dans le glossaire">Docker</a></td>
 <td><code>POST /predict</code>, <code>GET /health</code>, documentation <a class="g-lien" href="glossaire.html#rest" title="Définition dans le glossaire">Swagger</a>, environ 6 ms par <a class="g-lien" href="glossaire.html#inference" title="Définition dans le glossaire">prédiction</a></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Déploiement</td>
 <td>GitHub Actions → Hugging Face Spaces</td>
 <td>test → build → deploy à chaque push</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Sécurité</td>
 <td>slowapi, <a class="g-lien" href="glossaire.html#cors" title="Définition dans le glossaire">CORS</a>, en-têtes</td>
 <td>20 requêtes/min sur <code>/predict</code>, origines limitées, aucune trace d’erreur exposée</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Surveillance</td>
 <td>JSONL, Evidently (notebook), <a class="g-lien" href="glossaire.html#streamlit" title="Définition dans le glossaire">Streamlit</a> (local)</td>
 <td>Analyse de dérive ponctuelle, tableau de bord à lancer soi-même</td>
@@ -511,49 +511,49 @@
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Critère</th>
 <th>Constat sur la V1</th>
 <th>Écart</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Performance</td>
 <td>AUC ≈ 0,78 en <a class="g-lien" href="glossaire.html#validation-croisee" title="Définition dans le glossaire">validation croisée</a>, coût métier minimisé</td>
 <td>✅ Adéquat</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Robustesse</td>
 <td>14 <a class="g-lien" href="glossaire.html#tests-automatises" title="Définition dans le glossaire">tests automatisés</a>, API couverte à 96 %, CI bloquante</td>
 <td>✅ Adéquat</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Sécurité</td>
 <td><a class="g-lien" href="glossaire.html#limitation-debit" title="Définition dans le glossaire">Limitation de débit</a>, CORS restreint, en-têtes de sécurité</td>
 <td>✅ Adéquat pour un POC</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Coût</td>
 <td>0 € d’infrastructure</td>
 <td>✅ Adéquat</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Surveillance</td>
 <td>Notebook à relancer à la main, aucune alerte</td>
 <td>❌ Une dégradation passe inaperçue</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Maintenance du modèle</td>
 <td>Aucun réentraînement ; seuil 0,47 écrit en dur dans l’API</td>
 <td>❌ Un nouveau modèle serait servi avec un seuil faux</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Traçabilité</td>
 <td>Données non versionnées ; MLflow local, dans un autre dépôt</td>
 <td>❌ Impossible de dire sur quoi un modèle a appris</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Persistance du journal</td>
 <td>Fichier local au conteneur, perdu au redémarrage</td>
 <td>⚠️ Reporté</td>
@@ -574,7 +574,7 @@
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Décision</th>
 <th>Options étudiées</th>
 <th>Retenu</th>
@@ -582,43 +582,43 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><a class="g-lien" href="glossaire.html#langgraph" title="Définition dans le glossaire">Orchestration</a></td>
 <td><a class="g-lien" href="glossaire.html#etl" title="Définition dans le glossaire">Airflow</a> · cron local · GitHub Actions</td>
 <td>GitHub Actions</td>
 <td>Déjà utilisé par le CI/CD, gratuit pour un dépôt public, visible par un tiers. <a class="g-lien" href="glossaire.html#airflow" title="Définition dans le glossaire">Airflow</a>, que j’ai pratiqué sur un autre projet, demanderait un serveur à maintenir pour un seul flux hebdomadaire</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Registre et stockage des données</td>
 <td>MLflow auto-hébergé + S3 · <a class="g-lien" href="glossaire.html#cloud-manage" title="Définition dans le glossaire">cloud</a> managé · DagsHub</td>
 <td>DagsHub</td>
 <td>MLflow (Registry compris) et stockage DVC hébergés gratuitement au même endroit, consultables par un lien</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Déclencheur</td>
 <td>Calendrier fixe · dérive des données seule · dérive ou coût métier</td>
 <td>Les deux</td>
 <td>La dérive de concept est invisible pour un test de dérive des données (démontré au mois 4)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Mise en production</td>
 <td>Automatique · Pull Request validée par un humain · déploiement fantôme</td>
 <td>Pull Request</td>
 <td>Secteur régulé : supervision humaine ; s’appuie sur le CI/CD existant</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Entraînement du challenger</td>
 <td>Recherche d’<a class="g-lien" href="glossaire.html#hyperparametres" title="Définition dans le glossaire">hyperparamètres</a> · pondération des données récentes · hyperparamètres du champion</td>
 <td>Hyperparamètres du champion</td>
 <td>Une seule chose change (les données) ; quelques minutes en CI. J’ai testé puis écarté la pondération (section 4.2)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Évaluation</td>
 <td>Test figé seul · données récentes + garde-fou</td>
 <td>Données récentes + garde-fou</td>
 <td>Juger sur le présent sans casser le passé</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Versionnage</td>
 <td>Tout dans DVC · données dans DVC, modèles dans le Registry</td>
 <td>Mixte</td>
@@ -719,7 +719,7 @@
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Cas d’usage</th>
 <th>Valeur</th>
 <th>Effort</th>
@@ -727,37 +727,37 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Détecter une dérive des données sur les variables qui comptent</td>
 <td>Forte</td>
 <td>Faible</td>
 <td>1</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Détecter une hausse du coût métier (dérive de concept)</td>
 <td>Forte</td>
 <td>Faible</td>
 <td>1</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Alerter là où l’équipe travaille déjà (issue GitHub)</td>
 <td>Moyenne</td>
 <td>Faible</td>
 <td>2</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Réentraîner et comparer champion / challenger</td>
 <td>Forte</td>
 <td>Moyen</td>
 <td>2</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Proposer la promotion, déployer après validation</td>
 <td>Forte</td>
 <td>Moyen</td>
 <td>3</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Réentraînement continu sans validation humaine</td>
 <td>Faible (risque réglementaire)</td>
 <td>Faible</td>
@@ -777,24 +777,24 @@
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Part</th>
 <th>Demandes</th>
 <th>Rôle</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><a class="g-lien" href="glossaire.html#baseline" title="Définition dans le glossaire">Référence</a> (60 %)</td>
 <td>184 506</td>
 <td>Entraîne le champion v1</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Quatre lots mensuels (20 %)</td>
 <td>4 × ≈ 15 375</td>
 <td>Les « nouvelles données »</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Test figé (20 %)</td>
 <td>61 503</td>
 <td>Jamais appris ; sert de garde-fou</td>
@@ -815,7 +815,7 @@
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Étape</th>
 <th>Contenu</th>
 <th>Jalon prévu</th>
@@ -823,31 +823,31 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1. Fondations</td>
 <td>Cadrage ; DagsHub, DVC ; <a class="g-lien" href="glossaire.html#chunking" title="Définition dans le glossaire">découpage</a> ; champion v1 réentraîné sur la référence</td>
 <td>08/10</td>
 <td>Données versionnées, v1 dans le Registry</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2. Surveillance</td>
 <td>Simulation des lots ; dérive Evidently et coût métier</td>
 <td>09/10</td>
 <td>Rapport de surveillance par mois</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3. Réentraînement</td>
 <td>Challenger, règle de promotion, enregistrement</td>
 <td>10/10</td>
 <td>Décision chiffrée de promotion</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4. Automatisation</td>
 <td>Workflow hebdomadaire, alerte, PR, alias après déploiement ; seuil lu par l’API</td>
 <td>12/10</td>
 <td><code>monitoring.yml</code>, CI/CD étendu</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>5. Démonstration</td>
 <td>Mois 1 à 4 en conditions réelles, preuves, documentation</td>
 <td>13/10</td>
@@ -863,29 +863,29 @@
 <col style="width: 50%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Phase</th>
 <th>Outils</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Développement et tests</td>
 <td><a class="g-lien" href="glossaire.html#python" title="Définition dans le glossaire">Python 3</a>.12, uv, pytest, Ruff, <a class="g-lien" href="glossaire.html#linter" title="Définition dans le glossaire">pre-commit</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Données et modèles</td>
 <td>DVC, MLflow Model Registry (DagsHub), LightGBM, scikit-learn</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Surveillance</td>
 <td>Evidently 0.4.33, coût métier <code>10 × FN + 1 × FP</code></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Intégration et déploiement</td>
 <td>GitHub Actions, Docker, Hugging Face Spaces</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Pilotage</td>
 <td>GitHub Projects (Kanban), issues, Pull Requests</td>
 </tr>
@@ -932,7 +932,7 @@
 </figure>
 <div class="tablewrap"><table>
 <thead>
-<tr class="header">
+<tr>
 <th>Mois</th>
 <th>Champion</th>
 <th>Challenger</th>
@@ -942,7 +942,7 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td>0,557</td>
 <td>0,562</td>
@@ -950,7 +950,7 @@
 <td>+0,3 %</td>
 <td>Non promu : le champion reste</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4</td>
 <td>0,742</td>
 <td>0,682</td>
@@ -975,7 +975,7 @@
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Risque</th>
 <th>Probabilité</th>
 <th>Impact</th>
@@ -983,31 +983,31 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Promotion d’un modèle meilleur par hasard</td>
 <td>Moyenne</td>
 <td>Fort</td>
 <td>Garde-fou du test figé ; validation humaine ; marge à relever avec plus de données</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Alertes à répétition sans cause réelle</td>
 <td>Moyenne</td>
 <td>Moyen</td>
 <td>Seuils mesurés contre le bruit naturel (au plus +3,7 % entre lots sans dérive) ; référence de coût propre au modèle servi</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Données de défaut connues tardivement</td>
 <td>Forte (réalité métier)</td>
 <td>Fort</td>
 <td>La dérive des données alerte tôt ; le coût confirme quand les défauts sont connus</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Panne d’un service gratuit</td>
 <td>Faible</td>
 <td>Moyen</td>
 <td>Données et modèles reconstructibles depuis git, DVC et le Registry</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Biais de décision</td>
 <td>Moyenne</td>
 <td>Fort</td>
@@ -1021,17 +1021,17 @@
 <col style="width: 50%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Opportunité</th>
 <th>Gain</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Même boucle pour d’autres modèles</td>
 <td>Les modules de surveillance et de promotion ne dépendent pas du scoring</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Historique de décisions</td>
 <td>Chaque promotion laisse une trace (PR, version, métriques) réutilisable en audit</td>
 </tr>
@@ -1046,7 +1046,7 @@
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Scénario</th>
 <th>Mise en œuvre</th>
 <th>Infrastructure mensuelle</th>
@@ -1054,19 +1054,19 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>A. POC (réalisé)</td>
 <td>5,75 jours estimés, soit <strong>2 588 €</strong></td>
 <td><strong>0 €</strong> : GitHub Actions gratuit en dépôt public, DagsHub et Hugging Face gratuits</td>
 <td>Démonstration, validation du concept</td>
 </tr>
-<tr class="even">
+<tr>
 <td>B. Production légère</td>
 <td>A + 5 jours de <a class="g-lien" href="glossaire.html#durcissement" title="Définition dans le glossaire">durcissement</a> (journal persistant, validation des entrées, verrouillage des dépendances, audit d’<a class="g-lien" href="glossaire.html#biais-algorithmique" title="Définition dans le glossaire">équité</a>), soit <strong>4 838 €</strong></td>
 <td>≈ <strong>22 $</strong> pour un Space toujours actif (palier CPU Upgrade, 0,03 $/h), + <strong>99 à 119 $ par utilisateur</strong> si le registre doit être privé (DagsHub Team)</td>
 <td>Une équipe qui veut la même chaîne, en privé</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>C. Cloud managé</td>
 <td>B + 10 à 15 jours de migration (SageMaker, Vertex AI ou Azure ML), soit environ <strong>9 300 à 11 600 €</strong></td>
 <td>À chiffrer sur devis : dépend de l’instance et du volume</td>
@@ -1084,7 +1084,7 @@
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Type</th>
 <th>Indicateur</th>
 <th>Cible</th>
@@ -1092,43 +1092,43 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Métier</td>
 <td>Coût métier par demande après correction</td>
 <td>Baisse significative quand le modèle dérive</td>
 <td>−8,1 % au mois 4</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Métier</td>
 <td>Délai de détection d’une dégradation</td>
 <td>≤ 1 semaine</td>
 <td>Hebdomadaire (planifié)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Métier</td>
 <td>Promotions inutiles évitées</td>
 <td>0 promotion sans gain</td>
 <td>Mois 3 refusé</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Technique</td>
 <td>Fausses alertes sur des lots sans dérive</td>
 <td>0</td>
 <td>0 sur les mois 1 et 2</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Technique</td>
 <td>Durée d’un cycle complet</td>
 <td>&lt; 10 min</td>
 <td>4 min 12 s (mois 4)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Technique</td>
 <td><a class="g-lien" href="glossaire.html#reproductibilite" title="Définition dans le glossaire">Reproductibilité</a></td>
 <td>Mêmes chiffres en local et en CI</td>
 <td>Identiques au dix-millième</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Qualité</td>
 <td>Tests</td>
 <td>Tous verts</td>
@@ -1158,7 +1158,7 @@
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Tâche</th>
 <th>Estimation (j)</th>
 <th>Fin prévue</th>
@@ -1166,67 +1166,67 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Cadrer la V2</td>
 <td>0,5</td>
 <td>08/10</td>
 <td>08/10</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Brancher DagsHub (DVC, Registry)</td>
 <td>0,5</td>
 <td>08/10</td>
 <td>08/10</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Découper les données, réentraîner le champion v1</td>
 <td>0,5</td>
 <td>08/10</td>
 <td>08/10</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Servir le seuil et la version depuis les métadonnées</td>
 <td>0,25</td>
 <td>12/10</td>
 <td>08/10</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Simuler les lots et leurs dérives</td>
 <td>0,5</td>
 <td>09/10</td>
 <td>08/10</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Surveiller chaque lot</td>
 <td>0,5</td>
 <td>09/10</td>
 <td>08/10</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Réentraîner et appliquer la règle de promotion</td>
 <td>1</td>
 <td>10/10</td>
 <td>09/10</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Automatiser (workflow, alerte, PR, alias)</td>
 <td>1</td>
 <td>12/10</td>
 <td>09/10</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Démontrer la boucle de bout en bout</td>
 <td>0,5</td>
 <td>13/10</td>
 <td>09/10</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Documenter la V2</td>
 <td>0,5</td>
 <td>13/10</td>
 <td>08/10</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Total</strong></td>
 <td><strong>5,75</strong></td>
 <td><strong>13/10</strong></td>
@@ -1244,39 +1244,39 @@
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Livrable</th>
 <th>Où</th>
 <th>État</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Données versionnées</td>
 <td><code>data/*.dvc</code>, stockage DagsHub</td>
 <td>✅</td>
 </tr>
-<tr class="even">
+<tr>
 <td><a class="g-lien" href="glossaire.html#pipeline-sklearn" title="Définition dans le glossaire">Pipeline</a> (découpage, simulation, surveillance, réentraînement)</td>
 <td><code>pipeline/</code></td>
 <td>✅</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>API avec seuil et version lus dans le modèle</td>
 <td><code>app.py</code>, <code>model/model_meta.json</code></td>
 <td>✅</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Workflow hebdomadaire</td>
 <td><code>.github/workflows/monitoring.yml</code></td>
 <td>✅</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Démonstration réelle des mois 1 à 4</td>
 <td>Exécutions GitHub, issues n°15 et 16, PR n°18</td>
 <td>✅</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Documentation</td>
 <td>README, cadrage avec section de vérification</td>
 <td>✅</td>
@@ -1352,7 +1352,7 @@
 <col style="width: 20%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Mois</th>
 <th>Ce qui change</th>
 <th>Variables qui dérivent</th>
@@ -1361,28 +1361,28 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td>Rien</td>
 <td>0 %</td>
 <td>+1,9 %</td>
 <td>Aucune alerte</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td>Rien</td>
 <td>0 %</td>
 <td>−0,5 %</td>
 <td>Aucune alerte</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td>Clientèle plus jeune, montants × 1,3</td>
 <td><strong>35 %</strong></td>
 <td>+12,5 %</td>
 <td>Alerte ; challenger non promu</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4</td>
 <td>15 % des bons payeurs d’un segment font défaut</td>
 <td><strong>0 %</strong></td>
@@ -1400,7 +1400,7 @@
 <col style="width: 20%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Version</th>
 <th>Entraînée sur</th>
 <th>Seuil</th>
@@ -1409,28 +1409,28 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>v1</td>
 <td>Référence (184 506 demandes)</td>
 <td>0,50</td>
 <td>0,778</td>
 <td>Champion jusqu’au 09/10</td>
 </tr>
-<tr class="even">
+<tr>
 <td>v2</td>
 <td>Référence + mois 1 à 3</td>
 <td>0,49</td>
 <td></td>
 <td>Challenger du mois 3, non promu</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>v3</td>
 <td>Référence + mois 1 à 4</td>
 <td>0,48</td>
 <td></td>
 <td>Promue mais jamais livrée (incident n°2)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>v4</td>
 <td>Référence + mois 1 à 4 (234 680)</td>
 <td>0,48</td>
@@ -1449,7 +1449,7 @@
 <col style="width: 20%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>N°</th>
 <th>Ce qui s’est passé</th>
 <th>Cause</th>
@@ -1458,21 +1458,21 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td>Échec du premier lancement à la récupération des données</td>
 <td>Une résolution de dépendances partie de zéro a retenu une version de 2017 d’une bibliothèque réseau, incompatible avec Python 3.12. En local, l’environnement préexistant masquait le problème</td>
 <td>Version minimale imposée ; vérifié en rejouant la CI depuis un clone vierge</td>
 <td>Tester l’installation dans un environnement neuf ; verrouiller les versions</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td>Challenger promu, mais aucune PR ouverte, alors que l’exécution était « réussie »</td>
 <td>MLflow écrit aussi sur la sortie standard ; la lecture du résultat échouait sans erreur visible</td>
 <td>Résultat relu depuis son fichier ; une erreur de lecture arrête désormais l’étape</td>
 <td>Un pipeline doit échouer bruyamment, jamais sauter des étapes en silence</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td>Fausse alerte hebdomadaire anticipée après la promotion</td>
 <td>La référence de coût restait celle de l’ancien régime : après le choc, même un modèle adapté coûte plus</td>
@@ -1490,33 +1490,33 @@
 <col style="width: 50%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Outil</th>
 <th>Ce qu’il suit</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Rapport Evidently (joint à chaque exécution)</td>
 <td>Dérive de chacune des 20 variables surveillées</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Coût métier par mois (<code>summary.json</code>)</td>
 <td>Performance au regard de l’enjeu réel</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Issues GitHub</td>
 <td>Alertes, avec chiffres et lien vers l’exécution</td>
 </tr>
-<tr class="even">
+<tr>
 <td>MLflow Model Registry</td>
 <td>Versions, métriques, seuil, alias <code>champion</code> / <code>challenger</code></td>
 </tr>
-<tr class="odd">
+<tr>
 <td><code>GET /health</code></td>
 <td>Version réellement servie</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Journal JSONL de l’API</td>
 <td>Chaque prédiction : probabilité, décision, latence</td>
 </tr>
@@ -1530,34 +1530,34 @@
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Niveau</th>
 <th>Ce qui est testé</th>
 <th>Outil</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Unitaire</td>
 <td>Règles de décision à leurs bornes exactes : 30 % de dérive, +10 % de coût, −1 % et +2 % pour la promotion ; coût métier ; découpage</td>
 <td>pytest (32 tests)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>API</td>
 <td>Réponses, erreurs 404 et 422, seuil appliqué, documentation</td>
 <td>pytest + TestClient (15 tests, 96 % de couverture)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Intégration</td>
 <td>Boucle complète sur les vrais services</td>
 <td>Exécutions manuelles du workflow (bac à sable des lots simulés)</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Reproductibilité</td>
 <td>Mêmes chiffres en local et en CI ; CI rejouée depuis un clone vierge</td>
 <td>Comparaison des sorties</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Code et workflows</td>
 <td>Style, erreurs de workflow</td>
 <td>Ruff, pre-commit, actionlint</td>
@@ -1590,40 +1590,46 @@
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Priorité</th>
 <th>Action</th>
 <th>Effort</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>1</td>
 <td>Audit d’équité, retrait de <code>CODE_GENDER</code> et mesure de l’effet</td>
 <td>1 j</td>
 </tr>
-<tr class="even">
+<tr>
 <td>2</td>
 <td>Verrouillage complet des dépendances du pipeline</td>
 <td>0,5 j</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>3</td>
 <td>Journal de prédictions persistant</td>
 <td>1 à 2 j</td>
 </tr>
-<tr class="even">
+<tr>
 <td>4</td>
 <td>Validation du schéma des lots entrants</td>
 <td>1 j</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>5</td>
 <td>Intervalle de confiance dans la règle de promotion</td>
 <td>1 j</td>
 </tr>
 </tbody>
 </table></div>
+<h3 id="réflexivité">Réflexivité</h3>
+<p>Avant un bon modèle était pour moi un bon score dans un notebook. Aujourd’hui c’est un système <strong>qui tient en production</strong> et que l’on sait surveiller et maintenir.</p>
+<p>Je venais du développement web. La formation m’a appris à juger un modèle sur ce qu’il coûte à l’entreprise plutôt que sur son score. Elle m’a aussi appris à le traiter comme un logiciel avec ses tests, sa CI, son déploiement et sa surveillance. Les onze projets m’ont mené du ML classique aux <a class="g-lien" href="glossaire.html#llm" title="Définition dans le glossaire">LLM</a> fine-tunés, aux agents et au <a class="g-lien" href="glossaire.html#rl" title="Définition dans le glossaire">reinforcement learning</a>.</p>
+<p>Je referais deux choses autrement dans la V1 du scoring. Le seuil de décision était écrit en dur dans l’API et le modèle servi avait appris sur toutes les données. Pour simuler de nouveaux mois dans la V2 j’ai dû réentraîner le champion sur 60 % des données. Aujourd’hui je range le seuil avec le modèle et je mets de côté un <a class="g-lien" href="glossaire.html#entrainement" title="Définition dans le glossaire">jeu de test</a> figé dès le départ.</p>
+<p>Je cadre maintenant avant de coder : le besoin, des critères d’acceptation vérifiables, les décisions techniques. Je découpe le travail en tâches estimées sur un Kanban. Chaque changement passe par une Pull Request et une CI bloquante et je note les incidents. Sur la V2 la partie technique a fini quatre jours avant la date prévue malgré trois incidents.</p>
+<p>J’en tire trois convictions. La <strong>fiabilité prime sur la micro-optimisation</strong>. L’<strong>évaluation et le monitoring</strong> sont le cœur du métier. La valeur naît du <strong>lien entre la technique et le métier</strong>. Il me reste à progresser sur la surveillance avec étiquettes différées, sur le cloud managé et son observabilité, et sur le suivi du coût et des tokens en <a class="g-lien" href="glossaire.html#llmops" title="Définition dans le glossaire">LLMOps</a>.</p>
 <hr />
 <h2 id="annexes">7. Annexes</h2>
 <h3 id="a.-liens">A. Liens</h3>
@@ -1633,45 +1639,45 @@
 <col style="width: 50%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Ressource</th>
 <th>Lien</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Dépôt du projet</td>
 <td><a href="https://github.com/clementRbl/credit-scoring-mlops" class="uri">https://github.com/clementRbl/credit-scoring-mlops</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td>API en production</td>
 <td><a href="https://clementrbl-credit-scoring-api.hf.space/docs" class="uri">https://clementrbl-credit-scoring-api.hf.space/docs</a></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Registre des modèles (MLflow sur DagsHub)</td>
 <td><a href="https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow" class="uri">https://dagshub.com/clementRbl/credit-scoring-mlops.mlflow</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Pull Request de promotion (mois 4)</td>
 <td><a href="https://github.com/clementRbl/credit-scoring-mlops/pull/18" class="uri">https://github.com/clementRbl/credit-scoring-mlops/pull/18</a></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Alertes des mois 3 et 4</td>
 <td><a href="https://github.com/clementRbl/credit-scoring-mlops/issues/15" class="uri">https://github.com/clementRbl/credit-scoring-mlops/issues/15</a> · <a href="https://github.com/clementRbl/credit-scoring-mlops/issues/16" class="uri">https://github.com/clementRbl/credit-scoring-mlops/issues/16</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Exécution du mois 4</td>
 <td><a href="https://github.com/clementRbl/credit-scoring-mlops/actions/runs/37904674657" class="uri">https://github.com/clementRbl/credit-scoring-mlops/actions/runs/37904674657</a></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Cadrage et vérification</td>
 <td><a href="https://github.com/clementRbl/credit-scoring-mlops/blob/main/docs/features/2026-10-08-boucle-derive-reentrainement.md" class="uri">https://github.com/clementRbl/credit-scoring-mlops/blob/main/docs/features/2026-10-08-boucle-derive-reentrainement.md</a></td>
 </tr>
-<tr class="even">
+<tr>
 <td>Kanban de suivi (GitHub Projects)</td>
 <td><a href="https://github.com/users/clementRbl/projects/5" class="uri">https://github.com/users/clementRbl/projects/5</a></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Projet amont (modélisation)</td>
 <td><a href="https://github.com/clementRbl/pret-a-depenser" class="uri">https://github.com/clementRbl/pret-a-depenser</a></td>
 </tr>

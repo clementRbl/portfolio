@@ -83,7 +83,7 @@
  {
   "id": "projets",
   "title": "Projets",
-  "text": "Onze projets couvrant machine learning, MLOps, fine-tuning de LLM, agents IA, GenAI, computer vision, régression et reinforcement learning. Dépôts publics et documentés. Credit scoring, agent LangGraph d'ouvertures d'échecs pour la Fédération Française des Échecs, avec un RAG Wikichess sur index vectoriel Milvus. Chatbot RAG Puls-Events. Agent de triage médical, Qwen fine-tuné. BrainScanAI, Seattle Energy, segmentation client. Hors formation, deux produits en production au code privé : SDIS-Predict, prévision des interventions de pompiers, et SaadFlow, dossiers d'aide à domicile.",
+  "text": "Quatorze projets, dont onze menés pendant la formation, couvrant machine learning, MLOps, fine-tuning de LLM, agents IA, GenAI, computer vision, régression et reinforcement learning. Dépôts publics et documentés. Credit scoring, agent LangGraph d'ouvertures d'échecs pour la Fédération Française des Échecs, avec un RAG Wikichess sur index vectoriel Milvus. Chatbot RAG Puls-Events. Agent de triage médical, Qwen fine-tuné. BrainScanAI, Seattle Energy, segmentation client. Hors formation, trois projets en production au code privé : SDIS-Predict, prévision des interventions de pompiers, SaadFlow, dossiers d'aide à domicile, et un pipeline de données ouvertes sur Raspberry Pi, carburants et électricité, DuckDB, dbt, Dagster, prévision des jours rouges Tempo.",
   "queries": [
    "montre-moi ton travail",
    "tes réalisations",
@@ -97,9 +97,11 @@
    "un agent que tu as construit",
    "vous avez déjà fait un agent",
    "du langgraph",
-   "un projet avec une base vectorielle"
+   "un projet avec une base vectorielle",
+   "un pipeline de données",
+   "tu as fait du dbt"
   ],
-  "answer": "Onze projets couvrent la chaîne complète, du scoring crédit mis en production à l'agent d'ouvertures d'échecs construit pour la Fédération Française des Échecs, en passant par un LLM fine-tuné pour le triage aux urgences, un chatbot RAG, la détection de tumeurs sur IRM, un pipeline ETL et un agent d'apprentissage par renforcement. La plupart des dépôts sont publics et documentés. À côté, deux produits tournent pour de vrais utilisateurs : SDIS-Predict et SaadFlow.",
+  "answer": "Quatorze projets en tout. Les onze de la formation couvrent la chaîne complète, du scoring crédit mis en production à l'agent d'ouvertures d'échecs construit pour la Fédération Française des Échecs, en passant par un LLM fine-tuné pour le triage aux urgences, un chatbot RAG, la détection de tumeurs sur IRM, un pipeline ETL et un agent d'apprentissage par renforcement. La plupart des dépôts sont publics et documentés. À côté deux produits tournent pour de vrais utilisateurs, SDIS-Predict et SaadFlow, et un pipeline de données ouvertes collecte carburants et électricité chaque heure sur un Raspberry Pi.",
   "section": "projets"
  },
  {
@@ -132,6 +134,22 @@
   ],
   "answer": "Credit Scoring MLOps sert un LightGBM derrière une API FastAPI conteneurisée, déployée à chaque push. Dans la V2, un workflow surveille chaque lundi la dérive et le coût métier, réentraîne un challenger en cas d'alerte et propose sa mise en production dans une Pull Request. Au quatrième mois simulé, le modèle promu a réduit le coût métier de 8,1 %. L'AUC est de 0,78, l'inférence prend environ 6 ms, et l'API est couverte à 96 %.",
   "section": "projet-phare"
+ },
+ {
+  "id": "cv",
+  "title": "CV",
+  "text": "CV PDF une page téléchargeable, fiche model card, compétences et projets résumés, document à transmettre.",
+  "queries": [
+   "télécharger ton cv",
+   "cv en pdf",
+   "ton curriculum",
+   "un document à envoyer aux rh",
+   "votre cv",
+   "vous avez un cv",
+   "ton cv"
+  ],
+  "answer": "Le CV tient en une page et se télécharge en PDF depuis cette section. Juste au-dessus, le même parcours est présenté au format model card, celui que vos équipes lisent déjà pour documenter un modèle.",
+  "section": "cv"
  },
  {
   "id": "prestations",
@@ -168,7 +186,7 @@
  {
   "id": "soft-skills",
   "title": "Soft skills",
-  "text": "Esprit d'analyse, une fuite de données repérée par audit MD5. Curiosité continue, veille MLOps et LLMOps. Vulgarisation, traduire AUC drift et coût métier en enjeux business. Gestion de projet, découpage itératif, definition of done. Créativité. Rigueur, tests automatisés, reproductibilité, documentation.",
+  "text": "Soft skills prouvées dans les projets. Esprit d'analyse, une fuite de données repérée par audit MD5 sur BrainScanAI. Curiosité, trois runs DPO au-delà du SFT sur le triage médical. Vulgarisation, traduire AUC et coût métier en enjeux business sur Prêt à Dépenser. Gestion de projet, découpage itératif, definition of done, CI bloquante. Créativité, pagination par curseur de date sur Puls-Events. Rigueur, tests automatisés, reproductibilité, documentation.",
   "queries": [
    "comment tu travailles en équipe",
    "tu communiques bien",
@@ -179,8 +197,8 @@
    "vos qualités",
    "vos points forts"
   ],
-  "answer": "Six qualités sont mises en avant, mais chacune est adossée à un fait précis plutôt qu'à une auto-évaluation : une fuite de données repérée par audit MD5, un arbitrage documenté sur le retrait d'ONNX, ou une couverture de tests tenue par la CI.",
-  "section": "soft-skills"
+  "answer": "Chaque qualité est montrée sur le projet qui la prouve plutôt qu'auto-évaluée : une fuite de données repérée par audit MD5 sur BrainScanAI, l'AUC traduite en coût métier sur Prêt à Dépenser, une couverture de tests tenue par la CI sur le scoring crédit.",
+  "section": "projets"
  },
  {
   "id": "reflexivite",
@@ -197,24 +215,8 @@
    "vos axes de progrès",
    "vos convictions"
   ],
-  "answer": "Trois convictions ressortent du parcours : la fiabilité prime sur la micro-optimisation, l'évaluation et le monitoring sont le cœur du métier plutôt qu'une finition, et la valeur naît du lien entre la technique et le métier plus que de la seule modélisation.",
-  "section": "reflexivite"
- },
- {
-  "id": "cv",
-  "title": "CV",
-  "text": "CV PDF une page téléchargeable, fiche model card, compétences et projets résumés, document à transmettre.",
-  "queries": [
-   "télécharger ton cv",
-   "cv en pdf",
-   "ton curriculum",
-   "un document à envoyer aux rh",
-   "votre cv",
-   "vous avez un cv",
-   "ton cv"
-  ],
-  "answer": "Le CV tient en une page et se télécharge en PDF depuis cette section. Juste au-dessus, le même parcours est présenté au format model card, celui que vos équipes lisent déjà pour documenter un modèle.",
-  "section": "cv"
+  "answer": "Trois convictions ressortent du parcours : la fiabilité prime sur la micro-optimisation, l'évaluation et le monitoring sont le cœur du métier plutôt qu'une finition, et la valeur naît du lien entre la technique et le métier plus que de la seule modélisation. Le rapport de conduite de projet, lié depuis l'étude de cas, détaille en conclusion ce que je referais autrement et ma méthode.",
+  "section": "projet-phare"
  },
  {
   "id": "contact",
@@ -239,7 +241,7 @@
   "id": "rag",
   "section": "projets",
   "title": "GenAI et RAG",
-  "text": "RAG retrieval augmented generation LangChain LCEL chaîne Faiss Milvus index vectoriel embeddings Mistral Ragas évaluation hallucination garde-fous chunking chatbot documents",
+  "text": "RAG retrieval augmented generation LangChain LCEL chaîne Faiss pgvector Milvus Langfuse Azure index vectoriel embeddings Mistral Ragas évaluation hallucination garde-fous chunking chatbot documents",
   "queries": [
    "vous faites du rag",
    "vous connaissez le rag",
@@ -249,7 +251,7 @@
    "faiss ou milvus",
    "comment vous évitez les hallucinations"
   ],
-  "answer": "Oui, deux fois et de bout en bout. Puls-Events est un chatbot RAG sur seize mille événements culturels : ingestion, vectorisation Faiss, chaîne LangChain avec Mistral, garde-fous contre l'hallucination et évaluation Ragas. L'agent d'ouvertures d'échecs en refait un sur Milvus, avec un corpus d'articles. Je propose aussi l'audit d'un système RAG existant, en cinq jours."
+  "answer": "Oui, deux fois et de bout en bout. Puls-Events est un chatbot RAG sur seize mille événements culturels, avec une chaîne LangChain, des garde-fous contre l'hallucination et une évaluation Ragas. Il est passé de Faiss à pgvector, trace chaque question dans Langfuse et tourne sur Azure. L'agent d'ouvertures d'échecs en refait un sur Milvus, avec un corpus d'articles. Je propose aussi l'audit d'un système RAG existant, en cinq jours."
  },
  {
   "id": "agents",
