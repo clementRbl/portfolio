@@ -180,7 +180,7 @@
    "vous acceptez quelles missions",
    "vos offres"
   ],
-  "answer": "Je propose quatre missions cadrées : du renfort front Vue 3 ou Quasar à la journée, la mise en production d'un modèle en dix jours, un POC IA cadré en dix à quinze jours, et l'audit d'un système RAG en cinq jours. En CDI, je travaille sur les mêmes sujets, sans ce découpage en missions.",
+  "answer": "Je propose quatre missions cadrées : du renfort front Vue 3 ou Quasar à la journée, la mise en production d'un modèle en dix jours, un POC IA cadré en dix à quinze jours et l'audit d'un système RAG en cinq jours. En CDI, je travaille sur les mêmes sujets, sans ce découpage en missions.",
   "section": "prestations"
  },
  {
@@ -388,7 +388,7 @@
    "un devis",
    "combien vous facturez"
   ],
-  "answer": "Les tarifs ne sont pas affichés, mais le périmètre et la durée le sont : du renfort front à la journée, la mise en production d'un modèle en dix jours, un POC cadré en dix à quinze jours, un audit RAG en cinq. Décrivez votre besoin par mail et je réponds sur les trois à la fois — périmètre, durée et prix."
+  "answer": "Les tarifs ne sont pas affichés mais le périmètre et la durée le sont : du renfort front à la journée, la mise en production d'un modèle en dix jours, un POC cadré en dix à quinze jours, un audit RAG en cinq. Décrivez votre besoin par mail et je vous réponds sur le périmètre, la durée et le prix."
  },
  {
   "id": "disponibilite",
