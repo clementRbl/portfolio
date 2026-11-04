@@ -499,11 +499,11 @@
    "detail": "Se rédige en centiles et sur une fenêtre d'observation, avec une contrepartie en cas de manquement — sans quoi c'est une intention, pas un engagement. Les ordres de grandeur méritent d'être connus : 99 % de disponibilité laissent plus de sept heures d'indisponibilité par mois, 99,9 % en laissent quarante-trois minutes, et chaque neuf supplémentaire coûte davantage que le précédent. On distingue l'objectif interne, fixé plus strict, de l'engagement contractuel, la marge entre les deux constituant le budget d'erreur que l'équipe peut dépenser en déploiements. Passer d'un hébergement gratuit à un service avec engagement est le premier poste de coût d'une mise en production réelle, et se chiffre au cadrage plutôt qu'après.",
    "voir": ["centiles", "cloud-manage", "hugging-face"], "ou": "prestations"},
 
-  {"id": "cloud-manage", "terme": "Cloud managé (AWS, GCP)", "famille": "mlops",
-   "alias": ["aws", "gcp", "cloud"],
+  {"id": "cloud-manage", "terme": "Cloud managé (Azure, AWS, GCP)", "famille": "mlops",
+   "alias": ["azure", "aws", "gcp", "cloud"],
    "simple": "Louer chez un grand fournisseur des services déjà administrés — machines, bases de données, files d'attente, entraînement de modèles — plutôt que de les installer et de les maintenir soi-même. On y gagne du temps, de la robustesse et des mécanismes de reprise qu'on n'écrirait pas seul ; on y perd en maîtrise du coût et en portabilité, chaque fournisseur ayant ses interfaces propres.",
-   "detail": "Une limite que j'assume : mes déploiements tournent sur Docker et Hugging Face, et ma pratique d'AWS et GCP est en montée. Les concepts d'industrialisation s'y transposent — conteneur, registre d'images, variables d'environnement, journalisation centralisée, montée en charge horizontale sont les mêmes objets sous d'autres noms — et c'est l'outillage propre à chaque fournisseur qui s'apprend. Deux points structurent le choix en pratique : le modèle de facturation, où le transfert sortant et les requêtes coûtent souvent plus que le calcul lui-même, et le degré d'adhérence accepté, un service très intégré étant plus rapide à mettre en place et plus difficile à quitter. Une infrastructure décrite en code reste le meilleur garde-fou contre la configuration à la main, quel que soit le fournisseur.",
-   "voir": ["docker", "sla"], "ou": "reflexivite"},
+   "detail": "Une limite que j'assume : mes déploiements tournent sur Azure, Docker et Hugging Face, et ma pratique d'AWS et GCP est en montée. Les concepts d'industrialisation s'y transposent — conteneur, registre d'images, variables d'environnement, journalisation centralisée, montée en charge horizontale sont les mêmes objets sous d'autres noms — et c'est l'outillage propre à chaque fournisseur qui s'apprend. Deux points structurent le choix en pratique : le modèle de facturation, où le transfert sortant et les requêtes coûtent souvent plus que le calcul lui-même, et le degré d'adhérence accepté, un service très intégré étant plus rapide à mettre en place et plus difficile à quitter. Une infrastructure décrite en code reste le meilleur garde-fou contre la configuration à la main, quel que soit le fournisseur.",
+   "voir": ["docker", "sla"], "ou": "cv"},
 
   {"id": "grafana", "terme": "Grafana", "famille": "mlops",
    "alias": ["tableau de bord d'observabilité", "whylabs"],
@@ -749,7 +749,7 @@
    "alias": ["trade-off", "compromis", "arbitrages"],
    "simple": "Choisir entre deux options qui ont chacune leur prix, et assumer ce qu'on abandonne. ONNX allégeait le modèle de 39 % : écarté quand même, parce que la fiabilité passait devant le gain de taille. Un arbitrage n'est pas un compromis mou où l'on prend un peu des deux — c'est une décision qui perd volontairement quelque chose, et qui n'a de valeur que si le renoncement est nommé.",
    "detail": "Un arbitrage se documente avec ce qu'on a écarté et pourquoi, sinon il se rejoue tous les six mois par quelqu'un qui ignore qu'il a déjà été tranché. Le format utile tient en quatre lignes : le choix retenu, les options écartées, le critère qui a départagé, et la condition qui justifierait de revenir dessus. Cette dernière ligne est la plus souvent oubliée alors qu'elle transforme une décision figée en décision révisable : « à reconsidérer si le volume dépasse tant » vaut mieux qu'un choix qu'on n'ose plus toucher. C'est ce que porte le tableau des choix techniques du rapport.",
-   "voir": ["onnx", "dette-technique"], "ou": "reflexivite"},
+   "voir": ["onnx", "dette-technique"], "ou": "projet-phare"},
 
   {"id": "audit", "terme": "Audit", "famille": "conduite",
    "alias": ["auditer", "état des lieux", "diagnostic"],
@@ -761,7 +761,7 @@
    "alias": ["dette", "raccourci technique"],
    "simple": "Les raccourcis pris pour aller vite, qui se paient plus tard avec intérêts. Le journal en fichier de ce projet en est un : assumé, documenté, chiffré — c'est ce qui sépare une dette d'un oubli. Toute dette n'est pas mauvaise : emprunter du temps pour tenir une échéance est une décision légitime, à condition de savoir ce qu'on devra rembourser et quand. Ce qui coûte cher, c'est la dette qu'on a contractée sans s'en apercevoir.",
    "detail": "Devient dangereuse quand elle n'est plus recensée : personne ne sait plus ce qui est délibéré et ce qui est accidentel, et chaque modification se fait à l'aveugle. Un registre tenu à jour nomme le raccourci, la raison, le coût estimé du remboursement et le signal qui indiquera qu'il faut payer — « à remplacer par une base dès que le volume dépasse tant ». En apprentissage automatique, la dette prend des formes propres au domaine : dépendances de données non déclarées, variables calculées différemment à l'entraînement et en production, modèles empilés dont personne ne sait plus lequel décide. Les limites assumées du rapport tiennent ce registre.",
-   "voir": ["scalabilite", "poc", "arbitrage"], "ou": "reflexivite"},
+   "voir": ["scalabilite", "poc", "arbitrage"], "ou": "projet-phare"},
 
   {"id": "revue-code", "terme": "Revue de code", "famille": "conduite",
    "alias": ["code review", "relecture", "pull request"],
@@ -773,6 +773,6 @@
    "alias": ["vulgariser", "pédagogie", "restitution"],
    "simple": "Expliquer un résultat technique à qui décide sans être technicien : traduire une AUC en risque accepté, une dérive en alerte à traiter, un seuil en taux de refus. Un modèle que personne ne comprend ne sera pas utilisé, ou pire, sera utilisé de travers. L'exercice consiste moins à retirer des mots compliqués qu'à changer de point de départ : partir de la décision que l'interlocuteur doit prendre, pas de la méthode qui a produit le chiffre.",
    "detail": "Ce n'est pas simplifier jusqu'à l'approximation : c'est choisir le niveau de détail qui permet de décider juste. La ligne à ne pas franchir est celle où la simplification changerait la décision — dire qu'un modèle « a 78 % de réussite » quand il s'agit d'une AUC est faux et conduit à des attentes qu'aucun seuil ne satisfera. Trois réflexes aident : donner un ordre de grandeur avant la métrique, nommer l'erreur qu'on accepte en même temps que la performance qu'on annonce, et montrer un cas concret plutôt qu'une moyenne. Ce glossaire relève du même exercice, avec ses deux niveaux de lecture.",
-   "voir": ["shap", "kpi"], "ou": "soft-skills"}
+   "voir": ["shap", "kpi"], "ou": "projets"}
  ]
 }
