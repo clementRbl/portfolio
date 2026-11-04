@@ -112,26 +112,38 @@ document.documentElement.classList.add('js');
     unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
 
-  /* Police de corps du mode Standard : Inter (SIL Open Font License - usage
-     commercial libre). Auto-hébergée : la CSP servie sur /portfolio/* n'a pas
-     de directive font-src et retombe sur default-src 'self', donc un appel à
-     fonts.gstatic.com serait bloqué. Variable (400 à 700) : un seul fichier
-     couvre toutes les graisses. Seul le mode Standard la référence, donc le
-     mode Game ne la télécharge jamais. */
+  /* Polices du mode Standard, auto-hébergées : la CSP servie sur /portfolio/*
+     n'a pas de directive font-src et retombe sur default-src 'self', donc un
+     appel à fonts.gstatic.com ou cdn.fontshare.com serait bloqué. Seul le
+     mode Standard les référence : le mode Game ne les télécharge jamais.
+     - Hanken Grotesk (SIL Open Font License) pour le texte : une police
+       variable, un seul fichier couvre les graisses 400 et 500.
+     - Zodiak (licence Fontshare, usage commercial libre) pour les titres,
+       en graisses 100 et 300 seulement : elle ne se met jamais en gras. */
   @font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/inter-latin.woff2') format('woff2');
+    font-family: 'Hanken Grotesk';
+    src: url('assets/fonts/hanken-grotesk-latin.woff2') format('woff2');
     font-weight: 100 900; font-style: normal; font-display: swap;
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
   @font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/inter-latin-ext.woff2') format('woff2');
+    font-family: 'Hanken Grotesk';
+    src: url('assets/fonts/hanken-grotesk-latin-ext.woff2') format('woff2');
     font-weight: 100 900; font-style: normal; font-display: swap;
     /* U+0152-0153 (œ) est retiré de la plage : Google le déclare à la fois ici
        et dans le sous-ensemble latin, et ce seul caractère suffisait à faire
-       télécharger 85 Ko de latin-ext sur une page entièrement en français. */
-    unicode-range: U+0100-0151, U+0154-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+       télécharger le latin-ext sur une page entièrement en français. */
+    unicode-range: U+0100-0151, U+0154-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: 'Zodiak';
+    src: url('assets/fonts/zodiak-thin.woff2') format('woff2');
+    font-weight: 100; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Zodiak';
+    src: url('assets/fonts/zodiak-light.woff2') format('woff2');
+    font-weight: 300; font-style: normal; font-display: swap;
   }
 
   :root {
@@ -186,7 +198,7 @@ document.documentElement.classList.add('js');
     --good: #5F7A31;
   }
   /* Grain + vignette plus discrets sur fond clair */
-  :root[data-theme="light"] body::before { mix-blend-mode: multiply; opacity: .035; }
+  :root[data-theme="light"].fx-game body::before { mix-blend-mode: multiply; opacity: .035; }
   :root[data-theme="light"] { --on-accent: #FFFFFF; --accent-soft: rgba(176,115,26,.10); --accent-soft-2: rgba(176,115,26,.18); }
   :root[data-theme="light"] body::after {
     background:
@@ -194,72 +206,64 @@ document.documentElement.classList.add('js');
       linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,.012) 50%);
     background-size: cover, 100% 3px;
   }
-  /* ---------- MODE STANDARD : DA « instrument » ----------
-     Palette froide et neutre, angles droits, surfaces propres. Le mode Game
-     garde la DA « survivant » (ambre, biseaux, grain). Les deux thèmes clair
-     et sombre existent dans chaque mode : quatre combinaisons au total. */
+  /* ---------- MODE STANDARD : « chambre noire » ----------
+     Noir chaud, or une fois par écran, photos de projets en anneau autour du
+     titre. Le mode Game garde la DA « survivant » (ambre, biseaux, grain). Les
+     deux thèmes clair et sombre existent dans chaque mode. */
   html.fx-standard {
-    /* Inter partout : corps ET titres. Anton est une police d'affichage
-       condensée, de registre affiche - elle appartient à la DA du mode Game.
-       Un produit outil hiérarchise avec la graisse d'une seule grotesque, pas
-       en changeant de famille. Le mono ne bouge pas. */
-    --font-body: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-display: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --bg: #0B0D10;
-    --bg-rgb: 11,13,16;
-    --bg-2: #0F1216;
-    --surface: #12161B;
-    --surface-2: #171C22;
-    --border: #232932;
-    --border-2: #333B46;
-    --ink: #E7EAEF;
-    --ink-dim: #B0B8C4;
-    --muted: #7B8593;
-    /* Accent aligné sur le CV, qui est bâti sur l'échelle Tailwind autour de
-       blue-600 #2563EB. Ici blue-400, plus clair pour tenir le contraste sur
-       fond sombre : le PDF téléchargé et la page parcourue parlent la même
-       langue. Le vert des états « en production » reprend le green du CV. */
-    --ember: #60A5FA;                  /* blue-400 */
-    --ember-bright: #93C5FD;           /* blue-300 */
-    --ember-glow: rgba(96,165,250,.28);
-    --on-accent: #06101F;
-    --accent-soft: rgba(96,165,250,.10);
-    --accent-soft-2: rgba(96,165,250,.18);
-    --spore: #22C55E;
-    --spore-bright: #4ADE80;
-    --moss: #7288A0;                   /* ardoise - numéros de section */
-    --moss-dim: #46596B;
-    --blood: #F87171;                  /* red-400 - décision « refusé » */
-    --good: #22C55E;                   /* green-500 - états « en production » */
-    --grain: .02;
+    /* Deux voix : Zodiak, serif fine en capitales, pour les titres ; Hanken
+       Grotesk pour tout le reste. Le mono ne reste que dans le code et les
+       fragments d'interface (panneau d'API, fiche modèle, pipeline). */
+    --font-body: 'Hanken Grotesk', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-display: 'Zodiak', Georgia, 'Times New Roman', serif;
+    --bg: #0C0A08;
+    --bg-rgb: 12,10,8;
+    --bg-2: #110E0B;
+    --surface: #181512;
+    --surface-2: #211D19;
+    --border: #2B2621;
+    --border-2: #3D3630;
+    --ink: #F6F2EC;
+    --ink-dim: #CFC8BF;
+    --muted: #8F8A84;
+    --ember: #C9A45A;                  /* or : une fois par écran, jamais sur un aplat */
+    --ember-bright: #DDBA6E;
+    --ember-glow: rgba(201,164,90,.26);
+    --on-accent: #0C0A08;
+    --accent-soft: rgba(201,164,90,.10);
+    --accent-soft-2: rgba(201,164,90,.18);
+    --spore: #9FC27F;
+    --spore-bright: #B8D59B;
+    --moss: #8F8A84;
+    --moss-dim: #4A443E;
+    --blood: #E07A5F;                  /* décision « refusé » */
+    --good: #9FC27F;                   /* états « en production » */
+    --grain: 0;
     --bevel: 0px;                      /* angles droits : plus de HUD biseauté */
   }
   :root[data-theme="light"].fx-standard {
-    /* Le fond était trop proche du blanc des panneaux : ils flottaient sans
-       contour lisible. On creuse l'écart page / surface et on renforce les
-       bordures. Gris et bleu repris de l'échelle Tailwind du CV ; blue-700
-       plutôt que le blue-600 du CV, qui passait sous 4,5:1 sur ce fond. */
-    --bg: #EBEEF3;
-    --bg-rgb: 235,238,243;
-    --bg-2: #E1E6ED;
-    --surface: #FFFFFF;
-    --surface-2: #F4F6FA;
-    --border: #D3DAE4;
-    --border-2: #B3BECD;
-    --ink: #1F2937;                    /* gray-800 */
-    --ink-dim: #4B5563;                /* gray-600 */
-    --muted: #5B6472;
-    --ember: #1D4ED8;                  /* blue-700 */
-    --ember-bright: #2563EB;           /* blue-600 - celui du CV */
-    --ember-glow: rgba(29,78,216,.18);
-    --on-accent: #FFFFFF;
-    --accent-soft: rgba(29,78,216,.08);
-    --accent-soft-2: rgba(29,78,216,.14);
-    --spore: #14713C;
-    --moss: #5B6472;
-    --moss-dim: #9AA5B4;
-    --blood: #B91C1C;
-    --good: #14713C;
+    /* Papier chaud plutôt que blanc : la même chambre, volets ouverts. */
+    --bg: #F0EEEB;
+    --bg-rgb: 240,238,235;
+    --bg-2: #EAE7E2;
+    --surface: #E6E2DC;
+    --surface-2: #DDD8D0;
+    --border: #D0CAC1;
+    --border-2: #B8B1A7;
+    --ink: #14110E;
+    --ink-dim: #3D3832;
+    --muted: #5D564D;
+    --ember: #7A5D1A;
+    --ember-bright: #96742A;
+    --ember-glow: rgba(122,93,26,.22);
+    --on-accent: #F0EEEB;
+    --accent-soft: rgba(122,93,26,.10);
+    --accent-soft-2: rgba(122,93,26,.18);
+    --spore: #3F6B2E;
+    --moss: #5D564D;
+    --moss-dim: #B8B1A7;
+    --blood: #A6452C;
+    --good: #3F6B2E;
     --grain: 0;
   }
 
@@ -524,7 +528,7 @@ document.documentElement.classList.add('js');
   .status .st-top .s { color: var(--good); letter-spacing: .12em; }
   .status .st-top .h { margin-left: auto; color: var(--muted); }
   .status .st-body { padding: 15px 17px; display: grid; gap: 8px; color: var(--ink-dim); }
-  .status .row { display: flex; gap: 10px; }
+  .status .row { display: flex; gap: 10px; font: inherit; }
   .status .row .v { color: var(--moss); }
   .status .row .ok { margin-left: auto; color: var(--good); }
   .status .kpis { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid var(--border); }
@@ -656,10 +660,7 @@ document.documentElement.classList.add('js');
   .presta h3 { font-size: 1.35rem; text-transform: uppercase; color: var(--ink); line-height: 1.2; }
   .presta .duree { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ember); border: 1px solid var(--border-2); padding: 5px 10px; white-space: nowrap; flex: none; }
   .presta .desc { margin-top: 13px; color: var(--ink-dim); font-size: 14.8px; }
-  .presta ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 9px; }
-  .presta ul li { display: flex; gap: 10px; font-size: 14px; color: var(--muted); }
-  .presta ul svg { width: 15px; height: 15px; color: var(--moss); flex: none; margin-top: 3px; }
-  .presta .tags { margin-top: auto; padding-top: 18px; }
+  .presta .lien { margin-top: auto; padding-top: 18px; align-self: flex-start; font-size: 14px; color: var(--ember); text-decoration: underline; text-underline-offset: 3px; }
   .presta-foot { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--border); display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
   .presta-foot p { color: var(--muted); font-size: 14.4px; max-width: 62ch; }
 
@@ -707,6 +708,7 @@ document.documentElement.classList.add('js');
 
   footer { border-top: 1px solid var(--border); padding-block: 28px; }
   footer .wrap { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  footer .fo-id { text-transform: uppercase; }
 
   /* ---------- WEAPON WHEEL ---------- */
   .wheel-overlay {
@@ -873,6 +875,7 @@ document.documentElement.classList.add('js');
   .verdict .meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
   .try-raw { background: var(--surface-2); border: 1px solid var(--border); padding: 15px; font-family: var(--font-mono);
     font-size: 12px; color: var(--ink-dim); line-height: 1.75; overflow-x: auto; }
+  .try-raw code { font: inherit; }
   .try-raw .k { color: var(--ember); }
   .try-raw .rq { color: var(--muted); display: block; margin-bottom: 9px; word-break: break-all; }
   @media (max-width: 900px) { .try-panel { grid-template-columns: 1fr; } }
@@ -994,187 +997,534 @@ document.documentElement.classList.add('js');
   .scan-sweep.run { animation: scanDown .55s ease-in-out; }
   @keyframes scanDown { 0% { top: -90px; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { top: 100vh; opacity: 0; } }
 
-  /* ---------- MODE STANDARD (sobre) : on calme tout ---------- */
-  /* Effets animés : coupés */
+  /* ---------- MODE STANDARD : « chambre noire » ----------
+     Tout ce bloc est préfixé html.fx-standard : le mode Game ne lit aucune de
+     ces règles. Principes : rien n'est encadré (les surfaces se distinguent
+     par leur ton, pas par un filet), pas d'ombre au repos, pas de dégradé, pas
+     de petite étiquette en capitales espacées, et le monospace ne reste que
+     dans le code et les fragments d'interface marqués data-ui. */
+
+  /* Effets et ornements du mode Game : coupés */
   html.fx-standard .embers,
   html.fx-standard .scan-sweep,
   html.fx-standard .torch,
-  html.fx-standard .status .hb { display: none; }
+  html.fx-standard .hero-bg,
+  html.fx-standard .live-border::before,
+  html.fx-standard .panel::after,
+  html.fx-standard body::after,
+  html.fx-standard .sec-head .idx,
+  html.fx-standard .contact > .wrap > .hud-label,
+  html.fx-standard .hud-label::before,
+  html.fx-standard .hm-faits .hm-g,
+  html.fx-standard .facts svg,
+  html.fx-standard .flag ul svg,
+  html.fx-standard .proj-links svg,
+  html.fx-standard .menu-btn .dot { display: none; }
   html.fx-standard .proj::before { content: none; }
   html.fx-standard .menu-btn.pulse { animation: none; }
   html.fx-standard .status .pulse::after { animation: none; }
   html.fx-standard .hero h1 .ember { text-shadow: none; }
-
-  /* Bordure « vivante » : dégradé conique multicolore = rareté d'objet. Retirée. */
-  html.fx-standard .live-border::before { display: none; }
-
-  /* Angles droits : les coins biseautés sont la signature du HUD de jeu.
-     .panel suit --bevel ; ces quatre-là ont un biseau écrit en dur. */
-  html.fx-standard .panel::after { display: none; }
   html.fx-standard .btn,
   html.fx-standard .menu-btn,
-  html.fx-standard .icon-btn { clip-path: none; }
-  html.fx-standard .icon-btn { background: var(--surface); }
+  html.fx-standard .icon-btn,
+  html.fx-standard .panel { clip-path: none; }
 
-  /* Surfaces propres : ni vignette, ni scanlines (le grain passe par --grain) */
-  html.fx-standard body::after { display: none; }
-
-  /* Étiquettes : label d'axe plutôt qu'affichage tête haute */
-  html.fx-standard .hud-label { letter-spacing: .14em; color: var(--muted); }
-  html.fx-standard .hud-label::before { display: none; }
-  html.fx-standard .sl { display: none; }           /* le « // » des numéros de section */
-  html.fx-standard .sec-head .idx { letter-spacing: .14em; }
-  html.fx-standard .hero-stats .k { color: var(--ink); }
-  html.fx-standard .badge.star { background: none; color: var(--ember); font-weight: 500; }
-
-  /* Titres : Anton tient à 6,6rem parce qu'elle est condensée. Inter y serait
-     démesurée et casserait les retours à la ligne - on resserre. */
+  /* ----- Typographie : cinq corps, deux familles -----
+     1 rem (16 px) pour les mentions, 1.125 rem pour le texte, 1.3125 rem pour
+     les intertitres, une pente pour les titres de section, une pour le hero. */
+  html.fx-standard body { font-size: 1.125rem; line-height: 1.55; }
   html.fx-standard h1,
-  html.fx-standard h2,
-  html.fx-standard h3 { font-weight: 800; letter-spacing: -.022em; line-height: 1.04; }
-  html.fx-standard .hero h1 { font-size: clamp(2.5rem, 1.1rem + 5.2vw, 4.7rem); }
-  html.fx-standard .sec-head h2 { font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem); }
-  html.fx-standard .proj h3 { font-size: 1.45rem; }
-  html.fx-standard .proj.feat h3 { font-size: 1.95rem; }
-  html.fx-standard .presta h3 { font-size: 1.2rem; }
-  html.fx-standard .brand .mono-logo { font-size: 20px; font-weight: 800; letter-spacing: -.01em; }
-  html.fx-standard .flag-body h3,
-  html.fx-standard .tryout h3 { font-weight: 700; letter-spacing: .08em; }
-  @media (max-width: 560px) {
-    html.fx-standard .hero h1 { font-size: clamp(2.1rem, 1rem + 8vw, 2.9rem); }
-    html.fx-standard .sec-head h2 { font-size: clamp(1.7rem, 1.1rem + 4vw, 2.2rem); }
-  }
+  html.fx-standard h2 { font-family: var(--font-display); font-weight: 300; letter-spacing: 0; line-height: 1.05; text-transform: none; }
+  html.fx-standard h3,
+  html.fx-standard .tl-role,
+  html.fx-standard .hud-label,
+  html.fx-standard .ident .nm { font-family: var(--font-body); font-weight: 500; font-size: 1.3125rem; line-height: 1.3; letter-spacing: -.01em; text-transform: none; color: var(--ink); }
+  html.fx-standard .hud-label { gap: 0; color: var(--muted); }
+  html.fx-standard .hud-label .hl-name { font-weight: 500; letter-spacing: inherit; color: var(--ink); }
 
-
-  /* ---------- MODE STANDARD : COMPOSANTS 2026 ----------
-     Le mode Standard visait « pas gamer ». Il en gardait pourtant un
-     vocabulaire daté : angles vifs partout, capitales sur tous les titres,
-     panneaux posés à plat sans profondeur, libellés de boutons en capitales
-     monospace. Les outils que lisent les leads techniques aujourd'hui, consoles
-     LLM et tableaux de bord d'observabilité, tiennent un autre discours :
-     rayons francs, liserés d'un pixel, ombres basses et larges, capitales
-     réservées aux étiquettes techniques. C'est ce que pose ce bloc. */
-  html.fx-standard {
-    --r: 12px;                 /* panneaux */
-    --r-sm: 9px;               /* boutons, champs */
-    --hair: rgba(255,255,255,.055);   /* liseré haut : la lumière vient d'en haut */
-    --sh-1: 0 1px 2px rgba(0,0,0,.30), 0 10px 26px -14px rgba(0,0,0,.75);
-    --sh-2: 0 1px 2px rgba(0,0,0,.34), 0 22px 48px -20px rgba(0,0,0,.85);
-  }
-  :root[data-theme="light"].fx-standard {
-    --hair: transparent;       /* sur une surface blanche, un liseré blanc ne dit rien */
-    --sh-1: 0 1px 2px rgba(24,34,52,.05), 0 10px 24px -16px rgba(24,34,52,.30);
-    --sh-2: 0 1px 3px rgba(24,34,52,.07), 0 22px 44px -22px rgba(24,34,52,.36);
-  }
-
-  /* Panneaux. Le clip-path du HUD doit sauter : il rogne l'ombre portée. */
-  html.fx-standard .panel {
-    clip-path: none; border-radius: var(--r);
-    box-shadow: var(--sh-1), inset 0 1px 0 var(--hair);
-    transition: box-shadow .3s ease, border-color .3s ease;
-  }
-  html.fx-standard .proj:hover,
-  html.fx-standard .presta:hover { box-shadow: var(--sh-2), inset 0 1px 0 var(--hair); }
-
-  /* Halo suivant le curseur. Le biseau ::after est libre en mode Standard : on
-     le réemploie plutôt que d'ajouter un élément. --px / --py sont posées en JS. */
-  @media (hover: hover) and (pointer: fine) {
-    html.fx-standard .panel::after {
-      display: block; inset: 0; width: auto; height: auto; border-radius: inherit;
-      background: radial-gradient(300px circle at var(--px, 50%) var(--py, 50%),
-                                  var(--accent-soft), transparent 68%);
-      opacity: 0; transition: opacity .4s ease; pointer-events: none;
-    }
-    html.fx-standard .panel:hover::after { opacity: 1; }
-  }
-
-  /* Boutons : le monospace en capitales est une étiquette technique, pas un
-     libellé d'action. On rend l'action à la grotesque du corps de texte. */
-  html.fx-standard .btn {
-    font-family: var(--font-body); font-size: 14.5px; font-weight: 600;
-    text-transform: none; letter-spacing: -.005em; padding: 11px 18px;
-    border-radius: var(--r-sm);
-  }
-  html.fx-standard .btn-primary:hover { box-shadow: 0 8px 22px -8px var(--ember-glow); }
-  html.fx-standard .btn-ghost { background: var(--surface); }
-  html.fx-standard .btn-ghost:hover { background: var(--surface-2); }
-  html.fx-standard .icon-btn { border-radius: var(--r-sm); }
-  html.fx-standard .menu-btn { border-radius: var(--r-sm); }
-  html.fx-standard .invite .go { border-radius: var(--r-sm); }
-
-  /* Étiquettes : pilules. Le monospace reste, c'est là qu'il est juste. */
+  /* Le monospace et les capitales espacées quittent le texte courant. */
+  html.fx-standard .brand .tag,
+  html.fx-standard .top-nav a,
+  html.fx-standard .menu-btn,
+  html.fx-standard .menu-btn kbd,
+  html.fx-standard .btn,
+  html.fx-standard .hero-stats .k,
+  html.fx-standard .hero-stats .l,
+  html.fx-standard .hm-faits li,
+  html.fx-standard .wheel-hint,
+  html.fx-standard .ident .rl,
+  html.fx-standard .skill-head .name,
+  html.fx-standard .skill-tags,
+  html.fx-standard .lvl-txt,
   html.fx-standard .badge,
   html.fx-standard .tag,
-  html.fx-standard .duree { border-radius: 999px; }
-  html.fx-standard .pipe .node,
-  html.fx-standard .pipe,
-  html.fx-standard .gauge,
-  html.fx-standard .try-panel,
-  html.fx-standard .try-raw,
-  html.fx-standard .cmdk-item,
-  html.fx-standard .engagement { border-radius: 8px; }
-  html.fx-standard .eng-ico { border-radius: 8px; }
-  html.fx-standard .eng-txt h3 { text-transform: none; font-weight: 700; letter-spacing: -.01em; }
-  html.fx-standard .cmdk,
-  html.fx-standard .invite { border-radius: 14px; }
-  /* Une capture à angles vifs dans une carte arrondie trahit le montage. */
-  html.fx-standard .cover,
-  html.fx-standard .shot { border-radius: 9px; }
-  /* Le mode Game garde l'angle vif de son HUD, le Standard arrondit. */
-  html.fx-standard .ident img { border-radius: 50%; }
-  html.fx-standard .cmdk { box-shadow: var(--sh-2); }
-  html.fx-standard .sec-head .idx {
-    display: inline-block; padding: 3px 10px; border: 1px solid var(--border);
-    border-radius: 999px; font-size: 11px; color: var(--moss);
-  }
-
-  /* Barre supérieure : flou progressif, et un filet qui n'apparaît qu'une fois
-     la page défilée. Au repos, l'en-tête ne doit pas exister. */
-  html.fx-standard header.hud-top {
-    background: rgba(var(--bg-rgb), .68);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    border-bottom: 1px solid transparent;
-    transition: background .3s ease, border-color .3s ease;
-  }
-  html.fx-standard.scrolled header.hud-top {
-    background: rgba(var(--bg-rgb), .88); border-bottom-color: var(--border);
-  }
-
-  /* Casse. Les capitales sur un titre de 4,7rem sont un parti d'affiche : elles
-     appartiennent au mode Game. Un outil écrit ses titres comme des phrases. */
-  html.fx-standard .hero h1,
-  html.fx-standard .sec-head h2,
-  html.fx-standard .contact h2,
-  html.fx-standard .proj h3,
-  html.fx-standard .presta h3,
-  html.fx-standard .tl-role { text-transform: none; }
-  html.fx-standard .tl-role { font-weight: 650; font-size: 1.24rem; letter-spacing: -.012em; }
+  html.fx-standard .proj .role,
+  html.fx-standard .proj .proof b,
+  html.fx-standard .proj-links a,
+  html.fx-standard .media-tabs button,
+  html.fx-standard .kpi .v,
+  html.fx-standard .kpi .c,
   html.fx-standard .flag-body h3,
-  html.fx-standard .tryout h3 { letter-spacing: -.01em; text-transform: none; }
+  html.fx-standard .tryout h3,
+  html.fx-standard .try-chip,
+  html.fx-standard .gauge-head,
+  html.fx-standard .gauge-scale,
+  html.fx-standard .verdict .tag-d,
+  html.fx-standard .verdict .meta,
+  html.fx-standard .thr-head,
+  html.fx-standard .thr-head button,
+  html.fx-standard .thr-count,
+  html.fx-standard .presta .duree,
+  html.fx-standard .tl-when,
+  html.fx-standard .tl-tech,
+  html.fx-standard .cta-note,
+  html.fx-standard .ask-eng,
+  html.fx-standard .ask-chips button,
+  html.fx-standard .ask-toks,
+  html.fx-standard .ask-src,
+  html.fx-standard .invite .go,
+  html.fx-standard .invite .no,
+  html.fx-standard .cmdk-group,
+  html.fx-standard .cmdk-foot,
+  html.fx-standard .cmdk-item .ht,
+  html.fx-standard .cmdk-item .sc,
+  html.fx-standard .tip::after,
+  html.fx-standard footer .wrap { font-family: var(--font-body); letter-spacing: 0; text-transform: none; }
 
-  /* ---------- ANIMATIONS PILOTÉES PAR LE DÉFILEMENT ----------
-     animation-timeline lie l'animation à la position de l'élément dans la
-     fenêtre plutôt qu'à une horloge : ni observateur, ni requestAnimationFrame,
-     et le mouvement suit exactement le doigt sur le trackpad, y compris en
-     remontant. Là où le navigateur ne connaît pas view(), le chemin JS
-     d'origine reprend la main (voir le @supports not plus haut). */
-  @keyframes cardIn { from { opacity: 0; translate: 0 26px; } to { opacity: 1; translate: 0 0; } }
-  @keyframes headIn { from { opacity: .3; font-weight: 300; translate: 0 12px; }
-                        to { opacity: 1; font-weight: 800; translate: 0 0; } }
+  /* Corps 1 rem : mentions, liens secondaires, légendes */
+  html.fx-standard .brand .tag,
+  html.fx-standard .top-nav a,
+  html.fx-standard .menu-btn,
+  html.fx-standard .menu-btn kbd,
+  html.fx-standard .btn,
+  html.fx-standard .hero-stats .l,
+  html.fx-standard .hm-faits li,
+  html.fx-standard .wheel-hint,
+  html.fx-standard .ident .rl,
+  html.fx-standard .lvl-txt,
+  html.fx-standard .badge,
+  html.fx-standard .tag,
+  html.fx-standard .proj .role,
+  html.fx-standard .proj-links a,
+  html.fx-standard .media-tabs button,
+  html.fx-standard .kpi .c,
+  html.fx-standard .try-chip,
+  html.fx-standard .gauge-head,
+  html.fx-standard .gauge-scale,
+  html.fx-standard .verdict .tag-d,
+  html.fx-standard .verdict .meta,
+  html.fx-standard .thr-head,
+  html.fx-standard .thr-head button,
+  html.fx-standard .thr-count,
+  html.fx-standard .tl-when,
+  html.fx-standard .tl-org,
+  html.fx-standard .tl-tech,
+  html.fx-standard .cta-note,
+  html.fx-standard .ask-eng,
+  html.fx-standard .ask-chips button,
+  html.fx-standard .ask-toks,
+  html.fx-standard .ask-src,
+  html.fx-standard .cm-v,
+  html.fx-standard .cm-cols li,
+  html.fx-standard .cmdk-def,
+  html.fx-standard .cmdk-empty,
+  html.fx-standard .invite .txt,
+  html.fx-standard footer .wrap { font-size: 1rem; }
+  /* Corps 1.125 rem : le texte */
+  html.fx-standard .sec-head p,
+  html.fx-standard .proj .desc,
+  html.fx-standard .proj .proof,
+  html.fx-standard .proj-sub p,
+  html.fx-standard .presta .desc,
+  html.fx-standard .presta-foot p,
+  html.fx-standard .facts li,
+  html.fx-standard .flag ul li,
+  html.fx-standard .engagement p,
+  html.fx-standard .tryout .sub,
+  html.fx-standard .thr-why,
+  html.fx-standard .skill-head .name,
+  html.fx-standard .skill-tags,
+  html.fx-standard .contact p,
+  html.fx-standard .ask-a,
+  html.fx-standard .cmdk-item .lb,
+  html.fx-standard .cmdk-field input { font-size: 1.125rem; }
+  /* Fragments d'interface (data-ui) : le mono reste, mais rien sous 13 px. */
+  html.fx-standard .status { font-size: 14px; }
+  html.fx-standard .status .st-top .s,
+  html.fx-standard .status .st-top .h,
+  html.fx-standard .status .kpis,
+  html.fx-standard .status .api-note { font-family: var(--font-body); }
+  html.fx-standard .status .kpis .c,
+  html.fx-standard .api-note,
+  html.fx-standard .cm-ver,
+  html.fx-standard .cm-k,
+  html.fx-standard .cm-metrics .c,
+  html.fx-standard .cm-cols h3,
+  html.fx-standard .pipe .lane-label,
+  html.fx-standard .try-raw,
+  html.fx-standard .try-id .ti-head,
+  html.fx-standard .try-id dt,
+  html.fx-standard .try-id .ti-note,
+  html.fx-standard .gauge .thr::after,
+  html.fx-standard .cmdk-group,
+  html.fx-standard .cmdk-foot,
+  html.fx-standard .cmdk-foot kbd,
+  html.fx-standard .cmdk-item .ht,
+  html.fx-standard .cmdk-item .sc,
+  html.fx-standard .tip::after,
+  html.fx-standard .rail .lb { font-size: 13px; letter-spacing: 0; }
+  html.fx-standard .pipe .lane,
+  html.fx-standard .try-id dd,
+  html.fx-standard .cm-id { font-size: 14px; }
+  html.fx-standard .cm-id,
+  html.fx-standard .cm-ver { font-family: var(--font-body); }
+  html.fx-standard .cm-k { min-width: 128px; }
+  html.fx-standard .cm-metrics .n,
+  html.fx-standard .status .kpis .n { color: var(--ink); font-weight: 500; font-family: var(--font-body); }
+  /* Libellés d'instrument : en texte courant. Seules les requêtes et réponses brutes restent en code. */
+  html.fx-standard .pipe .lane,
+  html.fx-standard .try-id .ti-head,
+  html.fx-standard .try-id dt { font-family: var(--font-body); }
+  html.fx-standard .cm-cols h3 { color: var(--muted); letter-spacing: .08em; }
+  html.fx-standard .cm-metrics .c,
+  html.fx-standard .status .kpis .c { letter-spacing: .06em; }
+
+  /* ----- Cadre : surfaces sans filet, sans ombre, sans rayon ----- */
+  html.fx-standard .panel { border-color: transparent; border-radius: 0; box-shadow: none; }
+  html.fx-standard .proj:hover,
+  html.fx-standard .presta:hover { border-color: transparent; transform: none; background: var(--surface-2); }
+  html.fx-standard .cover,
+  html.fx-standard .shot { border: 0; border-radius: 0; filter: none; background: none; }
+  html.fx-standard .langs,
+  html.fx-standard .presta-foot,
+  html.fx-standard .proj-links,
+  html.fx-standard .hero-meta,
+  html.fx-standard .tryout,
+  html.fx-standard .thr-ctl,
+  html.fx-standard .ident,
+  html.fx-standard footer { border-top: 0; border-bottom: 0; }
+  html.fx-standard section { padding-block: clamp(88px, 10vw, 140px); }
+  html.fx-standard .sec-head { margin-bottom: 52px; }
+  html.fx-standard .sec-head h2 { font-size: clamp(2rem, 1.3rem + 3.2vw, 4rem); margin-top: 0; }
+  html.fx-standard .sec-head p { margin-top: 20px; color: var(--ink-dim); }
+  html.fx-standard .contact h2 { font-size: clamp(2rem, 1.3rem + 3.2vw, 4rem); }
+
+  /* Étiquettes : du texte, séparé par de l'air */
+  html.fx-standard .badges,
+  html.fx-standard .tags { gap: 4px 16px; }
+  html.fx-standard .badge,
+  html.fx-standard .tag { border: 0; padding: 0; background: none; color: var(--muted); }
+  html.fx-standard .badge.star { background: none; color: var(--ember); font-weight: 500; }
+  html.fx-standard .badge.live { color: var(--good); }
+
+  /* ----- Barre supérieure : elle n'existe pas au repos ----- */
+  html.fx-standard header.hud-top {
+    height: 72px; background: transparent; border: 0;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    transition: background .3s ease;
+  }
+  html.fx-standard.scrolled header.hud-top { background: rgba(var(--bg-rgb), .94); }
+  html.fx-standard .brand .mono-logo { font-family: var(--font-display); font-weight: 300; font-size: 1.3125rem; letter-spacing: .01em; }
+  html.fx-standard .brand .tag { border-left: 0; padding-left: 0; color: var(--muted); }
+  html.fx-standard .top-nav a { color: var(--ink-dim); }
+  html.fx-standard .icon-btn { background: none; border: 0; border-radius: 0; color: var(--ink-dim); }
+  html.fx-standard .icon-btn:hover { color: var(--ink); }
+  html.fx-standard .menu-btn { background: none; border: 0; padding: 8px 4px; gap: 8px; color: var(--ink-dim); }
+  html.fx-standard .menu-btn:hover { background: none; color: var(--ink); }
+  html.fx-standard .menu-btn kbd { background: none; border: 0; padding: 0; color: var(--muted); }
+  @media (max-width: 999px) {
+    html.fx-standard header.hud-top .top-nav {
+      background: rgba(var(--bg-rgb), .94); border-bottom: 0;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+    }
+  }
+
+  /* ----- Boutons : un plein clair, le reste souligné ----- */
+  html.fx-standard .btn { font-weight: 500; padding: 14px 24px; gap: 10px; border-radius: 2px; }
+  html.fx-standard .btn-primary { background: var(--ink); color: var(--bg); }
+  html.fx-standard .btn-primary:hover { background: var(--ember); color: var(--on-accent); }
+  html.fx-standard .btn-ghost {
+    border: 0; padding-inline: 4px; color: var(--ink);
+    text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px;
+    text-decoration-color: var(--muted);
+  }
+  html.fx-standard .btn-ghost:hover { color: var(--ink); text-decoration-color: var(--ink); }
+  @keyframes ctaHaloStd {
+    0%   { box-shadow: 0 0 0 0 var(--ember-glow); }
+    35%  { box-shadow: 0 0 0 7px color-mix(in srgb, var(--ember) 22%, transparent); }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+  html.fx-standard .contact-cta.flash .btn { animation-name: ctaHaloStd; }
+  html.fx-standard .contact-cta.flash .btn-ghost { animation: none; }
+
+  /* ----- Hero : le titre au cœur d'un anneau de photos -----
+     L'anneau (.ring) est posé par le script, en mode Standard seulement, à
+     partir des visuels des cartes projet. Le cœur reste vide : titre, phrase,
+     bouton. Le panneau d'API vient ensuite, allumé, puis les faits. */
+  html.fx-standard .hero { min-height: 0; padding-top: 72px; }
+  html.fx-standard .hero-grid { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0; margin-block: 0; }
+  /* Le cœur du hero recouvre une partie de l'anneau : il laisse passer la
+     souris (pointer-events) et seuls ses enfants la reprennent, sinon les
+     cadres situés derrière lui ne seraient pas cliquables. */
+  html.fx-standard .hero-grid { pointer-events: none; }
+  html.fx-standard .hero-grid > * { pointer-events: auto; }
+  html.fx-standard .hero-grid > div:first-child { pointer-events: none; }
+  html.fx-standard .hero-grid > div:first-child > * { pointer-events: auto; }
+  html.fx-standard .hero-grid > div:first-child {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; max-width: 760px; min-height: calc(100svh - 72px); padding-block: 40px;
+  }
+  html.fx-standard .hero h1 {
+    font-size: clamp(2.4rem, 1rem + 4.2vw, 4.5rem); font-weight: 100; line-height: 1;
+    text-transform: uppercase; letter-spacing: .03em; margin-top: 18px;
+  }
+  /* Deux lignes, toujours : la seconde porte la couleur. */
+  html.fx-standard .hero h1 .ember { display: block; color: var(--ember); }
+  html.fx-standard .hero .lede { margin: 26px auto 0; max-width: 40ch; color: var(--ink-dim); }
+  html.fx-standard .hero .lede b { font-weight: 500; }
+  /* Pendant l'échange de texte au survol de l'anneau, la phrase s'efface puis revient. */
+  html.js.fx-standard .hero .lede.in.fade { opacity: 0; transform: translateY(6px); transition-duration: .3s; }
+  html.fx-standard .hero-cta { justify-content: center; align-items: center; gap: 10px 22px; margin-top: 34px; }
+  html.fx-standard .wheel-hint { margin-top: 26px; color: var(--muted); }
+  html.fx-standard .wheel-hint b { color: var(--ink-dim); font-weight: 500; }
+  html.fx-standard .hero-panel { position: relative; z-index: 2; width: min(100%, 560px); margin-top: 8px; }
+  html.fx-standard .hero-meta {
+    flex-direction: column; align-items: center; text-align: center;
+    gap: 30px; padding: 64px 26px 0;
+  }
+  html.fx-standard .hm-faits { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; order: 1; }
+  html.fx-standard .hm-faits li { color: var(--muted); }
+  html.fx-standard .hero-meta .hero-stats { gap: 48px; justify-content: center; }
+  html.fx-standard .hero-stats .k { font-family: var(--font-display); font-weight: 300; font-size: 2.25rem; color: var(--ink); }
+  html.fx-standard .hero-stats .l { color: var(--muted); margin-top: 8px; }
+  .ring { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .ring a {
+    position: absolute; translate: -50% -50%; overflow: hidden; pointer-events: auto;
+    border-radius: 12px; background: var(--surface); filter: brightness(.55) saturate(.8);
+    transition: filter .5s ease, scale .5s cubic-bezier(.2, .7, .2, 1), box-shadow .5s ease, opacity .5s ease;
+  }
+  .ring a.tile { filter: none; opacity: .78; }
+  .ring a.tile:hover, .ring a.tile:focus-visible { opacity: 1; }
+  /* Sur écran étroit, les cadres passent derrière le texte : on les éteint davantage. */
+  @media (max-width: 1099px) { .ring a { filter: brightness(.4) saturate(.7); } .ring a.tile { filter: none; } }
+  .ring a img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  /* Vignette typographique : une icône et la description complète du projet.
+     Au survol, le nom du projet prend la place de l'icône. */
+  .ring .rf {
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 6px;
+    height: 100%; padding: 12px 14px; color: var(--ink); background: var(--surface);
+  }
+  .ring .rf-top { position: relative; height: 26px; margin-bottom: auto; }
+  .ring .rf svg, .ring .rf b { position: absolute; top: 0; left: 0; transition: opacity .3s ease; }
+  .ring .rf svg { width: 26px; height: 26px; color: var(--ember); }
+  .ring .rf b { opacity: 0; max-width: 100%; font-family: var(--font-display); font-weight: 300; font-size: 15px; line-height: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ring a:hover .rf svg, .ring a:focus-visible .rf svg { opacity: 0; }
+  .ring a:hover .rf b, .ring a:focus-visible .rf b { opacity: 1; }
+  /* -webkit-line-clamp : coupe proprement après 4 lignes si une description déborde. */
+  .ring .rf small { font-size: 13px; line-height: 1.3; color: var(--muted); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
+  @media (max-width: 1099px) { .ring .rf { padding: 10px 12px; } .ring .rf-top { height: 22px; } .ring .rf svg { width: 22px; height: 22px; } .ring .rf b { display: none; } }
+  @media (max-width: 767px) { .ring .rf small { -webkit-line-clamp: 5; } }
+  /* Au survol le cadre grossit franchement et sort de la pénombre. */
+  .ring a:hover,
+  .ring a:focus-visible { filter: none; scale: 1.7; z-index: 3; box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .55); }
+  :root[data-theme="light"].fx-standard .ring a { filter: brightness(.94) saturate(.85); }
+  :root[data-theme="light"].fx-standard .ring a:hover { filter: none; box-shadow: 0 24px 60px -20px rgba(40, 30, 10, .3); }
+  @media (prefers-reduced-motion: reduce) { .ring a { transition: none; } }
+
+  /* Le panneau d'API est la pièce allumée de la chambre : clair sur le thème
+     sombre. Sur le thème clair il reste clair, juste plus blanc que la page. */
+  html.fx-standard .status {
+    --surface: #F0EEEB; --surface-2: #E6E2DC; --border: #D0CAC1;
+    --ink: #14110E; --ink-dim: #3D3832; --muted: #5D564D; --moss: #5D564D;
+    --ember: #7A5D1A; --ember-glow: rgba(122,93,26,.25); --accent-soft: rgba(122,93,26,.10);
+    --good: #3F6B2E; --blood: #A6452C;
+    background: var(--surface); color: var(--ink-dim);
+  }
+  :root[data-theme="light"].fx-standard .status { --surface: #FBFAF7; --surface-2: #F1EEE9; }
+  html.fx-standard .status .pulse { box-shadow: none; }
+
+  /* ----- Profil : la phrase d'abord, le portrait en médaillon ----- */
+  html.fx-standard .about-grid { gap: 64px; align-items: center; }
+  html.fx-standard .about-grid .lead { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.45rem, 1.1rem + 1.4vw, 2.25rem); line-height: 1.2; }
+  html.fx-standard .about-grid .lead b { font-weight: inherit; }
+  html.fx-standard .about-grid p + p { margin-top: 18px; }
+  html.fx-standard .about-grid .muted { color: var(--ink-dim); }
+  html.fx-standard .about-grid .panel { padding: 36px; }
+  html.fx-standard .ident { flex-direction: column; align-items: flex-start; gap: 20px; padding: 0 0 22px; }
+  html.fx-standard .ident img { width: 136px; height: 136px; border: 0; border-radius: 50%; filter: none; }
+  html.fx-standard .ident .rl { color: var(--muted); margin-top: 4px; }
+  html.fx-standard .facts { padding: 0; gap: 12px; }
+  html.fx-standard .facts li { color: var(--ink-dim); }
+  html.fx-standard .facts b { font-weight: 500; }
+
+  /* ----- Parcours ----- */
+  html.fx-standard .tl-col > .hud-label { margin-bottom: 22px; }
+  html.fx-standard .tl-item::before { background: var(--bg); border-color: var(--border-2); }
+  html.fx-standard .tl-item.tl-current::before { background: var(--ember); border-color: var(--ember); box-shadow: none; }
+  html.fx-standard .tl-when { color: var(--muted); }
+  html.fx-standard .tl-role { margin-top: 4px; }
+  html.fx-standard .tl-org { color: var(--ink-dim); }
+  html.fx-standard .tl-tech { color: var(--muted); margin-top: 4px; }
+  html.fx-standard .engagement { border-left: 2px solid var(--ember); padding: 30px 34px; }
+  html.fx-standard .eng-ico { width: 40px; height: 40px; background: none; border: 0; color: var(--ink); }
+  html.fx-standard .eng-txt h3 { font-size: 1.3125rem; }
+
+  /* ----- Compétences : une liste alignée, un seul corps ----- */
+  html.fx-standard .skills-grid { gap: 22px 64px; }
+  html.fx-standard .skill-head { margin-bottom: 4px; gap: 6px 14px; }
+  html.fx-standard .lvl i { width: 7px; height: 7px; border-color: var(--ink-dim); }
+  html.fx-standard .lvl i.on { background: var(--ink-dim); }
+  html.fx-standard .lvl-txt { color: var(--muted); }
+  html.fx-standard .skill-tags { color: var(--muted); line-height: 1.5; }
+  html.fx-standard .langs { margin-top: 48px; padding-top: 0; }
+
+  /* ----- Projets : un titre très grand, posé au-dessus de la grille ----- */
+  html.fx-standard #projets .sec-head { display: flex; flex-direction: column; max-width: none; margin-bottom: 0; }
+  html.fx-standard #projets .sec-head p { order: -1; max-width: 760px; margin: 0 0 28px; }
+  html.fx-standard #projets .sec-head h2 {
+    font-size: clamp(3rem, 1.5rem + 7.5vw, 8.5rem); line-height: .9;
+    margin: 0 0 .3em -.04em;
+  }
+  html.fx-standard .proj-grid { gap: 18px; }
+  /* Les badges rejoignent le bas de la carte : rien ne coiffe le titre. */
+  html.fx-standard .proj .badges { order: 1; margin-top: 14px; }
+  html.fx-standard .proj .proj-links { order: 2; }
+  html.fx-standard .proj { padding: 34px; }
+  html.fx-standard .proj h3 { font-size: 1.3125rem; }
+  html.fx-standard .proj.feat h3 { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.25rem); line-height: 1.1; }
+  html.fx-standard .proj h3 .dash { font-weight: inherit; }
+  html.fx-standard .proj .role { color: var(--muted); margin-top: 6px; }
+  html.fx-standard .proj .desc { color: var(--ink-dim); margin-top: 16px; }
+  html.fx-standard .proj .proof { padding-left: 14px; border-left-color: var(--border-2); color: var(--muted); }
+  html.fx-standard .proj .proof b { font-size: inherit; font-weight: 500; color: var(--ink); margin-right: 8px; }
+  html.fx-standard .proj-links { padding-top: 6px; gap: 22px; }
+  html.fx-standard .proj-links a { color: var(--ink); text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--muted); }
+  html.fx-standard .proj-links a:hover { color: var(--ink); text-decoration-color: var(--ink); }
+  html.fx-standard .media-tabs { background: none; border: 0; padding: 0; gap: 16px; }
+  html.fx-standard .media-tabs button { padding: 2px 0; border-radius: 0; color: var(--muted); text-decoration: underline; text-underline-offset: 5px; text-decoration-color: transparent; }
+  html.fx-standard .media-tabs button[aria-pressed="true"] { background: none; color: var(--ink); text-decoration-color: var(--ink); }
+  html.fx-standard .proj-sub { margin: 72px 0 26px; }
+  html.fx-standard .proj-sub p { margin-top: 10px; color: var(--ink-dim); }
+
+  /* ----- Projet phare ----- */
+  html.fx-standard .kpi-row { margin: 34px; border: 0; }
+  html.fx-standard .kpi { background: var(--surface); }
+  html.fx-standard .kpi .v { font-family: var(--font-display); font-weight: 300; font-size: 2.25rem; color: var(--ink); }
+  html.fx-standard .kpi .c { color: var(--muted); margin-top: 6px; }
+  html.fx-standard .flag-body { padding: 0 34px; }
+  html.fx-standard .flag-body h3,
+  html.fx-standard .tryout h3 { color: var(--ink); margin-bottom: 18px; }
+  html.fx-standard .flag ul li,
+  html.fx-standard .flag ul li::before,
+  html.fx-standard .tryout { margin-top: 44px; padding: 0 34px 38px; }
+  html.fx-standard .tryout .sub { color: var(--ink-dim); }
+  html.fx-standard .try-chip { border: 0; padding: 10px 14px; background: var(--surface-2); color: var(--ink-dim); }
+  html.fx-standard .try-chip:hover { background: var(--border); color: var(--ink); }
+  html.fx-standard .try-chip.sel { background: var(--ink); color: var(--bg); }
+  html.fx-standard .gauge { height: 28px; border: 0; border-radius: 0; background: var(--surface-2); }
+  html.fx-standard .gauge-head .val { font-family: var(--font-display); font-weight: 300; }
+  html.fx-standard .verdict .tag-d { border: 0; padding: 8px 14px; background: var(--surface-2); }
+  html.fx-standard .thr-head button { border: 0; border-radius: 0; padding: 6px 12px; background: var(--surface-2); }
+  html.fx-standard .thr-head .thr-val { color: var(--ink); font-weight: 400; }
+  html.fx-standard .pipe { margin: 34px; padding: 26px; border: 0; background: var(--surface-2); }
+  html.fx-standard .pipe .node { border: 0; background: var(--surface); transition: color .3s ease, background .3s ease; }
+  html.fx-standard .pipe .node.hot { color: var(--ember); background: var(--accent-soft); }
+  html.fx-standard .try-raw,
+  html.fx-standard .try-id { border: 0; }
+  html.fx-standard .gl { border-bottom: 0; text-decoration: underline dotted var(--muted); text-underline-offset: 4px; }
+
+  /* ----- CV : la fiche modèle garde son mono, le champ devient une ligne ----- */
+  html.fx-standard .ask { margin-top: 18px; padding: 34px; }
+  html.fx-standard .ask-form input { padding: 12px 0; border: 0; border-bottom: 1px solid var(--border-2); background: none; font-size: 1.3125rem; }
+  html.fx-standard .ask-form input:focus { border-bottom-color: var(--ink); }
+  html.fx-standard .ask-form input:focus-visible { outline: 2px solid var(--ember); outline-offset: 4px; }
+  html.fx-standard .ask-chips button { border: 0; border-radius: 0; padding: 7px 12px; background: var(--surface-2); color: var(--ink-dim); }
+  html.fx-standard .ask-chips button:hover { color: var(--ink); background: var(--border); }
+  html.fx-standard .ask-toks .tk { border-radius: 0; }
+  html.fx-standard .ask-toks .tk.out { border: 0; background: var(--surface-2); }
+  html.fx-standard .ask-bar { border-radius: 0; }
+
+  /* ----- Prestations : la durée, très grande ----- */
+  html.fx-standard .presta-grid { gap: 18px; }
+  html.fx-standard .presta { padding: 34px; }
+  html.fx-standard .presta .presta-top { flex-direction: column; align-items: flex-start; gap: 14px; }
+  html.fx-standard .presta h3 { font-size: 1.3125rem; }
+  html.fx-standard .presta .duree {
+    order: -1; border: 0; padding: 0; color: var(--ink);
+    font-family: var(--font-display); font-weight: 100; font-size: clamp(2rem, 1.3rem + 3.2vw, 4rem); line-height: 1;
+  }
+  html.fx-standard .presta .desc { color: var(--ink-dim); margin-top: 16px; }
+  html.fx-standard .presta .lien { padding-top: 22px; color: var(--ink); text-decoration-color: var(--muted); }
+  html.fx-standard .presta-foot { margin-top: 40px; padding-top: 0; gap: 22px 36px; }
+
+  /* ----- Contact et pied de page : une ligne tranquille ----- */
+  html.fx-standard .contact p { color: var(--ink-dim); margin: 20px auto 36px; }
+  html.fx-standard .contact-actions .btn { font-size: 1.125rem; padding: 16px 28px; }
+  html.fx-standard .contact-liens { gap: 6px 28px; }
+  html.fx-standard .cta-note { color: var(--muted); }
+  html.fx-standard footer { padding-block: 40px 48px; }
+  html.fx-standard footer .wrap { justify-content: center; text-align: center; gap: 8px 24px; color: var(--muted); }
+  html.fx-standard footer .fo-id { text-transform: none; }
+
+  /* ----- Bande d'invitation et palette ----- */
+  html.fx-standard .invite { border: 0; background: var(--surface-2); box-shadow: none; }
+  html.fx-standard .invite .go { border: 0; padding: 10px 16px; background: var(--ink); color: var(--bg); }
+  html.fx-standard .invite .go:hover { background: var(--ember); color: var(--on-accent); }
+  html.fx-standard .invite .no { font-size: 1.375rem; line-height: 1; }
+  html.fx-standard .cmdk { border: 0; }
+  html.fx-standard .cmdk-field:focus-within { box-shadow: inset 0 -2px 0 var(--ember); }
+  html.fx-standard .cmdk-foot kbd { border: 0; border-radius: 0; }
+
+  /* ----- Écrans étroits ----- */
+  /* Sous 1100 px, l'anneau devient une rangée de vignettes sous le cœur :
+     on lui réserve la place en bas du cœur. */
+  @media (max-width: 1099px) {
+    html.fx-standard .hero-grid > div:first-child { padding-bottom: 170px; }
+  }
+  @media (max-width: 900px) {
+    html.fx-standard .hero { padding-top: 124px; }
+    html.fx-standard .hero-grid > div:first-child { min-height: calc(100svh - 124px); padding-top: 24px; }
+    html.fx-standard .hero-meta { padding: 48px 0 0; gap: 26px; }
+    html.fx-standard .hm-faits li { font-size: 1rem; letter-spacing: 0; }
+    html.fx-standard .hero-meta .hero-stats { display: flex; width: auto; gap: 36px; }
+    html.fx-standard .hero-meta .hero-stats .k { font-size: 2.25rem; }
+    html.fx-standard .hero-meta .hero-stats .l { font-size: 1rem; letter-spacing: 0; }
+    html.fx-standard section { padding-block: 72px; }
+    html.fx-standard .kpi-row { margin: 24px; }
+    html.fx-standard .flag-body,
+    html.fx-standard .tryout { padding-inline: 24px; }
+    html.fx-standard .pipe { margin: 24px; padding: 20px; }
+    html.fx-standard .proj,
+    html.fx-standard .presta,
+    html.fx-standard .ask,
+    html.fx-standard .about-grid .panel { padding: 26px; }
+    html.fx-standard .presta-grid { gap: 32px; }
+    html.fx-standard .engagement { padding: 24px 26px; }
+  }
+  @media (max-width: 560px) {
+    html.fx-standard .wrap { padding-inline: 20px; }
+    html.fx-standard header.hud-top { height: 60px; padding-inline: 20px; }
+    html.fx-standard header.hud-top .brand .mono-logo { font-size: 1.125rem; }
+    html.fx-standard .hero { padding-top: 104px; }
+    html.fx-standard .hero-grid > div:first-child { min-height: calc(100svh - 104px); }
+    html.fx-standard .hero h1 { font-size: clamp(1.75rem, .9rem + 4.8vw, 3rem); }
+    html.fx-standard .sec-head h2,
+    html.fx-standard .contact h2 { font-size: clamp(2rem, 1.3rem + 3.2vw, 4rem); }
+    html.fx-standard #projets .sec-head h2 { font-size: clamp(3rem, 1.5rem + 7.5vw, 8.5rem); }
+    html.fx-standard .btn { font-size: 1rem; padding: 14px 20px; }
+    html.fx-standard .tl-role { font-size: 1.125rem; }
+    html.fx-standard .pipe { margin-inline: 0; }
+  }
+
+  /* ---------- BARRE DE PROGRESSION DU RAIL ----------
+     animation-timeline lie la barre à la position de défilement plutôt qu'à
+     une horloge. Les cartes et les titres, eux, apparaissent par
+     IntersectionObserver : une animation liée à view() reste à zéro pour tout
+     ce qui est hors écran, donc vide à l'impression ou dans une capture. */
   @keyframes progScale { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      html.js.fx-standard .stg > * {
-        animation: cardIn linear both;
-        animation-timeline: view(); animation-range: entry 3% cover 22%;
-      }
-      /* Le titre prend sa graisse en entrant : Inter est une variable, autant
-         que la typographie elle-même serve d'animation. */
-      html.js.fx-standard .sec-head h2 {
-        animation: headIn linear both;
-        animation-timeline: view(); animation-range: entry 6% cover 32%;
-      }
       html.js.fx-standard .rprog {
         width: 100%; transform-origin: 0 50%; transform: scaleX(0);
         animation: progScale linear;
@@ -1218,8 +1568,8 @@ document.documentElement.classList.add('js');
   .rail a.on .bar { width: 34px; background: var(--ember); }
   .rail a:hover .bar { background: var(--ember-bright); }
   .rail .lb {
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--muted); white-space: nowrap;
+    font-family: var(--font-body); font-size: 13px; letter-spacing: 0;
+    color: var(--muted); white-space: nowrap;
     opacity: 0; translate: -6px 0; transition: opacity .22s ease, translate .22s ease;
   }
   .rail:hover .lb, .rail a:focus-visible .lb { opacity: 1; translate: 0 0; }
@@ -1378,28 +1728,12 @@ document.documentElement.classList.add('js');
   html.fx-standard .pipe .node { transition: color .3s ease, border-color .3s ease, background .3s ease; }
   html.fx-standard .pipe .node.hot { color: var(--ember); border-color: var(--ember); background: var(--accent-soft); }
 
-  /* Apparition échelonnée des grilles (classe posée par JS : sans JS, rien n'est masqué).
-     Chemin de repli : ne sert que là où animation-timeline: view() manque. */
-  @supports not (animation-timeline: view()) {
-    html.js.fx-standard .stg > * { transition: opacity .5s ease, transform .5s ease; }
-    html.js.fx-standard .stg:not(.stg-in) > * { opacity: 0; transform: translateY(10px); }
-    @media (prefers-reduced-motion: reduce) {
-      html.js.fx-standard .stg:not(.stg-in) > * { opacity: 1; transform: none; }
-      html.js.fx-standard .stg > * { transition: none; }
-    }
-  }
-
-  /* Fond du hero : grille de graphique, pas carte tactique */
-  html.fx-standard .hero-bg {
-    background:
-      radial-gradient(75% 55% at 78% 26%, rgba(96,165,250,.10), transparent 62%),
-      radial-gradient(60% 70% at 12% 88%, rgba(34,197,94,.06), transparent 62%);
-  }
-  html.fx-standard .hero-bg::before { background-size: 28px 28px; opacity: .26; }
-  :root[data-theme="light"].fx-standard .hero-bg {
-    background:
-      radial-gradient(75% 55% at 78% 26%, rgba(29,78,216,.07), transparent 62%),
-      radial-gradient(60% 70% at 12% 88%, rgba(20,113,60,.05), transparent 62%);
+  /* Apparition échelonnée des grilles (classe posée par JS : sans JS, rien n'est masqué). */
+  html.js.fx-standard .stg > * { transition: opacity .5s ease, transform .5s ease; }
+  html.js.fx-standard .stg:not(.stg-in) > * { opacity: 0; transform: translateY(10px); }
+  @media (prefers-reduced-motion: reduce) {
+    html.js.fx-standard .stg:not(.stg-in) > * { opacity: 1; transform: none; }
+    html.js.fx-standard .stg > * { transition: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1711,12 +2045,12 @@ document.documentElement.classList.add('js');
         <p class="wheel-hint reveal">Navigation : appuyez sur <b>M</b> ou cliquez sur <b>Menu</b> pour la roue de sélection</p>
       </div>
       <div class="hero-panel reveal">
-        <div class="panel status" role="status" aria-live="off" aria-label="Appels en direct à l'API de scoring crédit en production : santé, prédiction et latence mesurée.">
+        <div class="panel status" data-ui role="status" aria-live="off" aria-label="Appels en direct à l'API de scoring crédit en production : santé, prédiction et latence mesurée.">
           <div class="st-top"><span class="pulse" id="st-pulse"></span><span class="s" id="st-state">EN&nbsp;PRODUCTION</span><svg class="hb" viewBox="0 0 44 16" aria-hidden="true"><polyline points="0,8 10,8 13,8 16,3 20,13 24,8 44,8"/></svg><span class="h">credit-scoring-api</span></div>
           <div class="st-body">
-            <div class="row"><span class="v">GET</span><span>/health</span><span class="ok" id="st-health">200 OK</span></div>
-            <div class="row"><span class="v">POST</span><span id="st-req">/predict?SK_ID_CURR=100001</span><span class="ok" id="st-code">200</span></div>
-            <div class="row"><span class="muted" id="log-line">→ { "decision":"ACCORDE", "proba":0.37 }</span></div>
+            <code class="row"><span class="v">GET</span><span>/health</span><span class="ok" id="st-health">200 OK</span></code>
+            <code class="row"><span class="v">POST</span><span id="st-req">/predict?SK_ID_CURR=100001</span><span class="ok" id="st-code">200</span></code>
+            <code class="row"><span class="muted" id="log-line">→ { "decision":"ACCORDE", "proba":0.37 }</span></code>
           </div>
           <div class="kpis tnum">
             <div><div class="n">0.78</div><div class="c">AUC</div></div>
@@ -1736,7 +2070,7 @@ document.documentElement.classList.add('js');
       <div class="hero-stats tnum">
         <div><div class="k">5</div><div class="l">Ans dev web · lead</div></div>
         <div><div class="k">14</div><div class="l">Projets IA</div></div>
-        <div><div class="k">02</div><div class="l">API en prod</div></div>
+        <div><div class="k k-pad">02</div><div class="l">API en prod</div></div>
       </div>
     </div>
   </section>
@@ -1840,7 +2174,7 @@ document.documentElement.classList.add('js');
       <div class="sec-head reveal"><span class="idx"><i class="sl">//</i> 04</span><h2>Projets</h2><p>Quatorze projets. Onze viennent de la formation et vont du ML classique au MLOps, au fine-tuning de LLM, aux agents IA et à la computer vision. La plupart des dépôts sont publics et documentés. Les trois derniers tournent en production.</p></div>
       <div class="proj-grid reveal">
 
-        <article class="panel proj feat">
+        <article class="panel proj feat" id="credit-scoring">
           <div class="badges"><span class="badge star">Projet phare</span><span class="badge live">● En production</span><span class="badge">MLOps</span></div>
           <div class="layout">
             <div>
@@ -1901,7 +2235,7 @@ document.documentElement.classList.add('js');
           <div class="proj-links"><a href="https://github.com/clementRbl/TechNova-Partners" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.58 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05a9.3 9.3 0 015 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.02 10.02 0 0022 12.25C22 6.58 17.52 2 12 2z"/></svg> Code</a></div>
         </article>
 
-        <article class="panel proj">
+        <article class="panel proj" id="puls-events">
           <div class="badges"><span class="badge">GenAI · RAG</span></div>
           <h3>Puls<span class="dash">-</span>Events</h3><p class="role">Chatbot RAG d'événements culturels</p>
           <p class="desc">RAG de bout en bout sur plus de 16 000 événements Open Agenda : chaîne LangChain avec garde-fous anti-hallucination, API FastAPI, évaluation Ragas (fidélité 0,93, réponse en 2,6 s). L'index Faiss de la V1 a laissé place à PostgreSQL et pgvector. Chaque question est tracée dans Langfuse avec son coût et l'API tourne sur Azure, décrite en Terraform.</p>
@@ -1986,7 +2320,7 @@ document.documentElement.classList.add('js');
           <div class="cover"><img src="assets/sdis-dashboard.webp" width="1200" height="500" alt="Tableau de bord SDIS-Predict : prévision de la charge opérationnelle sur quatorze jours, avec les jours en tension signalés." loading="lazy" decoding="async"></div>
         </article>
 
-        <article class="panel proj">
+        <article class="panel proj" id="saadflow">
           <div class="badges"><span class="badge live">● En bêta</span><span class="badge">SaaS · GenAI</span><span class="badge">Code privé</span></div>
           <h3>SaadFlow</h3><p class="role">Montage des dossiers d'aide à domicile</p>
           <p class="desc">Plateforme B2B pour les services d'aide à domicile : éligibilité APA et PCH, Cerfa pré-remplis, pièces lues par vision et OCR dans un worker asynchrone, intake conversationnel et courriers rédigés par LLM (Mistral ou Anthropic), RAG réglementaire sur pgvector. FastAPI et Next.js, 324 tests, déploiement continu sur VPS avec suivi d'erreurs et page de statut. Bêta sans données de santé réelles tant que l'hébergement n'est pas certifié HDS.</p>
@@ -2067,7 +2401,7 @@ document.documentElement.classList.add('js');
               </div>
             </div>
             <div>
-              <div class="try-id" id="try-id" hidden>
+              <div class="try-id" id="try-id" data-ui hidden>
                 <div class="ti-head"><span>dossier</span><span class="n" id="ti-num">-</span></div>
                 <dl>
                   <div style="display:contents"><dt>Âge</dt><dd id="ti-age">-</dd></div>
@@ -2081,11 +2415,11 @@ document.documentElement.classList.add('js');
                 </dl>
                 <p class="ti-note">Valeurs réelles du dossier. Les montants sont dans l'unité du jeu de données, qui ne précise aucune devise.</p>
               </div>
-              <div class="try-raw"><span class="rq" id="try-req">POST /predict</span><span id="try-json">-</span></div>
+              <div class="try-raw" data-ui><code class="rq" id="try-req">POST /predict</code><code id="try-json">-</code></div>
             </div>
           </div>
         </div>
-        <div class="pipe" role="img" aria-label="Boucle MLOps de la V2. Serving : client vers API FastAPI Docker sur Hugging Face Spaces. Surveillance chaque lundi : lot mensuel versionné par DVC, dérive Evidently et coût métier, issue d'alerte, challenger enregistré dans MLflow. Promotion : Pull Request, fusion par un humain, CI/CD, alias champion.">
+        <div class="pipe" data-ui role="img" aria-label="Boucle MLOps de la V2. Serving : client vers API FastAPI Docker sur Hugging Face Spaces. Surveillance chaque lundi : lot mensuel versionné par DVC, dérive Evidently et coût métier, issue d'alerte, challenger enregistré dans MLflow. Promotion : Pull Request, fusion par un humain, CI/CD, alias champion.">
           <div class="lane"><span class="lane-label">Serving</span><span class="node">Client</span><span class="arr">→</span><span class="node accent">FastAPI · Docker</span><span class="arr">→</span><span class="node ok">HF Spaces</span></div>
           <div class="lane"><span class="lane-label">Lundi</span><span class="node">lot mensuel · DVC</span><span class="arr">→</span><span class="node">Evidently + coût métier</span><span class="arr">→</span><span class="node">issue d'alerte</span><span class="arr">→</span><span class="node">challenger · MLflow</span></div>
           <div class="lane"><span class="lane-label">Promotion</span><span class="node">Pull Request</span><span class="arr">→</span><span class="node accent">fusion humaine</span><span class="arr">→</span><span class="node">CI/CD</span><span class="arr">→</span><span class="node ok">alias champion</span></div>
@@ -2102,27 +2436,27 @@ document.documentElement.classList.add('js');
       <p class="reveal">Le PDF d'une page se télécharge en bas de la fiche. Au-dessus, le même parcours au format que vos équipes lisent déjà tous les jours.</p>
 
       <article class="panel card-model reveal">
-        <header class="cm-top">
+        <header class="cm-top" data-ui>
           <span class="cm-id"><span class="cm-org">clement-reboul</span><span class="cm-sep">/</span><span class="cm-name">ai-engineer</span></span>
           <span class="cm-ver">v2026.10</span>
           <span class="badge">Model card</span>
         </header>
-        <div class="cm-meta">
-          <div><span class="cm-k">base_model</span><span class="cm-v">Développeur full stack, 5 ans en production</span></div>
-          <div><span class="cm-k">fine_tuned_on</span><span class="cm-v">AI Engineer Bac+5, OpenClassrooms</span></div>
-          <div><span class="cm-k">languages</span><span class="cm-v">FR natif, anglais professionnel</span></div>
-          <div><span class="cm-k">deployment</span><span class="cm-v">Île-de-France, Hauts-de-France</span></div>
-          <div><span class="cm-k">status</span><span class="cm-v ok">Disponible en freelance &amp; CDI</span></div>
-          <div><span class="cm-k">license</span><span class="cm-v">Mission cadrée, périmètre annoncé</span></div>
+        <div class="cm-meta" data-ui>
+          <div><code class="cm-k">base_model</code><span class="cm-v">Développeur full stack, 5 ans en production</span></div>
+          <div><code class="cm-k">fine_tuned_on</code><span class="cm-v">AI Engineer Bac+5, OpenClassrooms</span></div>
+          <div><code class="cm-k">languages</code><span class="cm-v">FR natif, anglais professionnel</span></div>
+          <div><code class="cm-k">deployment</code><span class="cm-v">Île-de-France, Hauts-de-France</span></div>
+          <div><code class="cm-k">status</code><span class="cm-v ok">Disponible en freelance &amp; CDI</span></div>
+          <div><code class="cm-k">license</code><span class="cm-v">Mission cadrée, périmètre annoncé</span></div>
         </div>
-        <div class="cm-metrics tnum">
+        <div class="cm-metrics tnum" data-ui>
           <div><div class="n">14</div><div class="c">Projets IA</div></div>
-          <div><div class="n">02</div><div class="c">API en production</div></div>
+          <div><div class="n k-pad">02</div><div class="c">API en production</div></div>
           <div><div class="n">96&nbsp;%</div><div class="c">Couverture de tests</div></div>
           <div><div class="n">0,78</div><div class="c">AUC du modèle servi</div></div>
           <div><div class="n">~6&nbsp;ms</div><div class="c">Latence d'inférence</div></div>
         </div>
-        <div class="cm-cols">
+        <div class="cm-cols" data-ui>
           <div>
             <h3>Intended use</h3>
             <ul>
@@ -2177,51 +2511,26 @@ document.documentElement.classList.add('js');
         <p>Des missions freelance avec un périmètre et une durée annoncés d'avance. Chacune repose sur ce que montrent les projets ci-dessus. Vous pouvez aussi les réserver sur mon <a href="https://www.malt.fr/profile/clementrbl" target="_blank" rel="noopener">profil Malt</a> si vous préférez un contrat et une facturation déjà en place.</p>
       </div>
       <div class="presta-grid reveal">
-
-        <article class="panel presta">
-          <div class="presta-top"><h3>Renfort front Vue&nbsp;3 / Quasar</h3><span class="duree">À la journée</span></div>
-          <p class="desc">Je renforce une équipe front existante ou je migre une application de Vue&nbsp;2 à Vue&nbsp;3. J'ai fait cinq ans de front en production, dont Quasar et TypeScript en CDI.</p>
-          <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Développement de composants et d'écrans, revue de code incluse</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Passage progressif de l'Options API à la Composition API et dépendances remises à jour</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Tests Vitest sur le code repris pour ne pas migrer à l'aveugle</span></li>
-          </ul>
-          <div class="tags"><span class="tag">Vue 3</span><span class="tag">Quasar</span><span class="tag">TypeScript</span><span class="tag">Composition API</span><span class="tag">Vitest</span></div>
-        </article>
-
         <article class="panel presta">
           <div class="presta-top"><h3>Mise en production d'un modèle</h3><span class="duree">10 jours</span></div>
-          <p class="desc">Votre modèle sort du notebook et devient une API documentée, conteneurisée, déployée en continu et surveillée. C'est le périmètre de l'étude de cas Credit Scoring ci-dessus.</p>
-          <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>API FastAPI documentée (Swagger), conteneurisée, erreurs et cas limites gérés</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>CI/CD : tests → build → déploiement automatique à chaque push</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Journalisation des prédictions, détection de drift et dashboard de suivi</span></li>
-          </ul>
-          <div class="tags"><span class="tag">FastAPI</span><span class="tag">Docker</span><span class="tag">GitHub Actions</span><span class="tag">MLflow</span><span class="tag">Evidently</span></div>
+          <p class="desc">Votre modèle sort du notebook et devient une API documentée, conteneurisée, déployée en continu et surveillée.</p>
+          <a class="lien" href="#credit-scoring">La preuve : Credit Scoring MLOps</a>
         </article>
-
         <article class="panel presta">
           <div class="presta-top"><h3>POC IA cadré</h3><span class="duree">10 à 15 jours</span></div>
-          <p class="desc">Je pars du besoin métier pour arriver à une API déployée que vos équipes peuvent tester. Vous décidez ensuite sur pièces si le sujet mérite un vrai projet.</p>
-          <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Cadrage : le besoin métier, le critère de réussite et ce qu'on ne fera pas</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Prototype évalué sur vos propres données</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>API déployée et note de synthèse sur les coûts, les limites et ce qu'il faudrait pour industrialiser</span></li>
-          </ul>
-          <div class="tags"><span class="tag">LangChain</span><span class="tag">Mistral</span><span class="tag">pgvector</span><span class="tag">FastAPI</span><span class="tag">Streamlit</span></div>
+          <p class="desc">Du besoin métier à une API déployée que vos équipes testent sur vos données, avant de décider si le sujet mérite un vrai projet.</p>
+          <a class="lien" href="#saadflow">La preuve : SaadFlow</a>
         </article>
-
         <article class="panel presta">
           <div class="presta-top"><h3>Audit d'un système RAG</h3><span class="duree">5 jours</span></div>
-          <p class="desc">Votre RAG est en place mais ses réponses déçoivent. Je mesure avant de juger, avec un jeu d'évaluation et des métriques, puis je propose un plan d'action priorisé.</p>
-          <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Jeu d'évaluation construit sur vos questions réelles</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Chunking et retrieval passés au crible avec Ragas : fidélité, pertinence du contexte, rappel</span></li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg><span>Rapport avec correctifs priorisés par impact et par effort</span></li>
-          </ul>
-          <div class="tags"><span class="tag">Ragas</span><span class="tag">chunking</span><span class="tag">reranking</span><span class="tag">guardrails</span><span class="tag">coût / tokens</span></div>
+          <p class="desc">Un jeu d'évaluation construit sur vos questions réelles, des métriques Ragas, puis un plan d'action priorisé par impact et par effort.</p>
+          <a class="lien" href="#puls-events">La preuve : Puls-Events</a>
         </article>
-
+        <article class="panel presta">
+          <div class="presta-top"><h3>Renfort front Vue&nbsp;3 / Quasar</h3><span class="duree">À la journée</span></div>
+          <p class="desc">Je renforce une équipe front ou je migre une application de Vue&nbsp;2 à Vue&nbsp;3, après cinq ans de front en production.</p>
+          <a class="lien" href="#competences">La preuve : cinq ans de front, dont Quasar et TypeScript</a>
+        </article>
       </div>
       <div class="presta-foot reveal">
         <p><b>Zones d'intervention.</b> Paris et l'Île-de-France, l'Oise et les Hauts-de-France, sur site ou en télétravail. Le reste de la France à distance. Ces offres décrivent le format freelance et un poste en CDI se discute tout aussi bien. Votre besoin n'entre dans aucune de ces cases ? Décrivez-le-moi et je vous dirai en une réponse si je suis la bonne personne et sous quel format.</p>
@@ -2263,7 +2572,7 @@ document.documentElement.classList.add('js');
   <button class="no" id="invite-no" type="button" aria-label="Non merci, ne plus proposer">✕</button>
 </div>
 
-<footer><div class="wrap"><span>© 2026 CLÉMENT REBOUL - AI ENGINEER · FREELANCE OU CDI · PARIS · ÎLE-DE-FRANCE · OISE · HAUTS-DE-FRANCE</span><span class="muted">Construit sans dépendance</span></div></footer>
+<footer><div class="wrap"><span class="fo-id">© 2026 Clément Reboul - AI Engineer · freelance ou CDI · Paris · Île-de-France · Oise · Hauts-de-France</span><span class="muted">Construit sans dépendance</span></div></footer>
 
 <!-- PALETTE DE COMMANDES (mode Standard) -->
 <div class="cmdk-overlay" id="cmdk" role="dialog" aria-modal="true" aria-label="Palette de commandes" tabindex="-1">
@@ -2328,6 +2637,9 @@ document.documentElement.classList.add('js');
       es.forEach(function (e) { if (e.isIntersecting) { revealEl(e.target); io.unobserve(e.target); } });
     }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
     reveals.forEach(function (el) { io.observe(el); });
+    /* Filet : au bout de 4 s on révèle ce que l'observateur n'a pas encore vu
+       (impression, capture pleine page, saut d'ancre) plutôt que de le laisser vide. */
+    setTimeout(function () { reveals.forEach(revealEl); }, 4000);
   } else { reveals.forEach(revealEl); }
 
   /* ---- WEAPON WHEEL ---- */
@@ -3833,7 +4145,7 @@ FX.onStart(function (mode) {
   if (grids.length && !reduce) {
     grids.forEach(function (g) { g.classList.add('stg'); });
   }
-  if (grids.length && !reduce && !hasViewTL && 'IntersectionObserver' in window) {
+  if (grids.length && !reduce && 'IntersectionObserver' in window) {
     grids.forEach(function (g) {
       [].slice.call(g.children).forEach(function (c, i) { c.style.transitionDelay = Math.min(i * 55, 400) + 'ms'; });
     });
@@ -3842,8 +4154,8 @@ FX.onStart(function (mode) {
     }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
     grids.forEach(function (g) { gio.observe(g); });
     // Filet : une grille masquée est du contenu perdu. Si l'observateur n'a rien
-    // déclenché au bout de 6 s, on révèle tout plutôt que de risquer des cartes vides.
-    setTimeout(function () { grids.forEach(function (g) { g.classList.add('stg-in'); }); }, 6000);
+    // déclenché au bout de 4 s, on révèle tout plutôt que de risquer des cartes vides.
+    setTimeout(function () { grids.forEach(function (g) { g.classList.add('stg-in'); }); }, 4000);
   }
 
   /* --- 6. En-tête : un filet n'apparaît qu'une fois la page quittée --- */
@@ -3914,6 +4226,209 @@ FX.onStart(function (mode) {
     }
   }
 
+  /* --- 8b. Anneau de photos du hero (mode Standard) ---
+     Les visuels des cartes projet (et le portrait) sont repris en cadres
+     posés sur une ellipse autour du titre. Chaque cadre renvoie à sa carte ;
+     au survol, la phrase d'accroche laisse la place au nom du projet. Le mode
+     Game n'exécute rien de ce bloc. */
+  var hero = document.querySelector('.hero');
+  if (docEl.classList.contains('fx-standard')) {
+    /* La croix de l'invite est un signe typographique, pas un pictogramme. */
+    var inviteNo = document.getElementById('invite-no');
+    if (inviteNo) inviteNo.textContent = '\u00D7';
+    /* Le zéro de tête (« 02 ») est un habillage du mode Game : ici on compte « 2 ». */
+    [].slice.call(document.querySelectorAll('.k-pad')).forEach(function (el) {
+      var t = el.textContent;
+      if (t.charAt(0) === '0' && t.length > 1) el.textContent = t.slice(1);
+    });
+  }
+  if (hero && docEl.classList.contains('fx-standard')) (function () {
+    var shots = [];
+    [].slice.call(document.querySelectorAll('.proj')).forEach(function (card) {
+      var img = card.querySelector('.cover img, .shot img'), h3 = card.querySelector('h3');
+      var role = card.querySelector('.role');
+      if (h3) shots.push({ src: img ? img.getAttribute('src') : '', name: h3.textContent.trim(), role: role ? role.textContent.trim() : '', card: card });
+    });
+    var portrait = document.querySelector('.ident img');
+    if (portrait) shots.splice(0, 0, { src: portrait.getAttribute('src'), name: 'Clément Reboul', role: '', photo: true, card: document.getElementById('profil') });
+    if (shots.length < 4) return;
+
+    var core = hero.querySelector('.hero-grid > div');
+    var lede = hero.querySelector('.lede');
+    var ledeHtml = lede ? lede.innerHTML : '';
+    var ring = document.createElement('div');
+    ring.className = 'ring';
+    ring.setAttribute('aria-hidden', 'true');
+    var frames = [];
+
+    /* Changement de la phrase sous le titre : elle s'efface (classe .fade),
+       le texte change, elle revient. Le retour au texte d'origine attend un
+       peu, pour que passer d'un cadre au suivant ne fasse pas clignoter la
+       phrase. En mouvement réduit, le texte change sans fondu. */
+    /* Icônes Lucide (licence ISC), une par projet, tracées dans la vignette. */
+    var ICONS = {
+      'Credit Scoring MLOps': '<path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />',
+      'Triage médical': '<path d="M11 2v2" /> <path d="M5 2v2" /> <path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1" /> <path d="M8 15a6 6 0 0 0 12 0v-3" /> <circle cx="20" cy="10" r="2" />',
+      'Ouvertures FFE': '<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" /> <path d="M5 21h14" />',
+      'Seattle Energy': '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" /> <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /> <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" /> <path d="M10 6h4" /> <path d="M10 10h4" /> <path d="M10 14h4" /> <path d="M10 18h4" />',
+      'TechNova': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" />',
+      'Puls-Events': '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" />',
+      'BrainScanAI': '<path d="M12 18V5" /> <path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /> <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /> <path d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /> <path d="M18 18a4 4 0 0 0 2-7.464" /> <path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /> <path d="M6 18a4 4 0 0 1-2-7.464" /> <path d="M6.003 5.125a4 4 0 0 0-2.526 5.77" />',
+      'Prêt à Dépenser': '<path d="M10 18v-7" /> <path d="M11.12 2.198a2 2 0 0 1 1.76.006l7.866 3.847c.476.233.31.949-.22.949H3.474c-.53 0-.695-.716-.22-.949z" /> <path d="M14 18v-7" /> <path d="M18 18v-7" /> <path d="M3 22h18" /> <path d="M6 18v-7" />',
+      'CheckItAI': '<path d="M15 18h-5" /> <path d="M18 14h-8" /> <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2" /> <rect width="8" height="4" x="10" y="6" rx="1" />',
+      'Astro Dynamics': '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" /> <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" /> <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" /> <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />',
+      'Fashion-Insta': '<path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />',
+      'SDIS-Predict': '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />',
+      'SaadFlow': '<path d="M19.414 14.414C21 12.828 22 11.5 22 9.5a5.5 5.5 0 0 0-9.591-3.676.6.6 0 0 1-.818.001A5.5 5.5 0 0 0 2 9.5c0 2.3 1.5 4 3 5.5l5.535 5.362a2 2 0 0 0 2.879.052 2.12 2.12 0 0 0-.004-3 2.124 2.124 0 1 0 3-3 2.124 2.124 0 0 0 3.004 0 2 2 0 0 0 0-2.828l-1.881-1.882a2.41 2.41 0 0 0-3.409 0l-1.71 1.71a2 2 0 0 1-2.828 0 2 2 0 0 1 0-2.828l2.823-2.762" />',
+      'Pipeline de données ouvertes': '<path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0v-6.998a2 2 0 0 0-.59-1.42L18 5" /> <path d="M14 21V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v16" /> <path d="M2 21h13" /> <path d="M3 9h11" />'
+    };
+    var ICON_DEFAULT = '<ellipse cx="12" cy="5" rx="9" ry="3" /> <path d="M3 5V19A9 3 0 0 0 21 19V5" /> <path d="M3 12A9 3 0 0 0 21 12" />';
+    var ledeTimer = null, ledeShown = ledeHtml;
+    function setLede(value) {
+      /* Le texte d'origine est du HTML (il contient un <b>), un nom de projet est du texte brut. */
+      if (value === ledeHtml) lede.innerHTML = value; else lede.textContent = value;
+    }
+    function showLede(value, delay) {
+      if (!lede) return;
+      clearTimeout(ledeTimer);
+      ledeTimer = setTimeout(function () {
+        if (value === ledeShown) { lede.classList.remove('fade'); return; }
+        ledeShown = value;
+        if (reduce) { setLede(value); return; }
+        lede.classList.add('fade');
+        ledeTimer = setTimeout(function () {
+          setLede(value);
+          lede.classList.remove('fade');
+        }, 300);
+      }, delay);
+    }
+
+    /* Deux dispositions : grand écran (ellipse aplatie autour du texte) et
+       écran étroit (une rangée de vignettes sous le cœur, dans les marges). */
+    function layout() { var w = window.innerWidth; return w < 768 ? 'phone' : w < 1100 ? 'tablet' : 'desk'; }
+
+    function build() {
+      ring.innerHTML = '';
+      frames = [];
+      var n = { phone: 3, tablet: 4, desk: 14 }[layout()];
+      /* Au-delà d'un tour complet, on repasse sur les visuels de projets sans le portrait. */
+      var projects = shots.filter(function (x) { return x.card.id !== 'profil'; });
+      for (var i = 0; i < n; i++) {
+        var shot = i < shots.length ? shots[i] : projects[i % projects.length];
+        var a = document.createElement('a');
+        a.href = '#projets';
+        a.tabIndex = -1;
+        if (shot.photo) {
+          var im = document.createElement('img');
+          im.src = shot.src; im.alt = ''; im.decoding = 'async';
+          a.appendChild(im);
+        } else {
+          var tile = document.createElement('span'), top = document.createElement('span'), name = document.createElement('b'), role = document.createElement('small');
+          var icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          icon.setAttribute('viewBox', '0 0 24 24'); icon.setAttribute('fill', 'none'); icon.setAttribute('stroke', 'currentColor');
+          icon.setAttribute('stroke-width', '1.75'); icon.setAttribute('stroke-linecap', 'round'); icon.setAttribute('stroke-linejoin', 'round');
+          icon.innerHTML = ICONS[shot.name] || ICON_DEFAULT;
+          tile.className = 'rf'; top.className = 'rf-top';
+          name.textContent = shot.name; role.textContent = shot.role;
+          top.appendChild(icon); top.appendChild(name);
+          tile.appendChild(top); tile.appendChild(role);
+          a.appendChild(tile);
+          a.className = 'tile';
+        }
+        (function (shot) {
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            shot.card.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+          });
+          a.addEventListener('mouseenter', function () { showLede(shot.name, 0); });
+          a.addEventListener('mouseleave', function () { showLede(ledeHtml, 450); });
+        })(shot);
+        ring.appendChild(a);
+        frames.push(a);
+      }
+      place();
+    }
+
+    /* Le centre de l'anneau est le centre du cœur (titre + phrase + bouton).
+       Sur grand écran les cadres sont posés sur une ellipse, à égale distance
+       les uns des autres le long de la courbe (et non à angle égal, ce qui les
+       tasserait sur les flancs). Tous ont la même taille et restent droits. */
+    function ellipseAngles(rx, ry, n) {
+      /* Longueur d'arc cumulée sur 720 pas depuis le sommet, puis n angles à longueur égale. */
+      var steps = 720, lens = [0], px = 0, py = -ry, total = 0;
+      for (var k = 1; k <= steps; k++) {
+        var t = -Math.PI / 2 + (k / steps) * Math.PI * 2;
+        var x = rx * Math.cos(t), y = ry * Math.sin(t);
+        total += Math.hypot(x - px, y - py); lens.push(total); px = x; py = y;
+      }
+      var angles = [], k2 = 0;
+      for (var i = 0; i < n; i++) {
+        var target = (i / n) * total;
+        while (lens[k2 + 1] < target) k2++;
+        angles.push(-Math.PI / 2 + (k2 / steps) * Math.PI * 2);
+      }
+      return angles;
+    }
+    function setFrame(a, x, y, w) {
+      var ratio = { desk: .8, tablet: 1.1, phone: 1.3 };
+      var h = w * ratio[layout()];
+      a.style.left = x + 'px';
+      a.style.top = y + 'px';
+      a.style.width = w + 'px';
+      a.style.height = h + 'px';
+    }
+    function place() {
+      var W = hero.clientWidth;
+      var hr = hero.getBoundingClientRect(), cr = core.getBoundingClientRect();
+      if (layout() !== 'desk') { placeRow(W, hr, cr); return; }
+      var cx = cr.left - hr.left + cr.width / 2, cy = cr.top - hr.top + cr.height / 2;
+      var rx = Math.min(600, W * .44), ry = cr.height / 2 - 90, w = 160, h = w * .8;
+      var h1 = core.querySelector('h1'), h1r = h1 ? h1.getBoundingClientRect() : null;
+      var first = core.firstElementChild, firstTop = first ? first.getBoundingClientRect().top - hr.top : cr.top - hr.top;
+      /* Le portrait est le premier cadre : le sommet de l'ellipse, au-dessus du nom. */
+      var angles = ellipseAngles(rx, ry, frames.length);
+      frames.forEach(function (a, i) {
+        var t = angles[i], x = cx + rx * Math.cos(t), y = cy + ry * Math.sin(t);
+        /* Une vignette qui surplombe le titre de près passerait pour son sur-titre :
+           au-dessus du titre, on garde au moins 90 px entre les deux. */
+        if (h1r && a.classList.contains('tile') && Math.sin(t) < 0 && x + w / 2 > h1r.left - hr.left && x - w / 2 < h1r.right - hr.left) {
+          y = Math.min(y, h1r.top - hr.top - 90 - h / 2);
+        }
+        /* Le portrait ne mord pas sur la première ligne du cœur. */
+        if (!a.classList.contains('tile')) y = Math.min(y, firstTop - 20 - h / 2);
+        setFrame(a, x, y, w);
+      });
+    }
+    /* Écran étroit : une rangée centrée dans l'espace libre sous le contenu du
+       cœur (réservé par le padding-bottom du cœur), à 16 px des bords au moins. */
+    function placeRow(W, hr, cr) {
+      var n = frames.length, gap = 14;
+      var w = Math.min(170, (W - 32 - gap * (n - 1)) / n);
+      /* Dernier enfant visible du cœur (l'indication de navigation est masquée sur téléphone). */
+      var last = core.lastElementChild;
+      while (last && last.getBoundingClientRect().height === 0) last = last.previousElementSibling;
+      var bottom = last ? last.getBoundingClientRect().bottom : cr.top;
+      var cy = (bottom + cr.bottom) / 2 - hr.top;
+      var left = (W - (n * w + (n - 1) * gap)) / 2 + w / 2;
+      /* Dans la rangée, le portrait passe au milieu. */
+      var order = frames.slice(1);
+      order.splice(Math.floor(n / 2), 0, frames[0]);
+      order.forEach(function (a, i) {
+        setFrame(a, left + i * (w + gap), cy, w);
+      });
+    }
+
+    hero.appendChild(ring);
+    build();
+    var lastLayout = layout(), resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        if (layout() !== lastLayout) { lastLayout = layout(); build(); } else place();
+      }, 120);
+    });
+  })();
+
   /* --- 9. Rail sémantique ---
      Les traits estompés ne sont pas les sections voisines dans le sommaire :
      ce sont les deux plus proches de celle qu'on lit, au cosinus, dans le même
@@ -3934,8 +4449,10 @@ FX.onStart(function (mode) {
         var a = document.createElement('a');
         a.href = '#' + id;
         a.appendChild(document.createElement('span')).className = 'bar';
+        a.setAttribute('aria-label', labels[i]);
         var lb = a.appendChild(document.createElement('span'));
         lb.className = 'lb'; lb.textContent = labels[i];
+        lb.setAttribute('aria-hidden', 'true');
         nav.appendChild(a);
         return a;
       });
