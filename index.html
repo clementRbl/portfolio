@@ -412,7 +412,7 @@ document.documentElement.classList.add('js');
     header.hud-top .top-nav {
       position: absolute; top: 100%; left: 0; right: 0;
       justify-content: center; gap: 0;
-      background: rgba(var(--bg-rgb), .94); border-bottom: 1px solid var(--border);
+      background: rgba(var(--bg-rgb), .97); border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     }
     header.hud-top .top-nav a { padding: 11px 12px; }
@@ -1223,7 +1223,7 @@ document.documentElement.classList.add('js');
     backdrop-filter: none; -webkit-backdrop-filter: none;
     transition: background .3s ease;
   }
-  html.fx-standard.scrolled header.hud-top { background: rgba(var(--bg-rgb), .94); }
+  html.fx-standard.scrolled header.hud-top { background: rgba(var(--bg-rgb), .97); }
   html.fx-standard .brand .mono-logo { font-family: var(--font-display); font-weight: 300; font-size: 1.3125rem; letter-spacing: .01em; }
   html.fx-standard .brand .tag { border-left: 0; padding-left: 0; color: var(--muted); }
   html.fx-standard .top-nav a { color: var(--ink-dim); }
@@ -1234,7 +1234,7 @@ document.documentElement.classList.add('js');
   html.fx-standard .menu-btn kbd { background: none; border: 0; padding: 0; color: var(--muted); }
   @media (max-width: 999px) {
     html.fx-standard header.hud-top .top-nav {
-      background: rgba(var(--bg-rgb), .94); border-bottom: 0;
+      background: rgba(var(--bg-rgb), .97); border-bottom: 0;
       backdrop-filter: none; -webkit-backdrop-filter: none;
     }
   }
@@ -1286,6 +1286,17 @@ document.documentElement.classList.add('js');
   /* Pendant l'échange de texte au survol de l'anneau, la phrase s'efface puis revient. */
   html.js.fx-standard .hero .lede.in.fade { opacity: 0; transform: translateY(6px); transition-duration: .3s; }
   html.fx-standard .hero-cta { justify-content: center; align-items: center; gap: 10px 22px; margin-top: 34px; }
+  /* Ligne de preuve : l'API tourne, visible dès le premier écran. En mode Game
+     le panneau est déjà à côté du titre, la ligne n'y apparaît pas. */
+  .hero-proof { display: none; }
+  html.fx-standard .hero-proof {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 .4em;
+    margin-top: 22px; color: var(--ink-dim); font-size: .9375rem;
+  }
+  html.fx-standard .hero-proof a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--ember); text-underline-offset: 3px; }
+  html.fx-standard .hero-proof a:hover { color: var(--ember); }
+  .hp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); margin-right: 4px; }
+  .hp-dot.warn { background: var(--ember); }
   html.fx-standard .wheel-hint { margin-top: 26px; color: var(--muted); }
   html.fx-standard .wheel-hint b { color: var(--ink-dim); font-weight: 500; }
   html.fx-standard .hero-panel { position: relative; z-index: 2; width: min(100%, 560px); margin-top: 8px; }
@@ -1325,6 +1336,9 @@ document.documentElement.classList.add('js');
   .ring .rf small { font-size: 13px; line-height: 1.3; color: var(--muted); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; }
   @media (max-width: 1099px) { .ring .rf { padding: 10px 12px; } .ring .rf-top { height: 22px; } .ring .rf svg { width: 22px; height: 22px; } .ring .rf b { display: none; } }
   @media (max-width: 767px) { .ring .rf small { -webkit-line-clamp: 5; } }
+  /* Écran bas (posé en JS sous 860 px de haut) : vignettes de 136 px, trois lignes. */
+  .ring.compact .rf { padding: 10px 12px; }
+  .ring.compact .rf small { font-size: 12px; -webkit-line-clamp: 3; }
   /* Au survol le cadre grossit franchement et sort de la pénombre. */
   .ring a:hover,
   .ring a:focus-visible { filter: none; scale: 1.7; z-index: 3; box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .55); }
@@ -1381,7 +1395,7 @@ document.documentElement.classList.add('js');
 
   /* ----- Projets : un titre très grand, posé au-dessus de la grille ----- */
   html.fx-standard #projets .sec-head { display: flex; flex-direction: column; max-width: none; margin-bottom: 0; }
-  html.fx-standard #projets .sec-head p { order: -1; max-width: 760px; margin: 0 0 28px; }
+  html.fx-standard #projets .sec-head p { max-width: 760px; margin: 0 0 28px; }
   html.fx-standard #projets .sec-head h2 {
     font-size: clamp(3rem, 1.5rem + 7.5vw, 8.5rem); line-height: .9;
     margin: 0 0 .3em -.04em;
@@ -2042,9 +2056,10 @@ document.documentElement.classList.add('js');
           <a href="#contact" class="btn btn-primary" id="hero-contact">Me contacter<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a href="assets/CV_Reboul_Clement.pdf" class="btn btn-ghost" target="_blank" rel="noopener" download>Télécharger le CV</a>
         </div>
+        <p class="hero-proof reveal"><span class="hp-dot" id="hp-dot" aria-hidden="true"></span><span id="hp-state">API en production</span> · 0,78 AUC · 96&nbsp;% de tests · <a href="#hero-panel">voir l'appel en direct</a></p>
         <p class="wheel-hint reveal">Navigation : appuyez sur <b>M</b> ou cliquez sur <b>Menu</b> pour la roue de sélection</p>
       </div>
-      <div class="hero-panel reveal">
+      <div class="hero-panel reveal" id="hero-panel">
         <div class="panel status" data-ui role="status" aria-live="off" aria-label="Appels en direct à l'API de scoring crédit en production : santé, prédiction et latence mesurée.">
           <div class="st-top"><span class="pulse" id="st-pulse"></span><span class="s" id="st-state">EN&nbsp;PRODUCTION</span><svg class="hb" viewBox="0 0 44 16" aria-hidden="true"><polyline points="0,8 10,8 13,8 16,3 20,13 24,8 44,8"/></svg><span class="h">credit-scoring-api</span></div>
           <div class="st-body">
@@ -3402,7 +3417,8 @@ document.documentElement.classList.add('js');
       var t = document.getElementById('invite-txt');
       if (t) t.innerHTML = "<b>Ce site a un second visage.</b> Le mode Game rallume l'univers animé : braises, halo de lumière, typographie de jeu.";
     }
-    var refused = false, seen = false;
+    /* dismissed : refus par la croix ou Échap pendant la visite, définitif. */
+    var refused = false, seen = false, dismissed = false;
     try {
       refused = localStorage.getItem('inviteOff') === '1';
       seen = localStorage.getItem('inviteSeen') === '1';
@@ -3415,7 +3431,10 @@ document.documentElement.classList.add('js');
       box.classList.remove('in');
       document.documentElement.classList.remove('invite-open');
       setTimeout(function () { box.hidden = true; }, 450);
-      if (permanent) { try { localStorage.setItem('inviteOff', '1'); } catch (e) {} }
+      if (permanent) {
+        dismissed = true;
+        try { localStorage.setItem('inviteOff', '1'); } catch (e) {}
+      }
     }
     document.getElementById('invite-go').addEventListener('click', function () {
       try { localStorage.setItem('inviteOff', '1'); } catch (e) {}
@@ -3432,16 +3451,22 @@ document.documentElement.classList.add('js');
       return;
     }
     if (seen || !('IntersectionObserver' in window)) return;
+    /* Deux seuils : la bande s'ouvre quand la moitié du pied de page est
+       visible, et se referme dès qu'il a entièrement quitté l'écran, pour ne
+       pas rester collée sur les sections quand on remonte. */
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        io.disconnect();
-        try { localStorage.setItem('inviteSeen', '1'); } catch (err) {}
-        box.hidden = false;
-        document.documentElement.classList.add('invite-open');
-        requestAnimationFrame(function () { box.classList.add('in'); });
+        if (dismissed) return;
+        if (e.intersectionRatio >= 0.5 && !box.classList.contains('in')) {
+          try { localStorage.setItem('inviteSeen', '1'); } catch (err) {}
+          box.hidden = false;
+          document.documentElement.classList.add('invite-open');
+          requestAnimationFrame(function () { box.classList.add('in'); });
+        } else if (!e.isIntersecting && box.classList.contains('in')) {
+          close(false);
+        }
       });
-    }, { threshold: 0.5 });
+    }, { threshold: [0, 0.5] });
     var foot = document.querySelector('footer');
     if (foot) io.observe(foot);
   })();
@@ -3679,6 +3704,7 @@ window.CREDIT_API = (function () {
   if (!line) return;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var pulse = document.getElementById('st-pulse'), state = document.getElementById('st-state');
+  var proofDot = document.getElementById('hp-dot'), proofState = document.getElementById('hp-state');
   var hEl = document.getElementById('st-health'), reqEl = document.getElementById('st-req');
   var codeEl = document.getElementById('st-code'), latEl = document.getElementById('kpi-lat');
   var note = document.getElementById('api-note');
@@ -3707,6 +3733,9 @@ window.CREDIT_API = (function () {
     var warn = !live;
     if (pulse) pulse.classList.toggle('warn', warn);
     if (state) { state.classList.toggle('warn', warn); state.innerHTML = warn ? 'API&nbsp;EN&nbsp;VEILLE' : 'EN&nbsp;PRODUCTION'; }
+    /* La ligne de preuve sous les boutons du hero dit la même chose que le panneau. */
+    if (proofDot) proofDot.classList.toggle('warn', warn);
+    if (proofState) proofState.textContent = warn ? 'API en veille' : 'API en production';
     if (hEl) { hEl.textContent = warn ? '-' : '200 OK'; hEl.classList.toggle('err', warn); }
     if (note) note.innerHTML = warn
       ? 'Space en veille : réponses en cache - <a href="' + API.BASE + '/docs" target="_blank" rel="noopener">réveiller l\'API</a>'
@@ -4377,17 +4406,23 @@ FX.onStart(function (mode) {
       a.style.width = w + 'px';
       a.style.height = h + 'px';
     }
-    function place() {
-      var W = hero.clientWidth;
-      var hr = hero.getBoundingClientRect(), cr = core.getBoundingClientRect();
-      if (layout() !== 'desk') { placeRow(W, hr, cr); return; }
-      var cx = cr.left - hr.left + cr.width / 2, cy = cr.top - hr.top + cr.height / 2;
-      var rx = Math.min(600, W * .44), ry = cr.height / 2 - 90, w = 160, h = w * .8;
+    /* Rectangles des lignes visibles du cœur (sur-titre, titre, phrase, boutons...),
+       relatifs au hero : ce sont eux que les vignettes doivent contourner. */
+    function contentRects(hr) {
+      var rects = [];
+      [].slice.call(core.children).forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.height === 0) return;
+        rects.push({ left: r.left - hr.left, right: r.right - hr.left, top: r.top - hr.top, bottom: r.bottom - hr.top });
+      });
+      return rects;
+    }
+    /* Positions des cadres pour un rayon vertical donné, centre (cx, cy). */
+    function ellipsePositions(cx, cy, rx, ry, w, h, hr) {
       var h1 = core.querySelector('h1'), h1r = h1 ? h1.getBoundingClientRect() : null;
-      var first = core.firstElementChild, firstTop = first ? first.getBoundingClientRect().top - hr.top : cr.top - hr.top;
-      /* Le portrait est le premier cadre : le sommet de l'ellipse, au-dessus du nom. */
+      var first = core.firstElementChild, firstTop = first.getBoundingClientRect().top - hr.top;
       var angles = ellipseAngles(rx, ry, frames.length);
-      frames.forEach(function (a, i) {
+      return frames.map(function (a, i) {
         var t = angles[i], x = cx + rx * Math.cos(t), y = cy + ry * Math.sin(t);
         /* Une vignette qui surplombe le titre de près passerait pour son sur-titre :
            au-dessus du titre, on garde au moins 90 px entre les deux. */
@@ -4396,8 +4431,58 @@ FX.onStart(function (mode) {
         }
         /* Le portrait ne mord pas sur la première ligne du cœur. */
         if (!a.classList.contains('tile')) y = Math.min(y, firstTop - 20 - h / 2);
-        setFrame(a, x, y, w);
+        return { x: x, y: y };
       });
+    }
+    function touchesContent(positions, rects, w, h) {
+      var gap = 16;
+      return positions.some(function (p) {
+        return rects.some(function (r) {
+          return p.x + w / 2 + gap > r.left && p.x - w / 2 - gap < r.right &&
+                 p.y + h / 2 + gap > r.top && p.y - h / 2 - gap < r.bottom;
+        });
+      });
+    }
+    /* Le rayon vertical dépend du contenu à contourner, pas de la hauteur de la
+       fenêtre : sur un portable 16:9 (1366×768), l'ancien calcul posait des
+       vignettes sous la barre et sur les boutons. Si l'ellipse ne tient pas dans
+       l'écran, c'est le cœur qui grandit, jamais les vignettes qui débordent. */
+    function place() {
+      var W = hero.clientWidth;
+      var hr = hero.getBoundingClientRect(), cr = core.getBoundingClientRect();
+      if (layout() !== 'desk') { core.style.minHeight = ''; placeRow(W, hr, cr); return; }
+      /* Écran bas : vignettes plus petites, description sur trois lignes. */
+      var compact = window.innerHeight < 860;
+      ring.classList.toggle('compact', compact);
+      var rx = Math.min(600, W * .44), w = compact ? 136 : 160, h = w * .8;
+      var rects = contentRects(hr);
+      var contentTop = Math.min.apply(null, rects.map(function (r) { return r.top; }));
+      var contentBottom = Math.max.apply(null, rects.map(function (r) { return r.bottom; }));
+      var cx = cr.left - hr.left + cr.width / 2, cy = (contentTop + contentBottom) / 2;
+      /* On part d'une ellipse qui frôle le contenu et on l'étire jusqu'à ce
+         qu'aucune vignette ne le touche (borne de sécurité : 80 essais). */
+      var ry = (contentBottom - contentTop) / 2, positions = ellipsePositions(cx, cy, rx, ry, w, h, hr);
+      for (var k = 0; k < 80 && touchesContent(positions, rects, w, h); k++) {
+        ry += 8;
+        positions = ellipsePositions(cx, cy, rx, ry, w, h, hr);
+      }
+      /* Le cœur a changé de hauteur : son centre a bougé, on replace une fois. */
+      if (growCore(positions, cy, h)) { place(); return; }
+      /* Butée : aucune vignette ne monte au-dessus du cœur, donc sous la barre fixe. */
+      var minY = cr.top - hr.top + 12 + h / 2;
+      frames.forEach(function (a, i) { setFrame(a, positions[i].x, Math.max(positions[i].y, minY), w); });
+    }
+    /* Hauteur du cœur nécessaire pour loger l'ellipse, centrée comme le contenu.
+       Renvoie true quand la hauteur imposée change. */
+    function growCore(positions, cy, h) {
+      var margin = 24, reach = 0;
+      positions.forEach(function (p) { reach = Math.max(reach, Math.abs(p.y - cy) + h / 2); });
+      var needed = Math.ceil(2 * (reach + margin));
+      var current = core.style.minHeight;
+      core.style.minHeight = '';
+      var next = needed > core.offsetHeight ? needed + 'px' : '';
+      core.style.minHeight = next;
+      return next !== current;
     }
     /* Écran étroit : une rangée centrée dans l'espace libre sous le contenu du
        cœur (réservé par le padding-bottom du cœur), à 16 px des bords au moins. */
@@ -4427,6 +4512,19 @@ FX.onStart(function (mode) {
         if (layout() !== lastLayout) { lastLayout = layout(); build(); } else place();
       }, 120);
     });
+    /* Zodiak ne mesure pas comme la police de secours : on replace une fois
+       les polices chargées, puis à chaque changement de taille du cœur
+       (phrase d'accroche remplacée au survol, ligne de preuve qui change d'état). */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+    if ('ResizeObserver' in window) {
+      var lastCoreWidth = 0, lastCoreHeight = 0;
+      new ResizeObserver(function (entries) {
+        var box = entries[0].contentRect;
+        if (box.width === lastCoreWidth && box.height === lastCoreHeight) return;
+        lastCoreWidth = box.width; lastCoreHeight = box.height;
+        place();
+      }).observe(core);
+    }
   })();
 
   /* --- 9. Rail sémantique ---

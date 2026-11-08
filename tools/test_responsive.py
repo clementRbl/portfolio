@@ -47,6 +47,12 @@ WIDTHS = (320, 360, 390, 412)
 # la barre fixe, seule zone où le doigt vise des icônes sans libellé.
 MIN_TOUCH = 40
 
+# Portables courants, en paysage. 1366×768 est la taille la plus répandue : c'est
+# là que l'anneau du hero passait sous la barre et sur les boutons, parce que son
+# rayon dépendait de la hauteur de la fenêtre. Les téléphones seuls ne le
+# montraient pas.
+LAPTOPS = ((1280, 720), (1366, 768), (1536, 864), (1440, 900))
+
 
 def chrome():
     """Le binaire Chrome, ou None : sans lui les tests s'ignorent."""
@@ -181,7 +187,7 @@ def _wait_for_target(port, timeout=30):
     raise BrowserError(f"Chrome n'a pas exposé d'onglet en {timeout} s ({last})")
 
 
-def _cdp_measure(page, width, expression=None):
+def _cdp_measure(page, width, expression=None, *, height=900):
     """Pilote un navigateur et rend le résultat de l'expression évaluée."""
     binary = chrome()
     port = _free_port()
@@ -196,7 +202,7 @@ def _cdp_measure(page, width, expression=None):
             [binary, '--headless=new', '--disable-gpu', '--no-sandbox',
              '--disable-dev-shm-usage',   # /dev/shm est minuscule sur un runner
              f'--user-data-dir={profile}', f'--remote-debugging-port={port}',
-             f'--window-size={width},900', '--force-device-scale-factor=1',
+             f'--window-size={width},{height}', '--force-device-scale-factor=1',
              'about:blank'],
             stdout=subprocess.DEVNULL, stderr=log)
         try:
@@ -209,7 +215,7 @@ def _cdp_measure(page, width, expression=None):
                     raise BrowserError(
                         f'Chrome s\'est arrêté (code {proc.returncode}) : {err}') from e
                 raise
-            return _drive(target['webSocketDebuggerUrl'], page, width, expression)
+            return _drive(target['webSocketDebuggerUrl'], page, (width, height), expression)
         finally:
             log.close()
             proc.terminate()
@@ -298,8 +304,14 @@ def _ws_recv(sock, rest):
     return b''.join(frames).decode(), rest
 
 
-def _drive(ws_url, page, width, expression=None):
-    """Pilote l'onglet : émule l'appareil, charge la page, évalue l'expression."""
+def _drive(ws_url, page, size, expression=None):
+    """Pilote l'onglet : émule l'appareil, charge la page, évalue l'expression.
+
+    Sous 768 px de large, l'appareil émulé est un téléphone tactile ; au-dessus,
+    un portable à souris, pour que la page choisisse la même disposition qu'en vrai.
+    """
+    width, height = size
+    phone = width < 768
     sock, rest = _ws_connect(ws_url)
     seq = [0]
 
@@ -317,8 +329,8 @@ def _drive(ws_url, page, width, expression=None):
     try:
         call('Page.enable')
         call('Emulation.setDeviceMetricsOverride',
-             {'width': width, 'height': 900, 'deviceScaleFactor': 1, 'mobile': True})
-        call('Emulation.setTouchEmulationEnabled', {'enabled': True, 'maxTouchPoints': 5})
+             {'width': width, 'height': height, 'deviceScaleFactor': 1, 'mobile': phone})
+        call('Emulation.setTouchEmulationEnabled', {'enabled': phone, 'maxTouchPoints': 5})
         call('Page.navigate', {'url': f'{_server()}/{page}'})
 
         # Attendre quatre secondes en aveugle, c'est parier sur la vitesse de la
@@ -360,11 +372,11 @@ def evalue(page, expression, width=1440):
     return _reessaie(page, width, expression)
 
 
-def _reessaie(page, width, expression=None):
+def _reessaie(page, width, expression=None, *, height=900):
     last = None
     for attempt in range(3):
         try:
-            return _cdp_measure(page, width, expression)
+            return _cdp_measure(page, width, expression, height=height)
         except BrowserError as e:
             last = e
             if attempt < 2:
@@ -452,6 +464,49 @@ def test_cibles_tactiles_de_la_barre():
         assert not m['smallTargets'], (
             f"index.html à {width} px : cible(s) tactile(s) sous {MIN_TOUCH} px "
             f"dans la barre du haut : {m['smallTargets']}")
+
+
+# Vignettes de l'anneau qui recouvrent la barre fixe ou une ligne du cœur du
+# hero (sur-titre, titre, phrase, boutons, ligne de preuve, aide à la navigation).
+# Les animations d'entrée sont forcées à leur état final avant la mesure.
+HERO_PROBE = """
+(async () => {
+  document.querySelectorAll('.reveal').forEach(e => e.classList.add('in'));
+  window.scrollTo(0, 0);
+  await new Promise(r => setTimeout(r, 900));
+  const bar = document.querySelector('header.hud-top').getBoundingClientRect();
+  const core = document.querySelector('.hero-grid > div');
+  const lines = [...core.children].filter(e => e.getBoundingClientRect().height > 0);
+  const hit = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+  const frames = [...document.querySelectorAll('.ring a')];
+  const collisions = [];
+  frames.forEach((f, i) => {
+    const r = f.getBoundingClientRect();
+    if (r.top < bar.bottom) collisions.push('vignette ' + i + ' sous la barre');
+    lines.forEach(l => {
+      if (hit(r, l.getBoundingClientRect())) collisions.push('vignette ' + i + ' sur .' + l.classList[0]);
+    });
+  });
+  return JSON.stringify({ frames: frames.length, collisions: collisions });
+})()
+"""
+
+
+def test_anneau_du_hero_degage():
+    """Sur un portable, aucune vignette de l'anneau ne cache la barre ni le texte.
+
+    À 1366×768, cinq vignettes passaient sous la barre et trois sur l'aide à la
+    navigation ; à 1280×720, trois recouvraient le bouton « Me contacter ».
+    """
+    missing = _deps_missing()
+    if missing:
+        _skip(missing)
+    for width, height in LAPTOPS:
+        m = _reessaie('index.html', width, HERO_PROBE, height=height)
+        assert m['frames'] > 0, f"{width}×{height} : l'anneau n'a pas été construit"
+        assert not m['collisions'], (
+            f"{width}×{height} : {len(m['collisions'])} collision(s), "
+            f"dont {m['collisions'][:3]}")
 
 
 SITE = 'https://clement-reboul.fr/portfolio/'
