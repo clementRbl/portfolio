@@ -281,7 +281,9 @@ $palettes
      place. Ouvrir un terme, en revanche, remplace bien la liste - c'est une
      lecture, pas un choix. */
   @media (max-width: 939px){
-    html.gl-js .gl{display:flex;flex-direction:column;}
+    /* « stretch » : la grille posait align-items:start, qui en colonne laisse
+       le rail à la largeur de son contenu (300 px pour 288 px utiles à 320 px). */
+    html.gl-js .gl{display:flex;flex-direction:column;align-items:stretch;}
     html.gl-js .gl-detail{order:1;padding:22px 0 4px;}
     html.gl-js .gl-index{order:2;position:static;height:auto;overflow:visible;
       border-right:0;padding:4px 0 40px;display:block;}
